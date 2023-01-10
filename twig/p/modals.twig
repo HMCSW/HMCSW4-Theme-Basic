@@ -1,0 +1,200 @@
+<div class="modal modal-danger fade" id="cartModal-loginRequired" tabindex="-1" role="dialog"
+     aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6"
+            id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.notLogged' | language }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal modal-success fade" id="cartModal-add" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6"
+            id="modal_title_6">{{ 'site.products.cart.modal.success' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-check-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">
+            {% autoescape %}
+              {% set count = '<span class="red-text" id="cartCount"></span>' %}
+              {% set modal = 'site.products.cart.modal.addProduct'|language|replace({'@count': count }) %}
+              {{ modal|raw }}
+            {% endautoescape %}
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal modal-danger fade" id="cartModal-limit" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6"
+            id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.limitReached' | language }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal modal-danger fade" id="cartModal-requireIdentityCheck" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6"
+            id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.requireIdentityCheck' | language }}</h5>
+          <button class="btn  btn-white btn-animated btn-animated-x" onclick="startAddressVerification()">Start</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal modal-danger fade" id="cartModal-notFound" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6"
+            id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.notFound' | language }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal modal-danger fade" id="cartModal-cartFull" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6"
+            id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.cartFull' | language }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal modal-danger fade" id="cartModal-domainTransfer" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6" id="modal_title_6">{{ 'general.action.message.failed' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.domainNotAvailable' | language }}</h5>
+
+          <hr class="divider divider-fade"/>
+          <h3 class="heading" id="cartModal-domainTransfer-name">%NAME%</h3>
+          <h4 class="heading">{{ 'site.products.cart.modal.transferDomain' | language }}</h4>
+          <h5 class="heading">
+            {{ 'site.products.cart.modal.transferDomain.price'|language|replace({'@today': '<span id="cartModal-domainTransfer-todayPrice"></span>', '@next': '<span id="cartModal-domainTransfer-nextPrice"></span>'})|raw }}
+          </h5>
+          <div class="form-group">
+            <label for="cartModal-domainTransfer-authCode" class="form-control-label">Authcode</label>
+            <input required id="cartModal-domainTransfer-authCode" type="text" name="authCode"
+                   class="form-control form-control-emphasized" style="text-align: center"
+                   placeholder="ABCD-DEFGH-1234-5678">
+          </div>
+
+          <button type="button" onclick="addProduct(getAttribute('data-productId'), getAttribute('data-domainName'), 'transfer', document.getElementById('cartModal-domainTransfer-authCode').value);" data-productId="" data-domainName="" id="cartModal-domainTransfer-btn" class="btn btn-white btn-animated btn-animated-x">
+            <span class="btn-inner--visible">{{ 'site.products.buyNow' | language }}</span>
+            <span class="btn-inner--hidden"><i class="fa-regular fa-shopping-cart"></i></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal modal-success fade" id="cartModal-domainNew" tabindex="-1" role="dialog" aria-labelledby="cartModal"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h6" id="modal_title_6">{{ 'general.action.message.success' | language }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-check-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.domainAvailable' | language }}</h5>
+          <hr class="divider divider-fade"/>
+
+          <h3 class="heading" id="cartModal-domainNew-name">%NAME%</h3>
+          <h5 class="heading">
+            {{ 'site.products.cart.modal.transferDomain.price'|language|replace({'@today': '<span id="cartModal-domainNew-todayPrice"></span>', '@next': '<span id="cartModal-domainNew-nextPrice"></span>'})|raw }}
+          </h5>
+          <button type="button" onclick="addProduct(getAttribute('data-productId'), getAttribute('data-domainName'), 'new', '');" data-productId="" data-domainName="" id="cartModal-domainNew-btn" class="btn btn-white btn-animated btn-animated-x">
+            <span class="btn-inner--visible">{{ 'site.products.buyNow' | language }}</span>
+            <span class="btn-inner--hidden"><i class="fa-regular fa-shopping-cart"></i></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

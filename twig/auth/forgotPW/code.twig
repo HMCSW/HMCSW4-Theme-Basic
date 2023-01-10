@@ -1,0 +1,84 @@
+{% include '/general/header_noNav.twig' %}
+<section>
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center min-vh-100">
+      <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+        <div>
+          <div class="mb-5 text-center">
+            <div class="mb-5 text-center">
+              <h6 class="h3 mb-1">{{ 'site.auth.forgotPW.testCode' | language }}</h6>
+              <p class="text-muted mb-0">{{ 'site.auth.forgotPW.testCode.description' | language }}</p>
+            </div>
+          </div>
+          <span class="clearfix"></span>
+          {% if action != false %}
+            {% if action['success'] == false %}
+              {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+            {% else %}
+              {% set alert_color = "success" %} {% set alert_icon = "check" %}
+            {% endif %}
+            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+              <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-{{ alert_icon }}"></i>
+                                        </span>
+              </div>
+              <div class="alert-content">
+                {{ action['message'] | language }}
+              </div>
+            </div>
+          {% endif %}
+
+
+          <form method="post" onsubmit="send();">
+            <input type="hidden" name="action" value="testCode">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+
+
+            <div class="form-group">
+              <label for="input-code" class="form-control-label">{{ 'general.form.forgotPW.code' | language }}</label>
+              <div class="input-group input-group-merge">
+                <input required name="code" type="text" class="form-control form-control-prepend" id="input-code"
+                       placeholder="{{ 'general.form.forgotPW.code.placeholder' | language }}">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa-regular fa-code-simple"></i></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="my-4">
+              <div id="recaptcha"></div>
+              <br>
+            </div>
+
+            <div class="mt-4">
+              <div id="form">
+                <button type="submit"
+                        class="btn btn-block btn-primary">{{ 'site.forgotPW.form.testCode' | language }}</button>
+              </div>
+              <div id="loader" style="display: none">
+                <button class="btn btn-block btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  <span class="sr-only">{{ 'site.forgotPW.form.testCode' | language }}</span>
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <form method="post">
+            <input type="hidden" name="action" value="reTry">
+            <input type="hidden" name="csrf" value="{{ csrf }}">
+
+            <div class="mt-4">
+              <div id="form">
+                <button type="submit"
+                        class="btn btn-block btn-info btn-sm">{{ 'site.forgotPW.form.reTry' | language }}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

@@ -1,0 +1,181 @@
+{% include '/general/header_noNav.twig' %}
+<a href="{{ url }}"
+   class="btn btn-white btn-icon-only rounded-circle position-absolute zindex-101 left-4 top-4 d-none d-lg-inline-flex">
+        <span class="btn-inner--icon">
+            <i class="fa fa-arrow-left"></i>
+        </span>
+</a>
+<section>
+  <div
+    class="bg-primary position-absolute h-100 top-0 left-0 zindex-100 col-lg-6 col-xl-6 zindex-100 d-none d-lg-flex flex-column justify-content-end"
+    data-bg-size="cover" data-bg-position="center">
+    <!-- Cover image -->
+    <img src="https://cdn.hosmatic.com/website/Login-Background.svg" alt="Image" class="img-as-bg">
+    <!-- Overlay text -->
+    <div class="row position-relative zindex-110 p-5">
+      <div class="col-md-8 text-center mx-auto">
+        <span class="badge badge-warning badge-pill">{{ config['name'] }}</span>
+        <h5 class="h5 text-white mt-3">{{ 'site.auth.login' | language }}</h5>
+        <p class="text-white opacity-8">{{ 'site.auth.login.description' | language }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid d-flex flex-column">
+    <div class="row align-items-center justify-content-center justify-content-lg-end min-vh-100">
+      <div class="col-sm-7 col-lg-6 col-xl-6 py-6 py-md-0">
+        <div class="row justify-content-center">
+          <div class="col-11 col-lg-10 col-xl-6">
+            <div>
+              <div class="mb-3">
+                <h6 class="h3 mb-1">{{ 'site.auth.login' | language }}</h6>
+                <p class="text-muted mb-0">{{ 'site.auth.login.description' | language }}</p>
+              </div>
+            </div>
+            <span class="clearfix"></span>
+            {% include '/general/actionMessage.twig' %}
+
+            <div id="qrCodeForm" style="display:none">
+              <div id="qrCodeFormLoader" class="justify-content-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+              <div id="qrCode">
+                <p class="text-muted mb-5">{{ 'site.auth.login.scanQRCode' | language }}</p>
+                <div class="row align-items-center" style="display: none" id="qrCodeFormUserInfo">
+                  <div class="col-auto">
+                    <img id="qrCodeFormUserInfoIMG" alt="" src="" class="avatar avatar-xl rounded-circle">
+                  </div>
+                  <div class="col ml-n3 ml-md-n2">
+                    <h2 id="qrCodeFormUserInfoName" class="mb-0"></h2>
+                    <span id="qrCodeFormUserInfoRank" class="text-muted d-block"></span>
+                  </div>
+
+                  <div class="col-12 mt-4 text-center">
+                    <small>{{ 'site.auth.login.scanQRCode.notYou' | language }}</small>
+                    <a onClick="cancelLogin();"
+                       class="small font-weight-bold">{{ 'site.auth.login.scanQRCode.cancel' | language }}</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="loginForm">
+              <div class="row">
+                {% if avAccounts|length != 0 %}
+                  {% for account in avAccounts %}
+                    <div class="col-lg-6 col-sm-12">
+                      <a {% if account['shortName'] == "TheSystems" %}data-toggle="tooltip" data-placement="right"
+                         title="Recommend"{% endif %}
+                         href="{{ url }}/auth/r/{{ account['identifier'] }}{{ return_to }}"
+                         class="btn btn-block btn-neutral btn-icon mb-3 mb-sm-0">
+                    <span class="btn-inner--icon">
+
+                      {% if account['shortName'] == "TheSystems" %}
+                        <img src="https://cdn.the-systems.eu/icon-transparent.png" alt="TheSystems">
+                      {% elseif account['shortName'] == "Discord" %}
+                        <i class="fab fa-discord"></i>
+                      {% endif %}
+                    </span>
+                        <span class="btn-inner--text">{{ account['shortName'] }}</span>
+                      </a>
+
+                    </div>
+                  {% endfor %}
+                {% endif %}
+                <div class="col-lg-12 col-sm-12 py-1">
+                  <a id="createQRCode"
+                     class="btn btn-block btn-neutral btn-icon mb-3 mb-sm-0">
+                    <span class="btn-inner--icon">
+                        <i class="fas fa-qrcode"></i>
+                    </span>
+                    <span class="btn-inner--text">{{ 'site.auth.login.scanQRCodeMethod' | language }}</span>
+                  </a>
+
+                </div>
+                <div class="col-lg-12 col-sm-12 py-1">
+                  <a onclick="startFido2Login();"
+                     class="btn btn-block btn-neutral btn-icon mb-3 mb-sm-0">
+                    <span class="btn-inner--icon">
+                        <i class="fa-solid fa-key-skeleton"></i>
+                    </span>
+                    <span class="btn-inner--text">{{ 'site.auth.login.fido2' | language }}</span>
+                  </a>
+
+                </div>
+              </div>
+              <div class="py-1 text-center"
+              <span class="text-xs text-uppercase">{{ 'site.login.form.or' | language }}</span>
+            </div>
+
+              <div class="form-group">
+                <label for="username" class="form-control-label">{{ 'general.form.email' | language }}</label>
+                <div class="input-group input-group-merge">
+                  <input required autocomplete="email" name="email" type="email"
+                         class="form-control form-control-prepend"
+                         id="username"
+                         placeholder="{{ 'general.form.email.placeholder' | language }}">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa-regular fa-at"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <label for="password"
+                           class="form-control-label">{{ 'general.form.password' | language }}</label>
+                  </div>
+                  <div class="mb-2">
+                    <a class="small text-muted text-underline--dashed border-primary" data-toggle="password-text"
+                       data-target="#password">{{ 'general.form.password.show' | language }}</a>
+                  </div>
+                </div>
+                <div class="input-group input-group-merge">
+                  <input required autocomplete="password" name="password" type="password"
+                         class="form-control form-control-prepend" id="password"
+                         placeholder="{{ 'general.form.password.placeholder' | language }}">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa-regular fa-key"></i></span>
+                  </div>
+                </div>
+              </div>
+              <div class="my-4">
+                <div id="recaptcha"></div>
+                <br>
+
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" name="remember_login" value="true"
+                         id="remember_login">
+                  <label class="custom-control-label"
+                         for="remember_login">{{ 'general.form.remember' | language }}</label>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div id="form">
+                  <button type="button" onclick="onSiteLogin()"
+                          class="btn btn-block btn-primary">{{ 'site.login.form.sign_in' | language }}</button>
+                </div>
+                <div id="loader" style="display: none">
+                  <button class="btn btn-block btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    <span class="sr-only">{{ 'site.login.form.sign_in' | language }}</span>
+                  </button>
+                </div>
+              </div>
+
+            <div class="mt-4 text-center"><small>{{ 'site.login.not_registered' | language }}</small>
+              <a href="{{ url }}/auth/register{{ return_to }}"
+                 class="small font-weight-bold">{{ 'site.login.create_account' | language }}</a>
+            </div>
+            <div class="mt-4 text-center"><small>{{ 'site.login.forgot_password' | language }}</small>
+              <a href="{{ url }}/auth/forgotPW{{ return_to }}"
+                 class="small font-weight-bold">{{ 'site.login.reset_password' | language }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

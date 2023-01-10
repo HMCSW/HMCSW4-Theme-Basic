@@ -1,0 +1,58 @@
+{% include '/general/header.twig' %}
+{% include 'cp/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-9 order-lg-2">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="actions-toolbar py-2 mb-4">
+                  <h5 class="mb-1">{{ 'site.cp.settings.mails' | language }}</h5>
+                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.mails.description' | language }}</p>
+                </div>
+                {% if mails|length == 0 %}
+                  {{ 'site.cp.settings.mails.table.empty' | language }}
+                {% else %}
+                  <div class="table-responsive">
+                    <table class="table table-cards align-items-center">
+                      <thead>
+                      <tr>
+                        <th scope="col">{{ 'site.cp.settings.mails.table.title' | language }}</th>
+                        <th>{{ 'site.cp.settings.mails.table.created_at' | language }}</th>
+                        <th></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% for mail in mails %}
+                        <tr>
+                          <th scope="row">{{ mail['title'] }}</th>
+                          <td>{{ mail['created_at']|date("d.m.Y H:i") }}</td>
+                          <td class="text-right">
+                            <div class="actions ml-3">
+                              <a href="{{ url }}/cp/settings/mails/{{ mail['mail_id'] }}"
+                                 class="action-item mr-2" data-toggle="tooltip" title=""
+                                 data-original-title="{{ 'site.cp.settings.mails.table.show' | language }}">
+                                <i class="fas fa-eye"></i>
+                              </a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr class="table-divider"></tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% include 'cp/settings/nav.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include '/general/footer.twig' %}

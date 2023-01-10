@@ -1,0 +1,151 @@
+{% include '/general/header.twig' %}
+<section>
+  <!-- Container -->
+  <div class="container d-flex align-items-center text-center text-lg-left py-5 py-lg-6 border-bottom">
+    <div class="col px-0">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <!-- Title -->
+          <h2 class="h1 mb-2">{{ 'site.legal.imprint' | language }}</h2>
+          <h6 class="font-weight-light text-muted">{{ 'general.site.onlyGerman' | language }}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slice">
+  <div class="container">
+    <div class="row row-grid justify-content-between">
+      {% if config['dev_mode'] %}
+        <div class="col-lg-12">
+          <div class="alert alert-group alert-warning alert-icon justify-content-center" role="alert">
+            <div class="alert-group-prepend">
+                        <span class="alert-group-icon text-">
+                            <i class="fa fa-exclamation-triangle"></i>
+                        </span>
+            </div>
+            <div class="alert-content">
+              <b>The DevMode is activated! Expect higher loading times. Caching is disabled. Do not use in productive
+                mode. Some data may not be correct.</b>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="col-lg-3">
+        <div data-toggle="sticky" data-sticky-offset="50">
+          <div class="card">
+            <div class="card-body">
+              <nav class="nav nav-pills flex-column" id="nav-terms">
+                <a class="nav-link text-sm" href="#item-1" data-scroll-to data-scroll-to-offset="130">Angaben</a>
+
+                {% if config['legal']['show_tax'] %}
+                  <a class="nav-link text-sm" href="#item-2" data-scroll-to data-scroll-to-offset="130">Umsatzsteuer-Identifikationsnummer</a>
+                {% endif %}
+
+                <a class="nav-link text-sm" href="#item-3" data-scroll-to
+                   data-scroll-to-offset="130">Geltungsbereich</a>
+                <a class="nav-link text-sm" href="#item-4" data-scroll-to data-scroll-to-offset="130">Kontakt</a>
+
+
+                {% for area in all %}
+                  <a class="nav-link text-sm" href="#{{ area['short_title']|slugify }}" data-scroll-to data-scroll-to-offset="130">{{ area['short_title'] }}</a>
+                {% endfor %}
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="mb-5">
+          <h5 id="item-1">Informationspflicht laut §5 TMG, §5 E-Commerce Gesetz, §14 Unternehmensgesetzbuch, §63
+            Gewerbeordnung und Offenlegungspflicht laut §25 Mediengesetz</h5>
+          <p>
+            <b>{{ config['name'] }}</b><br>
+            {{ config['legal']['owner']['company'] }}<br>
+            {{ config['legal']['owner']['street'] }} {{ config['legal']['owner']['street_nr'] }}<br>
+            {{ config['legal']['owner']['postcode'] }} {{ config['legal']['owner']['city'] }}<br>
+            {{ config['legal']['owner']['country'] }}<br>
+          </p>
+          {% if config['legal']['represented_by'] != false %}
+            <p>
+              <b>Vertreten durch</b>
+            </p>
+            <ul>
+              {% for user in config['legal']['represented_by'] %}
+                <li>
+                  {{ user }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        {% if config['legal']['tax_number'] != false %}
+          <div class="mb-5">
+            <h5 id="item-2">Steuernummer</h5>
+            <p>{{ config['legal']['tax_number'] }}</p>
+          </div>
+        {% endif %}
+        {% if config['legal']['ust_number'] != false %}
+          <div class="mb-5">
+            <h5 id="item-2">Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz</h5>
+            <p>{{ config['legal']['ust_number'] }}</p
+
+            {% if config['legal']['show_tax'] != true %}
+              <p>{{ 'footer.noTax' | language }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if config['legal']['scope'] != false %}
+          <div class="mb-5">
+            <h5 id="item-3">Geltungsbereich</h5>
+            <ul>
+              {% for scope in config['legal']['scope'] %}
+                <li>
+                  {{ scope }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        <div class="mb-5">
+          <h5 id="item-4">Kontakt</h5>
+          <p>
+            Telefon: <a
+              href="tel:{{ config['legal']['owner']['telephone'] }}">{{ config['legal']['owner']['telephone'] }}</a> (No
+            Support)
+          </p>
+          <h6 id="item-4">Support</h6>
+          <p>
+            Telefon: <a href="tel:{{ config['support']['telephone'] }}">{{ config['support']['telephone'] }}</a>
+          </p>
+          <p>
+            E-Mail: <a href="mailto:{{ config['support']['support_mail'] }}">{{ config['support']['support_mail'] }}</a>
+          </p>
+        </div>
+
+        {% if config['legal']['fairCommerce'] != false %}
+          <div class="mb-5">
+            <h5 id="item-4">FairCommerce</h5>
+            <p>Wir sind Mitglied der Initiative FairCommerce</p>
+            <p>Nähere Informationen hierzu finden Sie unter: <a href="https://www.haendlerbund.de/faircommerce"
+                                                                alt="FairCommerce" title="FairCommerce">www.haendlerbund.de/faircommerce</a>
+            </p>
+            <img src="/assets/hmcsw/img/fairCommerce/fc_logo.png" width="200" loading="lazy" title="FaiCommerce"
+                 alt="FairCommerce">
+          </div>
+        {% endif %}
+
+        {% for area in all %}
+          <div class="mb-5">
+            <h5 id="{{ area['short_title']|slugify }}">{{ area['title'] }}</h5>
+            {% for text in area['text'] %}
+              <p>{{ text|raw }}</p>
+            {% endfor%}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

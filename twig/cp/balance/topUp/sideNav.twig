@@ -1,0 +1,45 @@
+
+<div class="col-md-4">
+  <div class="card" id="card-summary">
+    <div class="card-header py-3">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <span class="h6">{{ 'site.cart.summary.title' | language }}</span>
+        </div>
+        <div class="col-4 text-right">
+          <span class="badge badge-pill badge-soft-success">1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="col-8">
+          <div class="media align-items-center">
+            <div class="media-body">
+              <div class="text-limit lh-100">
+                <small class="font-weight-bold mb-0">{{ 'site.cart.summary.item.type.balance' | language }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4 text-right lh-100">
+          <small class="">
+            {{ amount | creditsToEuro }}{{ "symbol"|currency }}
+          </small>
+        </div>
+      </div>
+
+      <div class="row mt-3 pt-3 border-top">
+        <div class="col-8">
+          <small
+            class="text-uppercase font-weight-bold h6"><b>{{ 'site.cart.summary.total' | language }}</b></small>
+        </div>
+        <div class="col-4 text-right">
+                  <span
+                    class="text-sm font-weight-bold h4"><b>{{ amount | creditsToEuro }}{{ "symbol"|currency }}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

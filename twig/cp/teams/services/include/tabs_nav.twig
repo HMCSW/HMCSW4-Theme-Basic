@@ -1,0 +1,20 @@
+<li class="nav-item" role="presentation">
+  <a class="nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab"
+     aria-controls="info"
+     aria-selected="true">{{ 'site.cp.service.tab.info' | language }}</a>
+</li>
+
+{% if "team.service.invoice"|checkTeamPermission %}
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="invoice-tab" data-toggle="tab" href="#invoice" role="tab" aria-controls="invoice"
+       aria-selected="true">{{ 'site.cp.service.tab.invoice' | language }}</a>
+  </li>
+{% endif %}
+{% if "owner"|checkTeamPermission %}
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="team-tab" data-toggle="tab" href="#team" role="tab" aria-controls="team"
+       aria-selected="false">{{ 'site.cp.service.tab.team' | language }}
+    </a>
+  </li>
+{% endif %}
+

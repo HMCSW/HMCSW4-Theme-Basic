@@ -1,0 +1,55 @@
+{% include '/general/header.twig' %}
+<section>
+  <div class="container d-flex align-items-center text-center text-lg-left py-5 py-lg-6 border-bottom">
+    <div class="col px-0">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h2 class="h1 mb-2">{{ 'site.legal.parents' | language }}</h2>
+          <h6 class="font-weight-light text-muted">{{ 'general.site.onlyGerman' | language }}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slice">
+  <div class="container">
+    <div class="row row-grid justify-content-between">
+      {% if config['dev_mode'] %}
+        <div class="col-lg-12">
+          <div class="alert alert-group alert-warning alert-icon justify-content-center" role="alert">
+            <div class="alert-group-prepend">
+                        <span class="alert-group-icon text-">
+                            <i class="fa fa-exclamation-triangle"></i>
+                        </span>
+            </div>
+            <div class="alert-content">
+              <b>The DevMode is activated! Expect higher loading times. Caching is disabled. Do not use in productive
+                mode. Some data may not be correct.</b>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      <div class="offset-lg-1 col-lg-10 text-center">
+        {% for area in all %}
+          <div class="mb-5">
+            <h5 id="{{ area['short_title']|slugify }}">{{ area['title'] }}</h5>
+            {% for text in area['text'] %}
+              <p>{{ text|raw }}</p>
+            {% endfor%}
+          </div>
+        {% endfor %}
+
+        <div class="mb-5">
+          <h5 id="item-4">Kontakt</h5>
+          <p>
+            Telefon: <a href="tel:{{ config['support']['telephone'] }}">{{ config['support']['telephone'] }}</a>
+          </p>
+          <p>
+            E-Mail: <a href="mailto:{{ config['support']['support_mail'] }}">{{ config['support']['support_mail'] }}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

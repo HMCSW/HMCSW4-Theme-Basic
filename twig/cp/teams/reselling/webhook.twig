@@ -1,0 +1,214 @@
+{% include '/general/header.twig' %}
+{% include 'cp/teams/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9 order-lg-2">
+        {% if action != false %}
+          {% if action['success'] == false %}
+            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+          {% else %}
+            {% set alert_color = "success" %} {% set alert_icon = "check" %}
+          {% endif %}
+          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+            <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-{{ alert_icon }}"></i>
+                                        </span>
+            </div>
+            <div class="alert-content">
+              {{ action['message'] | language }}
+            </div>
+
+          </div>
+        {% endif %}
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-body">
+                    <form method="post">
+                      <input name="action" type="hidden" value="save">
+                      <input name="csrf" type="hidden" value="{{ csrf }}">
+
+                      <div class="form-group mb-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div>
+                            <label for="input-url"
+                                   class="form-control-label">{{ 'site.cp.teams.reselling.webhook.url' | language }}</label>
+                          </div>
+                        </div>
+                        <div class="input-group input-group-merge">
+                          <input name="url" type="url" class="form-control form-control-prepend"
+                                 id="input-url" value="{{ hook['url'] }}"
+                                 placeholder="{{ 'site.cp.teams.reselling.webhook.url' | language }}">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa-solid fa-brackets-curly"></i></span>
+                          </div>
+                          <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit"
+                                    id="input-password">{{ 'general.modal.saveBtn' | language }}</button>
+
+                          </div>
+                        </div>
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-body text-center justify-content-center">
+                    <nav>
+                      <ul class="pagination justify-content-center">
+
+                        <li class="page-item {% if apiLog['pagination']['previous_page'] == 0 %} disabled {% endif %}">
+                          <a class="page-link" href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page=1"
+                             tabindex="-1" {% if apiLog['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>First</a>
+                        </li>
+                        <li class="page-item {% if apiLog['pagination']['previous_page'] == 0 %} disabled {% endif %}">
+                          <a class="page-link"
+                             href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['previous_page'] }}"
+                             tabindex="-1" {% if apiLog['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>Previous</a>
+                        </li>
+
+                        {% if apiLog['pagination']['previous_page']-3 > 0 %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['previous_page']-3 }}">{{ apiLog['pagination']['previous_page']-3 }}</a>
+                          </li>
+                        {% endif %}
+                        {% if apiLog['pagination']['previous_page']-2 > 0 %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['previous_page']-2 }}">{{ apiLog['pagination']['previous_page']-2 }}</a>
+                          </li>
+                        {% endif %}
+                        {% if apiLog['pagination']['previous_page']-1 > 0 %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['previous_page']-1 }}">{{ apiLog['pagination']['previous_page']-1 }}</a>
+                          </li>
+                        {% endif %}
+                        {% if apiLog['pagination']['previous_page'] != 0 %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['previous_page'] }}">{{ apiLog['pagination']['previous_page'] }}</a>
+                          </li>
+                        {% endif %}
+
+                        <li class="page-item active" aria-current="page">
+                          <a class="page-link"
+                             href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['current_page'] }}">{{ apiLog['pagination']['current_page'] }}
+                            <span class="sr-only">(current)</span></a>
+                        </li>
+
+                        {% if apiLog['pagination']['current_page'] != apiLog['pagination']['total_no_of_pages'] %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['next_page'] }}">{{ apiLog['pagination']['next_page'] }}</a>
+                          </li>
+                        {% endif %}
+                        {% if apiLog['pagination']['next_page']+1 <= apiLog['pagination']['total_no_of_pages'] %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['next_page']+1 }}">{{ apiLog['pagination']['next_page']+1 }}</a>
+                          </li>
+                        {% endif %}
+                        {% if apiLog['pagination']['next_page']+2 <= apiLog['pagination']['total_no_of_pages'] %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['next_page']+2 }}">{{ apiLog['pagination']['next_page']+2 }}</a>
+                          </li>
+                        {% endif %}
+                        {% if apiLog['pagination']['next_page']+3 <= apiLog['pagination']['total_no_of_pages'] %}
+                          <li class="page-item"><a class="page-link"
+                                                   href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['next_page']+3 }}">{{ apiLog['pagination']['next_page']+3 }}</a>
+                          </li>
+                        {% endif %}
+
+                        <li
+                          class="page-item {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} disabled {% endif %}">
+                          <a class="page-link"
+                             href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['next_page'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Next</a>
+                        </li>
+                        <li
+                          class="page-item {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} disabled {% endif %}">
+                          <a class="page-link"
+                             href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api?page={{ apiLog['pagination']['total_no_of_pages'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Last</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="card-header">Verlauf</div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-cards">
+                        <thead>
+                        <tr>
+                          <th scope="col">{{ 'site.cp.settings.developer.webhook.table.time' | language }}</th>
+                          <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for log in apiLog['history'] %}
+                          <tr>
+                            <td>{{ log['createdAt']|date("d.m.Y H:i:s") }}</td>
+                            <td>
+                              <button type="button"
+                                      class="action-item mr-2" title="" data-toggle="modal"
+                                      data-target="#seeLog-{{ log['log_id'] }}">
+                                <i class="fas fa-eye"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                {% for log in apiLog['history'] %}
+                  <div class="modal fade" tabindex="-1" role="dialog" id="seeLog-{{ log['log_id'] }}">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title h6">{{ log['createdAt']|date("d.m.Y H:i:s") }}</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fa-solid fa-close"></i>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <h5 class="text-left">Request</h5>
+                          <pre style="background-color: #001f3f; color: #ffffff"><code
+                              id="request_{{ log['log_id'] }}"></code></pre>
+                          <script>document.getElementById("request_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['request']|json_encode|raw }}, undefined, 2);</script>
+
+                          <h5 class="text-left">Response</h5>
+                          <pre style="background-color: #001f3f; color: #ffffff"><code
+                              id="response_{{ log['log_id'] }}"></code></pre>
+                          <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['response']|json_encode|raw }}, undefined, 2);</script>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary"
+                                  data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      {% include 'cp/teams/reselling/nav.twig' %}
+    </div>
+    <br><br>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

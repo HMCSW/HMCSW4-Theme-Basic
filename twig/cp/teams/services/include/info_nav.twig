@@ -1,0 +1,234 @@
+{% include 'cp/terminateUser.twig' %}
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+  <div class="card card-fluid">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="icon icon-md">
+          {% if service['reinstalling'] %}
+            <i class="fa-solid text-warning fa-cog fa-spin"></i>
+          {% else %}
+            {% if service['state'] == 1 %}
+              <i class="fas text-success fa-check-circle"></i>
+            {% elseif service['state'] == 2 %}
+              <i class="fa-solid text-warning fa-cog fa-spin"></i>
+            {% elseif service['state'] == 3 %}
+              <i class="fa-solid text-warning fa-money-check-dollar-pen"></i>
+            {% elseif service['state'] == 4 %}
+              <i class="fa-solid text-warning fa-circle-exclamation"></i>
+            {% elseif service['state'] == 5 %}
+              <i class="fa-solid text-danger fa-circle-trash"></i>
+            {% elseif service['state'] == 6 %}
+              <i class="fa-solid text-danger fa-trash-clock"></i>
+            {% elseif service['state'] == 7 %}
+              <i class="fa-solid text-danger fa-triangle-exclamation"></i>
+            {% elseif service['state'] == 8 %}
+              <i class="fa-solid text-warning fa-cog fa-spin"></i>
+            {% else %}
+              <i class="fa-solid text-danger fa-circle-xmark"></i>
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <div class="text-right">
+          {% if service['reinstalling'] == false and service['state'] == "1" and "team.service.terminate"|checkTeamPermission %}
+            {% if service['locked'] == false %}
+              <button type="button" data-toggle="modal" data-target="#terminate_later" class="btn btn-xs btn-neutral">
+                <span class="btn-inner--text">{{ 'site.cp.service.terminate' | language }}</span>
+              </button>
+            {% else %}
+              <h6 class="text-center"><i class="fas fa-lock fa-2x"></i></h6>
+            {% endif %}
+          {% else %}
+            {% if service['reinstalling'] == false and service['state'] == "6" and "team.service.terminate"|checkTeamPermission %}
+              {% if service['checkCanWithdrawTerminateService'] %}
+                <form method="post">
+                  <input type="hidden" name="action" value="withdrawTerminateService">
+                  <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                  <button type="submit" class="btn btn-xs btn-neutral">
+                    <span class="btn-inner--text">{{ 'site.cp.service.withdrawTerminateService' | language }}</span>
+                  </button>
+                </form>
+              {% else %}
+                <a class="btn btn-xs btn-neutral disabled" disabled>
+                  <span class="btn-inner--text">{{ 'site.cp.service.withdrawTerminateService' | language }}</span>
+                </a>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </div>
+
+        {% if service['locked'] == false and service['reinstalling'] == false and service['state'] == "1" and "team.service.terminate"|checkTeamPermission %}
+          <div class="modal modal-danger fade" id="terminate_later" tabindex="-1" role="dialog"
+               aria-labelledby="terminate_later" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title h6">{{ 'site.cp.service.terminate.modal' | language }}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="text-center">
+                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                    <h5 class="heading h4 mt-4">{{ 'site.cp.service.terminate.modal.warn.later.title' | language }}</h5>
+                    <p>{{ 'site.cp.service.terminate.modal.warn.later.description' | language }}</p>
+                  </div>
+
+                  {% if service['terminateInstant'] %}
+                    <hr class="divider divider-fade"/>
+                    <div class="text-center">
+                      <h5
+                        class="heading h4 mt-4">{{ 'site.cp.service.terminate.modal.warn.instant.title' | language }}</h5>
+                      <p>{{ 'site.cp.service.terminate.modal.warn.instant.description' | language }}</p>
+                      {% if retour['success'] %}
+                        <p>{{ 'site.cp.service.terminate.modal.warn.instant.retour'|language|replace({'@amount': retour['response']['retour']|creditsToEuro ~ "symbol"|currency})|raw }}</p>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="modal-footer">
+                  {% if service['terminateInstant'] %}
+                    <form method="POST">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <input type="hidden" name="action" value="terminate_instant">
+                      <button type="submit"
+                              class="btn btn-sm btn-white">{{ 'site.cp.service.terminate.modal.instantBTN' | language }}</button>
+                    </form>
+                  {% endif %}
+                  <form method="POST">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <input type="hidden" name="action" value="terminate_later">
+                    <button type="submit"
+                            class="btn btn-sm btn-white">{{ 'site.cp.service.terminate.modal.laterBTN' | language }}</button>
+                  </form>
+                  <button type="button" class="btn btn-sm btn-white"
+                          data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+      <div class="mt-3"><h6 class="mb-0">{{ 'site.cp.service.state' | language }}</h6>
+        {% if service['reinstalling'] %}
+          <p class="mb-0 text-sm text-muted">{{ 'general.services.state.reinstalling' | language }}</p>
+        {% else %}
+          {% if service['state'] == 1 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.1' | language }}</p>
+          {% elseif service['state'] == 2 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.2' | language }}</p>
+          {% elseif service['state'] == 3 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.3' | language }}</p>
+          {% elseif service['state'] == 4 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.4' | language }}</p>
+          {% elseif service['state'] == 5 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.5' | language }}</p>
+          {% elseif service['state'] == 6 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.6' | language }}</p>
+          {% elseif service['state'] == 7 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.7' | language }}</p>
+          {% elseif service['state'] == 8 %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.8' | language }}</p>
+          {% else %}
+            <p class="mb-0 text-sm text-muted">{{ 'general.services.state.error' | language }}</p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+  <div class="card card-fluid">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="icon icon-md"><i class="fas text-warning fa-money-bill-alt"></i></div>
+        </div>
+      </div>
+      <div class="mt-3"><h6 class="mb-0">{{ 'site.cp.service.credits' | language }}</h6>
+        <p class="mb-0 text-sm text-muted">
+          {% if service['credits']['alltime']['at'] <= 'now'|date('U') %}
+            {{ service['credits']['alltime']['credits'] | creditsToEuro }}{{ "symbol"|currency }}
+          {% else %}
+            {{ service['credits']['first'] | creditsToEuro }}{{ "symbol"|currency }}
+            <br>{{ service['credits']['alltime']['credits'] | creditsToEuro }}{{ "symbol"|currency }} {{ 'site.cp.service.info.credits.alltime.at' | language }} {{ service['credits']['alltime']['at'] | date("d.m.Y H:i") }}
+          {% endif %}
+        </p></div>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+  <div class="card card-fluid">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="icon icon-md"><i class="fas text-primary fa-shopping-cart"></i></div>
+        </div>
+      </div>
+      <div class="mt-3"><h6 class="mb-0">{{ 'site.cp.service.created' | language }}</h6>
+        <p class="mb-0 text-sm text-muted">{{ service['at']['created'] | date("d.m.Y H:i") }}</p></div>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3">
+  <div class="card card-fluid">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div class="icon icon-md"><i class="fas text-danger fa-calendar-times"></i></div>
+        </div>
+
+
+        {% if service['renewTimes']|length != 0 %}
+          <div class="text-right">
+            <button type="button" class="btn btn-sm  btn-secondary  btn-icon-only" data-toggle="modal"
+                    data-target="#renewModal">
+            <span class="btn-inner--icon">
+                <i class="fa fa-plus"></i>
+            </span>
+            </button>
+
+            <div class="modal fade" id="renewModal" tabindex="-1" role="dialog">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content text-left">
+                  <form method="post">
+                    <input type="hidden" name="action" value="renewService">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{{ 'site.cp.service.renew.modal' | language }}</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="renewSelect" class="form-control-label">{{ 'site.cp.service.renew.modal.times' | language }}</label>
+                        <select id="renewSelect" class="custom-select" name="time">
+                          {% for i, time in service['renewTimes'] %}
+                            <option value="{{ i }}">{{ time['time']['d'] }} {{ 'general.period.days'|language }} ({{ time['credits']|creditsToEuro }}{{ "symbol"|currency }})</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary"
+                              data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
+                      <button type="submit" class="btn btn-primary">{{ 'site.cp.service.renew.modal.renewBtn' | language }}</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        {% endif %}
+      </div>
+      <div class="mt-3"><h6 class="mb-0">{{ 'site.cp.service.expire' | language }}</h6>
+        <p class="mb-0 text-sm text-muted">{{ service['at']['expire'] | date("d.m.Y H:i") }}</p></div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,89 @@
+{% include '/general/header.twig' %}
+{% include 'cp/teams/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9 order-lg-2">
+        {% if action != false %}
+          {% if action['success'] == false %}
+            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+          {% else %}
+            {% set alert_color = "success" %} {% set alert_icon = "check" %}
+          {% endif %}
+          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+            <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-{{ alert_icon }}"></i>
+                                        </span>
+            </div>
+            <div class="alert-content">
+              {{ action['message'] | language }}
+            </div>
+
+          </div>
+        {% endif %}
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+              <div class="card-body">
+                <h6 class="text-center"><i class="fas fa-2x fa-money-bill"></i></h6>
+                <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.dayOfPayment' | language }}</h5>
+                <h4 class="text-center">{{ team['reselling']['dayOfPayment'] }}.</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+              <div class="card-body">
+                <h6 class="text-center"><i class="fas fa-2x fa-server"></i></h6>
+                <h5 class="text-center">{{ 'site.cp.index.card.services' | language }}</h5>
+                <h4 class="text-center">{{ team['services']|length }}</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+              <div class="card-body">
+                <h6 class="text-center"><i class="fas fa-2x fa-file-invoice-dollar"></i></h6>
+                <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.nextInvoice' | language }}</h5>
+                <h4 class="text-center">{{ nextInvoice['amount']|creditsToEuro }}{{ "symbol"|currency }}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if "owner"|checkTeamPermission %}
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+                <div class="card-body">
+                  <h5 class="text-center">{{ 'site.cp.index.card.payment' | language }}</h5>
+                  <form method="post">
+                    <input type="hidden" name="action" value="setMethod">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                    <label for="method_id">Method</label>
+                    <select id="method_id" name="method_id" class="form-control" onchange="this.form.submit()">
+                      <option {% if team['reselling']['method_id'] == 0 %}selected{% endif %} value="0">Manuell</option>
+                      {% for methodType in methods %}
+                        {% for method in methodType %}
+                          <option {% if service['allowAutomaticPayment']['id'] == method['method_id'] %}selected{% endif %}
+                                  value="{{ method['method_id'] }}">{{ method['description'] }}</option>
+                        {% endfor %}
+                      {% endfor %}
+                    </select>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>
+      {% include 'cp/teams/reselling/nav.twig' %}
+    </div>
+    <br><br>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

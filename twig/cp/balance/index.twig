@@ -1,0 +1,144 @@
+{% include '/general/header.twig' %}
+{% include 'cp/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    {% include 'general/actionMessage.twig' %}
+
+    <div class="row justify-content-center">
+      {% include 'cp/terminateUser.twig' %}
+      <div class="col-lg-6">
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.current' | language }}</h5>
+          </div>
+          <div class="card-body align-items-center">
+            <h4 class="align-items-center text-center">{{ userData['credits'] | creditsToEuro }}{{ "symbol"|currency }}</h4>
+            <br><br>
+
+
+            <div class="row justify-content-center">
+              <h4 class="text-center">
+                <button data-toggle="modal" data-target="#sendBalance" type="submit"
+                        class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.send' | language }}
+                </button>
+              </h4>
+            </div>
+
+            <div class="modal fade" tabindex="-1" id="sendBalance" role="dialog" aria-labelledby="myLargeModalLabel"
+                 aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+
+                  <div class="modal-header">
+                    <h5 class="modal-title h6"
+                        id="myLargeModalLabel">{{ 'site.cp.balance.send' | language }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                    <form method="post">
+                      <input type="hidden" name="action" value="sendBalance">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                          <div class="form-group">
+                            <label for="input-user_id"
+                                   class="form-control-label">{{ 'site.cp.balance.send.user_id' | language }}</label>
+                            <input name="user_id" required type="number" class="form-control form-control-prepend"
+                                   id="input-user_id"
+                                   placeholder="{{ 'site.cp.balance.send.user_id.placeholder' | language }}">
+                          </div>
+                        </div>
+
+                        <div class="col-lg-8 offset-lg-2">
+                          <div class="form-group">
+                            <label for="input-amount"
+                                   class="form-control-label">{{ 'site.cp.balance.send.amount.euro' | language }}</label>
+                            <input name="amount" value="1" min="0.01" max="100" required type="text"
+                                   class="form-control form-control-prepend" id="input-amount"
+                                   placeholder="{{ 'site.cp.balance.send.amount.euro.placeholder' | language }}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row justify-content-center">
+                        <h4 class="text-center">
+                          <button type="submit"
+                                  class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.send.btn' | language }}</button>
+                        </h4>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+
+      <div class="col-lg-6">
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.topUp' | language }}</h5>
+          </div>
+          <div class="card-body text-center">
+
+            <form method="post">
+              <input type="hidden" name="action" value="topUp">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
+              <div class="row">
+                <div class="form-group col-lg-6 offset-lg-3">
+                  <label for="input-amount"
+                         class="form-control-label">{{ 'site.cp.balance.topUp.amount' | language }}</label>
+                  <input name="amount" value="1" min="1" required type="text" class="form-control form-control-prepend"
+                         id="input-amount"
+                         placeholder="{{ 'site.cp.balance.topUp.amount.placeholder' | language }}">
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <h4 class="text-center">
+                  <button type="submit"
+                          class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.topUp.btn' | language }}</button>
+                </h4>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.giftcode' | language }}</h5>
+          </div>
+          <div class="card-body text-center">
+
+            <form method="post">
+              <input type="hidden" name="action" value="useGiftcode">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
+              <div class="row">
+                <div class="form-group col-lg-8 offset-lg-2">
+                  <label for="input-giftcode"
+                         class="form-control-label">{{ 'site.cp.balance.giftcode.code' | language }}</label>
+                  <input name="giftcode" required type="text" class="form-control form-control-prepend input-mask"
+                         data-mask="00000-00000-00000-00000-00000" id="input-giftcode"
+                         placeholder="12345-67890-12345-67890-12345">
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <h4 class="text-center">
+                  <button type="submit"
+                          class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.giftcode.btn' | language }}</button>
+                </h4>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

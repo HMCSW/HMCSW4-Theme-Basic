@@ -1,0 +1,97 @@
+{
+  "name": "basic",
+  "description": "Basic HMCSW4 theme",
+  "version": "1.0.0",
+
+  "keyWords" : "HMCSW4",
+  "theme-color": "#0174DF",
+  "fontAwesome": "https://cdn.hosmatic.com/fontAwesome/6.1",
+
+  "defaultNightModeColor": "blue",
+  "nightModeColors": {
+    "blue": {
+      "message": "site.cp.settings.nightMode.form.color.blue",
+      "device": "device.css",
+      "enabled_file": "dark.css",
+      "disabled_file": "light.css"
+    },
+    "black": {
+      "message": "site.cp.settings.nightMode.form.color.black",
+      "device": "device_dark.css",
+      "enabled_file": "dark_black.css",
+      "disabled_file": "light.css"
+    }
+  },
+
+  "icons": {
+    "default": {
+      "user": "https://cdn.hosmatic.com/placeholder/user.png",
+      "team": "https://cdn.hosmatic.com/placeholder/team.png",
+      "news": "https://cdn.hosmatic.com/placeholder/team.png",
+      "default": "https://cdn.hosmatic.com/placeholder/user.png"
+    },
+    "icon": {
+      "500x500": "https://cdn.hosmatic.com/branding/The_Hosmatic_H_q.png"
+    },
+    "banner": {
+      "dark": {
+        "svg": "https://cdn.hosmatic.com/branding/logo_white_h_blue_lightblue.svg",
+        "png": "https://cdn.hosmatic.com/branding/logo_white_h_blue_lightblue.png"
+      },
+      "light": {
+        "svg": "https://cdn.hosmatic.com/branding/logo_black_h_blue_lightblue.svg",
+        "png": "https://cdn.hosmatic.com/branding/logo_black_h_blue_lightblue.png"
+      }
+    },
+    "favicon": {
+      "maskable": {
+        "48x48": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-48x.png",
+        "72x72": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-72x.png",
+        "96x96": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-96x.png",
+        "192x192": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-192x.png",
+        "384x384": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-384x.png",
+        "512x512": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-512x.png",
+        "909x909": "https://cdn.hosmatic.com/favicon/maskable/maskable_icon-909x.png"
+      },
+      "packagePath": "https://cdn.hosmatic.com/favicon/"
+    }
+  },
+  "language": {
+    "default": "en_US",
+    "supported": {
+      "de_DE": "Deutsch",
+      "en_US": "English",
+      "es_ES": "Español",
+      "ru_RU": "Русский",
+      "zh_Hans_CN": "简体中文"
+    }
+  },
+  "social":{
+    "discord":{
+      "invite":"https://discord.gg/w8Syn43",
+      "guild_id":"683279660406013969"
+    },
+    "twitter":"https://twitter.com/hosmatic",
+    "github":"https://github.com/hosmatic/",
+    "facebook":"https://www.facebook.com/hosmatic",
+    "tiktok":"https://www.tiktok.com/@hosmatic.com",
+    "instagram":"https://www.instagram.com/hosmaticcom/"
+  },
+  "alert":{
+    "cp":{
+      "info":{
+        "enabled": true,
+        "color":"red",
+        "message":"Alles gut."
+      }
+    },
+    "home":{
+      "info":{
+        "enabled": true,
+        "color":"green",
+        "message":"Rabatte auf viele Produkte",
+        "pill":"NUR AM 29.11"
+      }
+    }
+  }
+}

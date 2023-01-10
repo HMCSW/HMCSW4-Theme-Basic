@@ -1,0 +1,82 @@
+{% include '/general/header.twig' %}
+{% include 'cp/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-12">
+        <div class="card card-fluid">
+          <div class="card-header">
+            <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.tickets' | language }}</h5>
+          </div>
+          <div class="card-body">
+            {% if tickets|length == 0 %}
+              <h6 class="h6 text-center">{{ 'site.cp.tickets.nothing' | language }}</h6>
+            {% endif %}
+            <h5 class="text-center">
+              <a href="{{ url }}/cp/ticket/create"
+                 class="btn btn-primary btn-icon-label text-center"><span class="btn-inner--icon"><i
+                    class="fa-regular fa-plus"></i></span>
+                <span class="btn-inner--text">{{ 'site.cp.tickets.btn.create' | language }}</span>
+              </a>
+            </h5>
+            <div class="table-responsive">
+              <table class="table table-cards text-center">
+                <thead>
+                <tr>
+                  <th scope="col">{{ 'site.cp.tickets.table.id' | language }}</th>
+                  <th scope="col">{{ 'site.cp.tickets.table.title' | language }}</th>
+                  <th scope="col">{{ 'site.cp.tickets.table.lastupdate' | language }}</th>
+                  <th scope="col">{{ 'site.cp.tickets.table.state' | language }}</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody class="list">
+                {% for ticket in tickets %}
+                  <tr>
+                    <td class="order">
+                      <span class="h6 text-sm font-weight-bold mb-0">{{ ticket['ticket_id'] }}</span>
+                      <span
+                        class="d-block text-sm text-muted">{{ ticket['at']['created']|date("d.m.Y H:i") }}</span>
+                    </td>
+                    <td>
+                      <span class="h6 text-sm font-weight-bold mb-0">{{ ticket['title'] }}</span>
+                    </td>
+                    <td>
+                        <span
+                          class="h6 text-sm font-weight-bold mb-0">{{ ticket['at']['lastupdate']|date("d.m.Y H:i") }}</span>
+                    </td>
+                    <td>
+                      {% if ticket['state'] == 1 %}
+                        <span style="color:#76ff03">{{ 'general.tickets.state.1' | language }}</span>
+                      {% elseif ticket['state'] == 2 %}
+                        <span style="color:#ff9800">{{ 'general.tickets.state.2' | language }}</span>
+                      {% elseif ticket['state'] == 3 %}
+                        <span style="color:#ff9800">{{ 'general.tickets.state.3' | language }}</span>
+                      {% elseif ticket['state'] == 4 %}
+                        <span class="text-muted">{{ 'general.tickets.state.4' | language }}</span>
+                      {% else %}
+                        <span style="color:#FF0000">{{ 'general.tickets.state.error' | language }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="actions ml-3">
+                        <a href="{{ url }}/cp/ticket/{{ ticket['ticket_id'] }}"
+                           class="action-item mr-2" data-toggle="tooltip"
+                           title="{{ 'site.cp.tickets.show' | language }}"
+                           data-original-title="{{ 'site.cp.tickets.show' | language }}">
+                          <i class="fas fa-eye"></i>
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

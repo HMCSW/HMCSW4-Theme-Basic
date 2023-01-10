@@ -1,0 +1,19 @@
+{% include '/general/header_noNav.twig' %}
+<section class="vh-100 d-flex align-items-center bg-gradient-primary">
+  <div class="container py-md-8 position-relative zindex-100">
+    <div class="col px-0">
+      <div class="row justify-content-center">
+        <div class="col-lg-7 text-center">
+          <h6
+            class="my-4 text-white font-weight-light text-uppercase ls-2">{{ 'site.maintenance.title' | language }}</h6>
+          <img alt="{{ config['name'] }}"
+               src="{{ theme['icons']['banner']['dark']['svg'] }}" class="w-75 mb-5">
+          <p class="px-md-5 text-white mb-5">
+            {{ reason }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

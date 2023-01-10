@@ -1,0 +1,113 @@
+{% include '/general/header.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="actions-toolbar py-2 mb-4 text-center">
+            <h4 class="mb-1">{{ 'site.cart' | language }}</h4>
+            <h5 class="mb-1">{{ 'site.cart.start.title' | language }}</h5>
+            <p class="text-sm text-muted mb-0">{{ 'site.cart.start.info' | language }}</p>
+          </div>
+        </div>
+      </div>
+      {% include 'cart/nav.twig' %}
+      <br><br>
+      <!-- Shopping cart table -->
+      <div class="row justify-content-center">
+        <div class="table-responsive">
+          <table class="table table-cards align-items-center">
+            <thead>
+            <tr>
+              <th scope="col" class="sort" data-sort="product">{{ 'site.cart.start.tab.name' | language }}</th>
+              <th scope="col" class="sort" data-sort="id">{{ 'site.cart.start.tab.id' | language }}</th>
+              <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.credits' | language }}</th>
+              <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody class="list">
+            {% for item in cart['items'] %}
+              <tr>
+                {% if item['info']['available'] == false %}
+                  <th scope="row">
+                    <span class="h6 text-sm font-weight-bold mb-0">{{ 'site.cart.item.notAvailable' | language }}</span>
+                    <span class="d-block text-sm text-muted">{{ item['name'] }}</span>
+                  </th>
+
+                {% else %}
+                  <th scope="row">
+                    <span class="h6 text-sm font-weight-bold mb-0">{{ item['name'] }}</span>
+
+                    {% if item['description'] != false %}
+                      <span class="d-block text-sm text-muted">{{ item['description'] }}</span>
+                    {% endif %}
+                  </th>
+                {% endif %}
+
+                <td>{{ item['info']['product_id'] }}</td>
+                <td class="total">
+                  <span class="h6 text-sm font-weight-bold mb-0">
+                    {{ (item['amount']['full']-item['amount']['setup']) | creditsToEuro }}{{ "symbol"|currency }}
+                    {% if item['info']['period'] == "monthly" %}
+                      {{ 'general.time.monthly' | language }}
+                    {% elseif item['info']['period'] == "yearly" %}
+                      {{ 'general.time.yearly' | language }}
+                    {% elseif item['info']['period'] == "oneTime" %}
+                      {{ 'general.time.oneTime' | language }}
+                    {% endif %}
+                  </span>
+
+                  {% if item['amount']['setup'] != 0 %}
+                    <span class="d-block text-sm text-muted">
+                      {{ 'site.cart.item.setupFee' | language }}: {{ item['amount']['setup']|creditsToEuro }}
+                    </span>
+                  {% endif %}
+                </td>
+                <td class="text-right">
+                  <div class="actions ml-3">
+                    <form method="post">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <input type="hidden" name="action" value="removeItem">
+                      <input type="hidden" name="item_id" value="{{ item['item_id'] }}">
+                      <button type="submit" class="action-item text-danger mr-2" data-toggle="tooltip" title=""
+                              data-original-title="{{ 'site.cart.start.btn.removeItem' | language }}">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              <tr class="table-divider"></tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card mt-5 bg-secondary">
+        <div class="card-body">
+          <div class="row justify-content-between align-items-center">
+            <div class="col-md-6 order-md-2 mb-4 mb-md-0">
+              <div class="d-flex align-items-center justify-content-md-end">
+                <span class="h6 d-inline-block mr-3 mb-0">{{ 'site.cart.start.total' | language }}</span>
+                <span class="h4 mb-0">
+                                        {% autoescape %}
+                                          {% set credits = "@credits @symbol"|replace({'@credits': cart['amount']['full'] | creditsToEuro, '@symbol': 'symbol'|currency}) %}
+                                          {{ 'site.cart.start.credits'|language|replace({'@credits': credits }) }}
+                                        {% endautoescape %}
+                                    </span>
+              </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+              <a type="button" href="{{ url }}/cart/state/giftcode" class="btn btn-animated btn-primary btn-animated-y">
+                <span class="btn-inner--visible">{{ 'site.cart.start.btn.next' | language }}</span>
+                <span class="btn-inner--hidden"><i class="fas fa-shopping-cart"></i></span>
+              </a>
+              <a href="{{ url }}/p"
+                 class="btn btn-link text-sm font-weight-bold">{{ 'site.cart.start.btn.back' | language }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

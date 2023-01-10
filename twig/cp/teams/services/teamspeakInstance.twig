@@ -1,0 +1,76 @@
+{% include '/general/header.twig' %}
+{% include 'cp/teams/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+
+        <!-- ACTION MESSAGE -->
+        {% if action != false %}
+          {% if action['success'] == false %}
+            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+          {% else %}
+            {% set alert_color = "success" %} {% set alert_icon = "check" %}
+          {% endif %}
+          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+            <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                  class="fas fa-{{ alert_icon }}"></i></span></div>
+            <div class="alert-content">
+              {{ action['message'] | language }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="row">
+          <!-- nav with 4 cards -->
+          {% include 'cp/teams/services/include/info_nav.twig' %}
+          <div class="col-sm-12 col-md-12">
+            <div class="card">
+              <div class="card-body text-center">
+                <br>
+                {% include 'cp/teams/services/include/lock.twig' %}
+
+                <h5 class="text-center">{{ service['service_id'] }}</h5>
+                <h6 class="text-center">{{ service['name'] }}</h6>
+                <h6 class="text-center">{{ service['service_name'] }}</h6>
+                <br>
+                {% if service['state'] == 1 or service['state'] == 6 %}
+                  {% if teamspeak['response']['external']['status'] == "up" %}
+                    <h5><span style="color:#40FF00">{{ 'site.cp.service.teamspeak.state.started' | language }}</span></h5>
+                  {% else %}
+                    <h5><span style="color:#ff0000">{{ 'site.cp.service.proxmox.state.stopped' | language }}</span></h5>
+                  {% endif %}
+                {% else %}
+                  <h5><span style="color:#ff0000">{{ 'site.cp.service.proxmox.state.stopped' | language }}</span></h5>
+                {% endif %}
+                <br>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-12 ">
+            <div class="card">
+              <div class="card-body">
+
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+
+                  {% include 'cp/teams/services/include/tabs_nav.twig' %}
+
+                </ul>
+
+
+                <div class="tab-content" id="myTabContent">
+
+                  {% include 'cp/teams/services/include/tabs.twig' %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

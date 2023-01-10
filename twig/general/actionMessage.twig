@@ -1,0 +1,18 @@
+{% if action != false %}
+  {% if action['success'] == false %}
+    {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+  {% else %}
+    {% set alert_color = "success" %} {% set alert_icon = "check" %}
+  {% endif %}
+
+  <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+    <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-{{ alert_icon }}"></i>
+                                        </span>
+    </div>
+    <div class="alert-content">
+      {{ action['message'] | language }}
+    </div>
+  </div>
+{% endif %}

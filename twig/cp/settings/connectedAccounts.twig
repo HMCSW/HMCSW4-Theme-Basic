@@ -1,0 +1,87 @@
+{% include '/general/header.twig' %}
+{% include 'cp/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-9 order-lg-2">
+            <!-- ACTION MESSAGE -->
+
+            {% include '/general/actionMessage.twig' %}
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="actions-toolbar py-2 mb-4">
+                  <h5 class="mb-1">{{ 'site.cp.settings.accounts' | language }}</h5>
+                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.accounts.description' | language }}</p>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-cards align-items-center">
+                    <thead>
+                    <tr>
+                      <th scope="col"></th>
+                      <th>{{ 'site.cp.settings.accounts.table.name' | language }}</th>
+                      <th>{{ 'site.cp.settings.accounts.table.since' | language }}</th>
+                      <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                      <th scope="row">
+                        {% if account['shortName'] == "TheSystems" %}
+                        <i class="fas fa-cog mr-2 fa-2x "></i>
+                        {% elseif account['shortName'] == "Discord" %}
+                          <i class="fab fa-discord mr-2 fa-2x "></i>
+                        {% endif %}
+                      </th>
+                      <td>{{ account['shortName'] }}</td>
+                      <td>{{ account['since'] | date("d.m.Y H:i") }}</td>
+                      <td class="text-right">
+                        <form method="POST">
+                          <input type="hidden" name="action" value="removeAccount">
+                          <input type="hidden" name="csrf" value="{{ csrf }}">
+                          <input type="hidden" name="accountId" value="{{ account['account_id'] }}">
+                          <button type="submit" class="action-item"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="table-divider"></tr>
+                    <tr></tr>
+                    {% for account in avAccounts %}
+                      <tr>
+                        <th scope="row">
+                          {% if account['shortName'] == "TheSystems" %}
+                            <i class="fas fa-cog mr-2 fa-2x "></i>
+                          {% elseif account['shortName'] == "Discord" %}
+                            <i class="fab fa-discord mr-2 fa-2x "></i>
+                          {% endif %}
+                        </th>
+                        <td>{{ account['shortName'] }}</td>
+                        <td></td>
+                        <td class="text-right">
+                          <form method="POST">
+                            <input type="hidden" name="action" value="connectAccount">
+                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                            <input type="hidden" name="account" value="{{ account['identifier'] }}">
+                            <button type="submit" class="action-item"><i class="fas fa-plus"></i></button>
+                          </form>
+                        </td>
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% include 'cp/settings/nav.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

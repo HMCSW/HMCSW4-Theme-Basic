@@ -1,0 +1,587 @@
+{% include '/general/header.twig' %}
+{% include 'cp/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-9 order-lg-2">
+            {% if action != false %}
+              {% if action['success'] == false %}
+                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+              {% else %}
+                {% set alert_color = "success" %} {% set alert_icon = "check" %}
+              {% endif %}
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+                    <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-{{ alert_icon }}"></i>
+                                        </span>
+                    </div>
+                    <div class="alert-content">
+                      {{ action['message'] | language }}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            {% if userData['email_activation'] != "true" %}
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="alert alert-group alert-warning alert-icon" role="alert">
+                    <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-regular fa-triangle-exclamation"></i>
+                                </span>
+                    </div>
+                    <div class="alert-content">
+                      {{ 'site.cp.settings.emailNotVerified' | language }}
+                    </div>
+                    <div class="alert-action">
+                      <form method="post">
+                        <input type="hidden" name="action" value="sendVerifyEmail">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <button type="submit" class="btn btn-neutral"
+                                aria-label="Action Label">{{ 'site.cp.settings.emailNotVerified.btn' | language }}</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            <div class="row">
+
+              <div class="col-lg-12">
+                <div class="actions-toolbar py-2 mb-4">
+                  <h5 class="mb-1">{{ 'site.cp.settings.address' | language }}</h5>
+                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.address.description' | language }}</p>
+                </div>
+
+                <div id="accordion-1" class="accordion accordion-stacked">
+
+                  {% for id,address in userData['address'] %}
+                    <div class="card">
+                      <div class="card-header py-4" id="heading-{{ id }}" data-toggle="collapse" role="button"
+                           data-target="#collapse-{{ id }}" aria-expanded="false" aria-controls="collapse-{{ id }}">
+                        <h6>{{ address['firstname'] }} {{ address['lastname'] }}</h6>
+                      </div>
+                      <div id="collapse-{{ id }}" class="collapse" aria-labelledby="heading-{{ id }}"
+                           data-parent="#accordion-1">
+                        <div class="card-body">
+
+                          {% if testIfIdentCheckAvailable == true %}
+                            {% if address['identityChecked'] == "true" %}
+                              <div class="col-md-9 alert alert-group alert-success alert-icon" role="alert">
+                                <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                      class="fas fa-check"></i></span></div>
+                                <div class="alert-content">
+                                  {{ 'site.cp.settings.address.identityCheck.done' | language }}
+                                </div>
+                              </div>
+                            {% elseif address['identityChecked'] == "inProgress" %}
+                              <div class="col-md-9 alert alert-group alert-warning alert-icon" role="alert">
+                                <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                      class="fas fa-info"></i></span></div>
+                                <div class="alert-content">
+                                  {{ 'site.cp.settings.address.identityCheck.progress' | language }}
+                                </div>
+                                <div class="alert-action">
+                                  <button type="button" onclick="startAddressVerification(this.id)" id="{{ id }}"
+                                          class="btn btn-neutral"
+                                          aria-label="Action Label">{{ 'site.cp.settings.address.identityCheck.progress.btn' | language }}</button>
+                                </div>
+                              </div>
+                            {% elseif address['identityChecked'] == "failed" %}
+                              <div class="col-md-9 alert alert-group alert-danger alert-icon" role="alert">
+                                <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                      class="fas fa-info"></i></span></div>
+                                <div class="alert-content">
+                                  {{ 'site.cp.settings.address.identityCheck.failed' | language }}
+                                </div>
+                                <div class="alert-action">
+                                  <button type="button" onclick="startAddressVerification(this.id)" id="{{ id }}"
+                                          class="btn btn-neutral"
+                                          aria-label="Action Label">{{ 'site.cp.settings.address.identityCheck.failed.btn' | language }}</button>
+                                </div>
+                              </div>
+                            {% else %}
+                              {% if userData['age'] >= 16 %}
+
+
+                                <div class="col-md-9 alert alert-group alert-info alert-icon" role="alert">
+                                  <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                        class="fas fa-info"></i></span>
+                                  </div>
+                                  <div class="alert-content">
+                                    {{ 'site.cp.settings.address.identityCheck.available' | language }}
+                                  </div>
+                                  <div class="alert-action">
+                                    <button type="button" data-toggle="modal" data-target="#startIdentityCheck-{{ id }}"
+                                            class="btn btn-neutral"
+                                            aria-label="Action Label">{{ 'site.cp.settings.address.identityCheck.available.btn' | language }}</button>
+                                  </div>
+                                </div>
+
+                                <div class="modal modal-success fade" id="startIdentityCheck-{{ id }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="startIdentityCheck" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title h6"
+                                              id="modal_title_6">{{ 'site.cp.settings.address.identityCheck.available.modal' | language }}</h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <div class="py-3 text-center">
+                                            <i class="fas fa-id-card fa-4x"></i>
+                                            <h5
+                                              class="heading h4 mt-4">{{ 'site.cp.settings.address.identityCheck.available.modal.title' | language }}</h5>
+                                            <p>{{ 'site.cp.settings.address.identityCheck.available.modal.text' | language }}</p>
+                                          </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" onclick="startAddressVerification(this.id)" id="{{ id }}"
+                                                  class="btn btn-sm btn-white">{{ 'site.cp.settings.address.identityCheck.available.modal.start' | language }}</button>
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                              {% else %}
+                                <div class="col-md-9 alert alert-group alert-info alert-icon" role="alert">
+                                  <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                        class="fas fa-times"></i></span>
+                                  </div>
+                                  <div class="alert-content">
+                                    {{ 'site.cp.settings.address.identityCheck.age' | language }}
+                                  </div>
+                                </div>
+                              {% endif %}
+
+                            {% endif %}
+                          {% endif %}
+
+                          <form method="post">
+                            <input type="hidden" name="action" value="updateAddress">
+                            <input type="hidden" name="address_id" value="{{ id }}">
+                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                            <div class="row">
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="input-sex"
+                                         class="form-control-label">{{ 'general.address.sex' | language }}</label>
+                                  <select name="sex" id="input-sex" class="custom-select" required>
+                                    <option {% if address['sex'] == "m" %}selected{% endif %}
+                                            value="m">{{ 'general.address.sex.m' | language }}</option>
+                                    <option {% if address['sex'] == "w" %}selected{% endif %}
+                                            value="w">{{ 'general.address.sex.w' | language }}</option>
+                                    <option {% if address['sex'] == "d" %}selected{% endif %}
+                                            value="d">{{ 'general.address.sex.d' | language }}</option>
+                                    <option {% if address['sex'] == "0" %}selected{% endif %}
+                                            value="0">{{ 'general.address.sex.0' | language }}</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="input-firstname"
+                                         class="form-control-label">{{ 'general.address.firstname' | language }}</label>
+                                  <input required value="{{ address['firstname'] }}"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         id="input-firstname" name="firstname" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.firstname.placeholder' | language }}">
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="input-lastname"
+                                         class="form-control-label">{{ 'general.address.lastname' | language }}</label>
+                                  <input required value="{{ address['lastname'] }}"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         id="input-lastname" name="lastname" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.lastname.placeholder' | language }}">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-5">
+                                <div class="form-group">
+                                  <label for="input-company"
+                                         class="form-control-label">{{ 'general.address.company' | language }}</label>
+                                  <input value="{{ address['company'] }}" id="input-company"
+                                         name="company" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.company.placeholder' | language }}">
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="input-timezone"
+                                         class="form-control-label">{{ 'general.address.timezone' | language }}</label>
+                                  <select name="timezone" id="input-timezone" class="custom-select" required>
+                                    {% for timezone in timezones %}
+                                      <option
+                                        {% if address['timezone'] == timezone %} selected {% endif %}
+                                        value="{{ timezone }}">{{ timezone }}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              </div>
+
+                            </div>
+
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="input-street"
+                                         class="form-control-label">{{ 'general.address.street' | language }}</label>
+                                  <input required value="{{ address['street'] }}" id="input-street"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         name="street" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.street' | language }}">
+                                </div>
+                              </div>
+
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="input-street_nr"
+                                         class="form-control-label">{{ 'general.address.street_nr' | language }}</label>
+                                  <input required value="{{ address['street_nr'] }}"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         id="input-street_nr" name="street_nr" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.street_nr.placeholder' | language }}">
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="input-postcode"
+                                         class="form-control-label">{{ 'general.address.postcode' | language }}</label>
+                                  <input required value="{{ address['postcode'] }}"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         id="input-postcode" name="postcode" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.postcode.placeholder' | language }}">
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="input-city"
+                                         class="form-control-label">{{ 'general.address.city' | language }}</label>
+                                  <input required value="{{ address['city'] }}" id="input-city"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         name="city" class="form-control" type="text"
+                                         placeholder="{{ 'general.address.city.placeholder' | language }}">
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <div class="form-group">
+                                  <label for="input-state"
+                                         class="form-control-label">{{ 'general.address.state' | language }}</label>
+                                  <input required value="{{ address['state'] }}" name="state" type="text"
+                                         {% if address['identityChecked'] == "true" %}disabled{% endif %}
+                                         class="form-control form-control-prepend" id="input-state"
+                                         placeholder="{{ 'general.address.state.placeholder' | language }}">
+                                </div>
+                              </div>
+                              <div class="col-md-5">
+                                <div class="form-group">
+                                  <label for="input-country"
+                                         class="form-control-label">{{ 'general.address.country' | language }}</label>
+                                  <select name="country" id="input-country" class="custom-select" required
+                                          {% if address['identityChecked'] == "true" %}disabled{% endif %}>
+                                    {% for country in countrys %}
+                                      <option
+                                        {% if address['country'] == country['code'] %} selected {% endif %}
+                                        value="{{ country['code'] }}">
+                                        {% if country[language['current']] is defined %}
+                                          {{ country[language['current']] }}
+                                        {% else %}
+                                          {{ country["en_US"] }}
+                                        {% endif %}
+                                      </option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="mt-4">
+                              <button type="submit"
+                                      class="btn btn-sm btn-primary">{{ 'general.modal.saveBtn' | language }}
+                              </button>
+                            </div>
+                          </form>
+                          <div class="mt-4">
+
+                            <form method="post">
+                              <input type="hidden" name="address_id" value="{{ id }}">
+                              <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                              {% if userData['defaultAddress']['address_id'] != address['address_id'] %}
+                                <button type="submit" class="btn btn-sm btn-danger" name="action" value="deleteAddress">
+                                  {{ 'general.modal.deleteBtn' | language }}
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-primary" name="action"
+                                        value="setDefaultAddress">
+                                  {{ 'site.cp.settings.address.setDefaultAddress' | language }}
+                                </button>
+                              {% endif %}
+                            </form>
+
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                  <div class="card">
+                    <div class="card-header py-4" id="heading-create" data-toggle="collapse" role="button"
+                         data-target="#collapse-create" aria-expanded="false" aria-controls="collapse-create">
+                      <h6 class="mb-0">{{ 'site.cp.settings.address.createNew' | language }}</h6>
+                    </div>
+                    <div id="collapse-create" class="collapse" aria-labelledby="heading-create"
+                         data-parent="#accordion-1">
+                      <div class="card-body">
+                        <form method="post">
+                          <input type="hidden" name="action" value="createAddress">
+                          <input type="hidden" name="csrf" value="{{ csrf }}">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="input-sex"
+                                       class="form-control-label">{{ 'general.address.sex' | language }}</label>
+                                <select name="sex" id="input-sex" class="custom-select" required>
+                                  <option value="m">{{ 'general.address.sex.m' | language }}</option>
+                                  <option value="w">{{ 'general.address.sex.w' | language }}</option>
+                                  <option value="d">{{ 'general.address.sex.d' | language }}</option>
+                                  <option value="0">{{ 'general.address.sex.0' | language }}</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="input-firstname"
+                                       class="form-control-label">{{ 'general.address.firstname' | language }}</label>
+                                <input required id="input-firstname" name="firstname" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.firstname.placeholder' | language }}">
+                              </div>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="input-lastname"
+                                       class="form-control-label">{{ 'general.address.lastname' | language }}</label>
+                                <input required id="input-lastname" name="lastname" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.lastname.placeholder' | language }}">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-5">
+                              <div class="form-group">
+                                <label for="input-company"
+                                       class="form-control-label">{{ 'general.address.company' | language }}</label>
+                                <input id="input-company"
+                                       name="company" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.company.placeholder' | language }}">
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="input-timezone"
+                                       class="form-control-label">{{ 'general.address.timezone' | language }}</label>
+                                <select name="timezone" id="input-timezone" class="custom-select" required>
+                                  {% for timezone in timezones %}
+                                    <option value="{{ timezone }}">{{ timezone }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="input-street"
+                                       class="form-control-label">{{ 'general.address.street' | language }}</label>
+                                <input required id="input-street" name="street" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.street' | language }}">
+                              </div>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="input-street_nr"
+                                       class="form-control-label">{{ 'general.address.street_nr' | language }}</label>
+                                <input required id="input-street_nr" name="street_nr" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.street_nr.placeholder' | language }}">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row">
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="input-postcode"
+                                       class="form-control-label">{{ 'general.address.postcode' | language }}</label>
+                                <input required id="input-postcode" name="postcode" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.postcode.placeholder' | language }}">
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="input-city"
+                                       class="form-control-label">{{ 'general.address.city' | language }}</label>
+                                <input required id="input-city" name="city" class="form-control" type="text"
+                                       placeholder="{{ 'general.address.city.placeholder' | language }}">
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label for="input-state"
+                                       class="form-control-label">{{ 'general.address.state' | language }}</label>
+                                <input required name="state" type="text" class="form-control form-control-prepend"
+                                       id="input-state"
+                                       placeholder="{{ 'general.address.state.placeholder' | language }}">
+                              </div>
+                            </div>
+                            <div class="col-md-5">
+                              <div class="form-group">
+                                <label for="input-country"
+                                       class="form-control-label">{{ 'general.address.country' | language }}</label>
+                                <select name="country" id="input-country" class="custom-select" required>
+                                  {% for country in countrys %}
+                                    <option value="{{ country['code'] }}">{{ country[language['current']] }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="mt-4">
+                            <button type="submit"
+                                    class="btn btn-sm btn-primary">{{ 'general.modal.createBtn' | language }}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {% if config['service']['twilio']['enabled'] %}
+              <hr/>
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="actions-toolbar py-2 mb-4">
+                    <h5 class="mb-1">{{ 'site.cp.settings.userInfo.phone' | language }}</h5>
+                    <p
+                      class="text-sm text-muted mb-0">{{ 'site.cp.settings.userInfo.phone.description' | language }}</p>
+                  </div>
+
+                  {% if userData['phoneNumber']['number'] == "false" %}
+                    <form method="post">
+                      <input type="hidden" name="action" value="updatePhone">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="input-phoneNumber"
+                                   class="form-control-label">{{ 'general.userInfo.phone' | language }}</label>
+                            <input required id="input-phoneNumber"
+                                   name="phoneNumber" data-mask="+99 9999 9999999" class="form-control" type="tel"
+                                   maxlength="22"
+                                   placeholder="{{ 'general.userInfo.phone.placeholder' | language }}">
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mt-4">
+                        <button type="submit"
+                                class="btn btn-sm btn-primary">{{ 'site.cp.settings.userInfo.set.form.btn' | language }}
+                        </button>
+                      </div>
+                    </form>
+
+                  {% else %}
+                    {% if userData['phoneNumber']['status'] != "true" %}
+                      <div class="actions-toolbar py-2 mb-4">
+                        <h6 class="text-muted mb-0">{{ userData['phoneNumber']['number'] | censor }}</h6>
+                      </div>
+                      <form method="post">
+                        <input type="hidden" name="action" value="verifyPhone">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <label for="input-phoneNumber-Verify"
+                                     class="form-control-label">{{ 'site.cp.settings.userInfo.phone.verify.key' | language }}</label>
+                              <input required id="input-phoneNumber-Verify"
+                                     name="code" class="form-control" type="text" data-mask="AAAAAA"
+                                     placeholder="ABC123">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mt-4">
+                          <button type="submit"
+                                  class="btn btn-sm btn-primary">{{ 'site.cp.settings.userInfo.verify.form.btn' | language }}
+                          </button>
+                        </div>
+                      </form>
+
+                    {% else %}
+                      <div class="actions-toolbar py-2 mb-4">
+                        <h6 class="text-muted mb-0">{{ userData['phoneNumber']['number'] | censor }} <i
+                            class="fa fa-check text-success"></i></h6>
+                      </div>
+                    {% endif %}
+
+                    <form method="post">
+                      <input type="hidden" name="action" value="removePhone">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          {{ userInfo['phoneNumber']['number'] }}
+                        </div>
+                      </div>
+                      <div class="mt-4">
+                        <button type="submit"
+                                class="btn btn-sm btn-danger">{{ 'site.cp.settings.userInfo.remove.form.btn' | language }}
+                        </button>
+                      </div>
+                    </form>
+
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+            <br><br>
+          </div>
+          {% include 'cp/settings/nav.twig' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

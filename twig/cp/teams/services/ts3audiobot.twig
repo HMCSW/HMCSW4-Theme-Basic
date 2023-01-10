@@ -1,0 +1,719 @@
+{% include '/general/header.twig' %}
+{% include 'cp/teams/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+
+        <!-- ACTION MESSAGE -->
+        {% if action != false %}
+          {% if action['success'] == false %}
+            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+          {% else %}
+            {% set alert_color = "success" %} {% set alert_icon = "check" %}
+          {% endif %}
+          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+            <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                  class="fas fa-{{ alert_icon }}"></i></span></div>
+            <div class="alert-content">
+              {{ action['message'] | language }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="row">
+
+          <!-- nav with 4 cards -->
+          {% include 'cp/teams/services/include/info_nav.twig' %}
+
+          <div class="col-sm-12 col-md-6 py-4">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                {% if "team.service.lock"|checkTeamPermission %}
+                  <br>
+                  {% if service['locked'] %}
+                    <h6 class="text-center"><i class="fas fa-lock fa-2x"></i></h6>
+                  {% else %}
+                    <h6 class="text-center"><i class="fas fa-lock-open fa-2x"></i></h6>
+                  {% endif %}
+                  <h6 class="text-center">{{ 'site.cp.service.locked' | language }}</h6>
+                  <h6 class="text-center">
+                    <form method="post" class="text-center">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <input type="hidden" name="action" value="lockService">
+                      <div class="custom-control custom-switch">
+                        <input type="checkbox" name="lock" class="custom-control-input text-center" id="lockSwitch"
+                               onChange="this.form.submit()" {% if service['locked'] %} checked {% endif %}>
+                        <label class="custom-control-label text-center" for="lockSwitch"></label>
+                      </div>
+                    </form>
+                  </h6>
+                  <br>
+                {% endif %}
+
+                <h5 class="text-center">{{ service['service_id'] }}</h5>
+                <h6 class="text-center">{{ service['name'] }}</h6>
+                <h5 class="text-center">{{ service['external']['name'] }}</h5>
+                <h6 class="text-center">{{ service['service_name'] }}</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-6 py-4">
+            <div class="card h-100">
+              <div class="card-body text-center align-items-center justify-content-center">
+
+                {% if bot['external']['info']['song'] == null %}
+                  <h5>{{ 'site.cp.service.ts3audiobot.music.none' | language }}</h5>
+                {% else %}
+                  {% if bot['external']['info']['song']['AudioType'] == "youtube" %}
+                    <h5>{{ bot['external']['info']['song']['Title'] }}</h5>
+                    <h6>{{ bot['external']['info']['song']['Link'] }}</h6>
+                  {% elseif bot['external']['info']['song']['AudioType'] == "media" %}
+                    <h5>{{ bot['external']['info']['song']['Title'] }}</h5>
+                    <h6>{{ bot['external']['info']['song']['Link'] }}</h6>
+                  {% endif %}
+                {% endif %}
+
+                <form method="post">
+                  <input type="hidden" name="csrf" value="{{ csrf }}">
+                  <input type="hidden" name="action" value="setVolume">
+                  <div class="row justify-content-center">
+                    <div class="col-md-8">
+                      <div class="form-group">
+                        <label
+                          for="volume">{{ 'site.cp.service.ts3audiobot.volume' | language }}</label>
+                        <input onchange="this.form.submit()" name="volume" min="0" max="100"
+                               value="{{ bot['external']['info']['volume'] }}" type="range" class="custom-range"
+                               id="volume">
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#playMusic">{{ 'site.cp.service.ts3audiobot.playMusic' | language }}</button>
+
+                <div class="modal fade" id="playMusic" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title"
+                            id="exampleModalLabel">{{ 'site.cp.service.ts3audiobot.playMusic.modal' | language }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                        </button>
+                      </div>
+
+                      <div id="playMusicLoader1" style="display: none;">
+                        <div class="modal-body">
+                          <div class="text-center">
+                            <div class="spinner-border" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <form method="post" id="playMusicLoader2" onsubmit="playMusic();" style="display: block">
+                        <div class="modal-body">
+                          <input type="hidden" name="csrf" value="{{ csrf }}">
+                          <input type="hidden" name="action" value="playMusic">
+                          <div class="row justify-content-center">
+                            <div class="col-md-8">
+                              <div class="form-group">
+                                <label
+                                  for="url">{{ 'site.cp.service.ts3audiobot.playMusic.modal.url' | language }}</label>
+                                <input required name="url" id="url" type="url"
+                                       placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="form-control">
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary"
+                                  data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                          <button type="submit"
+                                  class="btn btn-primary">{{ 'site.cp.service.ts3audiobot.playMusic.modal.save' | language }}</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#playMusicQuick">
+                  {{ 'site.cp.service.ts3audiobot.playMusic.quick' | language }}
+                </button>
+
+                <div class="modal fade" id="playMusicQuick" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5
+                          class="modal-title">{{ 'site.cp.service.ts3audiobot.playMusic.quick.modal' | language }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                        </button>
+                      </div>
+                      <div id="playQuickMusicLoader1" style="display: none;">
+                        <div class="modal-body">
+                          <div class="text-center">
+                            <div class="spinner-border" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-body" id="playQuickMusicLoader2" style="display: block">
+                        {% for radio in radios %}
+                          <form method="post" onsubmit="startQuickMusic()">
+                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                            <input type="hidden" name="action" value="playMusic">
+                            <input type="hidden" name="url" value="{{ radio['url'] }}">
+                            <button type="submit" class="btn btn-primary mt-2">{{ radio['name'] }}</button>
+                          </form>
+                        {% endfor %}
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr/>
+
+                <div class="row justify-content-center">
+                  {% if bot['external']['info']['song'] != null %}
+
+                    <form method="post">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <input type="hidden" name="action" value="stop">
+                      <div class="col-md-12">
+                        <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-backward"></i>
+                                                    </span>
+                        </button>
+                      </div>
+                    </form>
+                    {% if bot['external']['info']['song']['Paused'] %}
+                      <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="pauseMusic">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-danger rounded-circle btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-play"></i>
+                                                    </span>
+                          </button>
+                        </div>
+                      </form>
+
+                    {% else %}
+                      <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="pauseMusic">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-pause"></i>
+                                                    </span>
+                          </button>
+                        </div>
+                      </form>
+                    {% endif %}
+
+
+                    {% if bot['external']['info']['repeat'] == null %}
+
+                      <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="toggleRepeat">
+                        <input type="hidden" name="repeat" value="0">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-minus"></i>
+                                                    </span>
+                          </button>
+                        </div>
+                      </form>
+
+                    {% elseif bot['external']['info']['repeat'] == "1" %}
+
+                      <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="toggleRepeat">
+                        <input type="hidden" name="repeat" value="1">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-repeat"></i>
+                                                    </span>
+                          </button>
+                        </div>
+                      </form>
+                    {% elseif bot['external']['info']['repeat'] == "2" %}
+
+                      <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="toggleRepeat">
+                        <input type="hidden" name="repeat" value="2">
+                        <div class="col-md-12">
+                          <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-repeat-1"></i>
+                                                    </span>
+                          </button>
+                        </div>
+                      </form>
+                    {% endif %}
+
+                    <form method="post">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <input type="hidden" name="action" value="stopMusic">
+                      <div class="col-md-12">
+                        <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-stop"></i>
+                                                    </span>
+                        </button>
+                      </div>
+                    </form>
+
+                    <form method="post">
+                      <input type="hidden" name="csrf" value="{{ csrf }}">
+                      <input type="hidden" name="action" value="next">
+                      <div class="col-md-12">
+                        <button type="submit" class="btn btn-danger btn-icon-only">
+                                                    <span class="btn-inner--icon">
+                                                        <i class="fas fa-forward"></i>
+                                                    </span>
+                        </button>
+                      </div>
+                    </form>
+
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-md-12 ">
+            <div class="card">
+              <div class="card-body">
+
+
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+
+                  {% include 'cp/teams/services/include/tabs_nav.twig' %}
+
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab"
+                       aria-controls="info"
+                       aria-selected="true">{{ 'site.cp.service.ts3audiobot.tab.settings' | language }}</a>
+                  </li>
+
+                  {% if "team.service.ts3audiobot.playlist"|checkTeamPermission and (service['state'] == 1 or service['state'] == 6) %}
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link" id="playlist-tab" data-toggle="tab" href="#playlist" role="tab"
+                         aria-controls="info"
+                         aria-selected="true">{{ 'site.cp.service.ts3audiobot.tab.playlist' | language }}</a>
+                    </li>
+                  {% endif %}
+                </ul>
+
+
+                <div class="tab-content" id="myTabContent">
+
+
+                  {% include 'cp/teams/services/include/tabs.twig' %}
+
+                  <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                    <br>
+                    <h5 class="text-left">{{ 'site.cp.service.ts3audiobot.tab.settings' | language }}</h5>
+                    <br>
+
+                    {% if bot['external']['status'] == "down" %}
+                      <h5><span
+                          style="color:#ff0000">{{ 'site.cp.service.ts3audiobot.state.offline' | language }}</span>
+                      </h5>
+
+
+                      <div id="startBotLoader1" style="display: none;">
+                        <div class="text-center">
+                          <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <form method="POST" id="startBotLoader2" style="display: block;">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="start">
+                        <button onclick="startBot();" type="submit"
+                                class="btn btn-sm btn-success">{{ 'site.cp.service.ts3audiobot.start' | language }}</button>
+                      </form>
+
+                    {% else %}
+                      <h5><span
+                          style="color:#00ff00">{{ 'site.cp.service.ts3audiobot.state.online' | language }}</span>
+                      </h5>
+
+                      <form method="POST">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="stop">
+                        <button type="submit"
+                                class="btn btn-sm btn-danger">{{ 'site.cp.service.ts3audiobot.stop' | language }}</button>
+                      </form>
+
+                    {% endif %}
+
+                    <h6>Botname: {{ bot['internal']['name'] }}
+                      <button type="button" class="btn btn-lg btn-link rounded-circle btn-icon-only" data-toggle="modal"
+                              data-target="#setName"><span class="btn-inner--icon"><i class="fa fa-pen-alt"></i></span>
+                      </button>
+                    </h6>
+
+                    <div class="modal fade" id="setName" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">{{ 'site.cp.service.ts3audiobot.editBot.modal' | language }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                            </button>
+                          </div>
+                          <form method="post">
+                            <div class="modal-body">
+                              <input type="hidden" name="csrf" value="{{ csrf }}">
+                              <input type="hidden" name="action" value="setName">
+                              <div class="row justify-content-center">
+                                <div class="col-md-8">
+                                  <div class="form-group">
+                                    <label
+                                      for="name">{{ 'site.cp.service.ts3audiobot.editBot.modal.name' | language }}</label>
+                                    <input required value="{{ bot['internal']['name'] }}" name="name" id="name"
+                                           type="text" class="form-control">
+                                  </div>
+                                </div>
+                                <div class="col-md-8">
+                                  <div class="custom-control custom-checkbox">
+                                    <input name="commander" type="checkbox" class="custom-control-input" id="commander">
+                                    <label class="custom-control-label"
+                                           for="commander">{{ 'site.cp.service.ts3audiobot.editBot.modal.commander' | language }}</label>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary"
+                                      data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                              <button type="submit"
+                                      class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h6>
+                      Server: {{ bot['internal']['server']['ip'] }} {% if bot['internal']['channel']['id'] != "" %} ({{ bot['internal']['channel']['id'] }}) {% endif %}
+                      <button type="button" class="btn btn-lg btn-link rounded-circle btn-icon-only" data-toggle="modal"
+                              data-target="#setServerAddress"><span class="btn-inner--icon"><i
+                            class="fa fa-pen-alt"></i></span></button>
+                    </h6>
+
+
+                    <div class="modal fade" id="setServerAddress" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5
+                              class="modal-title">{{ 'site.cp.service.ts3audiobot.editAddress.modal' | language }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                            </button>
+                          </div>
+                            <div class="modal-body">
+                              <div class="row justify-content-center">
+
+                                <div class="col-lg-6">
+                                  <form method="post">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="setServerAddress">
+                                    <div class="form-group">
+                                      <label
+                                        for="server_ip">{{ 'site.cp.service.ts3audiobot.editAddress.modal.server_ip' | language }}</label>
+                                      <input required value="{{ bot['internal']['server']['ip'] }}" name="server_ip"
+                                             id="server_ip" type="text" class="form-control"
+                                             placeholder="{{ 'site.cp.service.ts3audiobot.editAddress.modal.server_ip.placeholder' | language }}">
+                                    </div>
+                                    <div class="form-group">
+                                      <label
+                                        for="server_password">{{ 'site.cp.service.ts3audiobot.editAddress.modal.server_password' | language }}</label>
+                                      <input value="{{ bot['internal']['server']['password'] }}" name="server_password"
+                                             id="server_password" type="text" class="form-control"
+                                             placeholder="{{ 'site.cp.service.ts3audiobot.editAddress.modal.server_password.placeholder' | language }}">
+                                    </div>
+                                    <button type="submit"
+                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                  </form>
+                                </div>
+                                <div class="col-lg-6">
+                                  <form method="post">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="setServerAddress">
+                                    <div class="form-group">
+                                      <label
+                                        for="channel_name">{{ 'site.cp.service.ts3audiobot.editAddress.modal.channel_name' | language }}</label>
+                                      <input value="{{ bot['internal']['channel']['id'] }}" name="channel_name"
+                                             id="channel_name" type="text" class="form-control"
+                                             placeholder="{{ 'site.cp.service.ts3audiobot.editAddress.modal.channel_name.placeholder' | language }}">
+                                    </div>
+                                    <div class="form-group">
+                                      <label
+                                        for="channel_password">{{ 'site.cp.service.ts3audiobot.editAddress.modal.channel_password' | language }}</label>
+                                      <input value="{{ bot['internal']['channel']['password'] }}" name="channel_password"
+                                             id="channel_password" type="text" class="form-control"
+                                             placeholder="{{ 'site.cp.service.ts3audiobot.editAddress.modal.channel_password.placeholder' | language }}">
+                                    </div>
+                                    <button type="submit"
+                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                  </form>
+                                </div>
+                              </div>
+
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary"
+                                      data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="tab-pane fade" id="playlist" role="tabpanel" aria-labelledby="playlist-tab">
+                    <br>
+                    <h5
+                      class="text-left">{{ 'site.cp.service.ts3audiobot.tab.playlist' | language }}</h5>
+                    <br>
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th scope="col">{{ 'site.cp.service.ts3audiobot.tab.playlist.table.name' | language }}</th>
+                        <th scope="col"></th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {% if bot['internal']['playlist']|length == 0 %}
+                        <tr>
+                          <th scope="row">{{ 'site.cp.service.ts3audiobot.tab.playlist.nothing' | language }}</th>
+                          <td></td>
+                        </tr>
+                      {% else %}
+                        {% for playlist in bot['internal']['playlist'] %}
+                          <tr>
+                            <th scope="row">{{ playlist['name'] }}</th>
+                            <td>
+                              <div class="d-flex align-items-center justify-content-end">
+                                <div class="actions ml-3">
+                                  <button type="button" class="action-item mr-2" data-toggle="modal"
+                                          data-target="#list-{{ playlist['playlist_id'] }}"><i
+                                      class="fas fa-pencil-alt"></i></button>
+
+                                  <form method="post" class="action-item">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="playPlaylist">
+                                    <input type="hidden" name="playlist_id" value="{{ playlist['playlist_id'] }}">
+                                    <button type="submit" class="action-item mr-2" data-toggle="tooltip" title=""
+                                            data-original-title="{{ 'site.cp.service.ts3audiobot.tab.playlist.play' | language }}">
+                                      <i class="fas fa-play"></i>
+                                    </button>
+                                  </form>
+                                  <form method="post" class="action-item">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="deletePlaylist">
+                                    <input type="hidden" name="playlist_id" value="{{ playlist['playlist_id'] }}">
+
+                                    <button type="submit" class="action-item mr-2" data-toggle="tooltip" title=""
+                                            data-original-title="{{ 'site.cp.service.ts3audiobot.tab.playlist.remove' | language }}">
+                                      <i class="fas fa-times"></i>
+                                    </button>
+                                  </form>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      {% endif %}
+
+                      <tr>
+                        <form method="post" enctype="multipart/form-data">
+                          <input type="hidden" name="csrf" value="{{ csrf }}">
+                          <input type="hidden" name="action" value="createPlaylist">
+
+
+                          <th scope="row">
+                            <div class="form-group">
+                              <input name="name" id="name" type="text" class="form-control"
+                                     placeholder="{{ 'site.cp.service.ts3audiobot.tab.playlist.name' | language }}">
+                            </div>
+                          </th>
+                          <td>
+                            <button class="btn btn-sm btn-info"
+                                    type="submit">{{ 'site.cp.service.ts3audiobot.tab.playlist.add' | language }}</button>
+                          </td>
+                        </form>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                    {% for playlist in bot['internal']['playlist'] %}
+
+                      <div class="modal fade" id="list-{{ playlist['playlist_id'] }}" tabindex="-1" role="dialog"
+                           aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">{{ playlist['name'] }}</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                              <table class="table">
+                                <thead>
+                                <tr>
+                                  <th
+                                    scope="col">{{ 'site.cp.service.ts3audiobot.tab.playlist.table.name' | language }}</th>
+                                  <th scope="col">URL</th>
+                                  <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% if playlist['items']|length == 0 %}
+                                  <tr>
+                                    <th
+                                      scope="row">{{ 'site.cp.service.ts3audiobot.tab.playlist.nothing' | language }}</th>
+                                    <td></td>
+                                    <td></td>
+                                  </tr>
+                                {% else %}
+                                  {% for item in playlist['items'] %}
+                                    <tr>
+                                      <th scope="row">{{ item['name'] }}</th>
+                                      <th scope="row">{{ item['url'] }}</th>
+                                      <td>
+
+                                        <div class="actions ml-3">
+                                          <form method="post">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <input type="hidden" name="action" value="deletePlaylistItem">
+                                            <input type="hidden" name="playlist_id"
+                                                   value="{{ playlist['playlist_id'] }}">
+                                            <input type="hidden" name="item_id" value="{{ item['item_id'] }}">
+
+                                            <button type="submit" class="action-item mr-2" data-toggle="tooltip"
+                                                    title=""
+                                                    data-original-title="{{ 'site.cp.service.ts3audiobot.tab.playlist.remove' | language }}">
+                                              <i class="fas fa-times"></i>
+                                            </button>
+                                          </form>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  {% endfor %}
+                                {% endif %}
+
+
+                                <tr>
+                                  <form method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="addPlaylistItem">
+                                    <input type="hidden" name="playlist_id" value="{{ playlist['playlist_id'] }}">
+
+
+                                    <th scope="row">
+                                      <div class="form-group">
+                                        <input name="url" id="url" type="url" class="form-control"
+                                               placeholder="{{ 'site.cp.service.ts3audiobot.tab.playlist.url' | language }}">
+                                      </div>
+                                    </th>
+                                    <td>
+                                      <button class="btn btn-sm btn-info"
+                                              type="submit">{{ 'site.cp.service.ts3audiobot.tab.playlist.add' | language }}</button>
+                                    </td>
+                                    <td></td>
+                                  </form>
+                                </tr>
+                                </tbody>
+                              </table>
+
+
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary"
+                                      data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+
+
+                    <br>
+
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+    const startBotLoader1 = document.getElementById("startBotLoader1");
+    const startBotLoader2 = document.getElementById("startBotLoader2");
+
+    function startBot() {
+        startBotLoader1.style.display = "block";
+        startBotLoader2.style.display = "none";
+    }
+
+
+    const playMusicLoader1 = document.getElementById("playMusicLoader1");
+    const playMusicLoader2 = document.getElementById("playMusicLoader2");
+
+    function playMusic() {
+        playMusicLoader1.style.display = "block";
+        playMusicLoader2.style.display = "none";
+    }
+
+    const playQuickMusicLoader1 = document.getElementById("playQuickMusicLoader1");
+    const playQuickMusicLoader2 = document.getElementById("playQuickMusicLoader2");
+
+    function startQuickMusic() {
+        playQuickMusicLoader1.style.display = "block";
+        playQuickMusicLoader2.style.display = "none";
+    }
+</script>
+{% include '/general/footer.twig' %}

@@ -1,0 +1,110 @@
+<div class="col-md-4">
+  <div class="card" id="card-summary">
+    <div class="card-header py-3">
+      <div class="row align-items-center">
+        <div class="col-8">
+          <span class="h6">{{ 'site.cart.summary.title' | language }}</span>
+        </div>
+        <div class="col-4 text-right">
+          <span class="badge badge-pill badge-soft-success">{{ cart['items']|length }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      {% for item in cart['items'] %}
+        {% if item['info']['available'] %}
+          <div class="row">
+            <div class="col-8">
+              <div class="media align-items-center">
+                <div class="media-body">
+                  <div class="text-limit lh-100">
+                    <small class="font-weight-bold mb-0">{{ item['name'] }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 text-right lh-100">
+              <small class="">
+                {{ item['amount']['noDiscount'] | creditsToEuro }}{{ "symbol"|currency }}
+              </small>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <div class="row mt-3 pt-3 border-top">
+        <div class="col-8">
+          <small class=" font-weight-bold">{{ 'site.cart.summary.subtotal' | language }}</small>
+        </div>
+        <div class="col-4 text-right">
+          <span class="text-sm font-weight-bold">{{ cart['amount']['noDiscount'] | creditsToEuro }}{{ "symbol"|currency }}</span>
+        </div>
+      </div>
+
+      {% if cart['amount']['noDiscount'] != cart['amount']['full'] %}
+        <div class="row mt-3 pt-3 border-top">
+          <div class="col-8">
+            <div class="text-limit lh-100">
+              <small class="font-weight-bold">{{ 'site.cart.summary.subtotal.discount' | language }}</small>
+            </div>
+            <small class="text-muted">{{ cart['discountCode'] }}</small>
+          </div>
+          <div class="col-4 text-right">
+            {% set discount = cart['amount']['noDiscount'] - cart['amount']['full'] %}
+            <span class="text-sm font-weight-bold">{{ discount|creditsToEuro }}€</span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if cart['manuelSetup'] == false %}
+      <div class="row mt-3 pt-3 border-top">
+        <div class="col-8">
+          <div class="text-limit lh-100">
+            <small class="font-weight-bold">{{ 'site.cart.summary.delivery' | language }}</small>
+          </div>
+          <small class="text-muted"><span
+              class="">{{ 'site.cart.summary.delivery.sub' | language }}</span></small>
+        </div>
+        <div class="col-4 text-right">
+          <span class="text-sm font-weight-bold">0,00{{ "symbol"|currency }}</span>
+        </div>
+      </div>
+      {% endif %}
+      {% if config['legal']['show_tax'] %}
+        <div class="row mt-3 pt-3 border-top">
+          <div class="col-8">
+            <div class="text-limit lh-100">
+              <small class="font-weight-bold">{{ 'site.cart.summary.netto' | language }}</small>
+            </div>
+          </div>
+          <div class="col-4 text-right">
+            <span class="text-sm font-weight-bold">{{ cart['amount']['vat']['net'] | creditsToEuro }}{{ "symbol"|currency }}</span>
+          </div>
+        </div>
+
+        <div class="row mt-3 pt-3 border-top">
+          <div class="col-8">
+            <div class="text-limit lh-100">
+              <small class="font-weight-bold">{{ 'site.cart.summary.tax' | language }}
+                ({{ config['legal']['tax'] }}%)</small>
+            </div>
+          </div>
+          <div class="col-4 text-right">
+            <span class="text-sm font-weight-bold">{{ cart['amount']['vat']['tax'] | creditsToEuro }}{{ "symbol"|currency }}</span>
+          </div>
+        </div>
+      {% endif %}
+      <div class="row mt-3 pt-3 border-top">
+        <div class="col-8">
+          <small
+            class="text-uppercase font-weight-bold h6"><b>{{ 'site.cart.summary.total' | language }}</b></small>
+        </div>
+        <div class="col-4 text-right">
+                  <span
+                    class="text-sm font-weight-bold h4"><b>{{ cart['amount']['full'] | creditsToEuro }}{{ "symbol"|currency }}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

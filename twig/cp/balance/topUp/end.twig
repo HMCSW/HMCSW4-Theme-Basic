@@ -1,0 +1,107 @@
+{% include '/general/header.twig' %}
+{% include 'cp/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    {% include 'general/actionMessage.twig' %}
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+
+              <div class="col-12">
+                <h6 class="mb-0 lh-180">
+                  {{ 'site.cart.end.payWith'|language|replace({'@method': paymentMethod|raw })|raw }}
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-0 lh-180">
+              <div data-callback="unGreyButton" id="recaptcha"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="form-group mb-0 lh-180">
+              <div class="custom-control custom-checkbox">
+                <input required type="checkbox" class="custom-control-input" id="tos" name="tos">
+
+                <label class="custom-control-label"
+                       for="tos">{{ 'site.cart.end.terms'|language|replace({'@terms': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/terms', '@site': 'site.legal.terms'|language })|raw })|raw }}</label>
+              </div>
+            </div>
+            <div class="form-group mb-0 lh-180">
+              <div class="custom-control custom-checkbox">
+                <input required type="checkbox" class="custom-control-input" id="withdrawal" name="withdrawal">
+
+                <label class="custom-control-label"
+                       for="withdrawal">{{ 'site.cart.end.withdrawal'|language|replace({'@withdrawal': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/withdrawal', '@site': 'site.legal.withdrawal'|language })|raw })|raw }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="mt-4 text-left col-lg-6">
+
+            <div>
+              <form method="post">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <input type="hidden" name="action" value="cancelTopUp">
+                <button type="submit" class="btn btn-danger btn-sm">
+                  {{ 'site.cp.balance.topUp.cancel.btn' | language }}
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="mt-4 text-right col-lg-6">
+            <button id="btn_submit" onclick="startOrder();" type="button"
+                    class="btn btn-animated btn-success btn-animated-x hover-scale-110">
+              <span class="btn-inner--visible">{{ 'site.cp.balance.topUp.btn' | language }}</span>
+              <span class="btn-inner--hidden"><i class="fa-regular fa-credit-card"></i>
+                                    </span>
+            </button>
+            <button id="btn_loading" type="button" class="btn btn-animated btn-success btn-animated-x hover-scale-110"
+                    style="display: none;">
+              <span class="btn-inner--visible"> {{ 'site.cp.balance.topUp.btn' | language }}</span>
+              <span class="btn-inner--hidden">
+                                        <span class="spinner-border spinner-border-sm" role="status"
+                                              aria-hidden="true"></span>
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+      {% include 'cp/balance/topUp/sideNav.twig' %}
+    </div>
+  </div>
+</section>
+<div class="modal modal-danger fade" id="paymentLoadingModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="py-3 text-center">
+          <i class="fas fa-exclamation-circle fa-4x"></i>
+          <h5 class="heading h4 mt-4">{{ 'site.cart.end.focusPayment' | language }}</h5>
+          <h6 class="heading h6 mt-4">{{ 'site.cart.end.focusPayment.description' | language }}</h6>
+
+          <hr class="divider divider-fade"/>
+          <div class="text-center">
+            <button type="button" onclick="focusWindow();" class="btn btn-white btn-animated btn-animated-x">
+              <span class="btn-inner--visible">{{ 'site.cart.end.focusPayment.btn' | language }}</span>
+              <span class="btn-inner--hidden"><i class="fa-solid fa-arrows-to-eye"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% include '/general/footer.twig' %}

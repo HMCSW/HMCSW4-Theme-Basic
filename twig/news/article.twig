@@ -1,0 +1,124 @@
+{% include '/general/header.twig' %}
+<section class="slice slice-lg bg-cover bg-size--cover">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-9 col-lg-10">
+        <div class="card mb-n7 position-relative zindex-100">
+          <div class="card-body p-md-5">
+            <div class=" text-center">
+              <h1 class="h2 lh-150 mt-3 mb-0">
+                {{ news['title'] }}
+              </h1>
+            </div>
+            <div class="row align-items-center mt-5 pt-5 delimiter-top">
+              <div class="col mb-3 mb-lg-0">
+                <div class="media align-items-center">
+                  <span class="avatar rounded-circle mr-3">
+                    <img alt="{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}"
+                         src="{{ news['user']['icon'] }}">
+                  </span>
+                  <div class="media-body">
+                    <span class="d-block h6 mb-0">{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}
+                    </span>
+                    <span class="text-sm text-muted">{{ news['created_at']|date('d.m.Y H:i') }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto">
+                <ul class="list-inline mb-0">
+                  <li class="list-inline-item">
+                    <a class="text-muted"><i class="fa-regular fa-comment mr-1 text-muted"></i> 0</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SVG separator -->
+  <div class="shape-container shape-position-bottom">
+    <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;"
+         xml:space="preserve" class="">
+                <polygon points="2560 0 2560 100 0 100"></polygon>
+            </svg>
+  </div>
+</section>
+<section class="slice slice-lg pt-10 pb-5">
+  <div class="container pb-6">
+    <div class="row row-grid align-items-center">
+      <div class="col-xl-8 col-lg-10 offset-xl-2 offset-lg-1">
+        <!-- Topic body -->
+        <article class="img-fluid-">
+          {{ news['text']|raw }}
+        </article>
+        <div class="row align-items-center mt-7 py-4 border-top border-bottom">
+          <div class="col mb-3 mb-lg-0">
+            <div class="media align-items-center">
+              <span class="avatar rounded-circle mr-3">
+                <img alt="{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}"
+                     src="{{ news['user']['icon'] }}">
+              </span>
+              <div class="media-body">
+                <span class="d-block h6 mb-0">{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}</span>
+                <span class="text-sm text-muted">{{ article['created_at']|date('d.m.Y H:i') }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item">
+                <a class="text-muted"><i class="fa-regular fa-comment  mr-1 text-muted"></i> 0</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="shape-container shape-position-bottom">
+    <img alt="SVG" src="{{ url }}/assets/img/svg/separators/line.svg"
+         class="svg-inject fill-section-secondary">
+  </div>
+</section>
+<section class="slice slice-lg bg-section-secondary">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-12 col-md">
+        <h3 class="h4 mb-0">{{ 'site.news.article.more' | language }}</h3>
+        <p class="mb-0 text-muted">
+          {{ 'site.news.article.more.description' | language }}
+        </p>
+      </div>
+      <div class="col-12 col-md-auto">
+        <a href="{{ url }}/news" class="btn btn-sm btn-neutral d-none d-md-inline">
+          {{ 'site.news.article.more.btn' | language }}
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      {% for rArticle in randomNews %}
+        <div class="col-lg-4">
+          <div class="card bg-cover bg-size--cover card-fluid"
+               style="background-image:url({{ rArticle["image"] }} )"><span
+              class="mask bg-dark opacity-5"></span>
+            <div class="card-body pt-10 mt-auto position-relative">
+              <a href="{{ url }}/news/{{ rArticle['slug'] }}" class="d-block h5 mb-3 text-white stretched-link">{{ rArticle['title'] }}</a>
+              <p class="mb-0 text-white">{{ rArticle['shortText'] }}...</p>
+            </div>
+            <div class="card-body position-relative delimiter-top">
+              <div class="d-flex align-items-center">
+                <div><a href="{{ url }}/news/{{ rArticle['slug'] }}" class="avatar avatar-sm rounded-circle d-inline-block"><img alt="{{ rArticle['user']['firstname'] }} {{ rArticle['user']['lastname'] }}" src="{{ rArticle['user']['avatar'] }}"></a>
+                </div>
+                <div class="pl-3"><a href="{{ url }}/news/{{ rArticle['slug'] }}" class="h6 stretched-link text-white text-sm">{{ rArticle['user']['firstname'] }} {{ rArticle['user']['lastname'] }}</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

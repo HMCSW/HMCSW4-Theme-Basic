@@ -1,0 +1,122 @@
+{% include '/general/header.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="actions-toolbar py-2 mb-4 text-center">
+          <h4 class="mb-1">{{ 'site.cart' | language }}</h4>
+          <h5 class="mb-1">{{ 'site.cart.payment.title' | language }}</h5>
+          <p class="text-sm text-muted mb-0">{{ 'site.cart.payment.info' | language }}</p>
+        </div>
+      </div>
+    </div>
+    {% include 'cart/nav.twig' %}
+    <br><br>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <form method="post">
+          <input type="hidden" name="csrf" value="{{ csrf }}">
+          <input type="hidden" name="action" value="next">
+
+
+          {% if payments['moreTime']|length != 0 %}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <span class="h5">{{ 'site.cart.method.moreTime'|language }}</span>
+                  </div>
+                  <div class="text-right">
+                    <div class="actions mr-n2">
+                      <a href="{{ url }}/cp/settings/payment" class="action-item"><i class="fa fa-eye"></i></a>
+                      <a href="{{ url }}/cp/settings/payment" class="action-item"><i class="fa fa-plus"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% for key, payment in payments['moreTime'] %}
+                <div class="col-md-6">
+                  <div class="card card-fluid">
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="custom-control custom-radio">
+                            <input required type="radio" class="custom-control-input" name="payment"
+                                   value="{{ key }}" id="radio-payment-{{ key }}">
+                            <label class="custom-control-label h6 mb-0 lh-180"
+                                   for="radio-payment-{{ key }}">{{ payment['name'] }}</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            <br>
+          {% endif %}
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="h5">{{ 'site.cart.method.oneTime'|language }}</span>
+                </div>
+                <div class="text-right">
+                  <div class="actions mr-n2">
+                    <a href="{{ url }}/about/payment" class="action-item"><i class="fa fa-eye"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% for key, payment in payments['oneTime'] %}
+              <div class="col-md-6">
+                <div class="card card-fluid">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="custom-control custom-radio">
+                          <input required type="radio" class="custom-control-input" name="payment"
+                                 value="{{ key }}" id="radio-payment-{{ key }}">
+                          <label class="custom-control-label h6 mb-0 lh-180"
+                                 for="radio-payment-{{ key }}">{{ payment['name'] }}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+
+          </div>
+
+          {% if payments['oneTime']|length == 0 and payments['moreTime']|length == 0 %}
+            <div class="col-md-12">
+              <div class="alert alert-group alert-danger alert-icon" role="alert">
+                <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                      class="fa-regular fa-triangle-exclamation"></i></span>
+                </div>
+                <div class="alert-content">
+                  {{ 'site.cart.payment.noAvailable' | language }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="mt-4 text-right">
+            <a href="{{ url }}/p"
+               class="btn btn-link text-sm font-weight-bold">{{ 'site.cart.btn.shop' | language }}</a>
+            {% if payments['oneTime']|length != 0 or payments['moreTime']|length != 0 %}
+              <button type="submit" class="btn btn-animated btn-success btn-animated-x">
+                <span class="btn-inner--visible">{{ 'site.cart.btn.next' | language }}</span>
+                <span class="btn-inner--hidden"><i class="fa-regular fa-arrow-right"></i> </span>
+              </button>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+      {% include 'cart/sideNav.twig' %}
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

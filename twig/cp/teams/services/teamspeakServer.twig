@@ -1,0 +1,301 @@
+{% include '/general/header.twig' %}
+{% include 'cp/teams/nav.twig' %}
+<section class="slice slice-sm bg-section-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+
+        <!-- ACTION MESSAGE -->
+        {% if action != false %}
+          {% if action['success'] == false %}
+            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+          {% else %}
+            {% set alert_color = "success" %} {% set alert_icon = "check" %}
+          {% endif %}
+          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+            <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                  class="fas fa-{{ alert_icon }}"></i></span></div>
+            <div class="alert-content">
+              {{ action['message'] | language }}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="row">
+          <!-- nav with 4 cards -->
+          {% include 'cp/teams/services/include/info_nav.twig' %}
+          <div class="col-sm-12 col-md-12">
+            <div class="card">
+              <div class="card-body text-center">
+                <br>
+                {% include 'cp/teams/services/include/lock.twig' %}
+
+                <h5 class="text-center">{{ service['service_id'] }}</h5>
+                <h6 class="text-center">{{ service['name'] }}</h6>
+                <h6 class="text-center">{{ service['service_name'] }}</h6>
+                <br>
+                {% if service['state'] == 1 or service['state'] == 6 %}
+                  {% if teamspeak['response']['external']['status'] == "up" %}
+                    <h5><span style="color:#40FF00">{{ 'site.cp.service.teamspeak.state.started' | language }}</span>
+                    </h5>
+                    <div id="statusDiv">
+                      <form method="POST" id="startForm">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="stop">
+                        <button type="submit" id="btn_submit"
+                                class="btn btn-sm btn-danger">{{ 'site.cp.service.teamspeak.stop' | language }}</button>
+                      </form>
+                    </div>
+                  {% else %}
+                    <h5><span style="color:#ff0000">{{ 'site.cp.service.proxmox.state.stopped' | language }}</span></h5>
+                    <div id="statusDiv">
+                      <form method="POST" id="startForm">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="start">
+                        <button type="submit" id="btn_submit"
+                                class="btn btn-sm btn-success">{{ 'site.cp.service.teamspeak.start' | language }}</button>
+                      </form>
+                    </div>
+                  {% endif %}
+                  <div id="statusLoading" style="display: none;" class="spinner-border text-success" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                {% else %}
+                  <h5><span style="color:#ff0000">{{ 'site.cp.service.proxmox.state.stopped' | language }}</span></h5>
+                {% endif %}
+                <br>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-12 ">
+            <div class="card">
+              <div class="card-body">
+
+
+                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+
+                  {% include 'cp/teams/services/include/tabs_nav.twig' %}
+
+                  {% if "team.service.teamspeak_server.viewer"|checkTeamPermission and (service['state'] == 1 or service['state'] == 6) %}
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link" id="viewer-tab" data-toggle="tab" href="#viewer" role="tab"
+                         aria-controls="viewer"
+                         aria-selected="true">{{ 'site.cp.service.tab.teamspeak.viewer' | language }}</a>
+                    </li>
+                  {% endif %}
+
+                  {% if "team.service.teamspeak_server.token"|checkTeamPermission and (service['state'] == 1 or service['state'] == 6) %}
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link" id="token-tab" data-toggle="tab" href="#token" role="tab"
+                         aria-controls="token"
+                         aria-selected="true">{{ 'site.cp.service.tab.teamspeak.token' | language }}</a>
+                    </li>
+                  {% endif %}
+                </ul>
+
+
+                <div class="tab-content" id="myTabContent">
+
+                  {% include 'cp/teams/services/include/tabs.twig' %}
+
+                  {% if "team.service.teamspeak_server.viewer"|checkTeamPermission and (service['state'] == 1 or service['state'] == 6) %}
+                    <div class="tab-pane fade" id="viewer" role="tabpanel" aria-labelledby="viewer-tab">
+                      <br>
+                      <h5 class="text-left">{{ 'site.cp.service.tab.teamspeak.viewer' | language }}</h5>
+                      <br>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          {% if teamspeak['response']['external']['status'] == "up" %}
+                            {{ viewer['response']|raw }}
+                          {% else %}
+                            <div class="row">
+                              <div class="col-sm-12 col-md-12">
+                                <div class="alert alert-group alert-warning alert-icon" role="alert">
+                                  <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                        class="fas fa-exclamation"></i></span>
+                                  </div>
+                                  <div
+                                    class="alert-content">{{ 'site.cp.service.teamspeak.serverStopped' | language }}</div>
+                                </div>
+                              </div>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+
+                  {% if "team.service.teamspeak_server.token"|checkTeamPermission and (service['state'] == 1 or service['state'] == 6) %}
+                    <div class="tab-pane fade" id="token" role="tabpanel" aria-labelledby="token-tab">
+                      <br>
+                      <h5 class="text-left">{{ 'site.cp.service.tab.teamspeak.token' | language }}</h5>
+                      <br>
+                      {% if teamspeak['response']['external']['status'] == "up" %}
+                        <div class="row">
+                          <div class="col-lg-6 col-md-6">
+                            <form method="post">
+                              <input type="hidden" name="action" value="createToken">
+                              <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="token-group"
+                                         class="form-control-label">{{ 'site.cp.service.tab.teamspeak.token.group' | language }}</label>
+                                  <select id="token-group" class="custom-select" name="group_id" required>
+                                    {% for group in teamspeak['response']['external']['groups'] %}
+                                      <option value="{{ group['group_id'] }}">{{ group['name'] }}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                  <label for="token-description"
+                                         class="form-control-label">{{ 'site.cp.service.tab.teamspeak.token.description' | language }}</label>
+                                  <input class="form-control" type="text" id="token-description" name="description"
+                                         placeholder="Token1" required>
+                                </div>
+                              </div>
+
+                              <button type="submit"
+                                      class="btn-primary btn-sm btn">{{ 'site.cp.service.tab.teamspeak.token.create' | language }}</button>
+                            </form>
+                          </div>
+                          <div class="col-lg-6 col-md-6">
+                            {% for token in teamspeak['response']['external']['token'] %}
+                              <div class="col-md-12">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <div class="row">
+                                      <div class="col-10">
+                                        <span class="h6 text-sm font-weight-bold mb-0">{{ token['token'] }}</span>
+                                        <span class="d-block text-sm text-muted">{{ token['description'] }}</span>
+                                      </div>
+                                      <div class="col-2 text-right">
+                                        <div class="actions ml-3">
+                                          <form method="post">
+                                            <input name="token" value="{{ token['token'] }}" type="hidden">
+                                            <input type="hidden" name="action" value="deleteToken">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <button type="submit" class="action-item mr-2">
+                                              <i class="fas fa-times"></i>
+                                            </button>
+                                          </form>
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      {% else %}
+                        <div class="row">
+                          <div class="col-sm-12 col-md-12">
+                            <div class="alert alert-group alert-warning alert-icon" role="alert">
+                              <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                    class="fas fa-exclamation"></i></span>
+                              </div>
+                              <div
+                                class="alert-content">{{ 'site.cp.service.teamspeak.serverStopped' | language }}</div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+
+                  {% if "owner"|checkTeamPermission %}
+                    <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+                      <br>
+                      <h5 class="text-left">{{ 'site.cp.service.tab.team' | language }}</h5>
+                      <br>
+                      <h6>{{ 'site.cp.service.tab.team.currentTeam'|language|replace({'@name': team['name']})|raw }}</h6>
+                      <hr/>
+                      <h5>{{ 'site.cp.service.tab.team.changeTeam' | language }}</h5>
+                      <div class="col-lg-12">
+                        <form method="post">
+                          <input type="hidden" name="action" value="setTeam">
+                          <input type="hidden" name="csrf" value="{{ csrf }}">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label for="teamId"
+                                       class="form-control-label">{{ 'site.cp.service.tab.team.changeTeam.team' | language }}</label>
+                                <select required name="team_id" id="teamId" class="custom-select" required>
+                                  {% for team in teams %}
+                                    <option {% if team['team_id'] == service['team_id'] %} disabled {% endif %}
+                                      value="{{ team['team_id'] }}">{{ team['name'] }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="mt-4">
+                            <button type="submit"
+                                    class="btn btn-sm btn-primary">{{ 'site.cp.service.tab.team.changeTeam.setBtn' | language }}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  {% endif %}
+
+                  {% if "team.service.invoice"|checkTeamPermission %}
+                    <div class="tab-pane fade" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
+                      <br>
+                      <h5 class="text-left">{{ 'site.cp.service.tab.invoice' | language }}</h5>
+                      <br>
+                      {% if invoices|length == 0 %}
+                        <h6 class="text-left">{{ 'site.cp.service.tab.invoice.nothing' | language }}</h6>
+                      {% else %}
+                        <table class="table">
+                          <tbody>
+                          {% for invoice in invoices %}
+                            <tr>
+                              <td>
+                                <h6>
+                                  <b>
+                                    {% if invoice['state'] == 1 %}
+                                      <span style="color:#40FF00">{{ 'general.invoices.state.1' | language }}</span>
+                                    {% elseif invoice['state'] == 2 %}
+                                      <span style="color:#FFBF00">{{ 'general.invoices.state.2' | language }}</span>
+                                    {% elseif invoice['state'] == 3 %}
+                                      <span style="color:#FF0000">{{ 'general.invoices.state.3' | language }}</span>
+                                    {% elseif invoice['state'] == 4 %}
+                                      <span style="color:#ff0000">{{ 'general.invoices.state.4' | language }}</span>
+                                    {% else %}
+                                      <span style="color:#FF0000">{{ 'general.invoices.state.error' | language }}</span>
+                                    {% endif %}
+                                  </b>
+                                </h6>
+                                <h6>{{ 'site.cp.service.tab.invoice.created' | language }}
+                                  : {{ invoice['created_at']|date("d.m.Y H:i") }}</h6>
+                                <h6>{{ 'site.cp.service.tab.invoice.pay_to' | language }}
+                                  : {{ invoice['pay_to']|date("d.m.Y H:i") }}</h6>
+                                <h6>{{ 'site.cp.service.tab.invoice.id' | language }}: {{ invoice['invoice_id'] }}</h6>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      {% endif %}
+
+
+                    </div>
+                  {% endif %}
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

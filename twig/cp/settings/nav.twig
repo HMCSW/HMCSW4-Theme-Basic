@@ -1,0 +1,188 @@
+<div class="col-lg-3 order-lg-1">
+
+    {% if userData['terminatedUser'] == true %}
+        <div class="alert alert-group alert-danger alert-icon" role="alert">
+            <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </span>
+            </div>
+            <div class="alert-content">
+                {{ 'general.user.terminated' | language }}
+            </div>
+        </div>
+    {% endif %}
+    {% if userData['requireIdentityCheck'] == true and userData['restricted'] == true %}
+        <div class="alert alert-group alert-danger alert-icon" role="alert">
+            <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </span>
+            </div>
+            <div class="alert-content">
+                {{ 'general.user.restricted.identity' | language }}
+
+                <div class="alert-action">
+                    <button type="button" class="btn btn-neutral" data-toggle="modal" data-target="#requireIdentityCheck"
+                            aria-label="Action Label">{{ 'general.user.restricted.identity.btn' | language }}</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal modal-success fade" id="requireIdentityCheck" tabindex="-1"
+             role="dialog"
+             aria-labelledby="startIdentityCheck" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title h6"
+                            id="modal_title_6">{{ 'site.cp.settings.address.identityCheck.available.modal' | language }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i class="fas fa-id-card fa-4x"></i>
+                            <h5
+                                    class="heading h4 mt-4">{{ 'site.cp.settings.address.identityCheck.available.modal.title' | language }}</h5>
+                            <p>{{ 'site.cp.settings.address.identityCheck.available.modal.text' | language }}</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="requireIdentityCheck()"
+                                class="btn btn-sm btn-white">{{ 'site.cp.settings.address.identityCheck.available.modal.start' | language }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div data-toggle="sticky" data-sticky-offset="30" data-negative-margin=".card-profile-cover">
+        <div class="card">
+            <div class="card-header py-3">
+                <span class="h6">{{ 'site.cp.settings.tab' | language }}</span>
+            </div>
+            <div class="list-group list-group-sm list-group-flush">
+                <a href="{{ url }}/cp/settings"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-cog mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.general' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/userInfo"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-map-signs mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.userInfo' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                {#        <a href="{{ url }}/cp/settings/subscription" #}
+                {#           class="list-group-item list-group-item-action d-flex justify-content-between"> #}
+                {#          <div> #}
+                {#            <i class="fas fa-subscript mr-2"></i> #}
+                {#            <span>{{ 'site.cp.settings.tab.subscription' | language }}</span> #}
+                {#          </div> #}
+                {#          <div> #}
+                {#            <i class="fas fa-cash-register"></i> #}
+                {#          </div> #}
+                {#        </a> #}
+                <a href="{{ url }}/cp/settings/devices"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-user-cog mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.devices' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/security"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.security' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/mails"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-bell mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.maillog' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/connectedAccounts"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-user-plus mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.accounts' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/creditsHistory"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-money-bill-wave mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.creditsHistory' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/payment"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-cash-register mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.payment' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/notification"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-comment mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.notification' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/developer"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-code mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.developer' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+                <a href="{{ url }}/cp/settings/badge"
+                   class="list-group-item list-group-item-action d-flex justify-content-between">
+                    <div>
+                        <i class="fas fa-badge mr-2"></i>
+                        <span>{{ 'site.cp.settings.tab.badge' | language }}</span>
+                    </div>
+                    <div>
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

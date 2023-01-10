@@ -1,0 +1,153 @@
+{% include '/general/header.twig' %}
+<div class="main-content">
+  <section class="slice slice-lg">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 pb-5">
+          <h1 class="h3 text-center">{{ 'site.partner.apply' | language }}</h1>
+          <h2 class="h4 text-center">{{ 'site.partner.apply.description' | language }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card card-fluid text-center hover-translate-y-n10 hover-shadow-lg">
+            <div class="px-5 pb-5">
+              <div class="py-5">
+                <div class="icon text-warning">
+                  <i class="fas fa-shapes"></i>
+                </div>
+              </div>
+              <h5 class="">{{ 'site.partner.apply.card.1.title' | language }}</h5>
+              <p class="">{{ 'site.partner.apply.card.1.text' | language }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card card-fluid text-center hover-translate-y-n10 hover-shadow-lg">
+            <div class="px-5 pb-5">
+              <div class="py-5">
+                <div class="icon text-success">
+                  <i class="fas fa-users-cog"></i>
+                </div>
+              </div>
+              <h5 class="">{{ 'site.partner.apply.card.2.title' | language }}</h5>
+              <p class="">{{ 'site.partner.apply.card.2.text' | language }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="card card-fluid text-center hover-translate-y-n10 hover-shadow-lg">
+            <div class="px-5 pb-5">
+              <div class="py-5">
+                <div class="icon text-danger">
+                  <i class="fas fa-pencil-ruler"></i>
+                </div>
+              </div>
+              <h5 class="">{{ 'site.partner.apply.card.3.title' | language }}</h5>
+              <p class="">{{ 'site.partner.apply.card.3.text' | language }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section id="sct_contact_form" class="slice slice-lg" data-delimiter-before="1">
+    <div class="container">
+      <div class="row row-grid align-items-center">
+        <div class="col-lg-6">
+
+          {% if action != false %}
+            {% if action['success'] == false %}
+              {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+            {% else %}
+              {% set alert_color = "success" %} {% set alert_icon = "check" %}
+            {% endif %}
+            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+              <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-{{ alert_icon }}"></i>
+                                        </span>
+              </div>
+              <div class="alert-content">
+                {{ action['message'] | language }}
+              </div>
+
+            </div>
+          {% endif %}
+
+          <h3 class="h4">{{ 'site.partner.apply.title' | language }}</h3>
+          {% if guest == false %}
+            <p class="lead">{{ 'site.partner.apply.text' | language }}</p>
+            <form method="post">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
+              <input type="hidden" name="action" value="createApply">
+              <div class="form-group">
+                <label for="name">{{ 'site.partner.apply.form.name' | language }}</label>
+                <input id="name" name="name" class="form-control form-control-lg"
+                       placeholder="{{ 'site.partner.apply.form.name.placeholder' | language }}" type="text" required
+                       value="{{ placeholder['value'] }}">
+              </div>
+              <div class="form-group">
+                <label for="text">{{ 'site.partner.apply.form.text' | language }}</label>
+                <textarea required id="text" name="text" class="form-control form-control-lg textarea-autosize" rows="5"
+                          placeholder="{{ 'site.partner.apply.form.text.placeholder' | language }}">{{ placeholder['text'] }}</textarea>
+              </div>
+              <div id="recaptcha"></div>
+              <button type="submit"
+                      class="btn btn-primary mt-4">{{ 'site.partner.apply.form.submit' | language }}</button>
+            </form>
+          {% else %}
+            <h5>{{ 'site.partner.apply.notLogged' | language }}</h5>
+          {% endif %}
+        </div>
+        <div class="col-lg-5 ml-lg-auto">
+          <h3 class="h4">{{ 'site.partner.apply.moreInfos' | language }}</h3>
+
+          <div id="accordion-1" class="accordion accordion-spaced">
+            <div class="card">
+              <div class="card-header py-4" id="heading-1-1" data-toggle="collapse" role="button"
+                   data-target="#collapse-1-1" aria-expanded="false" aria-controls="collapse-1-1">
+                <h6 class="mb-0"><i
+                    class="fas fa-wrench mr-3"></i>{{ 'site.partner.apply.moreInfo.card.1.title' | language }}</h6>
+              </div>
+              <div id="collapse-1-1" class="collapse" aria-labelledby="heading-1-1" data-parent="#accordion-1">
+                <div class="card-body">
+                  <p>{{ 'site.partner.apply.moreInfo.card.1.text' | language }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header py-4" id="heading-1-2" data-toggle="collapse" role="button"
+                   data-target="#collapse-1-2" aria-expanded="false" aria-controls="collapse-1-2">
+                <h6 class="mb-0"><i
+                    class="fas fa-pen-alt mr-3"></i>{{ 'site.partner.apply.moreInfo.card.2.title' | language }}</h6>
+              </div>
+              <div id="collapse-1-2" class="collapse" aria-labelledby="heading-1-2" data-parent="#accordion-1">
+                <div class="card-body">
+                  <p>{{ 'site.partner.apply.moreInfo.card.2.text' | language }}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Accordion card 3 -->
+            <div class="card">
+              <div class="card-header py-4" id="heading-1-3" data-toggle="collapse" role="button"
+                   data-target="#collapse-1-3" aria-expanded="false" aria-controls="collapse-1-3">
+                <h6 class="mb-0"><i
+                    class="fas fa-music mr-3"></i>{{ 'site.partner.apply.moreInfo.card.3.title' | language }}</h6>
+              </div>
+              <div id="collapse-1-3" class="collapse" aria-labelledby="heading-1-3" data-parent="#accordion-1">
+                <div class="card-body">
+                  <p>{{ 'site.partner.apply.moreInfo.card.3.text' | language }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% include '/general/footer.twig' %}

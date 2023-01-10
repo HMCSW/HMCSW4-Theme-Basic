@@ -1,0 +1,60 @@
+{% if userData['terminatedUser'] == true %}
+  <div class="col-lg-12">
+    <div class="alert alert-group alert-danger alert-icon" role="alert">
+      <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </span>
+      </div>
+      <div class="alert-content">
+        {{ 'general.user.terminated' | language }}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if userData['requireIdentityCheck'] == true and userData['restricted'] == true %}
+    <div class="col-lg-12">
+        <div class="alert alert-group alert-danger alert-icon" role="alert">
+            <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </span>
+            </div>
+            <div class="alert-content">
+                {{ 'general.user.restricted.identity' | language }}
+            </div>
+            <div class="alert-action">
+                <button type="button" class="btn btn-neutral" data-toggle="modal" data-target="#requireIdentityCheck"
+                        aria-label="Action Label">{{ 'general.user.restricted.identity.btn' | language }}</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-success fade" id="requireIdentityCheck" tabindex="-1"
+         role="dialog"
+         aria-labelledby="startIdentityCheck" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h6"
+                        id="modal_title_6">{{ 'site.cp.settings.address.identityCheck.available.modal' | language }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="py-3 text-center">
+                        <i class="fas fa-id-card fa-4x"></i>
+                        <h5
+                                class="heading h4 mt-4">{{ 'site.cp.settings.address.identityCheck.available.modal.title' | language }}</h5>
+                        <p>{{ 'site.cp.settings.address.identityCheck.available.modal.text' | language }}</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="requireIdentityCheck()"
+                            class="btn btn-sm btn-white">{{ 'site.cp.settings.address.identityCheck.available.modal.start' | language }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}

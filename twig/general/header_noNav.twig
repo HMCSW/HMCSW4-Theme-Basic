@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="{{ html_lang }}">
+<head>
+  <meta charset=utf-8>
+  <title>{{ website_title }}</title>
+
+  <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+  <style>@keyframes hidePreloader {
+             0% {
+                 width: 100%;
+                 height: 100%
+             }
+             100% {
+                 width: 0;
+                 height: 0
+             }
+         }
+
+    {% if nightMode == "device" %}
+      @media (prefers-color-scheme: light) {
+          body > div.preloader {
+              position: fixed;
+              background: #fff;
+              width: 100%;
+              height: 100%;
+              z-index: 1071;
+              opacity: 0;
+              transition: opacity .5s ease;
+              overflow: hidden;
+              pointer-events: none;
+              display: flex;
+              align-items: center;
+              justify-content: center
+          }
+      }
+
+      @media (prefers-color-scheme: dark) {
+          body > div.preloader {
+              position: fixed;
+              background: {% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %};
+              width: 100%;
+              height: 100%;
+              z-index: 1071;
+              opacity: 0;
+              transition: opacity .5s ease;
+              overflow: hidden;
+              pointer-events: none;
+              display: flex;
+              align-items: center;
+              justify-content: center
+          }
+      }
+
+    {% else %}
+
+      body > div.preloader {
+          position: fixed;
+          background: {% if nightMode == "true" %}{% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %}{% else %}#fff{% endif %};
+          width: 100%;
+          height: 100%;
+          z-index: 1071;
+          opacity: 0;
+          transition: opacity .5s ease;
+          overflow: hidden;
+          pointer-events: none;
+          display: flex;
+          align-items: center;
+          justify-content: center
+      }
+
+    {% endif %}
+
+      body:not(.loaded) > div.preloader {
+          opacity: 1
+      }
+
+      body:not(.loaded) {
+          overflow: hidden
+      }
+
+      body.loaded > div.preloader {
+          animation: hidePreloader .5s linear .5s forwards
+      }</style>
+  <script>window.addEventListener("load", function () {
+          setTimeout(function () {
+              document.querySelector("body").classList.add("loaded")
+          }, 300)
+      })
+  </script>
+
+
+  <meta name="robots" content="index,follow">
+  <base href="{{ url }}">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ website_description }}">
+  <meta name="keywords"
+        content="{{ config['name'] }}, {{ theme['keywords'] }}">
+  <meta name="author" content="{{ config['name'] }}"/>
+
+
+  <meta property="og:title" content="{{ website_title }}"/>
+  <meta property="og:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
+  <meta property="og:url" content="{{ url }}"/>
+  <meta property="og:site_name" content="{{ website_title }}"/>
+  <meta property="og:description" content="{{ website_description }}"/>
+  <meta property="og:locale" content="{{ language['current'] }}"/>
+  {% for language in language['all'] %}
+    <meta property="og:locale:alternate" content="{{ language }}"/>
+  {% endfor %}
+  <meta property="og:type" content="website"/>
+  <link rel="canonical" href="{{ url }}{{ canonical }}"/>
+
+  <meta name="twitter:title" content="{{ website_title }}"/>
+  <meta name="twitter:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
+  <meta name="twitter:url" content="{{ url }}"/>
+  <meta name="twitter:card" content="{{ website_description }}"/>
+  <meta name="twitter:site" content="{{ config['social']['twitter'] }}"/>
+  <meta name="twitter:creator" content="{{ name }}"/>
+
+  <!-- favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ theme['icons']['favicon']['packagePath'] }}/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192"
+        href="{{ theme['icons']['favicon']['packagePath'] }}/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-16x16.png">
+  <link rel="manifest" href="{{ url }}/manifest">
+  <link rel="mask-icon" href="{{ theme['icons']['favicon']['packagePath'] }}/safari-pinned-tab.svg" color="#5bbad5">
+  <link rel="shortcut icon" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon.ico">
+  <meta name="apple-mobile-web-app-title" content="{{ name }}">
+  <meta name="application-name" content="{{ name }}">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="{{ theme['icons']['favicon']['packagePath'] }}/mstile-144x144.png">
+  <meta name="msapplication-config" content="{{ theme['icons']['favicon']['packagePath'] }}/browserconfig.xml">
+  <meta name="theme-color" content="{{ theme['theme-color'] }}">
+
+  <link rel=stylesheet href="{{ url }}/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.css?version={{ version }}">
+  {% if theme['fontAwesome'] == false %}
+    <link rel=stylesheet href="{{ url }}/assets/libs/@fortawesome/fontawesome-free/css/all.min.css?version={{ version }}">
+  {% else %}
+    <link rel=stylesheet href="{{ theme['fontAwesome'] }}/css/all.min.css?version={{ version }}">
+  {% endif %}
+  <link rel="stylesheet" type="text/css" href="{{ url }}/assets/css/cookieconsent.min.css?version={{ version }}"/>
+
+  <span id="puhts-relativetime-config" style="display: none">{}</span>
+  <script type="application/javascript" async
+          src="https://cdn-01-services.the-systems.eu/js/puhts/2.1.0/bundle.js?version={{ version }}"></script>
+
+  {% if nightMode == "device" %}
+    {% if nightModeColor == "black" %}
+      <link rel=stylesheet href="{{ url }}/include/css/device_dark.css?version={{ version }}" id=stylesheet>
+    {% else %}
+      <link rel=stylesheet href="{{ url }}/include/css/device.css?version={{ version }}&black" id=stylesheet>
+    {% endif %}
+  {% else %}
+    {% if nightMode == "true" %}
+      {% if nightModeColor == "black" %}
+        <link rel=stylesheet href="{{ url }}/include/css/dark_black.css?version={{ version }}" id=stylesheet>
+      {% else %}
+        <link rel=stylesheet href="{{ url }}/include/css/dark.css?version={{ version }}" id=stylesheet>
+      {% endif %}
+    {% else %}
+      <link rel=stylesheet href="{{ url }}/include/css/light.css?version={{ version }}" id=stylesheet>
+    {% endif %}
+  {% endif %}
+  {{ javaScript['header']|raw }}
+  {{ css|raw }}
+
+
+  <style>
+      body.modal-open {
+          overflow: visible;
+      }
+  </style>
+</head>
+<body>
+
+{% if loader %}
+<!-- Preloader -->
+<div class="preloader">
+  <div class="spinner-border text-primary" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+{% endif %}
+
+<div id="moveModalHere">
+
+</div>

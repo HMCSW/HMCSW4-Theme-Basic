@@ -1,0 +1,43 @@
+{% include '/general/header.twig' %}
+<div class="main-content">
+  <section class="slice slice-lg">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 pb-5">
+          <h1 class="h3 text-center">{{ 'site.team' | language }}</h1>
+          <h2 class="h4 text-center">{{ 'site.team.description' | language }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row justify-content-center">
+
+        {% for member in admin['response'] %}
+          <div class="col-lg-4">
+            <div class="card card-fluid hover-translate-y-n10 hover-shadow-lg p-2">
+              <img class="card-img-top img-fluid" src="{{ member['icon'] }}" alt="{{ member['username'] }}">
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ member['firstname'] }} {{ member['lastname'] }}</h5>
+                <p class="card-text text-center">{{ member['group_name'] }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="row justify-content-center">
+        {% for member in team['response'] %}
+          <div class="col-lg-3">
+            <div class="card card-fluid hover-translate-y-n10 hover-shadow-lg p-2">
+              <img class="card-img-top img-fluid" src="{{ member['icon'] }}" alt="{{ member['username'] }}">
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ member['firstname'] }} {{ member['lastname'] }}</h5>
+                <p class="card-text text-center">{{ member['group_name'] }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+{% include '/general/footer.twig' %}

@@ -1,0 +1,324 @@
+{% include '/general/header.twig' %}
+<section>
+  <div class="container d-flex align-items-center text-center text-lg-left py-5 py-lg-6 border-bottom">
+    <div class="col px-0">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h2 class="h1 mb-2">{{ 'site.about.payment' | language }}</h2>
+          <h6 class="font-weight-light text-muted">{{ 'site.about.payment.description' | language }}</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="slice slice-lg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="paypal" title="PayPal" height="50" src="https://cdn.hosmatic.com/website/about/payment/paypal.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">PayPal</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.paypal' | language }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 ">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 mx-auto text-center">
+              <img alt="paysafecard" title="Paysafecard" height="45" class="mx-auto"
+                   src="https://cdn.hosmatic.com/website/about/payment/paysafecard.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">PaySafeCard</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.paysafecard' | language }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="giropay" title="Giropay" height="50" src="https://cdn.hosmatic.com/website/about/payment/giropay.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">GiroPay</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.giropay' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="klarna" title="Klarna" height="50" src="https://cdn.hosmatic.com/website/about/payment/klarna.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">Klarna</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.klarna' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <i class="fa-brands fa-5x fa-bitcoin"></i>
+            </div>
+            <h5 class="h6 mt-4 mb-1">{{ 'site.cart.method.coinbase'|language }}</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.crypto' | language }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="GooglePay" title="GooglePay" height="50" src="https://cdn.hosmatic.com/website/about/payment/google_pay.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">GooglePay</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.googlepay' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="mastercard" title="Mastercard" height="50" src="https://cdn.hosmatic.com/website/about/payment/mastercard.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">Mastercard</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.mastercard' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="ApplePay" title="ApplePay" height="50" src="https://cdn.hosmatic.com/website/about/payment/apple_pay.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">ApplePay</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.applepay' | language }}</p>
+          </div>
+
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="Sepa" title="Sepa" height="50" src="https://cdn.hosmatic.com/website/about/payment/sepa.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">SEPA</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.sepa' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="iDEAL" title="iDEAL" height="50" src="https://cdn.hosmatic.com/website/about/payment/ideal.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">iDEAL</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.iDEAL' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="EPS" title="EPS" height="50" src="https://cdn.hosmatic.com/website/about/payment/eps.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">EPS</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.eps' | language }}</p>
+          </div>
+
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="Bancontact" title="Bancontact" height="50" src="https://cdn.hosmatic.com/website/about/payment/bancontact.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">Bancontact</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.bancontact' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="przelewy24" title="Przelewy24" height="50" src="https://cdn.hosmatic.com/website/about/payment/przelewy24.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">Przelewy24</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.przelewy24' | language }}</p>
+          </div>
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+          <div class="card-body py-5 text-center h-100">
+            <div class="img-fluid mb-4 w-50 mx-auto">
+              <img alt="Wechat Pay" title="Wechat Pay" height="50" src="https://cdn.hosmatic.com/website/about/payment/wechat.svg"/>
+            </div>
+            <h5 class="h6 mt-4 mb-1">Wechat Pay</h5>
+            <p class="text-muted text-sm mb-0">{{ 'site.about.payment.method.wechat' | language }}</p>
+          </div>
+
+          <div class="card-footer">
+            <div class="row align-items-center">
+              <div class="col">
+                <span class="avatar avatar-sm rounded-circle"><a href="{{ url }}/about#climate" target="_blank"><img
+                      alt="Stripe Climate" src="https://cdn.hosmatic.com/website/about/climate/stripe.svg" title="Stripe Climate"
+                      loading="lazy" class="img-fluid"></a></span>
+                <span class="text-sm mb-0 avatar-content">{{ 'site.about.payment.climate' | language }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slice slice-lg pt-10 bg-primary">
+  <div class="shape-container shape-line shape-position-top shape-orientation-inverse">
+    <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg"
+         preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;"
+         xml:space="preserve" class="">
+      <polygon points="2560 0 2560 100 0 100"></polygon>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="row row-grid">
+      <div class="col-lg-8">
+        <span class="badge badge-warning badge-pill">{{ 'site.about.payment.info.badge' | language }}</span>
+        <h2 class="my-4 text-white">{{ 'site.about.payment.info' | language }}</h2>
+        <p
+          class="lead text-white lh-190">{{ 'site.about.payment.info.description'|language|replace({'@name': name }) }}</p>
+      </div>
+
+      <div class="col-lg-4">
+        <p class="lead lh-180 text-center">
+          <a href="{{ url }}/about#climate" target="_blank"><img alt="Stripe Climate"
+                                                                 src="https://cdn.hosmatic.com/website/about/climate/stripe.svg"
+                                                                 title="Stripe Climate" loading="lazy" height="250"
+                                                                 width="250" class="img-fluid"></a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% include '/general/footer.twig' %}

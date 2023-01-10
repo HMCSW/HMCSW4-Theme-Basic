@@ -1,0 +1,19 @@
+<!-- TODO: CHANGE IMAGE SERVER? -->
+<!-- should not be hardcoded anymore. -->
+{% if service['state'] == 1 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/template/active.png" alt="" class="img-fluid">
+{% elseif service['state'] == 2 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/waiting.gif" alt="" class="img-fluid">
+{% elseif service['state'] == 3 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/pay.png" alt="" class="img-fluid">
+{% elseif service['state'] == 4 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/template/pause.png" alt="" class="img-fluid">
+{% elseif service['state'] == 5 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/template/delete.png" alt="" class="img-fluid">
+{% elseif service['state'] == 6 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/template/delete.png" alt="" class="img-fluid">
+{% elseif service['state'] == 7 %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/template/delete.png" alt="" class="img-fluid">
+{% else %}
+  <img src="https://cdn.puh.hosting/puhhosting/product/icons/template/nix.png" alt="" class="img-fluid">
+{% endif %}

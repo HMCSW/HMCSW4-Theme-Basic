@@ -1,0 +1,184 @@
+{% if products['type'] == "plesk_license" %}
+  {% if products['package']['external_name'] == "PLSK_12_ADMIN_VPS" %}
+    <li><b>{{ 'site.products.specs.plesk_license.vps' | language }}</b></li>
+    <li><i class="fa fa-check"></i> 10 {{ 'site.products.specs.domains' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.wordpressToolkit' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.subscriptionManagment' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.accountManagment' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.resellerManagment' | language }}</li>
+  {% elseif products['package']['external_name'] == "PLSK_12_PRO_VPS" %}
+    <li><b>{{ 'site.products.specs.plesk_license.vps' | language }}</b></li>
+    <li><i class="fa fa-check"></i> 30 {{ 'site.products.specs.domains' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.wordpressToolkit' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.subscriptionManagment' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.accountManagment' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.resellerManagment' | language }}</li>
+  {% elseif products['package']['external_name'] == "PLSK_12_HOST_VPS" %}
+    <li><b>{{ 'site.products.specs.plesk_license.vps' | language }}</b></li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.unlimited' | language }} {{ 'site.products.specs.domains' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.wordpressToolkit' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.subscriptionManagment' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.accountManagment' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.resellerManagment' | language }}</li>
+  {% elseif products['package']['external_name'] == "PLSK_12_ADMIN" %}
+    <li><b>{{ 'site.products.specs.plesk_license.dedicated' | language }}</b></li>
+    <li><i class="fa fa-check"></i> 10 {{ 'site.products.specs.domains' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.wordpressToolkit' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.subscriptionManagment' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.accountManagment' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.resellerManagment' | language }}</li>
+  {% elseif products['package']['external_name'] == "PLSK_12_PRO" %}
+    <li><b>{{ 'site.products.specs.plesk_license.dedicated' | language }}</b></li>
+    <li><i class="fa fa-check"></i> 30 {{ 'site.products.specs.domains' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.wordpressToolkit' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.subscriptionManagment' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.accountManagment' | language }}</li>
+    <li><i class="fa fa-close"></i> {{ 'site.products.specs.plesk_license.resellerManagment' | language }}</li>
+  {% elseif products['package']['external_name'] == "PLSK_12_HOST" %}
+    <li><b>{{ 'site.products.specs.plesk_license.dedicated' | language }}</b></li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.unlimited' | language }} {{ 'site.products.specs.domains' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.wordpressToolkit' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.subscriptionManagment' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.accountManagment' | language }}</li>
+    <li><i class="fa fa-check"></i> {{ 'site.products.specs.plesk_license.resellerManagment' | language }}</li>
+  {% endif %}
+{% elseif products['type'] == "ts3audiobot" %}
+  <li><i class="fa fa-check"></i> {{ 'site.products.specs.ts3audiobot.youtube' | language }}</li>
+  <li><i class="fa fa-check"></i> {{ 'site.products.specs.ts3audiobot.radio' | language }}</li>
+  <li><i class="fa fa-check"></i> {{ 'site.products.specs.ts3audiobot.playlist' | language }}</li>
+  <li><i class="fa fa-check"></i> {{ 'site.products.specs.ts3audiobot.node' | language }}</li>
+{% else %}
+
+  {% if products['package']['specs']['customSpecs']|length != 0 %}
+    {% for name,value in products['package']['specs']['customSpecs'] %}
+      <li>{{ name }}: {{ value }}</li>
+    {% endfor %}
+  {% endif %}
+
+  {% if products['package']['specs']['disk'] != 0 and products['package']['specs']['disk'] != "" %}
+    <li>
+      {% if products['package']['specs']['disk'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['disk'] }}GB
+      {% endif %}
+      {{ 'site.products.specs.disk' | language }}
+      {% if products['package']['specs']['disk_type'] == "ssd" %}
+        (SSD)
+      {% elseif products['package']['specs']['disk_type'] == "nvme" %}
+        (NVME)
+      {% elseif products['package']['specs']['disk_type'] == "hdd" %}
+        (HDD)
+      {% elseif products['package']['specs']['disk_type'] == "floppy" %}
+        (Floppy)
+      {% endif %}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['domains'] != 0 and products['package']['specs']['domains'] != "" %}
+    <li>
+      {% if products['package']['specs']['domains'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['domains'] }}
+      {% endif %}
+      {{ 'site.products.specs.domains' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['subdomains'] != 0 and products['package']['specs']['subdomains'] != "" %}
+    <li>
+      {% if products['package']['specs']['subdomains'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['subdomains'] }}
+      {% endif %}
+      {{ 'site.products.specs.subdomains' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['databases'] != 0 and products['package']['specs']['databases'] != "" %}
+    <li>
+      {% if products['package']['specs']['databases'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['databases'] }}
+      {% endif %}
+      {{ 'site.products.specs.database' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['memory'] != 0 and products['package']['specs']['memory'] != "" %}
+    <li>
+      {% if products['package']['specs']['memory'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['memory'] }}MB
+      {% endif %}
+      {{ 'site.products.specs.ram' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['cpu'] != 0 and products['package']['specs']['cpu'] != "" %}
+    <li>
+      {% if products['package']['specs']['cpu'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['cpu'] / 100 }}
+      {% endif %}
+      {{ 'site.products.specs.cpu' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['emails'] != 0 and products['package']['specs']['emails'] != "" %}
+    <li>
+      {% if products['package']['specs']['emails'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['emails'] }}
+      {% endif %}
+      {{ 'site.products.specs.email' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['backups'] != 0 and products['package']['specs']['backups'] != "" %}
+    <li>
+      {% if products['package']['specs']['backups'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['backups'] }}
+      {% endif %}
+      {{ 'site.products.specs.backups' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['traffic'] != 0 and products['package']['specs']['traffic'] != "" %}
+    <li>
+      {% if products['package']['specs']['traffic'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['traffic'] }}GB
+      {% endif %}
+      {{ 'site.products.specs.traffic' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['ipv4']['count'] != 0 and products['package']['specs']['ipv4']['count'] != "" %}
+    <li>
+      {% if products['package']['specs']['ipv4']['count'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['ipv4']['count'] }}x {{ products['package']['specs']['ipv4']['net'] }}
+      {% endif %}
+      {{ 'site.products.specs.ipv4_net' | language }}
+    </li>
+  {% endif %}
+  {% if products['package']['specs']['ipv6']['count'] != 0 and products['package']['specs']['ipv6']['count'] != "" %}
+    <li>
+      {% if products['package']['specs']['ipv6']['net'] == "-1" %}
+        {{ 'site.products.specs.unlimited' | language }}
+      {% else %}
+        {{ products['package']['specs']['ipv6']['count'] }}x {{ products['package']['specs']['ipv6']['net'] }}
+      {% endif %}
+      {{ 'site.products.specs.ipv6_net' | language }}
+    </li>
+  {% endif %}
+
+{% endif %}
+{% if products["terminateInstant"] == true %}
+  <li><i class="fa fa-check"></i> {{ 'site.products.specs.terminateInstant' | language }}</li>
+{% endif %}
+{% if products["manuelSetup"] == true %}
+  <li><i class="fa-solid fa-clock"></i> {{ 'site.products.specs.manuelSetup' | language }}</li>
+{% endif %}

@@ -1,0 +1,176 @@
+<footer class=position-relative id=footer-main>
+  <div class="footer footer-dark bg-dark">
+    <div class="container">
+      <div class=row>
+        <div class="col-lg-4 mb-5 mb-lg-0">
+          <a href="{{ url }}"><img width="150" alt="{{ name }}" title="{{ name }}" loading="lazy"
+                                   src="{{ theme['icons']['banner']['dark']['svg'] }}"
+                                   id=footer-logo></a>
+          <p class="mt-4 text-sm opacity-8 pr-lg-4">{{ specialLang['website.description'] }}</p>
+
+          {% if config['legal']['show_tax'] != true %}
+            <p class="mt-4 text-sm opacity-8 pr-lg-4">{{ 'footer.noTax' | language }}</p>
+          {% endif %}
+          <ul class="nav mt-4">
+            {% if theme['social']['discord']['invite'] != null %}
+              <li class=nav-item><a title="Discord" class="nav-link pl-0"
+                                    href="{{ theme['social']['discord']['invite'] }}" target=_blank><i
+                    class="fab fa-discord"></i></a></li>
+            {% endif %}
+            {% if theme['social']['twitter'] != null %}
+              <li class=nav-item><a title="Twitter" class="nav-link pl-0" href="{{ theme['social']['twitter'] }}"
+                                    target=_blank><i class="fab fa-twitter"></i></a></li>
+            {% endif %}
+            {% if theme['social']['instagram'] != null %}
+              <li class=nav-item><a title="Instagram" class="nav-link pl-0" href="{{ theme['social']['instagram'] }}"
+                                    target=_blank><i class="fab fa-instagram"></i></a></li>
+            {% endif %}
+            {% if theme['social']['facebook'] != null %}
+              <li class=nav-item><a title="Facebook" class="nav-link pl-0" href="{{ theme['social']['facebook'] }}"
+                                    target=_blank><i class="fab fa-facebook"></i></a></li>
+            {% endif %}
+            {% if theme['social']['tiktok'] != null %}
+              <li class=nav-item><a title="TikTok" class="nav-link pl-0" href="{{ theme['social']['tiktok'] }}"
+                                    target=_blank><i class="fab fa-tiktok"></i></a></li>
+            {% endif %}
+            {% if theme['social']['github'] != null %}
+              <li class=nav-item><a title="GitHub" class="nav-link pl-0" href="{{ theme['social']['github'] }}"
+                                    target=_blank><i class="fab fa-github"></i></a></li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-6 col-sm-4 ml-lg-auto mb-5 mb-lg-0">
+          <h6 class="heading mb-3">{{ 'footer.products' | language }}</h6>
+          <ul class=list-unstyled>
+            {% for type in products %}
+              <li><a href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-lg-2 col-6 col-sm-4 mb-5 mb-lg-0">
+          <h6 class="heading mb-3">{{ 'footer.aboutUs' | language }}</h6>
+          <ul class=list-unstyled>
+            <li><a href="{{ url }}/news">{{ 'footer.aboutUs.news' | language }}</a></li>
+            {% if config['service']['statuspage']['enabled'] != false %}
+              <li><a href="{{ url }}/status">{{ 'footer.aboutUs.status' | language }}</a></li>
+            {% endif %}
+
+            {% if config['service']['faq']['enabled'] != false %}
+              <li><a href="{{ url }}/faq">{{ 'footer.aboutUs.faq' | language }}</a></li>
+            {% endif %}
+
+            <li><a href="{{ url }}/about/payment">{{ 'footer.aboutUs.payment' | language }}</a></li>
+            <li><a href="{{ url }}/reselling">{{ 'footer.aboutUs.reselling' | language }}</a></li>
+            <li><a href="{{ url }}/contact">{{ 'footer.contact' | language }}</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-6 col-sm-4 mb-5 mb-lg-0">
+          <h6 class="heading mb-3">{{ 'footer.legal' | language }}</h6>
+          <ul class=list-unstyled>
+            <li><a href="{{ url }}/legal/imprint">{{ 'footer.legal.imprint' | language }}</a></li>
+            <li><a href="{{ url }}/legal/privacy">{{ 'footer.legal.privacy' | language }}</a></li>
+            <li><a href="{{ url }}/legal/terms">{{ 'footer.legal.terms' | language }}</a></li>
+            <li><a href="{{ url }}/legal/withdrawal">{{ 'footer.legal.withdrawal' | language }}</a></li>
+            <li><a href="{{ url }}/legal/parents">{{ 'footer.aboutUs.parents' | language }}</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="divider divider-fade divider-dark my-4">
+      <div class="row align-items-center justify-content-md-between pb-4">
+        <div class=col-md-4>
+          <div class="copyright text-sm font-weight-bold text-center text-md-left">&copy; 2020 - {{ copyrightYear }} <a
+              href="{{ url }}" class=font-weight-bold target=_blank>{{ name }}</a>. All rights reserved
+          </div>
+        </div>
+        <div class=col-md-4>
+          <div class="text-sm font-weight-bold text-center">
+            <div class="dropdown">
+              <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                 aria-expanded="false" data-offset="0,10">
+                <img alt="{{ selectLang['current']['value'] }}" loading="lazy"
+                     title="{{ selectLang['current']['value'] }}"
+                     src="{{ url }}/assets/img/icons/flags/{{ selectLang['current']['short'] }}.svg">
+                <span class="d-none d-lg-inline-block text-white">{{ selectLang['current']['value'] }}</span>
+                <span class="d-lg-none text-white">{{ selectLang['current']['value'] }}</span>
+              </a>
+              <ul class="dropdown-menu text-black">
+                {% for key, value in selectLang['all'] %}
+                  <li>
+                    <a class="dropdown-item text-black" title="{{ key }}"
+                       href="{{ currentUrl }}?G_action=setLanguage&language={{ key }}">
+                      <img alt="{{ value['value'] }}" loading="lazy" title="{{ key['value'] }}"
+                           src="{{ url }}/assets/img/icons/flags/{{ value['short'] }}.svg">
+                      <span>{{ value['value'] }} ({{ key }})</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class=col-md-4>
+          <div class="copyright text-sm font-weight-bold text-center text-md-right">Powered by <a
+              href="{{ url }}/hmcsw" class=font-weight-bold target=_blank>HMCSW</a> {{ version }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url }}/assets/js/cookieconsent.min.js"></script>
+
+
+<script data-cfasync="false" src="{{ url }}/assets/js/initServiceWorker.js"></script>
+<script src="{{ url }}/assets/libs/jquery/dist/jquery.min.js"></script>
+<script src="{{ url }}/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url }}/assets/libs/svg-injector/dist/svg-injector.min.js"></script>
+<script src="{{ url }}/assets/libs/in-view/dist/in-view.min.js"></script>
+<script src="{{ url }}/assets/libs/sticky-kit/dist/sticky-kit.min.js"></script>
+<script src="{{ url }}/assets/libs/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="{{ url }}/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.js"></script>
+<script src="{{ url }}/assets/libs/typed.js/lib/typed.min.js"></script>
+<script src="{{ url }}/assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+{% if theme['fontAwesome'] == false %}
+  <script src="{{ url }}/assets/libs/@fortawesome/fontawesome-free/all/all.min.js?version={{ version }}"></script>
+{% else %}
+  <script src="{{ theme['fontAwesome'] }}/js/all.min.js?version={{ version }}"></script>
+{% endif %}
+
+<script src="{{ url }}/assets/libs/bootstrap-notify/bootstrap-notify.min.js"></script>
+<link rel="stylesheet" href="{{ url }}/assets/libs/animate.css/animate.min.css">
+<script>
+  function sendNotify(message, status){
+      var notify = $.notify(decodeURI(message).replace( /\+/g, ' ' ), {
+          type: status,
+          allow_dismiss: true,
+      });
+  }
+
+</script>
+
+{{ javaScript['footer']|raw }}
+
+<script src="{{ url }}/include/js/website.js"></script>
+<script>
+    /* MOVE modal body:
+        All HTML code with the class modalBodyToMove
+        must move in div identifier moveModalHere (div in the generic header)
+        to move them out of everything (specially the HTML tables)
+    */
+    var elements = document.querySelectorAll('.modal');
+    var classCount = elements.length;
+    console.log("Number of class modalBodyToMove: "+classCount);
+    if (classCount > 0){
+        for(var i = 0; i < elements.length; i++) {
+            if(!elements[i].classList.contains("modal-no-move")) {
+                document.getElementById('moveModalHere').appendChild(elements[i])
+            }
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{% include '/general/header.twig' %}
+<div class="main-content">
+  <section class="slice slice-lg min-vh-100 d-flex align-items-center bg-section-secondary">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-6 col-xl-7 order-md-2">
+          <img alt="{{ error_code }}" src="{{ url }}/assets/img/svg/illustrations/illustration-13.svg"
+               class="img-fluid">
+        </div>
+        <div class="col-12 col-md-6 col-xl-5 order-md-1 text-center text-md-left">
+          <h6 class="display-1 mb-3 font-weight-600 text-warning">Ooops!</h6>
+          <p class="lead text-lg mb-5">
+            {{ 'site.error.code.500'|language }}
+          </p>
+          <p class="lead text-lg mb-5">
+            {{ error_message }}
+          </p>
+          <a href="{{ url }}" class="btn btn-dark btn-icon hover-translate-y-n3">
+            <span class="btn-inner--icon">
+              <i class="fa-regular fa-home"></i>
+
+            </span>
+            <span class="btn-inner--text">{{ 'site.error.btn.back' | language }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% include '/general/footer.twig' %}
