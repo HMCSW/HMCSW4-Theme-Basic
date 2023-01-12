@@ -1,287 +1,297 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-9 order-lg-2">
-            {% include "general/actionMessage.twig" %}
-
-
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
             <div class="row">
-              <div class="col-lg-12" id="qrCodeLogin">
-                <div class="actions-toolbar py-2 mb-4">
-                  <h5 class="mb-1">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
-                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.qrCode.description' | language }}</p>
-                </div>
+                <div class="col-lg-6">
+                    {% include "general/actionMessage.twig" %}
+                    <div class="row">
+                        <div class="col-lg-12" id="qrCodeLogin">
+                            <div class="actions-toolbar py-2 mb-4">
+                                <h5 class="mb-1">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
+                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.qrCode.description' | language }}</p>
+                            </div>
 
-                <div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <div id="submitVideo">
-                          <video width="100%" height="auto" id="video">Gimme Permissions!</video>
+                            <div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="submitVideo">
+                                                <video width="100%" height="auto" id="video">Gimme Permissions!</video>
 
-                          <div class="custom-control custom-switch" id="flashToggleDIV">
-                            <input type="checkbox" class="custom-control-input" id="flashBox">
-                            <label class="custom-control-label" for="flashBox">{{ 'site.cp.settings.devices.qrCode.modal.flash' | language }}</label>
-                          </div>
-                          <label for="camList">{{ 'site.cp.settings.devices.qrCode.modal.camera' | language }}</label>
-                          <select class="custom-select" id="camList">
-                            <option value="environment" selected>{{ 'site.cp.settings.devices.qrCode.modal.camera.default' | language }}</option>
-                          </select>
-                        </div>
-                        <div id="submitCode" style="display:none">
-                          <h4>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.1' | language }}</h4>
-                          <h6 class="text-danger">{{ 'site.cp.settings.devices.qrCode.modal.submit.text.2' | language }}</h6>
-                          <h6>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.3' | language }}</h6>
+                                                <div class="custom-control custom-switch" id="flashToggleDIV">
+                                                    <input type="checkbox" class="custom-control-input" id="flashBox">
+                                                    <label class="custom-control-label"
+                                                           for="flashBox">{{ 'site.cp.settings.devices.qrCode.modal.flash' | language }}</label>
+                                                </div>
+                                                <label for="camList">{{ 'site.cp.settings.devices.qrCode.modal.camera' | language }}</label>
+                                                <select class="form-select" id="camList">
+                                                    <option value="environment"
+                                                            selected>{{ 'site.cp.settings.devices.qrCode.modal.camera.default' | language }}</option>
+                                                </select>
+                                            </div>
+                                            <div id="submitCode" style="display:none">
+                                                <h4>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.1' | language }}</h4>
+                                                <h6 class="text-danger">{{ 'site.cp.settings.devices.qrCode.modal.submit.text.2' | language }}</h6>
+                                                <h6>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.3' | language }}</h6>
 
-                          <button type="button" class="btn btn-danger" id="submitCodeBtn">{{ 'site.cp.settings.devices.qrCode.modal.submit.btn' | language }}</button>
+                                                <button type="button" class="btn btn-danger"
+                                                        id="submitCodeBtn">{{ 'site.cp.settings.devices.qrCode.modal.submit.btn' | language }}</button>
+                                            </div>
+                                            <div id="submitSuccess" style="display:none">
+                                                <h4>{{ 'site.cp.settings.devices.qrCode.modal.success' | language }}</h4>
+                                            </div>
+                                            <div id="submitFailed" style="display:none">
+                                                <h5>{{ 'site.cp.settings.devices.qrCode.modal.failed' | language }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" id="openCamera"
+                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.devices.qrCode.open' | language }}</button>
+
                         </div>
-                        <div id="submitSuccess" style="display:none">
-                          <h4>{{ 'site.cp.settings.devices.qrCode.modal.success' | language }}</h4>
-                        </div>
-                        <div id="submitFailed" style="display:none">
-                          <h5>{{ 'site.cp.settings.devices.qrCode.modal.failed' | language }}</h5>
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                </div>
-
-                <button type="button" id="openCamera" class="btn btn-sm btn-primary">{{ 'site.cp.settings.devices.qrCode.open' | language }}</button>
-
-              </div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="actions-toolbar py-2 mb-4">
-                  <h5 class="mb-1">{{ 'site.cp.settings.devices' | language }}</h5>
-                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.description' | language }}</p>
-                </div>
-                <div class="table-responsive">
-                  <table class="table table-cards align-items-center">
-                    <thead>
-                    <tr>
-                      <th scope="col"></th>
-                      <th>{{ 'site.cp.settings.devices.table.device' | language }}</th>
-                      <th>{{ 'site.cp.settings.devices.table.by' | language }}</th>
-                      <th>{{ 'site.cp.settings.devices.table.last' | language }}</th>
-                      <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for device in devices %}
-                      <tr>
-                        {% if device_id == device['device_id'] %}
-                          {% set device_color = "#00FF40" %}
-                        {% else %}
-                          {% set device_color = "" %}
-                        {% endif %}
-
-                        {% if device['device_info']['type'] == "desktop" %}
-                          {% set device_icon = "fa-desktop" %}
-                        {% elseif device['device_info']['type'] == "smartphone" %}
-                          {% set device_icon = "fa-mobile-screen-button" %}
-                        {% elseif device['device_info']['type'] == "tablet" %}
-                          {% set device_icon = "fa-tablet-screen-button" %}
-                        {% elseif device['device_info']['type'] == "tv" %}
-                          {% set device_icon = "fa-tv" %}
-                        {% elseif device['device_info']['type'] == "phablet" %}
-                          {% set device_icon = "fa-tablet-screen" %}
-                        {% elseif device['device_info']['type'] == "feature phone" %}
-                          {% set device_icon = "fa-mobile-retro" %}
-                        {% elseif device['device_info']['type'] == "console" %}
-                          {% set device_icon = "fa-game-console-handheld" %}
-                        {% elseif device['device_info']['type'] == "car browser" %}
-                          {% set device_icon = "fa-car" %}
-                        {% elseif device['device_info']['type'] == "smart display" %}
-                          {% set device_icon = "fa-display" %}
-                        {% elseif device['device_info']['type'] == "camera" %}
-                          {% set device_icon = "fa-camera-retro" %}
-                        {% elseif device['device_info']['type'] == "portable media player" %}
-                          {% set device_icon = "fa-mp3-player" %}
-                        {% elseif device['device_info']['type'] == "smart speaker" %}
-                          {% set device_icon = "fa-speaker" %}
-                        {% elseif device['device_info']['type'] == "wearable" %}
-                          {% set device_icon = "fa-watch-smart" %}
-                        {% elseif device['device_info']['type'] == "peripheral" %}
-                          {% set device_icon = "fa-computer-mouse" %}
-                        {% elseif device['device_info']['access']['type'] == "library" %}
-                          {% set device_icon = "fa-book-open" %}
-                        {% else %}
-                          {% set device_icon = "fa-question" %}
-                        {% endif %}
-
-                        <th scope="row">
-                          <i style="color:{{ device_color }}" class="fas {{ device_icon }} mr-2 fa-2x "></i>
-                        </th>
-                        <td>
-                          {% if device['device_info']['type'] == "smartphone" %}
-                            {% if device['device_info']['device']['model'] is empty and device['device_info']['device']['name'] is empty %}
-                              {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                            {% else %}
-                              {{ device ['device_info']['device']['name'] }} {{ device['device_info']['device']['model'] }}
-                              <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                            {% endif %}
-                          {% elseif device['device_info']['type'] == "tablet" %}
-                            {{ device['device_info']['device']['brand'] }} {{ device['device_info']['device']['model'] }}
-                            <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                          {% elseif device['device_info']['access']['type'] == "library" %}
-                            API
-                          {% elseif device['device_info']['system']['name'] != "" %}
-                            {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }} ( {{ device['device_info']['system']['platform'] }} )
-                          {% else %}
-                            Unknown Device
-                          {% endif %}
-                        </td>
-                        <td>
-                          {% if device['device_info']['access']['type'] == "browser" %}
-                            {{ device['device_info']['access']['name'] }} ( {{ device['device_info']['access']['version'] }} )
-                          {% elseif device['device_info']['access']['type'] == "library" %}
-                            {{ device['device_info']['access']['name'] }} ( {{ device['device_info']['access']['version'] }} )
-                          {% endif %}
-                        </td>
-                        <td><span
-                            data-relativetimestamp="{{ device['lastuse_at'] }}">{{ device['lastuse_at']|date("d.m.Y H:i") }}</span>
-                        </td>
-                        <td class="text-right">
-                          <div class="actions">
-                            <div class="dropdown">
-                              <a class="action-item" role="button" data-toggle="dropdown"
-                                 aria-haspopup="true" aria-expanded="false"><i
-                                  class="fas fa-ellipsis-h"></i></a>
-                              <div class="dropdown-menu dropdown-menu-right"
-                                   x-placement="bottom-end">
-
-
-                                <button type="submit" class="dropdown-item" data-toggle="modal"
-                                        data-target="#device-{{ device['device_id'] }}"><i
-                                    class="fas fa-eye"></i>{{ 'site.cp.settings.devices.table.show' | language }}
-                                </button>
-                                <form method="POST">
-                                  <input type="hidden" name="action" value="removeDevice">
-                                  <input type="hidden" name="csrf" value="{{ csrf }}">
-                                  <input type="hidden" name="device_id" value="{{ device['device_id'] }}">
-
-                                  <button type="submit" class="dropdown-item" href="#"><i
-                                      class="fas fa-trash-alt"></i>{{ 'site.cp.settings.devices.table.remove' | language }}
-                                  </button>
-                                </form>
-                              </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="actions-toolbar py-2 mb-4">
+                                <h5 class="mb-1">{{ 'site.cp.settings.devices' | language }}</h5>
+                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.description' | language }}</p>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <div class="modal fade" id="device-{{ device['device_id'] }}" tabindex="-1" role="dialog"
-                           aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                          <div class="modal-content">
+                            <div class="table-responsive">
+                                <table class="table table-cards align-items-center">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th>{{ 'site.cp.settings.devices.table.device' | language }}</th>
+                                        <th>{{ 'site.cp.settings.devices.table.by' | language }}</th>
+                                        <th>{{ 'site.cp.settings.devices.table.last' | language }}</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for device in devices %}
+                                        <tr>
+                                            {% if device_id == device['device_id'] %}
+                                                {% set device_color = "#00FF40" %}
+                                            {% else %}
+                                                {% set device_color = "" %}
+                                            {% endif %}
 
-                            <div class="modal-header">
-                              <h5 class="modal-title h6">
+                                            {% if device['device_info']['type'] == "desktop" %}
+                                                {% set device_icon = "fa-desktop" %}
+                                            {% elseif device['device_info']['type'] == "smartphone" %}
+                                                {% set device_icon = "fa-mobile-screen-button" %}
+                                            {% elseif device['device_info']['type'] == "tablet" %}
+                                                {% set device_icon = "fa-tablet-screen-button" %}
+                                            {% elseif device['device_info']['type'] == "tv" %}
+                                                {% set device_icon = "fa-tv" %}
+                                            {% elseif device['device_info']['type'] == "phablet" %}
+                                                {% set device_icon = "fa-tablet-screen" %}
+                                            {% elseif device['device_info']['type'] == "feature phone" %}
+                                                {% set device_icon = "fa-mobile-retro" %}
+                                            {% elseif device['device_info']['type'] == "console" %}
+                                                {% set device_icon = "fa-game-console-handheld" %}
+                                            {% elseif device['device_info']['type'] == "car browser" %}
+                                                {% set device_icon = "fa-car" %}
+                                            {% elseif device['device_info']['type'] == "smart display" %}
+                                                {% set device_icon = "fa-display" %}
+                                            {% elseif device['device_info']['type'] == "camera" %}
+                                                {% set device_icon = "fa-camera-retro" %}
+                                            {% elseif device['device_info']['type'] == "portable media player" %}
+                                                {% set device_icon = "fa-mp3-player" %}
+                                            {% elseif device['device_info']['type'] == "smart speaker" %}
+                                                {% set device_icon = "fa-speaker" %}
+                                            {% elseif device['device_info']['type'] == "wearable" %}
+                                                {% set device_icon = "fa-watch-smart" %}
+                                            {% elseif device['device_info']['type'] == "peripheral" %}
+                                                {% set device_icon = "fa-computer-mouse" %}
+                                            {% elseif device['device_info']['access']['type'] == "library" %}
+                                                {% set device_icon = "fa-book-open" %}
+                                            {% else %}
+                                                {% set device_icon = "fa-question" %}
+                                            {% endif %}
 
-                                {% if device['device_info']['type'] == "smartphone" %}
-                                  {% if device['device_info']['device']['model'] is empty and device['device_info']['device']['name'] is empty %}
-                                    {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                                  {% else %}
-                                    {{ device ['device_info']['device']['name'] }} {{ device['device_info']['device']['model'] }}
-                                    <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                                  {% endif %}
-                                {% elseif device['device_info']['type'] == "tablet" %}
-                                  {{ device['device_info']['device']['brand'] }} {{ device['device_info']['device']['model'] }}
-                                  <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                                {% elseif device['device_info']['access']['type'] == "library" %}
-                                  API
-                                {% else %}
-                                  {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }} ( {{ device['device_info']['system']['platform'] }} )
-                                {% endif %}
-                              </h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              {% if device['latest_ip'] != false and device['latest_ip'] != null %}
-                                <h5
-                                  class="mb-1">{{ 'site.cp.settings.devices.lastIP' | language }}</h5>
-                                <iframe height="300" id="iframe-{{ device['device_id'] }}"
-                                        src="about:blank"
-                                        style='display:none '>
-                                </iframe>
+                                            <th scope="row">
+                                                <i style="color:{{ device_color }}"
+                                                   class="fas {{ device_icon }} mr-2 fa-2x "></i>
+                                            </th>
+                                            <td>
+                                                {% if device['device_info']['type'] == "smartphone" %}
+                                                    {% if device['device_info']['device']['model'] is empty and device['device_info']['device']['name'] is empty %}
+                                                        {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                    {% else %}
+                                                        {{ device ['device_info']['device']['name'] }} {{ device['device_info']['device']['model'] }}
+                                                        <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                    {% endif %}
+                                                {% elseif device['device_info']['type'] == "tablet" %}
+                                                    {{ device['device_info']['device']['brand'] }} {{ device['device_info']['device']['model'] }}
+                                                    <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                {% elseif device['device_info']['access']['type'] == "library" %}
+                                                    API
+                                                {% elseif device['device_info']['system']['name'] != "" %}
+                                                    {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }} ( {{ device['device_info']['system']['platform'] }} )
+                                                {% else %}
+                                                    Unknown Device
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if device['device_info']['access']['type'] == "browser" %}
+                                                    {{ device['device_info']['access']['name'] }} ( {{ device['device_info']['access']['version'] }} )
+                                                {% elseif device['device_info']['access']['type'] == "library" %}
+                                                    {{ device['device_info']['access']['name'] }} ( {{ device['device_info']['access']['version'] }} )
+                                                {% endif %}
+                                            </td>
+                                            <td><span
+                                                        data-relativetimestamp="{{ device['lastuse_at'] }}">{{ device['lastuse_at']|date("d.m.Y H:i") }}</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <div class="actions">
+                                                    <div class="dropdown">
+                                                        <a class="btn" role="button" data-toggle="dropdown"
+                                                           aria-haspopup="true" aria-expanded="false"><i
+                                                                    class="fas fa-ellipsis-h"></i></a>
+                                                        <div class="dropdown-menu dropdown-menu-right"
+                                                             x-placement="bottom-end">
 
-                                <div id="button-{{ device['device_id'] }}" style="display:block" data-frameUrl="https://maps.google.de/maps?hl=de&q=%20{{ device['latest_ip']['loc'] | url_encode }}&t=&z=10&ie=utf8&iwloc=b&output=embed"
-                                  class="card bg-info hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
-                                  <div class="overflow-hidden align-self-center align-items-center">
-                                    <button type="button"
-                                            class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon">
-                                        <span class="btn-inner--icon text-white" onClick="showIFrame({{ device['device_id'] }});">
+
+                                                            <button type="submit" class="dropdown-item"
+                                                                    data-toggle="modal"
+                                                                    data-target="#device-{{ device['device_id'] }}"><i
+                                                                        class="fas fa-eye"></i>{{ 'site.cp.settings.devices.table.show' | language }}
+                                                            </button>
+                                                            <form method="POST">
+                                                                <input type="hidden" name="action" value="removeDevice">
+                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                                <input type="hidden" name="device_id"
+                                                                       value="{{ device['device_id'] }}">
+
+                                                                <button type="submit" class="dropdown-item" href="#"><i
+                                                                            class="fas fa-trash-alt"></i>{{ 'site.cp.settings.devices.table.remove' | language }}
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="device-{{ device['device_id'] }}" tabindex="-1"
+                                             role="dialog"
+                                             aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title h6">
+
+                                                            {% if device['device_info']['type'] == "smartphone" %}
+                                                                {% if device['device_info']['device']['model'] is empty and device['device_info']['device']['name'] is empty %}
+                                                                    {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                                {% else %}
+                                                                    {{ device ['device_info']['device']['name'] }} {{ device['device_info']['device']['model'] }}
+                                                                    <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                                {% endif %}
+                                                            {% elseif device['device_info']['type'] == "tablet" %}
+                                                                {{ device['device_info']['device']['brand'] }} {{ device['device_info']['device']['model'] }}
+                                                                <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                            {% elseif device['device_info']['access']['type'] == "library" %}
+                                                                API
+                                                            {% else %}
+                                                                {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }} ( {{ device['device_info']['system']['platform'] }} )
+                                                            {% endif %}
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        {% if device['latest_ip'] != false and device['latest_ip'] != null %}
+                                                            <h5
+                                                                    class="mb-1">{{ 'site.cp.settings.devices.lastIP' | language }}</h5>
+                                                            <iframe height="300" id="iframe-{{ device['device_id'] }}"
+                                                                    src="about:blank"
+                                                                    style='display:none '>
+                                                            </iframe>
+
+                                                            <div id="button-{{ device['device_id'] }}"
+                                                                 style="display:block"
+                                                                 data-frameUrl="https://maps.google.de/maps?hl=de&q=%20{{ device['latest_ip']['loc'] | url_encode }}&t=&z=10&ie=utf8&iwloc=b&output=embed"
+                                                                 class="card bg-info hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
+                                                                <div class="overflow-hidden align-self-center align-items-center">
+                                                                    <button type="button"
+                                                                            class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon">
+                                        <span class="btn-inner--icon text-white"
+                                              onClick="showIFrame({{ device['device_id'] }});">
                                            <i class="fa-solid fa-arrows-to-eye"></i>
                                         </span>
-                                    </button>
+                                                                    </button>
 
 
-                                  </div>
-                                </div>
+                                                                </div>
+                                                            </div>
 
-                                <h6 class="mb-1">
-                                  {{ device['latest_ip']['org'] }} ({{ device['latest_ip']['city'] }}
-                                  , {{ device['latest_ip']['region'] }})</h6>
-                                <hr/>
-                              {% endif %}
-                              <ul>
-                                {% for ip in device['ip_address'] %}
-                                  <li>{{ ip['ip_address'] }} ({{ ip['firstuse_at']|date("d.m.Y H:i") }})</li>
-                                {% endfor %}
-                              </ul>
+                                                            <h6 class="mb-1">
+                                                                {{ device['latest_ip']['org'] }}
+                                                                ({{ device['latest_ip']['city'] }}
+                                                                , {{ device['latest_ip']['region'] }})</h6>
+                                                            <hr/>
+                                                        {% endif %}
+                                                        <ul>
+                                                            {% for ip in device['ip_address'] %}
+                                                                <li>{{ ip['ip_address'] }}
+                                                                    ({{ ip['firstuse_at']|date("d.m.Y H:i") }})
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <tr class="table-divider"></tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
                             </div>
-                          </div>
                         </div>
-                      </div>
-                      <tr class="table-divider"></tr>
-                    {% endfor %}
+                    </div>
 
-                    </tbody>
-                  </table>
+
+                    <hr/>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form method="post">
+                                <input type="hidden" name="action" value="removeAllDevices">
+                                <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                <div class="actions-toolbar py-2 mb-4">
+                                    <h5 class="mb-1">{{ 'site.cp.settings.devices.removeAll' | language }}</h5>
+                                    <p
+                                            class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.removeAll.description' | language }}</p>
+                                </div>
+                                <div class="mt-4">
+                                    <button type="submit"
+                                            class="btn btn-lg btn-danger">{{ 'site.cp.settings.devices.removeAll.btn' | language }}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <br><br>
                 </div>
-              </div>
             </div>
-
-
-            <hr/>
-            <div class="row">
-              <div class="col-lg-12">
-                <form method="post">
-                  <input type="hidden" name="action" value="removeAllDevices">
-                  <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                  <div class="actions-toolbar py-2 mb-4">
-                    <h5 class="mb-1">{{ 'site.cp.settings.devices.removeAll' | language }}</h5>
-                    <p
-                      class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.removeAll.description' | language }}</p>
-                  </div>
-                  <div class="mt-4">
-                    <button type="submit"
-                            class="btn btn-lg btn-danger">{{ 'site.cp.settings.devices.removeAll.btn' | language }}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-            <br><br>
-          </div>
-          {% include 'cp/settings/nav.twig' %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

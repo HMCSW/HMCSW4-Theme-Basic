@@ -335,7 +335,7 @@
             <div class="form-group">
               <label for="teamId"
                      class="form-control-label">{{ 'site.cp.service.tab.team.changeTeam.team' | language }}</label>
-              <select required name="team_id" id="teamId" class="custom-select" required>
+              <select required name="team_id" id="teamId" class="form-select" required>
                 {% for team_id, team in teams %}
                   <option value="{{ team_id }}">{{ team['name'] }}</option>
                 {% endfor %}

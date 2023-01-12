@@ -1,139 +1,151 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      {% include 'cp/terminateUser.twig' %}
-      <div class="col-xl-12 d-lg-none">
-        <div class="row">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    {% include 'cp/terminateUser.twig' %}
+                    <div class="col-xl-12 d-lg-none">
+                        <div class="row">
 
-          {% for team in teams %}
-            <div class="col-lg-4" id="team_{{ team['team_id'] }}">
-              <div class=" card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
-                <div class="overflow-hidden align-self-center align-items-center">
-                  <a href="{{ url }}/cp/teams/{{ team['team_id'] }}" class="d-block align-self-center"></a>
-                </div>
-                <div class="card-body py-4">
+                            {% for team in teams %}
+                                <div class="col-lg-4" id="team_{{ team['team_id'] }}">
+                                    <div class=" card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+                                        <div class="overflow-hidden align-self-center align-items-center">
+                                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                               class="d-block align-self-center"></a>
+                                        </div>
+                                        <div class="card-body py-4">
 
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="text-center">
-                      <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
-                         class="h5 stretched-link lh-150">{{ team['name'] }}</a>
-                    </div>
-                    <div class="text-right">
-                      <div class="actions mr-n2">
-                        <button class="action-item"><i class="fa-regular fa-right-to-bracket"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-4">
-            <div
-              class="card bg-primary  hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
-              <div class="overflow-hidden align-self-center align-items-center">
-                <button type="button"
-                        class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon"
-                        data-toggle="modal" data-target="#createTeam">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="text-center">
+                                                    <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                                       class="h5 stretched-link lh-150">{{ team['name'] }}</a>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="actions mr-n2">
+                                                        <button class="btn"><i
+                                                                    class="fa-regular fa-right-to-bracket"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4">
+                                <div
+                                        class="card bg-primary  hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
+                                    <div class="overflow-hidden align-self-center align-items-center">
+                                        <button type="button"
+                                                class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon"
+                                                data-toggle="modal" data-target="#createTeam">
                                     <span class="btn-inner--icon text-white">
                                         <i class="fa-regular fa-plus"></i>
                                     </span>
-                </button>
+                                        </button>
 
 
-              </div>
-            </div>
+                                    </div>
+                                </div>
 
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-12 d-none d-lg-block">
-        <div class="row row-eq-height teams" id="teams">
-          {% for team in teams %}
-            <div class="col-lg-4" id="team_{{ team['team_id'] }}">
-              <div class=" card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
-                <div class="overflow-hidden align-self-center align-items-center">
-                  <a href="{{ url }}/cp/teams/{{ team['team_id'] }}" class="d-block align-self-center">
-                    <img height="300" width="300" alt="{{ team['name'] }}" src="{{ team['icon'] }}"
-                         class="card-img-top">
-                  </a>
-                </div>
-                <div class="card-body py-4">
-
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="text-center">
-                      <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
-                         class="h5 stretched-link lh-150">{{ team['name'] }}</a>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-right">
-                      <div class="actions mr-n2">
-                        <button class="action-item"><i class="fa-regular fa-right-to-bracket"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-4">
-            <div
-              class="card bg-primary  hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
-              <div class="overflow-hidden align-self-center align-items-center">
-                <button type="button"
-                        class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon"
-                        data-toggle="modal" data-target="#createTeam">
+                    <div class="col-xl-12 d-none d-lg-block">
+                        <div class="row row-eq-height teams" id="teams">
+                            {% for team in teams %}
+                                <div class="col-lg-4" id="team_{{ team['team_id'] }}">
+                                    <div class=" card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+                                        <div class="overflow-hidden align-self-center align-items-center">
+                                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                               class="d-block align-self-center">
+                                                <img height="300" width="300" alt="{{ team['name'] }}"
+                                                     src="{{ team['icon'] }}"
+                                                     class="card-img-top">
+                                            </a>
+                                        </div>
+                                        <div class="card-body py-4">
+
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="text-center">
+                                                    <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                                       class="h5 stretched-link lh-150">{{ team['name'] }}</a>
+                                                </div>
+                                                <div class="text-right">
+                                                    <div class="actions mr-n2">
+                                                        <button class="btn"><i
+                                                                    class="fa-regular fa-right-to-bracket"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4">
+                                <div
+                                        class="card bg-primary  hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
+                                    <div class="overflow-hidden align-self-center align-items-center">
+                                        <button type="button"
+                                                class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon"
+                                                data-toggle="modal" data-target="#createTeam">
                                     <span class="btn-inner--icon text-white">
                                         <i class="fa-regular fa-plus"></i>
                                     </span>
-                </button>
+                                        </button>
 
 
-              </div>
-            </div>
+                                    </div>
+                                </div>
 
-          </div>
-        </div>
-      </div>
+                            </div>
+                        </div>
+                    </div>
 
-      <div class="modal fade" id="createTeam" tabindex="-1" role="dialog" aria-labelledby="createTeam"
-           aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <form method="post">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-              <input type="hidden" name="action" value="createTeam">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ 'site.cp.teams.createTeam' | language }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label for="teamName"
-                           class="form-control-label">{{ 'site.cp.teams.createTeam.name' | language }}</label>
-                    <input class="form-control" type="text" id="teamName" name="name"
-                           placeholder="{{ 'site.cp.teams.createTeam.name.placeholder' | language }}" required>
-                  </div>
+                    <div class="modal fade" id="createTeam" tabindex="-1" role="dialog" aria-labelledby="createTeam"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form method="post">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="createTeam">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"
+                                            id="exampleModalLabel">{{ 'site.cp.teams.createTeam' | language }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="teamName"
+                                                       class="form-control-label">{{ 'site.cp.teams.createTeam.name' | language }}</label>
+                                                <input class="form-control" type="text" id="teamName" name="name"
+                                                       placeholder="{{ 'site.cp.teams.createTeam.name.placeholder' | language }}"
+                                                       required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                                        <button type="submit"
+                                                class="btn btn-primary">{{ 'general.modal.createBtn' | language }}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                <button type="submit" class="btn btn-primary">{{ 'general.modal.createBtn' | language }}</button>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

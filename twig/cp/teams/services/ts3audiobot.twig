@@ -529,25 +529,25 @@
                             <td>
                               <div class="d-flex align-items-center justify-content-end">
                                 <div class="actions ml-3">
-                                  <button type="button" class="action-item mr-2" data-toggle="modal"
+                                  <button type="button" class="btn btn-primary" data-toggle="modal"
                                           data-target="#list-{{ playlist['playlist_id'] }}"><i
                                       class="fas fa-pencil-alt"></i></button>
 
-                                  <form method="post" class="action-item">
+                                  <form method="post" class="btn">
                                     <input type="hidden" name="csrf" value="{{ csrf }}">
                                     <input type="hidden" name="action" value="playPlaylist">
                                     <input type="hidden" name="playlist_id" value="{{ playlist['playlist_id'] }}">
-                                    <button type="submit" class="action-item mr-2" data-toggle="tooltip" title=""
+                                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" title=""
                                             data-original-title="{{ 'site.cp.service.ts3audiobot.tab.playlist.play' | language }}">
                                       <i class="fas fa-play"></i>
                                     </button>
                                   </form>
-                                  <form method="post" class="action-item">
+                                  <form method="post" class="btn">
                                     <input type="hidden" name="csrf" value="{{ csrf }}">
                                     <input type="hidden" name="action" value="deletePlaylist">
                                     <input type="hidden" name="playlist_id" value="{{ playlist['playlist_id'] }}">
 
-                                    <button type="submit" class="action-item mr-2" data-toggle="tooltip" title=""
+                                    <button type="submit" class="btn btn-primary" data-toggle="tooltip" title=""
                                             data-original-title="{{ 'site.cp.service.ts3audiobot.tab.playlist.remove' | language }}">
                                       <i class="fas fa-times"></i>
                                     </button>
@@ -626,7 +626,7 @@
                                                    value="{{ playlist['playlist_id'] }}">
                                             <input type="hidden" name="item_id" value="{{ item['item_id'] }}">
 
-                                            <button type="submit" class="action-item mr-2" data-toggle="tooltip"
+                                            <button type="submit" class="btn btn-primary" data-toggle="tooltip"
                                                     title=""
                                                     data-original-title="{{ 'site.cp.service.ts3audiobot.tab.playlist.remove' | language }}">
                                               <i class="fas fa-times"></i>

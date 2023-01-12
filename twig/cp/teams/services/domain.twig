@@ -183,7 +183,7 @@
                               <div class="form-group">
                                 <label for="addDNS_type"
                                        class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.type' | language }}</label>
-                                <select class="custom-select" onselect="changeDNSType();" id="addDNS_type" name="type">
+                                <select class="form-select" onselect="changeDNSType();" id="addDNS_type" name="type">
                                   <option value="A">A</option>
                                   <option value="AAAA">AAAA</option>
                                   <option value="MX">MX</option>
@@ -209,7 +209,7 @@
                               <div class="form-group">
                                 <label for="addDNS_ttl"
                                        class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</label>
-                                <select class="custom-select" id="addDNS_ttl" name="ttl">
+                                <select class="form-select" id="addDNS_ttl" name="ttl">
                                   <option value="300">300</option>
                                 </select>
                               </div>
@@ -242,7 +242,7 @@
                               <div class="form-group">
                                 <label for="updateDNS_type"
                                        class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.type' | language }}</label>
-                                <select class="custom-select" id="updateDNS_type" name="type" disabled>
+                                <select class="form-select" id="updateDNS_type" name="type" disabled>
                                   <option value="A">A</option>
                                   <option value="AAAA">AAAA</option>
                                   <option value="MX">MX</option>
@@ -268,7 +268,7 @@
                               <div class="form-group">
                                 <label for="updateDNS_ttl"
                                        class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</label>
-                                <select class="custom-select" id="updateDNS_ttl" name="ttl">
+                                <select class="form-select" id="updateDNS_ttl" name="ttl">
                                   <option value="300">300</option>
                                 </select>
                               </div>
@@ -322,7 +322,7 @@
                               <div class="form-group">
                                 <label for="another_service_id"
                                        class="form-control-label">{{ 'site.cp.service.tab.domain.dnsHelper.service' | language }}</label>
-                                <select required name="another_service_id" id="another_service_id" class="custom-select"
+                                <select required name="another_service_id" id="another_service_id" class="form-select"
                                         required>
                                   {% for another_service in team['services'] %}
                                     {% if another_service['state'] == 1 and another_service['hostType'] == "plesk" %}

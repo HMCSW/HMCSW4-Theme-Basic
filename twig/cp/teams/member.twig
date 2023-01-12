@@ -71,12 +71,12 @@
                           {% if user['group']['group_id'] != 0 and user['user_id'] != userData['user_id'] %}
                             {% if 'team.removeMember'|checkTeamPermission == true %}
                               <a data-toggle="modal" data-target="#member_{{ user['user_id'] }}_remove"
-                                 class="action-item mr-2" title="{{ 'site.cp.teams.member.removeMember' | language }}">
+                                 class="btn btn-primary" title="{{ 'site.cp.teams.member.removeMember' | language }}">
                                 <i class="fa fa-trash"></i>
                               </a>
                             {% endif %}
                           {% elseif user['group']['group_id'] != 0 and user['user_id'] == userData['user_id'] %}
-                            <a href="#" class="action-item mr-2" data-toggle="modal" data-target="#leaveTeam"
+                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#leaveTeam"
                                title="{{ 'site.cp.teams.member.leaveTeam' | language }}">
                               <i class="fa fa-door-closed"></i>
                             </a>
@@ -161,7 +161,7 @@
                     <div class="col-md-12">
                       <label for="group"
                              class="form-control-label">{{ 'site.cp.teams.member.group' | language }}</label>
-                      <select name="group_id" id="group" class="custom-select" required>
+                      <select name="group_id" id="group" class="form-select" required>
                         {% for group in groups %}
                           <option {% if group['group_id'] == user['group']['group_id'] %}selected{% endif %}
                                   value="{{ group['group_id'] }}">{{ group['name'] }}</option>

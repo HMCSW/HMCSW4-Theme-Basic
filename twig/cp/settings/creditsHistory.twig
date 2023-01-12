@@ -1,85 +1,86 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-9 order-lg-2">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="actions-toolbar py-2 mb-4">
-                  <h5 class="mb-1">{{ 'site.cp.settings.creditsHistory' | language }}</h5>
-                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.creditsHistory.description' | language }}</p>
-                </div>
-                {% if credits|length == 0 %}
-                  {{ 'site.cp.settings.creditsHistory.table.empty' | language }}
-                {% else %}
-                  <div class="table-responsive">
-                    <table class="table table-cards align-items-center">
-                      <thead>
-                      <tr>
-                        <th scope="col"></th>
-                        <th>{{ 'site.cp.settings.creditsHistory.table.amount' | language }}</th>
-                        <th>{{ 'site.cp.settings.creditsHistory.table.action' | language }}</th>
-                        <th>{{ 'site.cp.settings.creditsHistory.table.created_at' | language }}</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {% for credit in credits %}
-                        <tr>
-                          <th scope="row">
-                            {% if credit['type'] == "plus" %}
-                              <i style="color:#00FF40" class="fas fa-arrow-up mr-2 fa-2x "></i>
-                            {% elseif credit['type'] == "minus" %}
-                              <i style="color:#ff0000" class="fas fa-arrow-down mr-2 fa-2x"></i>
+                    {% include '/general/actionMessage.twig' %}
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="actions-toolbar py-2 mb-4">
+                                <h5 class="mb-1">{{ 'site.cp.settings.creditsHistory' | language }}</h5>
+                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.creditsHistory.description' | language }}</p>
+                            </div>
+                            {% if credits|length == 0 %}
+                                {{ 'site.cp.settings.creditsHistory.table.empty' | language }}
                             {% else %}
-                              <i style="color:#ff0000" class="fas fa-question mr-2 fa-2x"></i>
-                            {% endif %}
-                          </th>
-                          <td>
-                            {{ credit['amount'] | creditsToEuro }}{{ "symbol"|currency }}
-                          </td>
-                          <td>
+                                <div class="table-responsive">
+                                    <table class="table table-cards align-items-center">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th>{{ 'site.cp.settings.creditsHistory.table.amount' | language }}</th>
+                                            <th>{{ 'site.cp.settings.creditsHistory.table.action' | language }}</th>
+                                            <th>{{ 'site.cp.settings.creditsHistory.table.created_at' | language }}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for credit in credits %}
+                                            <tr>
+                                                <th scope="row">
+                                                    {% if credit['type'] == "plus" %}
+                                                        <i style="color:#00FF40"
+                                                           class="fas fa-arrow-up mr-2 fa-2x "></i>
+                                                    {% elseif credit['type'] == "minus" %}
+                                                        <i style="color:#ff0000"
+                                                           class="fas fa-arrow-down mr-2 fa-2x"></i>
+                                                    {% else %}
+                                                        <i style="color:#ff0000" class="fas fa-question mr-2 fa-2x"></i>
+                                                    {% endif %}
+                                                </th>
+                                                <td>
+                                                    {{ credit['amount'] | creditsToEuro }}{{ "symbol"|currency }}
+                                                </td>
+                                                <td>
                         <span class="h6 text-sm font-weight-bold mb-0">
                           {% if credit['action'] == "affiliate" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.affiliate' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.affiliate' | language }}
                           {% elseif credit['action'] == "event" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.event' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.event' | language }}
                           {% elseif credit['action'] == "invoice" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.invoice' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.invoice' | language }}
                           {% elseif credit['action'] == "order" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.order' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.order' | language }}
                           {% elseif credit['action'] == "retour" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.retour' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.retour' | language }}
                           {% elseif credit['action'] == "send" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.send' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.send' | language }}
                           {% elseif credit['action'] == "topUp" %}
-                            {{ 'site.cp.settings.creditsHistory.table.action.topUp' | language }}
+                              {{ 'site.cp.settings.creditsHistory.table.action.topUp' | language }}
                           {% endif %}
                         </span>
-                            {% if credit['action'] == "send" %}
-                              <span class="d-block text-sm text-muted">{{ credit['extra']['username'] }}</span>
-                            {% elseif credit['action'] == "retour" %}
-                              <span class="d-block text-sm text-muted">{{ credit['extra']['name'] }}</span>
+                                                    {% if credit['action'] == "send" %}
+                                                        <span class="d-block text-sm text-muted">{{ credit['extra']['username'] }}</span>
+                                                    {% elseif credit['action'] == "retour" %}
+                                                        <span class="d-block text-sm text-muted">{{ credit['extra']['name'] }}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{ credit['created_at'] | date('d.m.Y H:i') }}</td>
+                                            </tr>
+                                            <tr class="table-divider"></tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             {% endif %}
-                          </td>
-                          <td>{{ credit['created_at'] | date('d.m.Y H:i') }}</td>
-                        </tr>
-                        <tr class="table-divider"></tr>
-                      {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                {% endif %}
-              </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          {% include 'cp/settings/nav.twig' %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

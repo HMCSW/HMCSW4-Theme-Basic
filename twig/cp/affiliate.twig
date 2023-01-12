@@ -1,144 +1,149 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      {% include 'cp/terminateUser.twig' %}
-      <div class="col-xl-12">
-        {% include '/general/actionMessage.twig' %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    {% include 'cp/terminateUser.twig' %}
+                    <div class="col-xl-12">
+                        {% include '/general/actionMessage.twig' %}
 
-        {% if affiliate['success'] %}
-          <div class="d-none d-md-block d-lg-block d-xl-block">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="card card-fluid">
-                  <div class="card-body">
-                    <h6 class="text-center"><i class="fas fa-2x fa-mouse-pointer"></i></h6>
-                    <h4
-                      class="text-center">{{ 'site.cp.affiliate.card.click' | language }}</h4>
-                    <h4 class="text-center">{{ stats['click_count'] }}</h4>
-                  </div>
+                        {% if affiliate['success'] %}
+                            <div class="d-none d-md-block d-lg-block d-xl-block">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card card-fluid">
+                                            <div class="card-body">
+                                                <h6 class="text-center"><i class="fas fa-2x fa-mouse-pointer"></i></h6>
+                                                <h4
+                                                        class="text-center">{{ 'site.cp.affiliate.card.click' | language }}</h4>
+                                                <h4 class="text-center">{{ stats['click_count'] }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card card-fluid">
+                                            <div class="card-body">
+                                                <h6 class="text-center"><i class="fas fa-2x fa-user-circle"></i></h6>
+                                                <h4 class="text-center">{{ 'site.cp.affiliate.card.register' | language }}</h4>
+                                                <h4 class="text-center">{{ stats['user_count'] }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card card-fluid">
+                                            <div class="card-body">
+                                                <h6 class="text-center"><i class="fas fa-2x fa-shopping-cart"></i></h6>
+                                                <h4 class="text-center">{{ 'site.cp.affiliate.card.order' | language }}</h4>
+                                                <h4 class="text-center">{{ stats['service_count'] }}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="card card-fluid">
+                                        <div class="card-body">
+                                            <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.url' | language }}</h5>
+                                            <h6 class="h6 mb-0 text-center"><a
+                                                        href="{{ url }}/aff/{{ affiliate['response']['affiliate_id'] }}">{{ url }}
+                                                    /aff/{{ affiliate['response']['affiliate_id'] }}</a>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="card card-fluid">
+                                        <div class="card-header">
+                                            <h5
+                                                    class="d-block h5 mb-0 text-center">{{ 'site.cp.affiliate.log' | language }}</h5>
+                                        </div>
+
+                                        <div class="card-body">
+
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">{{ 'site.cp.affiliate.table.type' | language }}</th>
+                                                        <th scope="col">{{ 'site.cp.affiliate.table.amount' | language }}</th>
+                                                        <th scope="col">{{ 'site.cp.affiliate.table.at' | language }}</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% if logs['response']|length == 0 %}
+                                                        <tr>
+                                                            <td>{{ 'site.cp.affiliate.table.nothing' | language }}</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    {% else %}
+                                                        {% for log in logs['response'] %}
+                                                            <tr>
+                                                                <td>
+                                                                    {% if log['type'] == "click" %}
+                                                                        {{ 'site.cp.affiliate.table.type.click' | language }}
+                                                                    {% elseif log['type'] == "register" %}
+                                                                        {{ 'site.cp.affiliate.table.type.register' | language }}
+                                                                    {% elseif log['type'] == "service" %}
+                                                                        {{ 'site.cp.affiliate.table.type.service' | language }}
+                                                                        ({{ log['service']['name'] }})
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>{{ log['amount'] | creditsToEuro }}{{ "symbol"|currency }}</td>
+                                                                <td>{{ log['created_at']|date("d.m.Y H:i") }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6
+                                                    class="h6 text-center">{{ 'site.cp.affiliate.payOut' | language }}</h6>
+
+                                            <form method="post" class="text-center">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <input type="hidden" name="action" value="payOut">
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'site.cp.affiliate.payOut.btn' | language }}</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="h5 text-center">{{ 'site.cp.affiliate.create' | language }}</h5>
+                                            <h6
+                                                    class="h6 text-center">{{ 'site.cp.affiliate.description' | language }}</h6>
+                                            <form method="post" class="text-center">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <input type="hidden" name="action" value="createAffiliate">
+                                                <button type="submit"
+                                                        class="text-center btn btn-primary">{{ 'site.cp.affiliate.create.btn' | language }}</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card card-fluid">
-                  <div class="card-body">
-                    <h6 class="text-center"><i class="fas fa-2x fa-user-circle"></i></h6>
-                    <h4 class="text-center">{{ 'site.cp.affiliate.card.register' | language }}</h4>
-                    <h4 class="text-center">{{ stats['user_count'] }}</h4>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card card-fluid">
-                  <div class="card-body">
-                    <h6 class="text-center"><i class="fas fa-2x fa-shopping-cart"></i></h6>
-                    <h4 class="text-center">{{ 'site.cp.affiliate.card.order' | language }}</h4>
-                    <h4 class="text-center">{{ stats['service_count'] }}</h4>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-
-          <div class="row">
-
-            <div class="col-md-12">
-              <div class="card card-fluid">
-                <div class="card-body">
-                  <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.url' | language }}</h5>
-                  <h6 class="h6 mb-0 text-center"><a
-                      href="{{ url }}/aff/{{ affiliate['response']['affiliate_id'] }}">{{ url }}/aff/{{ affiliate['response']['affiliate_id'] }}</a>
-                  </h6>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="card card-fluid">
-                <div class="card-header">
-                  <h5
-                    class="d-block h5 mb-0 text-center">{{ 'site.cp.affiliate.log' | language }}</h5>
-                </div>
-
-                <div class="card-body">
-
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                      <tr>
-                        <th scope="col">{{ 'site.cp.affiliate.table.type' | language }}</th>
-                        <th scope="col">{{ 'site.cp.affiliate.table.amount' | language }}</th>
-                        <th scope="col">{{ 'site.cp.affiliate.table.at' | language }}</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      {% if logs['response']|length == 0 %}
-                        <tr>
-                          <td>{{ 'site.cp.affiliate.table.nothing' | language }}</td>
-                          <td></td>
-                          <td></td>
-                        </tr>
-                      {% else %}
-                        {% for log in logs['response'] %}
-                          <tr>
-                            <td>
-                              {% if log['type'] == "click" %}
-                                {{ 'site.cp.affiliate.table.type.click' | language }}
-                              {% elseif log['type'] == "register" %}
-                                {{ 'site.cp.affiliate.table.type.register' | language }}
-                              {% elseif log['type'] == "service" %}
-                                {{ 'site.cp.affiliate.table.type.service' | language }}
-                                ({{ log['service']['name'] }})
-                              {% endif %}
-                            </td>
-                            <td>{{ log['amount'] | creditsToEuro }}{{ "symbol"|currency }}</td>
-                            <td>{{ log['created_at']|date("d.m.Y H:i") }}</td>
-                          </tr>
-                        {% endfor %}
-                      {% endif %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-body">
-                  <h6
-                    class="h6 text-center">{{ 'site.cp.affiliate.payOut' | language }}</h6>
-
-                  <form method="post" class="text-center">
-                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                    <input type="hidden" name="action" value="payOut">
-                    <button type="submit"
-                            class="btn btn-primary">{{ 'site.cp.affiliate.payOut.btn' | language }}</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% else %}
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="h5 text-center">{{ 'site.cp.affiliate.create' | language }}</h5>
-                  <h6
-                    class="h6 text-center">{{ 'site.cp.affiliate.description' | language }}</h6>
-                  <form method="post" class="text-center">
-                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                    <input type="hidden" name="action" value="createAffiliate">
-                    <button type="submit"
-                            class="text-center btn btn-primary">{{ 'site.cp.affiliate.create.btn' | language }}</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endif %}
-      </div>
+        </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

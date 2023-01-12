@@ -1,0 +1,151 @@
+<div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
+    {% if config['dev_mode'] %}
+        <div class="col-lg-12">
+            <div class="alert alert-group alert-warning alert-icon justify-content-center" role="alert">
+                <div class="alert-content">
+                    <b>The DevMode is activated! Expect higher loading times. Caching is disabled. Do
+                        not use in productive
+                        mode. </b>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if userData['email_activation'] != "true" %}
+        <div class="col-lg-12">
+            <div class="alert alert-warning" role="alert"><i class="fa-regular fa-triangle-exclamation"></i>
+                {{ 'site.cp.settings.emailNotVerified' | language }}
+                <form method="post" class="text-right">
+                    <input type="hidden" name="action" value="sendVerifyEmail">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <button type="submit" class="btn btn-warning"
+                            aria-label="Action Label">{{ 'site.cp.settings.emailNotVerified.btn' | language }}</button>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    <ul class="nav nav-pills flex-column mb-auto">
+
+        <li class="nav-item">
+            <a href="{{ url }}/cp" class="nav-link {% if currentSite_CP == "start" %}active{% else %}link-dark{% endif %}" aria-current="page">
+                {{ 'site.cp.tab.start' | language }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url }}/cp/teams" class="nav-link {% if currentSite_CP == "teams" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.teams' | language }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url }}/cp/invoice" class="nav-link {% if currentSite_CP == "invoice" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.invoice' | language }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url }}/cp/ticket" class="nav-link {% if currentSite_CP == "ticket" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.ticket' | language }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url }}/cp/balance" class="nav-link {% if currentSite_CP == "balance" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.balance' | language }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url }}/cp/affiliate" class="nav-link {% if currentSite_CP == "affiliate" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.affiliate' | language }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ url }}/cp/subscription" class="nav-link {% if currentSite_CP == "subscription" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.subscription' | language }}
+            </a>
+        </li>
+        <li class="mb-1">
+            <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                    data-bs-toggle="collapse" data-bs-target="#settings" aria-expanded="true">
+                {{ 'site.cp.tab.settings' | language }}
+            </button>
+            <div class="collapse  {% if currentSite_CP == "settings" %}show{% endif %}" id="settings">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="{{ url }}/cp/settings" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.general' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/userInfo" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.userInfo' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/devices" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.devices' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/security" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.security' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/mails" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.maillog' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/connectedAccounts" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.accounts' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/creditsHistory" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.creditsHistory' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/payment" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.payment' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/notification" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.notification' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/developer" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.developer' | language }}</a>
+                    </li>
+                    <li><a href="{{ url }}/cp/settings/badge" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.badge' | language }}</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <hr />
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ userData['icon'] }}" alt="{{ userData['name'] }}" width="32" height="32" class="rounded-circle me-2">
+            <strong>{{ userData['name'] }}</strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+            <a href="{{ url }}/cp" class="dropdown-item">
+                <i class="fa-regular fa-wave-pulse"></i>
+                <span>{{ 'header.cp' | language }}</span>
+            </a>
+
+            {% if 'cp.team'|checkPermission %}
+                <a href="{{ url }}/cp/team" class="dropdown-item">
+                    <i class="fa-regular fa-users"></i>
+                    <span>{{ 'header.cp.team' | language }}</span>
+                </a>
+            {% endif %}
+
+            {% if loginAs %}
+                <form method="post">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <input type="hidden" name="G_action" value="backToMyUser">
+
+                    <button type="submit" class="dropdown-item">
+                        <i class="fa-regular fa-backward-step"></i>
+                        <span>{{ 'header.cp.backToMyUser' | language }}</span>
+                    </button>
+                </form>
+            {% endif %}
+
+            <div class="dropdown-divider"></div>
+            <a href="{{ url }}/cp/settings" class="dropdown-item">
+                <i class="fa-regular fa-gear"></i>
+                <span>{{ 'header.settings' | language }}</span>
+            </a>
+            <a href="{{ url }}/cp/settings/devices#qrCodeLogin" class="dropdown-item">
+                <i class="fa-regular fa-qrcode"></i>
+                <span>{{ 'site.cp.settings.devices.qrCode' | language }}</span>
+            </a>
+            <a href="{{ url }}/cp/settings/payment" class="dropdown-item">
+                <i class="fa-regular fa-money-bill-trend-up"></i>
+                <span>{{ 'site.cp.settings.paymentHistory' | language }}</span>
+            </a>
+            <a href="{{ url }}/cp/teams" class="dropdown-item">
+                <i class="fa-regular fa-people-group"></i>
+                <span>{{ 'site.cp.tab.teams' | language }}</span>
+            </a>
+            <a href="{{ url }}/auth/logout" class="dropdown-item">
+                <i class="fa-regular fa-arrow-right-from-bracket"></i>
+                <span>{{ 'header.logout' | language }}</span>
+            </a>
+        </ul>
+    </div>
+</div>

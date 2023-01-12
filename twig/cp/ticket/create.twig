@@ -21,7 +21,7 @@
                 <div class="form-group col-lg-6">
                   <label for="input-service"
                          class="form-control-label">{{ 'site.cp.ticket.create.service_id' | language }}</label>
-                  <select id="input-service" name="service_id" class="custom-select">
+                  <select id="input-service" name="service_id" class="form-select">
                     <option value="0">{{ 'site.cp.ticket.create.service_id.nothing'|language }}</option>
                     {% for service in services %}
                       <option value="{{ service['service_id'] }}">{{ service['service_id'] }} - {{ service['name'] }} |

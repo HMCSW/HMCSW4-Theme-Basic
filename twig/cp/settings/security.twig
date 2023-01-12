@@ -1,380 +1,372 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-9 order-lg-2">
-            {% if action != false %}
-              {% if action['success'] == false %}
-                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-              {% else %}
-                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-              {% endif %}
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                    <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-                    </div>
-                    <div class="alert-content">
-                      {{ action['message'] | language }}
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="actions-toolbar py-2 mb-4">
-                  <h5 class="mb-1">{{ 'site.cp.settings.security' | language }}</h5>
-                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.security.description' | language }}</p>
-                </div>
-                <div class="row">
-                  <div class="col-lg-6 col-sm-12">
-                    <div class="card card-fluid">
-                      <div class="card-header">{{ 'site.cp.settings.security.email' | language }}</div>
-                      <div class="card-body">
-                        {% if twoFactor['email']['status'] == "true" %}
-                          {% if twoFactor['email']['ready'] == "false" %}
-                            <div class="text-center">
-                              <p class="text-center">{{ 'site.cp.settings.security.email.tutorial' | language }}</p>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    {% include "general/actionMessage.twig" %}
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="actions-toolbar py-2 mb-4">
+                                <h5 class="mb-1">{{ 'site.cp.settings.security' | language }}</h5>
+                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.security.description' | language }}</p>
                             </div>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="finishTwoFactor">
-                              <input type="hidden" name="type" value="email">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="card card-fluid">
+                                        <div class="card-header">{{ 'site.cp.settings.security.email' | language }}</div>
+                                        <div class="card-body">
+                                            {% if twoFactor['email']['status'] == "true" %}
+                                                {% if twoFactor['email']['ready'] == "false" %}
+                                                    <div class="text-center">
+                                                        <p class="text-center">{{ 'site.cp.settings.security.email.tutorial' | language }}</p>
+                                                    </div>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="finishTwoFactor">
+                                                        <input type="hidden" name="type" value="email">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                    <label for="email-code" class="form-control-label">Code</label>
-                                    <input id="email-code" name="code" class="form-control" type="text"
-                                           placeholder="ABC 123 DFG 456">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% else %}
-                            <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="removeTwoFactor">
-                              <input type="hidden" name="type" value="email">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="email-code" class="form-control-label">Code</label>
+                                                                    <input id="email-code" name="code"
+                                                                           class="form-control" type="text"
+                                                                           placeholder="ABC 123 DFG 456">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% else %}
+                                                    <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="removeTwoFactor">
+                                                        <input type="hidden" name="type" value="email">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% endif %}
-                        {% else %}
-                          <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
-                          <form method="POST">
-                            <input type="hidden" name="action" value="setupTwoFactor">
-                            <input type="hidden" name="type" value="email">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
+                                                <form method="POST">
+                                                    <input type="hidden" name="action" value="setupTwoFactor">
+                                                    <input type="hidden" name="type" value="email">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                            <div class="mt-4">
-                              <button type="submit"
-                                      class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                            </div>
-                          </form>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-6 col-sm-12">
-                    <div class="card card-fluid">
-                      <div class="card-header">{{ 'site.cp.settings.security.totp' | language }}</div>
-                      <div class="card-body">
-                        {% if twoFactor['totp']['status'] == "true" %}
-                          {% if twoFactor['totp']['ready'] == "false" %}
-                            <div class="text-center">
-                              <img src="{{ twoFactor['totp']['qr_code'] }}" alt="">
-                              <p class="text-center">{{ twoFactor ['totp']['secret'] }}</p>
-                              <p class="text-center">{{ 'site.cp.settings.security.totp.tutorial' | language }}</p>
-                            </div>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="finishTwoFactor">
-                              <input type="hidden" name="type" value="totp">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                    <label for="totp-code" class="form-control-label">Code</label>
-                                    <input id="totp-code" name="code" class="form-control" type="number"
-                                           placeholder="123 456">
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% else %}
-                            <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="removeTwoFactor">
-                              <input type="hidden" name="type" value="totp">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% endif %}
-                        {% else %}
-                          <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
-                          <form method="POST">
-                            <input type="hidden" name="action" value="setupTwoFactor">
-                            <input type="hidden" name="type" value="totp">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                            <div class="mt-4">
-                              <button type="submit"
-                                      class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                            </div>
-                          </form>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-sm-12">
-                    <div class="card card-fluid">
-                      <div class="card-header">{{ 'site.cp.settings.security.backup' | language }}</div>
-                      <div class="card-body">
-                        {% if twoFactor['backup']['status'] == "true" %}
-                          {% if twoFactor['backup']['ready'] == "false" %}
-                            <div class="text-center">
-                              <p class="text-center"><b>{{ twoFactor['backup']['secret'] }}</b></p>
-                              <p class="text-center">{{ 'site.cp.settings.security.backup.tutorial' | language }}</p>
-                            </div>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="finishTwoFactor">
-                              <input type="hidden" name="type" value="backup">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                    <label for="backup-code" class="form-control-label">Code</label>
-                                    <input id="backup-code" name="code" class="form-control" type="text"
-                                           placeholder="ABC 123 DFG 456">
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% else %}
-                            <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="removeTwoFactor">
-                              <input type="hidden" name="type" value="backup">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% endif %}
-                        {% else %}
-                          <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
-                          <form method="POST">
-                            <input type="hidden" name="action" value="setupTwoFactor">
-                            <input type="hidden" name="type" value="backup">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                            <div class="mt-4">
-                              <button type="submit"
-                                      class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                            </div>
-                          </form>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6 col-sm-12">
-                    <div class="card card-fluid">
-                      <div class="card-header">{{ 'site.cp.settings.security.phone' | language }}</div>
-                      <div class="card-body">
-                        {% if userData['phoneNumber']['status'] == "true" %}
-                          {% if twoFactor['phone']['status'] == "true" %}
-                            <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="removeTwoFactor">
-                              <input type="hidden" name="type" value="phone">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% else %}
-                            <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
-                            <form method="POST">
-                              <input type="hidden" name="action" value="setupTwoFactor">
-                              <input type="hidden" name="type" value="phone">
-                              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                              <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
-                              </div>
-                            </form>
-                          {% endif %}
-                        {% else %}
-                          <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
-                          <h6>{{ 'site.cp.settings.security.phone.noneNumber' | language }}</h6>
-                        {% endif %}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-lg-12 col-sm-12">
-                    <div class="card">
-                      <div class="card-header">{{ 'site.cp.settings.security.fido2' | language }}</div>
-                      <div class="card-body">
-
-                        {% if twoFactor['fido2']['ready'] == "true" %}
-                          <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
-                        {% else %}
-                          <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
-                        {% endif %}
-                        <div class="mt-4">
-                          <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                  data-target="#setupFido2">{{ 'site.cp.settings.security.setupBtn' | language }}
-                          </button>
-                        </div>
-
-                        <div class="modal fade" id="setupFido2" tabindex="-1" role="dialog"
-                             aria-labelledby="exampleModalLabel" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title">{{ 'site.cp.settings.security.fido2' | language }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
-                              <div class="modal-body">
-                                <div class="row row-grid">
-                                  <div class="col-12">
-                                    <div class="form-group">
-                                      <label for="fido-name"
-                                             class="form-control-label">{{ 'site.cp.settings.security.fido2.form.name' | language }}</label>
-                                      <input id="fido-name" name="fido-name" type="text" class="form-control"
-                                             placeholder="{{ 'site.cp.settings.security.fido2.form.name.placeholder' | language }}">
-                                    </div>
-                                  </div>
-
-                                  <div class="col-md-12">
-                                    <div class="card">
-                                      <div class="card-body">
-                                        <div class="row">
-                                          <div class="col-8">
-                                            <div class="custom-control custom-radio">
-                                              <input type="radio" class="custom-control-input" name="radio-mode" id="radio-mode-physical" checked>
-                                              <label class="custom-control-label h6 mb-0 lh-180" for="radio-mode-physical">{{ 'site.cp.settings.security.fido2.mode.physical'|language }}</label>
-                                            </div>
-                                            <p class="text-sm text-muted mt-2 mb-0">{{ 'site.cp.settings.security.fido2.mode.physical.description'|language}}</p>
-                                          </div>
-                                          <div class="col-4 text-right">
-                                            <i class="fa fa-solid fa-key fa-2x"></i>
-                                          </div>
+                                                    <div class="mt-4">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                    </div>
+                                                </form>
+                                            {% endif %}
                                         </div>
-                                      </div>
                                     </div>
-                                    <div class="card">
-                                      <div class="card-body">
-                                        <div class="row">
-                                          <div class="col-8">
-                                            <div class="custom-control custom-radio">
-                                              <input type="radio" class="custom-control-input" name="radio-mode" id="radio-mode-integrated">
-                                              <label class="custom-control-label h6 mb-0 lh-180" for="radio-mode-integrated">{{ 'site.cp.settings.security.fido2.mode.integrated'|language}}</label>
-                                            </div>
-                                            <p class="text-sm text-muted mt-2 mb-0">{{ 'site.cp.settings.security.fido2.mode.integrated.description'|language}}</p>
-                                          </div>
-                                          <div class="col-4 text-right">
-                                            <i class="fa fa-solid fa-laptop-mobile fa-2x"></i>
-                                          </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="card card-fluid">
+                                        <div class="card-header">{{ 'site.cp.settings.security.totp' | language }}</div>
+                                        <div class="card-body">
+                                            {% if twoFactor['totp']['status'] == "true" %}
+                                                {% if twoFactor['totp']['ready'] == "false" %}
+                                                    <div class="text-center">
+                                                        <img src="{{ twoFactor['totp']['qr_code'] }}" alt="">
+                                                        <p class="text-center">{{ twoFactor ['totp']['secret'] }}</p>
+                                                        <p class="text-center">{{ 'site.cp.settings.security.totp.tutorial' | language }}</p>
+                                                    </div>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="finishTwoFactor">
+                                                        <input type="hidden" name="type" value="totp">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="totp-code" class="form-control-label">Code</label>
+                                                                    <input id="totp-code" name="code"
+                                                                           class="form-control" type="number"
+                                                                           placeholder="123 456">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% else %}
+                                                    <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="removeTwoFactor">
+                                                        <input type="hidden" name="type" value="totp">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
+                                                <form method="POST">
+                                                    <input type="hidden" name="action" value="setupTwoFactor">
+                                                    <input type="hidden" name="type" value="totp">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                    <div class="mt-4">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                    </div>
+                                                </form>
+                                            {% endif %}
                                         </div>
-                                      </div>
                                     </div>
-                                  </div>
                                 </div>
 
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="card card-fluid">
+                                        <div class="card-header">{{ 'site.cp.settings.security.backup' | language }}</div>
+                                        <div class="card-body">
+                                            {% if twoFactor['backup']['status'] == "true" %}
+                                                {% if twoFactor['backup']['ready'] == "false" %}
+                                                    <div class="text-center">
+                                                        <p class="text-center">
+                                                            <b>{{ twoFactor['backup']['secret'] }}</b></p>
+                                                        <p class="text-center">{{ 'site.cp.settings.security.backup.tutorial' | language }}</p>
+                                                    </div>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="finishTwoFactor">
+                                                        <input type="hidden" name="type" value="backup">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                                <button type="button" class="btn btn-primary"
-                                        onclick="setupFido2();">{{ 'site.cp.settings.security.fido2.btnSetup' | language }}</button>
-                              </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="backup-code" class="form-control-label">Code</label>
+                                                                    <input id="backup-code" name="code"
+                                                                           class="form-control" type="text"
+                                                                           placeholder="ABC 123 DFG 456">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% else %}
+                                                    <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="removeTwoFactor">
+                                                        <input type="hidden" name="type" value="backup">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
+                                                <form method="POST">
+                                                    <input type="hidden" name="action" value="setupTwoFactor">
+                                                    <input type="hidden" name="type" value="backup">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                    <div class="mt-4">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                    </div>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-sm-12">
+                                    <div class="card card-fluid">
+                                        <div class="card-header">{{ 'site.cp.settings.security.phone' | language }}</div>
+                                        <div class="card-body">
+                                            {% if userData['phoneNumber']['status'] == "true" %}
+                                                {% if twoFactor['phone']['status'] == "true" %}
+                                                    <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="removeTwoFactor">
+                                                        <input type="hidden" name="type" value="phone">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.removeBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% else %}
+                                                    <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
+                                                    <form method="POST">
+                                                        <input type="hidden" name="action" value="setupTwoFactor">
+                                                        <input type="hidden" name="type" value="phone">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                                        <div class="mt-4">
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.security.setupBtn' | language }}</button>
+                                                        </div>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
+                                                <h6>{{ 'site.cp.settings.security.phone.noneNumber' | language }}</h6>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">{{ 'site.cp.settings.security.fido2' | language }}</div>
+                                        <div class="card-body">
+
+                                            {% if twoFactor['fido2']['ready'] == "true" %}
+                                                <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
+                                            {% else %}
+                                                <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
+                                            {% endif %}
+                                            <div class="mt-4">
+                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                        data-target="#setupFido2">{{ 'site.cp.settings.security.setupBtn' | language }}
+                                                </button>
+                                            </div>
+
+                                            <div class="modal fade" id="setupFido2" tabindex="-1" role="dialog"
+                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">{{ 'site.cp.settings.security.fido2' | language }}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row row-grid">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="fido-name"
+                                                                               class="form-control-label">{{ 'site.cp.settings.security.fido2.form.name' | language }}</label>
+                                                                        <input id="fido-name" name="fido-name"
+                                                                               type="text" class="form-control"
+                                                                               placeholder="{{ 'site.cp.settings.security.fido2.form.name.placeholder' | language }}">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-12">
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <div class="row">
+                                                                                <div class="col-8">
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <input type="radio"
+                                                                                               class="custom-control-input"
+                                                                                               name="radio-mode"
+                                                                                               id="radio-mode-physical"
+                                                                                               checked>
+                                                                                        <label class="custom-control-label h6 mb-0 lh-180"
+                                                                                               for="radio-mode-physical">{{ 'site.cp.settings.security.fido2.mode.physical'|language }}</label>
+                                                                                    </div>
+                                                                                    <p class="text-sm text-muted mt-2 mb-0">{{ 'site.cp.settings.security.fido2.mode.physical.description'|language }}</p>
+                                                                                </div>
+                                                                                <div class="col-4 text-right">
+                                                                                    <i class="fa fa-solid fa-key fa-2x"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card">
+                                                                        <div class="card-body">
+                                                                            <div class="row">
+                                                                                <div class="col-8">
+                                                                                    <div class="custom-control custom-radio">
+                                                                                        <input type="radio"
+                                                                                               class="custom-control-input"
+                                                                                               name="radio-mode"
+                                                                                               id="radio-mode-integrated">
+                                                                                        <label class="custom-control-label h6 mb-0 lh-180"
+                                                                                               for="radio-mode-integrated">{{ 'site.cp.settings.security.fido2.mode.integrated'|language }}</label>
+                                                                                    </div>
+                                                                                    <p class="text-sm text-muted mt-2 mb-0">{{ 'site.cp.settings.security.fido2.mode.integrated.description'|language }}</p>
+                                                                                </div>
+                                                                                <div class="col-4 text-right">
+                                                                                    <i class="fa fa-solid fa-laptop-mobile fa-2x"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                                                            <button type="button" class="btn btn-primary"
+                                                                    onclick="setupFido2();">{{ 'site.cp.settings.security.fido2.btnSetup' | language }}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            {% for key in twoFactor['fidoKeys'] %}
+                                                <hr class="my-3"/>
+                                                <div class="row align-items-center mb-3 shadow-none">
+                                                    <div class="col-auto">
+                                                        <div class="icon icon-shape bg-soft-success text-success">
+                                                            <i class="fas fa-key"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col pl-0 text-center">
+                                                        <span class="d-block h6 text-sm mb-0">{{ key['name'] }}</span>
+                                                        <p class="mb-0 text-xs">{{ key['created_at']|date("d.m.Y H:i") }}</p>
+                                                    </div>
+                                                    <div class="col-auto actions">
+                                                        <form method="post">
+                                                            <input name="fido_id" value="{{ key['fido_id'] }}"
+                                                                   type="hidden">
+                                                            <input type="hidden" name="action" value="removeFido2Key">
+                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                            <button type="submit" class="btn btn-primary">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <br><br>
                         </div>
-
-
-                        {% for key in twoFactor['fidoKeys'] %}
-                          <hr class="my-3"/>
-                          <div class="row align-items-center mb-3 shadow-none">
-                            <div class="col-auto">
-                              <div class="icon icon-shape bg-soft-success text-success">
-                                <i class="fas fa-key"></i>
-                              </div>
-                            </div>
-                            <div class="col pl-0 text-center">
-                              <span class="d-block h6 text-sm mb-0">{{ key['name'] }}</span>
-                              <p class="mb-0 text-xs">{{ key['created_at']|date("d.m.Y H:i") }}</p>
-                            </div>
-                            <div class="col-auto actions">
-                              <form method="post">
-                                <input name="fido_id" value="{{ key['fido_id'] }}" type="hidden">
-                                <input type="hidden" name="action" value="removeFido2Key">
-                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                <button type="submit" class="action-item mr-2">
-                                  <i class="fas fa-times"></i>
-                                </button>
-                              </form>
-                            </div>
-                          </div>
-                        {% endfor %}
-                      </div>
                     </div>
-                  </div>
-
                 </div>
-                <br><br>
-              </div>
             </div>
-          </div>
-          {% include 'cp/settings/nav.twig' %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

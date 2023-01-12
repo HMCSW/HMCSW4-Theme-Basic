@@ -1,648 +1,286 @@
 <!DOCTYPE html>
 <html lang="{{ html_lang }}">
 <head>
-  <meta charset=utf-8>
-  <title>{{ website_title }}</title>
+    <meta charset=utf-8>
+    <title>{{ website_title }}</title>
 
-  <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-  <style>@keyframes hidePreloader {
-             0% {
-                 width: 100%;
-                 height: 100%
-             }
-             100% {
-                 width: 0;
-                 height: 0
-             }
-         }
+    <style>@keyframes hidePreloader {
+               0% {
+                   width: 100%;
+                   height: 100%
+               }
+               100% {
+                   width: 0;
+                   height: 0
+               }
+           }
 
-    {% if nightMode == "device" %}
-      @media (prefers-color-scheme: light) {
-          body > div.preloader {
-              position: fixed;
-              background: #fff;
-              width: 100%;
-              height: 100%;
-              z-index: 1071;
-              opacity: 0;
-              transition: opacity .5s ease;
-              overflow: hidden;
-              pointer-events: none;
-              display: flex;
-              align-items: center;
-              justify-content: center
-          }
-      }
+        {% if nightMode == "device" %}
+        @media (prefers-color-scheme: light) {
+            body > div.preloader {
+                position: fixed;
+                background: #fff;
+                width: 100%;
+                height: 100%;
+                z-index: 1071;
+                opacity: 0;
+                transition: opacity .5s ease;
+                overflow: hidden;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+        }
 
-      @media (prefers-color-scheme: dark) {
-          body > div.preloader {
-              position: fixed;
-              background: {% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %};
-              width: 100%;
-              height: 100%;
-              z-index: 1071;
-              opacity: 0;
-              transition: opacity .5s ease;
-              overflow: hidden;
-              pointer-events: none;
-              display: flex;
-              align-items: center;
-              justify-content: center
-          }
-      }
+        @media (prefers-color-scheme: dark) {
+            body > div.preloader {
+                position: fixed;
+                background: {% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %};
+                width: 100%;
+                height: 100%;
+                z-index: 1071;
+                opacity: 0;
+                transition: opacity .5s ease;
+                overflow: hidden;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center
+            }
+        }
 
+        {% else %}
+
+        body > div.preloader {
+            position: fixed;
+            background: {% if nightMode == "true" %}{% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %}{% else %}#fff{% endif %};
+            width: 100%;
+            height: 100%;
+            z-index: 1071;
+            opacity: 0;
+            transition: opacity .5s ease;
+            overflow: hidden;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        {% endif %}
+
+        body:not(.loaded) > div.preloader {
+            opacity: 1
+        }
+
+        body:not(.loaded) {
+            overflow: hidden
+        }
+
+        body.loaded > div.preloader {
+            animation: hidePreloader .5s linear .5s forwards
+        }
+
+        /* custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 20px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #d6dee1;
+            border-radius: 20px;
+            border: 6px solid transparent;
+            background-clip: content-box;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #a8bbbf;
+        }
+
+    </style>
+    <script>window.addEventListener("load", function () {
+            setTimeout(function () {
+                document.querySelector("body").classList.add("loaded")
+            }, 300)
+        })
+    </script>
+
+
+    <meta name="robots" content="index,follow">
+    <base href="{{ url }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ website_description }}">
+    <meta name="keywords"
+          content="{{ config['name'] }}, {{ theme['keywords'] }}">
+    <meta name="author" content="{{ config['name'] }}"/>
+
+
+    <meta property="og:title" content="{{ website_title }}"/>
+    <meta property="og:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
+    <meta property="og:url" content="{{ url }}"/>
+    <meta property="og:site_name" content="{{ website_title }}"/>
+    <meta property="og:description" content="{{ website_description }}"/>
+    <meta property="og:locale" content="{{ language['current'] }}"/>
+    {% for language in language['all'] %}
+        <meta property="og:locale:alternate" content="{{ language['key'] }}"/>
+    {% endfor %}
+    <meta property="og:type" content="website"/>
+    <link rel="canonical" href="{{ url }}{{ canonical }}"/>
+
+    <meta name="twitter:title" content="{{ website_title }}"/>
+    <meta name="twitter:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
+    <meta name="twitter:url" content="{{ url }}"/>
+    <meta name="twitter:card" content="{{ website_description }}"/>
+    <meta name="twitter:site" content="{{ config['social']['twitter'] }}"/>
+    <meta name="twitter:creator" content="{{ name }}"/>
+
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="{{ theme['icons']['favicon']['packagePath'] }}/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192"
+          href="{{ theme['icons']['favicon']['packagePath'] }}/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-16x16.png">
+    <link rel="manifest" href="{{ url }}/manifest">
+    <link rel="mask-icon" href="{{ theme['icons']['favicon']['packagePath'] }}/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="{{ name }}">
+    <meta name="application-name" content="{{ name }}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="{{ theme['icons']['favicon']['packagePath'] }}/mstile-144x144.png">
+    <meta name="msapplication-config" content="{{ theme['icons']['favicon']['packagePath'] }}/browserconfig.xml">
+    <meta name="theme-color" content="{{ theme['theme-color'] }}">
+
+    <link rel=stylesheet
+          href="{{ url }}/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.css?version={{ version }}">
+    {% if theme['fontAwesome'] == false %}
+        <link rel=stylesheet
+              href="{{ url }}/assets/libs/@fortawesome/fontawesome-free/css/all.min.css?version={{ version }}">
     {% else %}
-
-      body > div.preloader {
-          position: fixed;
-          background: {% if nightMode == "true" %}{% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %}{% else %}#fff{% endif %};
-          width: 100%;
-          height: 100%;
-          z-index: 1071;
-          opacity: 0;
-          transition: opacity .5s ease;
-          overflow: hidden;
-          pointer-events: none;
-          display: flex;
-          align-items: center;
-          justify-content: center
-      }
-
+        <link rel=stylesheet href="{{ theme['fontAwesome'] }}/css/all.min.css?version={{ version }}">
     {% endif %}
+    <link rel="stylesheet" type="text/css" href="{{ url }}/assets/css/cookieconsent.min.css?version={{ version }}"/>
 
-      body:not(.loaded) > div.preloader {
-          opacity: 1
-      }
+    <span id="puhts-relativetime-config" style="display: none">{}</span>
+    <script type="application/javascript" async
+            src="https://cdn-01-services.the-systems.eu/js/puhts/2.1.0/bundle.js?version={{ version }}"></script>
 
-      body:not(.loaded) {
-          overflow: hidden
-      }
+    {#  {% if nightMode == "device" %} #}
+    {#    <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['device'] }}?version={{ version }}" id=stylesheet> #}
+    {#  {% else %} #}
+    {#    {% if nightMode == "true" %} #}
+    {#      <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['enabled_file'] }}?version={{ version }}" id=stylesheet> #}
+    {#    {% else %} #}
+    {#      <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['disabled_file'] }}?version={{ version }}" id=stylesheet> #}
+    {#    {% endif %} #}
+    {#  {% endif %} #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
 
-      body.loaded > div.preloader {
-          animation: hidePreloader .5s linear .5s forwards
-      }
-      /* custom scrollbar */
-      ::-webkit-scrollbar {
-          width: 20px;
-      }
-
-      ::-webkit-scrollbar-track {
-          background-color: transparent;
-      }
-
-      ::-webkit-scrollbar-thumb {
-          background-color: #d6dee1;
-          border-radius: 20px;
-          border: 6px solid transparent;
-          background-clip: content-box;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-          background-color: #a8bbbf;
-      }
-
-  </style>
-  <script>window.addEventListener("load", function () {
-          setTimeout(function () {
-              document.querySelector("body").classList.add("loaded")
-          }, 300)
-      })
-  </script>
+    <link href="{{ url }}/include/css/sidebars.css" rel="stylesheet">
+    {{ javaScript['header']|raw }}
+    {{ css|raw }}
 
 
-  <meta name="robots" content="index,follow">
-  <base href="{{ url }}">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{{ website_description }}">
-  <meta name="keywords"
-        content="{{ config['name'] }}, {{ theme['keywords'] }}">
-  <meta name="author" content="{{ config['name'] }}"/>
-
-
-  <meta property="og:title" content="{{ website_title }}"/>
-  <meta property="og:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
-  <meta property="og:url" content="{{ url }}"/>
-  <meta property="og:site_name" content="{{ website_title }}"/>
-  <meta property="og:description" content="{{ website_description }}"/>
-  <meta property="og:locale" content="{{ language['current'] }}"/>
-  {% for language in language['all'] %}
-    <meta property="og:locale:alternate" content="{{ language['key'] }}"/>
-  {% endfor %}
-  <meta property="og:type" content="website"/>
-  <link rel="canonical" href="{{ url }}{{ canonical }}"/>
-
-  <meta name="twitter:title" content="{{ website_title }}"/>
-  <meta name="twitter:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
-  <meta name="twitter:url" content="{{ url }}"/>
-  <meta name="twitter:card" content="{{ website_description }}"/>
-  <meta name="twitter:site" content="{{ config['social']['twitter'] }}"/>
-  <meta name="twitter:creator" content="{{ name }}"/>
-
-  <!-- favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ theme['icons']['favicon']['packagePath'] }}/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="192x192"
-        href="{{ theme['icons']['favicon']['packagePath'] }}/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-16x16.png">
-  <link rel="manifest" href="{{ url }}/manifest">
-  <link rel="mask-icon" href="{{ theme['icons']['favicon']['packagePath'] }}/safari-pinned-tab.svg" color="#5bbad5">
-  <link rel="shortcut icon" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon.ico">
-  <meta name="apple-mobile-web-app-title" content="{{ name }}">
-  <meta name="application-name" content="{{ name }}">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="msapplication-TileImage" content="{{ theme['icons']['favicon']['packagePath'] }}/mstile-144x144.png">
-  <meta name="msapplication-config" content="{{ theme['icons']['favicon']['packagePath'] }}/browserconfig.xml">
-  <meta name="theme-color" content="{{ theme['theme-color'] }}">
-
-  <link rel=stylesheet href="{{ url }}/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.css?version={{ version }}">
-  {% if theme['fontAwesome'] == false %}
-    <link rel=stylesheet href="{{ url }}/assets/libs/@fortawesome/fontawesome-free/css/all.min.css?version={{ version }}">
-  {% else %}
-    <link rel=stylesheet href="{{ theme['fontAwesome'] }}/css/all.min.css?version={{ version }}">
-  {% endif %}
-  <link rel="stylesheet" type="text/css" href="{{ url }}/assets/css/cookieconsent.min.css?version={{ version }}"/>
-
-  <span id="puhts-relativetime-config" style="display: none">{}</span>
-  <script type="application/javascript" async
-          src="https://cdn-01-services.the-systems.eu/js/puhts/2.1.0/bundle.js?version={{ version }}"></script>
-
-  {% if nightMode == "device" %}
-    <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['device'] }}?version={{ version }}" id=stylesheet>
-  {% else %}
-    {% if nightMode == "true" %}
-      <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['enabled_file'] }}?version={{ version }}" id=stylesheet>
-    {% else %}
-      <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['disabled_file'] }}?version={{ version }}" id=stylesheet>
-    {% endif %}
-  {% endif %}
-  {{ javaScript['header']|raw }}
-  {{ css|raw }}
-
-
-  <style>
-      body.modal-open {
-          overflow: visible;
-      }
-  </style>
+    <style>
+        body.modal-open {
+            overflow: visible;
+        }
+    </style>
 </head>
 <body>
-
-{% if loader %}
-  <!-- Preloader -->
-  <div class="preloader">
-    <div class="spinner-border text-primary" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
-
-{% endif %}
-
-
-{% if guest == false %}
-  <!-- User profile modal -->
-  <div class="modal fade fixed-right" id="modal-profile" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-vertical" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="px-4">
-            {% if dataSaver %}
-              <div class="text-center mb-4">
-                <div class="text-muted">{{ 'header.dataSaverEnabled' | language }}</div>
-              </div>
-            {% endif %}
-            <div class="d-flex">
-              <div class="avatar-parent-child mx-auto">
-                <img alt="{{ userData['name'] }}" src="{{ userData['icon'] }}" title="{{ userData['name'] }}"
-                     loading="lazy" class="avatar avatar-xl rounded-circle">
-                <span class="avatar-child avatar-badge bg-success"></span>
-              </div>
-            </div>
-            <div class="text-center mb-4">
-              <h6 class="h5 mb-0">{{ userData['name'] }}</h6>
-              <span class="d-block text-muted">{{ userData['email'] }}</span>
-              <span class="d-block text-muted">kn{{ userData['user_id'] }}</span>
-            </div>
-
-            <div class="mb-5">
-              <div class="text-center mb-3">
-                <span class="d-block h6 mb-1">{{ 'header.supportPin' | language }}</span>
-                {% if config['support']['supportpin']['enabled'] %}
-                  <h6 class="text-center">{{ supportPin }}</h6>
-                  <form method="post" class="text-center">
-                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                    <input type="hidden" name="G_action" value="newSupportPin">
-                    <button type="submit" class="btn btn-secondary btn-sm rounded-circle btn-icon-only">
-                                                            <span class="btn-inner--hidden">
-                                                                <i class="fas fa-sync"></i>
-                                                            </span>
-                    </button>
-                  </form>
-                {% else %}
-                  <h6 class="text-center">{{ 'header.supportPin.disabled' | language }}</h6>
-                {% endif %}
-              </div>
-            </div>
-
-            <div class="card shadow-none border-0 bg-section-secondary mt-8">
-              <div class="card-body pt-0 px-3 text-center">
-                <div class="pb-4 px-5 mt-n6">
-                  <img loading="lazy" title="{{ 'header.balance' | language }}" alt="{{ 'header.balance' | language }}"
-                       src="{{ url }}/assets/img/svg/illustrations/illustration-15.svg" class="img-fluid img-center"/>
-                </div>
-                <div class="text-center">
-                  <span class="d-block h6 mb-1">{{ 'header.balance' | language }}: {{ userData['credits'] | creditsToEuro }}{{ "symbol"|currency }}</span>
-                </div>
-                <a href="{{ url }}/cp/balance" class="btn btn-sm btn-primary">{{ 'header.balance.btn' | language }}</a>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-            {% for badge in userData['badges'] %}
-              <img alt="{{ badge['name'] }}" title="{{ badge['name'] }}" src="{{ badge['icon'] }}" class="avatar rounded-circle">
-            {% endfor %}
-            </div>
-            <hr />
-            <h6 class="text-center">{{ 'header.join' | language }}<br> {{ userData['created_at']|date("d.m.Y H:i") }}</h6>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <a href="{{ url }}/auth/logout" class="btn btn-block btn-sm btn-neutral btn-icon rounded-pill">
-            <span class="btn-inner--icon"><i class="fa-regular fa-arrow-right-from-bracket"></i></span>
-            <span class="btn-inner--text">{{ 'header.logout' | language }}</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endif %}
-<header id="header-main">
-  <nav
-    class="navbar navbar-main navbar-fixed-top navbar-expand-lg shadow {% if nightMode == "true" %} navbar-dark bg-dark {% elseif nightMode == "false" %} navbar-light bg-white {% endif %}"
-    id="navbar-main">
+<header class="p-3 text-bg-dark ">
     <div class="container">
-      <button class="navbar-toggler order-lg-2 ml-n3 ml-lg-0" type="button" data-toggle="collapse"
-              data-target="#navbar-main-collapse" aria-controls="navbar-main-collapse" aria-expanded="false"
-              aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-      </button>
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <img src="{{ theme['icons']['banner']['dark']['svg'] }}" width="100" height="32">
+            </a>
 
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
 
-      <a class="navbar-brand order-lg-1" href="{{ url }}">
-        {% if nightMode == "true" %}
-          <img alt="{{ name }}" title="{{ name }}" src="{{ theme['icons']['banner']['dark']['svg'] }}"
-               id="navbar-logo" loading="eager">
-        {% elseif nightMode == "false" %}
-          <img alt="{{ name }}" title="{{ name }}" src="{{ theme['icons']['banner']['light']['svg'] }}"
-               id="navbar-logo" loading="eager">
-        {% else %}
-          <img alt="{{ name }}" title="{{ name }}" src="{{ theme['icons']['banner']['light']['svg'] }}"
-               id="navbar-logo" loading="eager">
-        {% endif %}
-      </a>
-      <div class="collapse navbar-collapse navbar-collapse-overlay order-lg-3" id="navbar-main-collapse">
-        <div class="position-relative">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main-collapse"
-                  aria-controls="navbar-main-collapse" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fa-regular fa-x"></i>
-          </button>
-        </div>
-        <ul class="navbar-nav ml-lg-auto mr-3">
-
-          {% if config['dev_mode'] %}
-            <li class="nav-item nav-item-spaced d-none d-lg-block nav-link text-red"><span class="text-red">DevMode activated</span>
-            </li>
-          {% endif %}
-
-          <li class="nav-item nav-item-spaced d-none d-lg-block">
-            <a class="nav-link" href="{{ url }}">{{ 'header.home' | language }}</a>
-          </li>
-
-          {% if guest %}
-            <li class="nav-item nav-item-spaced d-lg-none">
-              <a class="nav-link" href="{{ url }}/auth/login">{{ 'header.login' | language }}</a>
-            </li>
-          {% endif %}
-          <li class="nav-item nav-item-spaced dropdown dropdown-animate" data-toggle="hover">
-            <a class="nav-link" data-toggle="dropdown" href="#" aria-haspopup="true"
-               aria-expanded="false">{{ 'header.aboutUs' | language }}</a>
-            <div class="dropdown-menu dropdown-menu-xl p-0">
-              <div class="row no-gutters">
-                <div class="col-12 col-lg-6 order-lg-2">
-                  <div class="dropdown-body dropdown-body-right bg-dropdown-secondary h-100">
-                    <h6 class="dropdown-header">{{ 'header.aboutUs.security' | language }}</h6>
-                    <div class="list-group list-group-flush">
-                      <div class="list-group-item bg-transparent border-0 px-0 py-2">
-                        <div class="media d-flex">
-                                                    <span class="h6">
-                                                            <i class="fa-regular fa-globe"></i>
-                                                        </span>
-                          <div class="media-body ml-2">
-                            <a href="{{ url }}/legal/parents"
-                               class="d-block h6 mb-0">{{ 'header.aboutUs.parents' | language }}</a>
-                            <small
-                              class="text-sm text-muted mb-0">{{ 'header.aboutUs.parents.description' | language }}</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <h6 class="dropdown-header mt-4">{{ 'header.aboutUs.more' | language }}</h6>
-                    <div class="list-group list-group-flush">
-
-                      {% if config['service']['faq']['enabled'] != false %}
-                        <div class="list-group-item bg-transparent border-0 px-0 py-2">
-                          <div class="media d-flex">
-                                                    <span class="h6">
-                                                            <i class="fa-regular fa-book-open"></i>
-                                                        </span>
-                            <div class="media-body ml-2">
-                              <a href="{{ url }}/faq"
-                                 class="d-block h6 mb-0">{{ 'header.aboutUs.more.faq' | language }}</a>
-                              <small
-                                class="text-sm text-muted mb-0">{{ 'header.aboutUs.more.faq.description' | language }}</small>
-                            </div>
-                          </div>
-                        </div>
-                      {% endif %}
-                      <div class="list-group-item bg-transparent border-0 px-0 py-2">
-                        <div class="media d-flex">
-                                                    <span class="h6">
-                                                            <i class="fa-regular fa-code"></i>
-                                                        </span>
-                          <div class="media-body ml-2">
-                            <a href="https://hmcsw4-docs.the-systems.eu/"
-                               class="d-block h6 mb-0">{{ 'header.aboutUs.more.api' | language }}</a>
-                            <small
-                              class="text-sm text-muted mb-0">{{ 'header.aboutUs.more.api.description' | language }}</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-6 order-lg-1 mt-4 mt-lg-0">
-                  <div class="dropdown-body">
-                    <h6 class="dropdown-header">{{ 'header.aboutUs' | language }}</h6>
-                    <div class="list-group list-group-flush">
-                      <div class="list-group-item border-0">
-                        <div class="media d-flex">
-                          <figure style="width: 40px;">
-                            <img loading="lazy" title="{{ 'header.aboutUs.team' | language }}"
-                                 alt="{{ 'header.aboutUs.team' | language }}"
-                                 src="{{ url }}/assets/img/svg/icons/Group.svg"
-                                 class="img-fluid" style="height: 40px;">
-                          </figure>
-                          <div class="media-body ml-3">
-                            <a href="{{ url }}/team" class="d-block h6 mb-0">{{ 'header.aboutUs.team' | language }}</a>
-                            <small
-                              class="text-sm text-muted mb-0">{{ 'header.aboutUs.team.description' | language }}</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="list-group-item border-0">
-                        <div class="media d-flex">
-                          <figure style="width: 40px;">
-                            <img loading="lazy" title="{{ 'header.aboutUs.partner' | language }}"
-                                 alt="{{ 'header.aboutUs.partner' | language }}"
-                                 src="{{ url }}/assets/img/svg/icons/Group_2.svg"
-                                 class="img-fluid" style="height: 40px;">
-                          </figure>
-                          <div class="media-body ml-3">
-                            <a href="{{ url }}/partner"
-                               class="d-block h6 mb-0">{{ 'header.aboutUs.partner' | language }}</a>
-                            <small
-                              class="text-sm text-muted mb-0">{{ 'header.aboutUs.partner.description' | language }}</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="list-group-item border-0">
-                        <div class="media d-flex align-items-center">
-                          <figure style="width: 40px;">
-                            <img loading="lazy" title="{{ 'header.aboutUs.aboutUs' | language }}"
-                                 alt="{{ 'header.aboutUs.aboutUs' | language }}"
-                                 src="{{ url }}/assets/img/svg/icons/Apps.svg" class="img-fluid"
-                                 style="width: 40px;">
-                          </figure>
-                          <div class="media-body ml-3">
-                            <a href="{{ url }}/about"
-                               class="d-block h6 mb-0">{{ 'header.aboutUs.aboutUs' | language }}</a>
-                            <small
-                              class="text-sm text-muted mb-0">{{ 'header.aboutUs.aboutUs.description' | language }}</small>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="list-group-item border-0">
-                        <div class="media d-flex align-items-center">
-                          <figure style="width: 40px;">
-                            <img loading="lazy" title="{{ 'header.aboutUs.reselling' | language }}"
-                                 alt="{{ 'header.aboutUs.reselling' | language }}"
-                                 src="{{ url }}/assets/img/svg/icons/Cloud.svg" class="img-fluid"
-                                 style="width: 40px;">
-                          </figure>
-                          <div class="media-body ml-3">
-                            <a href="{{ url }}/reselling"
-                               class="d-block h6 mb-0">{{ 'header.aboutUs.reselling' | language }}</a>
-                            <small
-                              class="text-sm text-muted mb-0">{{ 'header.aboutUs.reselling.description' | language }}</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <!-- Pages menu -->
-          <li class="nav-item nav-item-spaced dropdown dropdown-animate" data-toggle="hover">
-            <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-               aria-expanded="false">{{ 'header.products' | language }}</a>
-            <div class="dropdown-menu dropdown-menu-md p-0">
-              <ul class="list-group list-group-flush px-lg-4">
-
-                {% for type in products %}
-                  <li class="dropdown dropdown-animate dropdown-submenu" data-toggle="hover">
-
-                    {% if type['category']|length > 1 %}
-                      <a href="{{ url }}/p/{{ type['type'] }}"
-                         class="list-group-item list-group-item-action dropdown-toggle" role="button"
-                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <div class="d-flex">
-                          <figure style="width: 20px;">
-                            <img alt="{{ type['name'] }}" title="{{ type['name'] }}" loading="lazy"
-                                 src="{{ url }}/assets/img/svg/icons/{{ type['image'] }}"
-                                 class="svg-inject img-fluid" style="height: 20px;">
-                          </figure>
-                          <div class="ml-3">
-                            <h6 class="heading mb-0">{{ type['name'] }}</h6>
-                          </div>
-                        </div>
-                      </a>
-                      <ul class="dropdown-menu">
-                        {% set categorys = type['category'] %}
-                        {% for category in categorys %}
-                          <li>
-                            <a class="dropdown-item"
-                               href="{{ url }}/p/{{ type['type'] }}{% if category['default'] != "true" %}#{{ category['name']|lower|slugify }}{% endif %}">
-                              {{ category['name'] }}
-                            </a>
-                          </li>
+                {% if config['dev_mode'] %}
+                    <li class="nav-item nav-item-spaced d-none d-lg-block nav-link text-red"><span class="text-white">DevMode activated</span>
+                    </li>
+                {% endif %}
+                <li><a class="nav-link px-2 text-white" href="{{ url }}">{{ 'header.home' | language }}</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link px-2 text-white dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ 'header.products' | language }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% for type in products %}
+                            <li><a class="dropdown-item" href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a>
+                            </li>
                         {% endfor %}
-                      </ul>
-                    {% else %}
-                      <a href="{{ url }}/p/{{ type['type'] }}" class="list-group-item list-group-item-action"
-                         role="button" aria-haspopup="true" aria-expanded="false">
-                        <div class="d-flex">
-                          <figure style="width: 20px;">
-                            <img alt="{{ type['name'] }}" title="{{ type['name'] }}" loading="lazy"
-                                 src="{{ url }}/assets/img/svg/icons/{{ type['image'] }}"
-                                 class="svg-inject img-fluid" style="height: 20px;">
-                          </figure>
-                          <div class="ml-3">
-                            <h6 class="heading mb-0">{{ type['name'] }}</h6>
-                          </div>
-                        </div>
-                      </a>
-                    {% endif %}
-                  </li>
-                {% endfor %}
-                <li>
-                  <div class="d-none d-lg-block py-3 bg-transparent">
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <a href="{{ url }}/p/giftcode"
-                           class="dropdown-item">{{ 'header.products.giftcodes' | language }}</a>
-                      </div>
-                    </div>
-                  </div>
+                    </ul>
                 </li>
-              </ul>
+            </ul>
 
-            </div>
-          </li>
-          {% if guest %}
-            <li class="nav-item nav-item-spaced d-none d-lg-block">
-              <a class="nav-link" href="{{ url }}/auth/login">{{ 'header.login' | language }}</a>
-            </li>
-          {% endif %}
-        </ul>
-        <!-- Right navigation -->
-        {% if guest == false %}
-          <ul class="navbar-nav align-items-lg-center d-lg-flex ml-lg-auto">
 
-            <li class="nav-item dropdown dropdown-animate">
-              <a class="nav-link nav-link-icon px-2" href="{{ url }}/cart"><span id="cartCountHeader">{{ cartCount }}</span>
-                 <i class="fa-regular fa-shopping-cart"></i>
-              </a>
-            </li>
-            <li class="nav-item dropdown dropdown-animate">
-              <a class="nav-link nav-link-icon px-2" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                 aria-expanded="false">
-                <i class="fa-regular fa-gear"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right dropdown-menu-arrow p-3">
-                <h6 class="dropdown-header px-0 mb-2 text-primary">Hi, {{ userData['name'] }}!</h6>
-                <a href="{{ url }}/cp" class="dropdown-item">
-                  <i class="fa-regular fa-wave-pulse"></i>
-                  <span>{{ 'header.cp' | language }}</span>
-                </a>
+            {% if guest %}
+                <div class="text-end">
+                    <a href="{{ url }}/auth/login"
+                       class="btn btn-outline-light me-2">{{ 'header.login' | language }}</a>
+                </div>
+            {% else %}
 
-                {% if 'cp.team'|checkPermission %}
-                  <a href="{{ url }}/cp/team" class="dropdown-item">
-                    <i class="fa-regular fa-users"></i>
-                    <span>{{ 'header.cp.team' | language }}</span>
-                  </a>
-                {% endif %}
-
-                {% if loginAs %}
-                  <form method="post">
-                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                    <input type="hidden" name="G_action" value="backToMyUser">
-
-                    <button type="submit" class="dropdown-item">
-                      <i class="fa-regular fa-backward-step"></i>
-                      <span>{{ 'header.cp.backToMyUser' | language }}</span>
-                    </button>
-                  </form>
-                {% endif %}
-
-                <div class="dropdown-divider"></div>
-                <a href="{{ url }}/cp/settings" class="dropdown-item">
-                  <i class="fa-regular fa-gear"></i>
-                  <span>{{ 'header.settings' | language }}</span>
+              <div class="text-end">
+                <a class="px-2 nav-item text-white" style=" text-decoration: none" href="{{ url }}/cart"><span id="cartCountHeader">{{ cartCount }}</span>
+                  <i class="fa-regular fa-shopping-cart"></i>
                 </a>
-                <a href="{{ url }}/cp/settings/devices#qrCodeLogin" class="dropdown-item">
-                  <i class="fa-regular fa-qrcode"></i>
-                  <span>{{ 'site.cp.settings.devices.qrCode' | language }}</span>
-                </a>
-                <a href="{{ url }}/cp/settings/payment" class="dropdown-item">
-                  <i class="fa-regular fa-money-bill-trend-up"></i>
-                  <span>{{ 'site.cp.settings.paymentHistory' | language }}</span>
-                </a>
-                <a href="{{ url }}/cp/teams" class="dropdown-item">
-                  <i class="fa-regular fa-people-group"></i>
-                  <span>{{ 'site.cp.tab.teams' | language }}</span>
-                </a>
-                <a href="{{ url }}/auth/logout" class="dropdown-item">
-                  <i class="fa-regular fa-arrow-right-from-bracket"></i>
-                  <span>{{ 'header.logout' | language }}</span>
-                </a>
-              </div>
-            </li>
-          </ul>
-        {% endif %}
-      </div>
-      {% if guest == false %}
-        <div class="order-lg-4 ml-lg-3">
-          <a class="" href="#modal-profile" role="button" data-toggle="modal">
-                        <span class="avatar rounded-circle">
-                            <img loading="eager" title="{{ userData['name'] }}" alt="{{ userData['name'] }}"
+                <a href="{{ url }}/auth/login"><span class="avatar rounded-circle">
+                            <img height="50" class="rounded" loading="eager" title="{{ userData['name'] }}" alt="{{ userData['name'] }}"
                                  src="{{ userData['icon'] }}">
                         </span>
-          </a>
+                </a>
+              </div>
+            {% endif %}
         </div>
-      {% endif %}
     </div>
-  </nav>
 </header>
 
 
 {% if nightMode == "device" %}
-  <script defer>
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          style_dark();
-      } else {
-          style_light();
-      }
+    <script defer>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            style_dark();
+        } else {
+            style_light();
+        }
 
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-          const newColorScheme = e.matches ? 'dark' : 'light'
-          if (newColorScheme === "dark") {
-              style_dark();
-          } else {
-              style_light();
-          }
-      });
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            const newColorScheme = e.matches ? 'dark' : 'light'
+            if (newColorScheme === "dark") {
+                style_dark();
+            } else {
+                style_light();
+            }
+        });
 
-      function style_dark() {
-          document.getElementById('navbar-main').setAttribute("class", "navbar navbar-main navbar-expand-lg shadow navbar-dark bg-dark");
-          document.getElementById('navbar-logo').setAttribute("src", "{{ theme['icons']['banner']['dark']['svg'] }}");
-      }
+        function style_dark() {
+            document.getElementById('navbar-main').setAttribute("class", "navbar navbar-main navbar-expand-lg shadow navbar-dark bg-dark");
+            document.getElementById('navbar-logo').setAttribute("src", "{{ theme['icons']['banner']['dark']['svg'] }}");
+        }
 
-      function style_light() {
-          document.getElementById('navbar-main').setAttribute("class", "navbar navbar-main navbar-expand-lg shadow navbar-light bg-white");
-          document.getElementById('navbar-logo').setAttribute("src", "{{ theme['icons']['banner']['light']['svg'] }}");
-      }
-  </script>
+        function style_light() {
+            document.getElementById('navbar-main').setAttribute("class", "navbar navbar-main navbar-expand-lg shadow navbar-light bg-white");
+            document.getElementById('navbar-logo').setAttribute("src", "{{ theme['icons']['banner']['light']['svg'] }}");
+        }
+    </script>
 {% endif %}
-
-<div class="text-center img-responsive" id="halloween"></div>
 
 <div id="moveModalHere">
 

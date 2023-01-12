@@ -142,7 +142,7 @@
                                 <div class="form-group">
                                   <label for="token-group"
                                          class="form-control-label">{{ 'site.cp.service.tab.teamspeak.token.group' | language }}</label>
-                                  <select id="token-group" class="custom-select" name="group_id" required>
+                                  <select id="token-group" class="form-select" name="group_id" required>
                                     {% for group in teamspeak['response']['external']['groups'] %}
                                       <option value="{{ group['group_id'] }}">{{ group['name'] }}</option>
                                     {% endfor %}
@@ -176,7 +176,7 @@
                                             <input name="token" value="{{ token['token'] }}" type="hidden">
                                             <input type="hidden" name="action" value="deleteToken">
                                             <input type="hidden" name="csrf" value="{{ csrf }}">
-                                            <button type="submit" class="action-item mr-2">
+                                            <button type="submit" class="btn btn-primary">
                                               <i class="fas fa-times"></i>
                                             </button>
                                           </form>
@@ -224,7 +224,7 @@
                               <div class="form-group">
                                 <label for="teamId"
                                        class="form-control-label">{{ 'site.cp.service.tab.team.changeTeam.team' | language }}</label>
-                                <select required name="team_id" id="teamId" class="custom-select" required>
+                                <select required name="team_id" id="teamId" class="form-select" required>
                                   {% for team in teams %}
                                     <option {% if team['team_id'] == service['team_id'] %} disabled {% endif %}
                                       value="{{ team['team_id'] }}">{{ team['name'] }}</option>

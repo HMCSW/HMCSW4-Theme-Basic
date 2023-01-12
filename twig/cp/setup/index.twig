@@ -42,7 +42,7 @@
                 <div class="form-group col-lg-3">
                   <label for="input-sex"
                          class="form-control-label">{{ 'general.address.sex' | language }}</label>
-                  <select name="sex" id="input-sex" class="custom-select" required autocomplete="sex">
+                  <select name="sex" id="input-sex" class="form-select" required autocomplete="sex">
                     <option {% if setup != false %} {% if setup['address']['sex'] == "m" %} selected {% endif %} {% endif %}
                       value="m">{{ 'general.address.sex.m' | language }}</option>
                     <option {% if setup != false %} {% if setup['address']['sex'] == "w" %} selected {% endif %} {% endif %}
@@ -88,7 +88,7 @@
                 <div class="form-group col-lg-6">
                   <label for="input-timezone"
                          class="form-control-label">{{ 'general.address.timezone' | language }}</label>
-                  <select required name="timezone" id="input-timezone" class="custom-select" required>
+                  <select required name="timezone" id="input-timezone" class="form-select" required>
                     {% for timezone in timezones %}
                       <option
                         {% if setup != false %} {% if setup['address']['timezone'] == timezone %} selected {% endif %} {% else %} {% if timezone == "Europe/Berlin" %} selected {% endif %} {% endif %}
@@ -153,7 +153,7 @@
                 <div class="form-group col-lg-6">
                   <label for="input-country" class="form-control-label">{{ 'general.address.country' | language }}
                     *</label>
-                  <select required name="country" id="input-country" class="custom-select">
+                  <select required name="country" id="input-country" class="form-select">
                     {% for country in countrys %}
                       <option
                         {% if setup != false %}{% if setup['address']['country']  == country['code'] %} selected {% endif %}{% else %} {% if country['code'] == "DE" %} selected {% endif %} {% endif %}

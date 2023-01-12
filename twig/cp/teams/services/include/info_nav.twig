@@ -206,7 +206,7 @@
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="renewSelect" class="form-control-label">{{ 'site.cp.service.renew.modal.times' | language }}</label>
-                        <select id="renewSelect" class="custom-select" name="time">
+                        <select id="renewSelect" class="form-select" name="time">
                           {% for i, time in service['renewTimes'] %}
                             <option value="{{ i }}">{{ time['time']['d'] }} {{ 'general.period.days'|language }} ({{ time['credits']|creditsToEuro }}{{ "symbol"|currency }})</option>
                           {% endfor %}

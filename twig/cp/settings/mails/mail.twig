@@ -1,74 +1,71 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-9 order-lg-2">
-            <!-- ACTION MESSAGE -->
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-            {% include '/general/actionMessage.twig' %}
+                    {% include '/general/actionMessage.twig' %}
 
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="card">
-                  <div class="card-body text-center">
-                    <h5>{{ mail['title'] }}</h5>
-                    <p>{{ mail['text']|nl2br }}</p>
-                  </div>
-                  <div class="card-footer">
-                    <div class="media mt-5">
-                      <div>
-                        <a class="avatar rounded-circle mr-3">
-                          <img alt="{{ config['name'] }}" src="{{ theme['icons']['icon']['500x500'] }}">
-                        </a>
-                      </div>
-                      <div class="media-body">
-                        <span class="d-block h6 mb-0">{{ config['name'] }}</span>
-                        <span class="text-sm text-muted">{{ mail['created_at']|date("d.m.Y H:i") }}</span>
-                      </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <h5>{{ mail['title'] }}</h5>
+                                    <p>{{ mail['text']|nl2br }}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="media mt-5">
+                                        <div>
+                                            <a class="avatar rounded-circle mr-3">
+                                                <img height="50" width="50" alt="{{ config['name'] }}"
+                                                     src="{{ theme['icons']['icon']['500x500'] }}">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <span class="d-block h6 mb-0">{{ config['name'] }}</span>
+                                            <span class="text-sm text-muted">{{ mail['created_at']|date("d.m.Y H:i") }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {% for file in mail['files'] %}
+                                        <hr class="my-3"/>
+                                        <div class="row align-items-center mb-3 shadow-none">
+                                            <div class="col-auto">
+                                                <div class="icon icon-shape bg-soft-success text-success">
+                                                    {% if file['extension'] == "pdf" %}
+                                                        <i class="fas fa-file-pdf"></i>
+                                                    {% else %}
+                                                        <i class="fas fa-file"></i>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col pl-0 text-center">
+                                                <span class="d-block h6 text-sm mb-0">{{ file['download_name'] }}</span>
+                                                <p class="mb-0 text-xs">{{ file['fileSize'] }}</p>
+                                            </div>
+                                            <div class="col-auto actions">
+                                                <form method="post">
+                                                    <input name="file_id" value="{{ file['file_id'] }}" type="hidden">
+                                                    <input type="hidden" name="action" value="downloadFile">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fas fa-download"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="card-body">
-                    {% for file in mail['files'] %}
-                      <hr class="my-3"/>
-                      <div class="row align-items-center mb-3 shadow-none">
-                        <div class="col-auto">
-                          <div class="icon icon-shape bg-soft-success text-success">
-                            {% if file['extension'] == "pdf" %}
-                              <i class="fas fa-file-pdf"></i>
-                            {% else %}
-                              <i class="fas fa-file"></i>
-                            {% endif %}
-                          </div>
-                        </div>
-                        <div class="col pl-0 text-center">
-                          <span class="d-block h6 text-sm mb-0">{{ file['download_name'] }}</span>
-                          <p class="mb-0 text-xs">{{ file['fileSize'] }}</p>
-                        </div>
-                        <div class="col-auto actions">
-                          <form method="post">
-                            <input name="file_id" value="{{ file['file_id'] }}" type="hidden">
-                            <input type="hidden" name="action" value="downloadFile">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                            <button type="submit" class="action-item mr-2">
-                              <i class="fas fa-download"></i>
-                            </button>
-                          </form>
-                        </div>
-                      </div>
-                    {% endfor %}
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-          {% include 'cp/settings/nav.twig' %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 
 {% include '/general/footer.twig' %}

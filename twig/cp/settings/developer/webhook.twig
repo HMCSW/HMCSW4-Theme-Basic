@@ -1,172 +1,170 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-9 order-lg-2">
-            <!-- ACTION MESSAGE -->
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-            {% include '/general/actionMessage.twig' %}
+                    {% include '/general/actionMessage.twig' %}
 
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="actions-toolbar py-2 mb-4">
-                  <h5 class="mb-1">{{ 'site.cp.settings.developer.webhook' | language }}</h5>
-                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.webhook.description' | language }}</p>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="actions-toolbar py-2 mb-4">
+                                <h5 class="mb-1">{{ 'site.cp.settings.developer.webhook' | language }}</h5>
+                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.webhook.description' | language }}</p>
+                            </div>
+
+                            {% if history['history']|length != 0 %}
+                                <div class="card">
+                                    <div class="card-body text-center justify-content-center">
+                                        <nav>
+                                            <ul class="pagination justify-content-center">
+
+                                                <li
+                                                        class="page-item {% if history['pagination']['previous_page'] == 0 %} disabled {% endif %}">
+                                                    <a class="page-link"
+                                                       href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page=1"
+                                                       tabindex="-1" {% if history['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>First</a>
+                                                </li>
+                                                <li
+                                                        class="page-item {% if history['pagination']['previous_page'] == 0 %} disabled {% endif %}">
+                                                    <a class="page-link"
+                                                       href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page'] }}"
+                                                       tabindex="-1" {% if history['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>Previous</a>
+                                                </li>
+
+                                                {% if history['pagination']['previous_page']-3 > 0 %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page']-3 }}">{{ history['pagination']['previous_page']-3 }}</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if history['pagination']['previous_page']-2 > 0 %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page']-2 }}">{{ history['pagination']['previous_page']-2 }}</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if history['pagination']['previous_page']-1 > 0 %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page']-1 }}">{{ history['pagination']['previous_page']-1 }}</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if history['pagination']['previous_page'] != 0 %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page'] }}">{{ history['pagination']['previous_page'] }}</a>
+                                                    </li>
+                                                {% endif %}
+
+                                                <li class="page-item active" aria-current="page">
+                                                    <a class="page-link"
+                                                       href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['current_page'] }}">{{ history['pagination']['current_page'] }}
+                                                        <span class="sr-only">(current)</span></a>
+                                                </li>
+
+                                                {% if history['pagination']['current_page'] != history['pagination']['total_no_of_pages'] %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page'] }}">{{ history['pagination']['next_page'] }}</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if history['pagination']['next_page']+1 <= history['pagination']['total_no_of_pages'] %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page']+1 }}">{{ history['pagination']['next_page']+1 }}</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if history['pagination']['next_page']+2 <= history['pagination']['total_no_of_pages'] %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page']+2 }}">{{ history['pagination']['next_page']+2 }}</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% if history['pagination']['next_page']+3 <= history['pagination']['total_no_of_pages'] %}
+                                                    <li class="page-item"><a class="page-link"
+                                                                             href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page']+3 }}">{{ history['pagination']['next_page']+3 }}</a>
+                                                    </li>
+                                                {% endif %}
+
+                                                <li
+                                                        class="page-item {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} disabled {% endif %}">
+                                                    <a class="page-link"
+                                                       href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page'] }}" {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Next</a>
+                                                </li>
+                                                <li
+                                                        class="page-item {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} disabled {% endif %}">
+                                                    <a class="page-link"
+                                                       href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['total_no_of_pages'] }}" {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Last</a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="card">
+                                <div class="card-header">Verlauf</div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-cards">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">{{ 'site.cp.settings.developer.webhook.table.time' | language }}</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for log in history['history'] %}
+                                                <tr>
+                                                    <td>{{ log['createdAt']|date("d.m.Y H:i:s") }}</td>
+                                                    <td>
+                                                        <button type="button"
+                                                                class="btn btn-primary" title="" data-toggle="modal"
+                                                                data-target="#seeLog-{{ log['log_id'] }}">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for log in history['history'] %}
+                                <div class="modal fade" tabindex="-1" role="dialog" id="seeLog-{{ log['log_id'] }}">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title h6">{{ log['createdAt']|date("d.m.Y H:i:s") }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <i class="fa-solid fa-close"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5 class="text-left">Request</h5>
+                                                <pre style="background-color: #001f3f; color: #ffffff"><code
+                                                            id="request_{{ log['log_id'] }}"></code></pre>
+                                                <script>document.getElementById("request_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['request']|json_encode|raw }}, undefined, 2);</script>
+
+                                                <h5 class="text-left">Response</h5>
+                                                <pre style="background-color: #001f3f; color: #ffffff"><code
+                                                            id="response_{{ log['log_id'] }}"></code></pre>
+                                                <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['response']|json_encode|raw }}, undefined, 2);</script>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+
+                        </div>
+                    </div>
+                    <br><br>
                 </div>
-
-                {% if history['history']|length != 0 %}
-                  <div class="card">
-                    <div class="card-body text-center justify-content-center">
-                      <nav>
-                        <ul class="pagination justify-content-center">
-
-                          <li
-                            class="page-item {% if history['pagination']['previous_page'] == 0 %} disabled {% endif %}">
-                            <a class="page-link" href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page=1"
-                               tabindex="-1" {% if history['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>First</a>
-                          </li>
-                          <li
-                            class="page-item {% if history['pagination']['previous_page'] == 0 %} disabled {% endif %}">
-                            <a class="page-link"
-                               href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page'] }}"
-                               tabindex="-1" {% if history['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>Previous</a>
-                          </li>
-
-                          {% if history['pagination']['previous_page']-3 > 0 %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page']-3 }}">{{ history['pagination']['previous_page']-3 }}</a>
-                            </li>
-                          {% endif %}
-                          {% if history['pagination']['previous_page']-2 > 0 %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page']-2 }}">{{ history['pagination']['previous_page']-2 }}</a>
-                            </li>
-                          {% endif %}
-                          {% if history['pagination']['previous_page']-1 > 0 %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page']-1 }}">{{ history['pagination']['previous_page']-1 }}</a>
-                            </li>
-                          {% endif %}
-                          {% if history['pagination']['previous_page'] != 0 %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['previous_page'] }}">{{ history['pagination']['previous_page'] }}</a>
-                            </li>
-                          {% endif %}
-
-                          <li class="page-item active" aria-current="page">
-                            <a class="page-link"
-                               href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['current_page'] }}">{{ history['pagination']['current_page'] }}
-                              <span class="sr-only">(current)</span></a>
-                          </li>
-
-                          {% if history['pagination']['current_page'] != history['pagination']['total_no_of_pages'] %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page'] }}">{{ history['pagination']['next_page'] }}</a>
-                            </li>
-                          {% endif %}
-                          {% if history['pagination']['next_page']+1 <= history['pagination']['total_no_of_pages'] %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page']+1 }}">{{ history['pagination']['next_page']+1 }}</a>
-                            </li>
-                          {% endif %}
-                          {% if history['pagination']['next_page']+2 <= history['pagination']['total_no_of_pages'] %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page']+2 }}">{{ history['pagination']['next_page']+2 }}</a>
-                            </li>
-                          {% endif %}
-                          {% if history['pagination']['next_page']+3 <= history['pagination']['total_no_of_pages'] %}
-                            <li class="page-item"><a class="page-link"
-                                                     href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page']+3 }}">{{ history['pagination']['next_page']+3 }}</a>
-                            </li>
-                          {% endif %}
-
-                          <li
-                            class="page-item {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} disabled {% endif %}">
-                            <a class="page-link"
-                               href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['next_page'] }}" {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Next</a>
-                          </li>
-                          <li
-                            class="page-item {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} disabled {% endif %}">
-                            <a class="page-link"
-                               href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}?page={{ history['pagination']['total_no_of_pages'] }}" {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Last</a>
-                          </li>
-                        </ul>
-                      </nav>
-                    </div>
-                  </div>
-                {% endif %}
-
-                <div class="card">
-                  <div class="card-header">Verlauf</div>
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table class="table table-cards">
-                        <thead>
-                        <tr>
-                          <th scope="col">{{ 'site.cp.settings.developer.webhook.table.time' | language }}</th>
-                          <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for log in history['history'] %}
-                          <tr>
-                            <td>{{ log['createdAt']|date("d.m.Y H:i:s") }}</td>
-                            <td>
-                              <button type="button"
-                                      class="action-item mr-2" title="" data-toggle="modal"
-                                      data-target="#seeLog-{{ log['log_id'] }}">
-                                <i class="fas fa-eye"></i>
-                              </button>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                {% for log in history['history'] %}
-                  <div class="modal fade" tabindex="-1" role="dialog" id="seeLog-{{ log['log_id'] }}">
-                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title h6">{{ log['createdAt']|date("d.m.Y H:i:s") }}</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fa-solid fa-close"></i>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <h5 class="text-left">Request</h5>
-                          <pre style="background-color: #001f3f; color: #ffffff"><code
-                              id="request_{{ log['log_id'] }}"></code></pre>
-                          <script>document.getElementById("request_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['request']|json_encode|raw }}, undefined, 2);</script>
-
-                          <h5 class="text-left">Response</h5>
-                          <pre style="background-color: #001f3f; color: #ffffff"><code
-                              id="response_{{ log['log_id'] }}"></code></pre>
-                          <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['response']|json_encode|raw }}, undefined, 2);</script>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary"
-                                  data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-
-
-              </div>
             </div>
-            <br><br>
-          </div>
-          {% include 'cp/settings/nav.twig' %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

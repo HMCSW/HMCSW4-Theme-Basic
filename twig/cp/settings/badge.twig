@@ -1,96 +1,97 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <div class="row">
-          <div class="col-lg-9 order-lg-2">
-            <!-- ACTION MESSAGE -->
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
 
-            {% include '/general/actionMessage.twig' %}
+                    {% include '/general/actionMessage.twig' %}
 
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="actions-toolbar py-2 mb-4">
-                  <h5 class="mb-1">{{ 'site.cp.settings.tab.badge' | language }}</h5>
-                  <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.badge.description' | language }}</p>
-                </div>
-
-
-
-                <div class="modal fade" tabindex="-1" id="addBadge" role="dialog" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-
-                      <div class="modal-header">
-                        <h5 class="modal-title h6"
-                            id="myLargeModalLabel">{{ 'site.cp.settings.badge.addBadge' | language }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-
-                        <form method="post">
-                          <input type="hidden" name="action" value="addBadge">
-                          <input type="hidden" name="csrf" value="{{ csrf }}">
-                          <div class="row">
-                            <div class="col-lg-8 offset-lg-2">
-                              <div class="form-group">
-                                <label for="input-code"
-                                       class="form-control-label">{{ 'site.cp.settings.badge.code' | language }}</label>
-                                <input name="code" required type="text" class="form-control form-control-prepend"
-                                       id="input-code"
-                                       placeholder="1234-ABCD-5678-DEFG">
-                              </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="actions-toolbar py-2 mb-4">
+                                <h5 class="mb-1">{{ 'site.cp.settings.tab.badge' | language }}</h5>
+                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.badge.description' | language }}</p>
                             </div>
-                          </div>
-                          <div class="row justify-content-center">
-                            <h4 class="text-center">
-                              <button type="submit"
-                                      class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.settings.badge.addBadge' | language }}</button>
-                            </h4>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                <div class="card">
-                  <div class="card-header">
-                    <div class="text-right">
-                      <div class="actions mr-n2">
-                        <a data-toggle="modal" data-target="#addBadge" class="action-item"><i class="fa fa-plus"></i></a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group list-group-flush badges" id="badges">
-                    {% for badge in badges %}
-                    <div class="list-group-item list-group-item-action" id="badge_{{ badge['badge_id'] }}">
-                      <div class="d-flex align-items-center">
-                        <div>
-                          <img alt="{{ badge['name'] }}" src="{{ badge['icon'] }}" class="avatar rounded-circle">
+
+                            <div class="modal fade" tabindex="-1" id="addBadge" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title h6"
+                                                id="myLargeModalLabel">{{ 'site.cp.settings.badge.addBadge' | language }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <form method="post">
+                                                <input type="hidden" name="action" value="addBadge">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <div class="row">
+                                                    <div class="col-lg-8 offset-lg-2">
+                                                        <div class="form-group">
+                                                            <label for="input-code"
+                                                                   class="form-control-label">{{ 'site.cp.settings.badge.code' | language }}</label>
+                                                            <input name="code" required type="text"
+                                                                   class="form-control form-control-prepend"
+                                                                   id="input-code"
+                                                                   placeholder="1234-ABCD-5678-DEFG">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <h4 class="text-center">
+                                                        <button type="submit"
+                                                                class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.settings.badge.addBadge' | language }}</button>
+                                                    </h4>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="text-right">
+                                        <div class="actions mr-n2">
+                                            <a data-toggle="modal" data-target="#addBadge" class="btn"><i
+                                                        class="fa fa-plus"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-group list-group-flush badges" id="badges">
+                                    {% for badge in badges %}
+                                        <div class="list-group-item list-group-item-action"
+                                             id="badge_{{ badge['badge_id'] }}">
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <img alt="{{ badge['name'] }}" src="{{ badge['icon'] }}"
+                                                        height="50" width="50" class="avatar rounded-circle">
+                                                </div>
+                                                <div class="flex-fill ml-3">
+                                                    <div class="h6 text-sm mb-0">{{ badge['name'] }} <small
+                                                                class="float-right text-muted">{{ badge['get_at']|date("d.m.Y H:i") }}</small>
+                                                    </div>
+                                                    <p class="text-sm lh-140 mb-0">
+                                                        {{ badge['description'] }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex-fill ml-3">
-                          <div class="h6 text-sm mb-0">{{ badge['name'] }} <small class="float-right text-muted">{{ badge['get_at']|date("d.m.Y H:i") }}</small></div>
-                          <p class="text-sm lh-140 mb-0">
-                            {{ badge['description'] }}
-                          </p>
-                        </div>
-                      </div>
                     </div>
-                    {% endfor %}
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-          {% include 'cp/settings/nav.twig' %}
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}
