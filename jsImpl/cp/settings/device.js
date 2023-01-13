@@ -1,7 +1,7 @@
 import QrScanner from '/assets/js/qrCode/qr-scanner.min.js'
 
 $( '#openCamera' ).click(function() {
-    $('#videoModal').modal();
+    $('#videoModal').modal("show");
 
     initialCam();
     document.getElementById('submitVideo').style = 'display: block';

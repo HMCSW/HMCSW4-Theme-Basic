@@ -42,7 +42,7 @@ $('#tos').change(function () {
 }).change();
 
 function showPaymentLoadingModal(){
-    $('#paymentLoadingModal').modal({backdrop: 'static', keyboard: false});
+    $('#paymentLoadingModal').modal({show: true, backdrop: 'static', keyboard: false});
 }
 
 function startOrder(){

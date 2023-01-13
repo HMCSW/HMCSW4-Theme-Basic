@@ -2,7 +2,7 @@ var callback;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function addToCart(productId){
     if(accessToken === ''){
-        $('#cartModal-loginRequired').modal();
+        $('#cartModal-loginRequired').modal("show");
         return;
     }
 
@@ -15,20 +15,20 @@ function addToCart(productId){
         },
     }).done(function (answer) {
         document.getElementById('cartCount').textContent = answer.response.count;
-        $('#cartModal-add').modal();
+        $('#cartModal-add').modal("show");
         if(document.getElementById('cartCountHeader') != null){
             document.getElementById('cartCountHeader').textContent = answer.response.count;
         }
     }).fail(function (err)  {
         if(err.responseJSON.response.error_message === "requireIdentityCheck"){
             $("#cartModal-requireIdentityCheck" ).data( "productId", productId );
-            $('#cartModal-requireIdentityCheck').modal();
+            $('#cartModal-requireIdentityCheck').modal("show");
         } else if(err.status === 404){
-            $('#cartModal-notFound').modal();
+            $('#cartModal-notFound').modal("show");
         } else if(err.status === 429){
-            $('#cartModal-limit').modal();
+            $('#cartModal-limit').modal("show");
         } else if(err.status === 402){
-            $('#cartModal-cartFull').modal();
+            $('#cartModal-cartFull').modal("show");
         } else {
             sendNotify(getMessage("general.action.message.failed"),'danger');
         }

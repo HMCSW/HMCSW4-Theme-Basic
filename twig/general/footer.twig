@@ -1,59 +1,76 @@
 <div class="container">
     <footer class="py-5">
-        <div class="row">
+        <div class="row justify-content-center">
+            <hr />
             <div class="col-6 col-md-2 mb-3">
-                <h5>Section</h5>
+                <h5>{{ 'footer.aboutUs' | language }}</h5>
                 <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/news">{{ 'footer.aboutUs.news' | language }}</a></li>
+                    {% if config['service']['statuspage']['enabled'] != false %}
+                        <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/status">{{ 'footer.aboutUs.status' | language }}</a></li>
+                    {% endif %}
+
+                    {% if config['service']['faq']['enabled'] != false %}
+                        <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/faq">{{ 'footer.aboutUs.faq' | language }}</a></li>
+                    {% endif %}
                 </ul>
             </div>
 
             <div class="col-6 col-md-2 mb-3">
-                <h5>Section</h5>
+                <h5>{{ 'footer.products' | language }}</h5>
                 <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+                    {% for type in products %}
+                        <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
 
             <div class="col-6 col-md-2 mb-3">
-                <h5>Section</h5>
+                <h5>{{ 'footer.legal' | language }}</h5>
                 <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Home</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
-                    <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/imprint">{{ 'footer.legal.imprint' | language }}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/privacy">{{ 'footer.legal.privacy' | language }}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/terms">{{ 'footer.legal.terms' | language }}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/withdrawal">{{ 'footer.legal.withdrawal' | language }}</a></li>
                 </ul>
             </div>
 
-            <div class="col-md-5 offset-md-1 mb-3">
-                <form>
-                    <h5>Subscribe to our newsletter</h5>
-                    <p>Monthly digest of what's new and exciting from us.</p>
-                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                        <label for="newsletter1" class="visually-hidden">Email address</label>
-                        <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
-                        <button class="btn btn-primary" type="button">Subscribe</button>
-                    </div>
-                </form>
-            </div>
         </div>
 
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <p>© 2022 Company, Inc. All rights reserved.</p>
-            <ul class="list-unstyled d-flex">
-                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
-                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
-                <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
-            </ul>
+            <div class=col-md-4>
+                <div class="copyright text-sm font-weight-bold text-center text-md-left">&copy; {{ copyrightYear }} <a
+                            href="{{ url }}" class=font-weight-bold target=_blank>{{ name }}</a>. All rights reserved
+                </div>
+            </div>
+            <div class=col-md-4>
+                <div class="copyright text-sm font-weight-bold text-center">
+                    <div class="dropdown">
+                        <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false" data-offset="0,10">
+                            <span class="d-none d-lg-inline-block">{{ selectLang['current']['value'] }}</span>
+                            <span class="d-lg-none">{{ selectLang['current']['value'] }}</span>
+                        </a>
+                        <ul class="dropdown-menu text-black">
+                            {% for key, value in selectLang['all'] %}
+                                <li>
+                                    <a class="dropdown-item text-black" title="{{ key }}"
+                                       href="{{ currentUrl }}?G_action=setLanguage&language={{ key }}">
+                                        <span>{{ value['value'] }} ({{ key }})</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class=col-md-4>
+                <div class="copyright text-sm font-weight-bold text-center text-md-right">Powered by <a
+                            href="{{ url }}/hmcsw" class=font-weight-bold target=_blank>HMCSW</a> {{ version }}</div>
+            </div>
         </div>
     </footer>
 </div>

@@ -1,0 +1,168 @@
+<div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
+    {% if config['dev_mode'] %}
+        <div class="col-lg-12">
+            <div class="alert alert-group alert-warning alert-icon justify-content-center" role="alert">
+                <div class="alert-content">
+                    <b>The DevMode is activated! Expect higher loading times. Caching is disabled. Do
+                        not use in productive
+                        mode. </b>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="col-lg-12">
+
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <img height="50" width="50" alt="{{ team['name'] }}" src="{{ team['icon'] }}" class="avatar avatar-xl rounded-circle">
+            </div>
+            <div class="col ml-n3 ml-md-n2">
+                <h2 class="mb-0">{{ team['name'] }}</h2>
+                <span class="text-muted d-block">{{ currentSite_TEAMS_lang }}</span>
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-pills flex-column mb-auto">
+
+
+        <li class="nav-item">
+            <a href="{{ url }}/cp/" class="nav-link link-dark">
+                {{ 'site.cp.tab.start' | language }}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url }}/cp/teams" class="nav-link link-dark">
+                {{ 'site.cp.tab.teams' | language }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+               class="nav-link {% if currentSite_TEAMS == "service" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.teams.services' | language }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/member"
+               class="nav-link {% if currentSite_TEAMS == "member" %}active{% else %}link-dark{% endif %}">
+                {{ 'site.cp.tab.teams.member' | language }}
+            </a>
+        </li>
+
+        {% if "team.settings"|checkTeamPermission %}
+            <li class="nav-item">
+                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/settings"
+                   class="nav-link {% if currentSite_TEAMS == "settings" %}active{% else %}link-dark{% endif %}">
+                    {{ 'site.cp.tab.teams.settings' | language }}
+                </a>
+            </li>
+        {% endif %}
+        {% if "team.sshKey"|checkTeamPermission %}
+            <li class="nav-item">
+                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/sshKeys"
+                   class="nav-link {% if currentSite_TEAMS == "sshKeys" %}active{% else %}link-dark{% endif %}">
+                    {{ 'site.cp.tab.teams.sshKeys' | language }}
+                </a>
+            </li>
+        {% endif %}
+        {% if "owner"|checkTeamPermission %}
+            <li class="nav-item">
+                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/groups"
+                   class="nav-link {% if currentSite_TEAMS == "groups" %}active{% else %}link-dark{% endif %}">
+                    {{ 'site.cp.tab.teams.groups' | language }}
+                </a>
+            </li>
+        {% endif %}
+        {% if "team.partner"|checkTeamPermission %}
+            {% if team['partner'] != false %}
+                <li class="nav-item">
+                    <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/partner"
+                       class="nav-link {% if currentSite_TEAMS == "partner" %}active{% else %}link-dark{% endif %}">
+                        {{ 'site.cp.tab.teams.partner' | language }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
+
+        {% if "team.reselling"|checkTeamPermission %}
+            {% if team['reselling'] != false %}
+
+                <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#reselling" aria-expanded="true">
+                        {{ 'site.cp.tab.teams.reselling' | language }}
+                    </button>
+                    <div class="collapse  {% if currentSite_TEAMS == "reselling" %}show{% endif %}" id="reselling">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.general' | language }}</a>
+                            </li>
+                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/invoice" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.invoice' | language }}</a>
+                            </li>
+                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.api' | language }}</a>
+                            </li>
+                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/webhook" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.webhook' | language }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+            {% endif %}
+        {% endif %}
+    </ul>
+    <hr />
+    <div class="dropdown">
+        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ userData['icon'] }}" alt="{{ userData['name'] }}" width="32" height="32" class="rounded-circle me-2">
+            <strong>{{ userData['name'] }}</strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+            <a href="{{ url }}/cp" class="dropdown-item">
+                <i class="fa-regular fa-wave-pulse"></i>
+                <span>{{ 'header.cp' | language }}</span>
+            </a>
+
+            {% if 'cp.team'|checkPermission %}
+                <a href="{{ url }}/cp/team" class="dropdown-item">
+                    <i class="fa-regular fa-users"></i>
+                    <span>{{ 'header.cp.team' | language }}</span>
+                </a>
+            {% endif %}
+
+            {% if loginAs %}
+                <form method="post">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <input type="hidden" name="G_action" value="backToMyUser">
+
+                    <button type="submit" class="dropdown-item">
+                        <i class="fa-regular fa-backward-step"></i>
+                        <span>{{ 'header.cp.backToMyUser' | language }}</span>
+                    </button>
+                </form>
+            {% endif %}
+
+            <div class="dropdown-divider"></div>
+            <a href="{{ url }}/cp/settings" class="dropdown-item">
+                <i class="fa-regular fa-gear"></i>
+                <span>{{ 'header.settings' | language }}</span>
+            </a>
+            <a href="{{ url }}/cp/settings/devices#qrCodeLogin" class="dropdown-item">
+                <i class="fa-regular fa-qrcode"></i>
+                <span>{{ 'site.cp.settings.devices.qrCode' | language }}</span>
+            </a>
+            <a href="{{ url }}/cp/settings/payment" class="dropdown-item">
+                <i class="fa-regular fa-money-bill-trend-up"></i>
+                <span>{{ 'site.cp.settings.paymentHistory' | language }}</span>
+            </a>
+            <a href="{{ url }}/cp/teams" class="dropdown-item">
+                <i class="fa-regular fa-people-group"></i>
+                <span>{{ 'site.cp.tab.teams' | language }}</span>
+            </a>
+            <a href="{{ url }}/auth/logout" class="dropdown-item">
+                <i class="fa-regular fa-arrow-right-from-bracket"></i>
+                <span>{{ 'header.logout' | language }}</span>
+            </a>
+        </ul>
+    </div>
+</div>

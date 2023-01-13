@@ -1,219 +1,242 @@
 {% include '/general/header.twig' %}
-{% include 'cp/teams/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-xl-12">
-        {% include '/general/actionMessage.twig' %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/teams/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-12">
+                        {% include '/general/actionMessage.twig' %}
 
-        <div class="avatar-connect">
-          <ul class="d-flex justify-content-between">
-            {% for user in teamMember %}
-              <li>
-                <img alt="{{ user['username'] }}" title="{{ user['username'] }}" src="{{ user['icon'] }}" id="icon-{{ user['user_id'] }}"
-                     class="avatar avatar-lg shadow rounded-circle">
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-12">
+                                <div class="mb-5">
+                                    <div class="table-responsive">
+                                        <table class="table table-cards align-items-center">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" style="min-width: 240px"></th>
+                                                <th scope="col" style="min-width: 240px">Name</th>
+                                                <th scope="col">{{ 'site.cp.teams.member.table.role' | language }}</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for user in teamMember %}
+                                                <tr id="user-{{ user['user_id'] }}">
+                                                    <th scope="row">
+                                                        <div class="media align-items-center">
+                                                            <div>
+                                                                <div class="avatar-parent-child">
+                                                                    <img alt="{{ user['username'] }}" height="50" width="50"
+                                                                         title="{{ user['username'] }}"
+                                                                         src="{{ user['icon'] }}"
+                                                                         class="avatar rounded-circle">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th scope="row">
+                                                        <div class="media align-items-center">
+                                                            <div class="media-body ml-4">
+                                                                <a href="#"
+                                                                   class="name h6 mb-0 text-sm">{{ user['firstname'] }} {{ user['lastname'] }}
+                                                                    (kn{{ user['user_id'] }}
+                                                                    ){% if user['accept'] != "true" %}| {{ 'site.cp.teams.member.noAccept' | language }}{% endif %}</a>
+                                                                <small class="d-block font-weight-bold"
+                                                                       id="editMember-{{ user['user_id'] }}-name">
+                                                                    {% if user['group']['group_id'] == 0 %}
+                                                                        {{ 'site.cp.teams.member.role.owner' | language }}
+                                                                    {% else %}
+                                                                        {{ user['group']['name'] }}
+                                                                    {% endif %}
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <td>
+                                                        {% if user['group']['group_id'] != 0 %}
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-sm btn-secondary dropdown-toggle"
+                                                                        id="editMember-{{ user['user_id'] }}-dropDown"
+                                                                        type="button" data-toggle="dropdown"
+                                                                        aria-haspopup="true" aria-expanded="false">
+                                                                    {{ user['group']['name'] }}
+                                                                </button>
+                                                                <div class="dropdown-menu">
+                                                                    {% for group in groups %}
+                                                                        <button class="dropdown-item" type="button"
+                                                                                onclick="editMember(this);"
+                                                                                data-userId="{{ user['user_id'] }}"
+                                                                                value="{{ group['group_id'] }}">{{ group['name'] }}</button>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </td>
 
-        <div class="row mt-4">
-          <div class="col-lg-12">
-            <div class="mb-5">
-              <div class="table-responsive">
-                <table class="table table-cards align-items-center">
-                  <thead>
-                  <tr>
-                    <th scope="col" style="min-width: 240px">Name</th>
-                    <th scope="col">{{ 'site.cp.teams.member.table.role' | language }}</th>
-                    <th scope="col"></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for user in teamMember %}
-                    <tr  id="user-{{ user['user_id'] }}">
-                      <th scope="row">
-                        <div class="media align-items-center">
-                          <div>
-                            <div class="avatar-parent-child">
-                              <img alt="{{ user['username'] }}" title="{{ user['username'] }}" src="{{ user['icon'] }}" class="avatar rounded-circle">
+                                                    <td class="text-right">
+                                                        <div class="actions text-right ml-3">
+                                                            {% if user['group']['group_id'] != 0 and user['user_id'] != userData['user_id'] %}
+                                                                {% if 'team.removeMember'|checkTeamPermission == true %}
+                                                                    <a data-toggle="modal"
+                                                                       data-target="#member_{{ user['user_id'] }}_remove"
+                                                                       class="btn btn-primary"
+                                                                       title="{{ 'site.cp.teams.member.removeMember' | language }}">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                {% endif %}
+                                                            {% elseif user['group']['group_id'] != 0 and user['user_id'] == userData['user_id'] %}
+                                                                <a href="#" class="btn btn-primary" data-toggle="modal"
+                                                                   data-target="#leaveTeam"
+                                                                   title="{{ 'site.cp.teams.member.leaveTeam' | language }}">
+                                                                    <i class="fa fa-door-closed"></i>
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                          <div class="media-body ml-4">
-                            <a href="#" class="name h6 mb-0 text-sm">{{ user['firstname'] }} {{ user['lastname'] }} (kn{{ user['user_id'] }}){% if user['accept'] != "true" %}| {{ 'site.cp.teams.member.noAccept' | language }}{% endif %}</a>
-                            <small class="d-block font-weight-bold" id="editMember-{{ user['user_id'] }}-name" >
-                              {% if user['group']['group_id'] == 0 %}
-                                {{ 'site.cp.teams.member.role.owner' | language }}
-                              {% else %}
-                                {{ user['group']['name'] }}
-                              {% endif %}
-                            </small>
-                          </div>
                         </div>
-                      </th>
-                      <td>
-                        {% if user['group']['group_id'] != 0 %}
-                          <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle" id="editMember-{{ user['user_id'] }}-dropDown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              {{ user['group']['name'] }}
-                            </button>
-                            <div class="dropdown-menu">
-                              {% for group in groups %}
-                                <button class="dropdown-item" type="button" onclick="editMember(this);" data-userId="{{ user['user_id'] }}" value="{{ group['group_id'] }}">{{ group['name'] }}</button>
-                              {% endfor %}
+
+
+                        <div class="modal modal-danger fade" id="leaveTeam" tabindex="-1" role="dialog"
+                             aria-labelledby="leaveTeam"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title h6"
+                                            id="modal_title_6">{{ 'site.cp.teams.member.leaveTeam' | language }}</h5>
+                                        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="py-3 text-center">
+                                            <i class="fas fa-exclamation-circle fa-4x"></i>
+                                            <h5 class="heading h4 mt-4">{{ 'site.cp.teams.member.leaveTeam.modal.leave' | language }}</h5>
+                                            <p>{{ 'site.cp.teams.member.leaveTeam.modal.leave.1' | language }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <form method="POST">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <input type="hidden" name="action" value="leaveTeam">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-white">{{ 'site.cp.teams.member.leaveTeam.modal.leave.leaveBtn' | language }}</button>
+                                        </form>
+                                        <button type="button" class="btn btn-sm btn-white"
+                                                data-dismiss="modal">{{ 'site.cp.teams.member.leaveTeam.modal.leave.cancelBtn' | language }}</button>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                        {% endif %}
-                      </td>
-
-                      <td class="text-right">
-                        <div class="actions text-right ml-3">
-                          {% if user['group']['group_id'] != 0 and user['user_id'] != userData['user_id'] %}
-                            {% if 'team.removeMember'|checkTeamPermission == true %}
-                              <a data-toggle="modal" data-target="#member_{{ user['user_id'] }}_remove"
-                                 class="btn btn-primary" title="{{ 'site.cp.teams.member.removeMember' | language }}">
-                                <i class="fa fa-trash"></i>
-                              </a>
-                            {% endif %}
-                          {% elseif user['group']['group_id'] != 0 and user['user_id'] == userData['user_id'] %}
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#leaveTeam"
-                               title="{{ 'site.cp.teams.member.leaveTeam' | language }}">
-                              <i class="fa fa-door-closed"></i>
-                            </a>
-                          {% endif %}
                         </div>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
 
 
-
-        <div class="modal modal-danger fade" id="leaveTeam" tabindex="-1" role="dialog" aria-labelledby="leaveTeam"
-             aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title h6" id="modal_title_6">{{ 'site.cp.teams.member.leaveTeam' | language }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <div class="py-3 text-center">
-                  <i class="fas fa-exclamation-circle fa-4x"></i>
-                  <h5 class="heading h4 mt-4">{{ 'site.cp.teams.member.leaveTeam.modal.leave' | language }}</h5>
-                  <p>{{ 'site.cp.teams.member.leaveTeam.modal.leave.1' | language }}</p>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <form method="POST">
-                  <input type="hidden" name="csrf" value="{{ csrf }}">
-                  <input type="hidden" name="action" value="leaveTeam">
-                  <button type="submit"
-                          class="btn btn-sm btn-white">{{ 'site.cp.teams.member.leaveTeam.modal.leave.leaveBtn' | language }}</button>
-                </form>
-                <button type="button" class="btn btn-sm btn-white"
-                        data-dismiss="modal">{{ 'site.cp.teams.member.leaveTeam.modal.leave.cancelBtn' | language }}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        {% if 'team.addMember'|checkTeamPermission == true %}
-          <h5 class="text-center">
-            <button class="btn btn-primary btn-icon-label text-center" data-toggle="modal" data-target="#addMember">
+                        {% if 'team.addMember'|checkTeamPermission == true %}
+                            <h5 class="text-center">
+                                <button class="btn btn-primary btn-icon-label text-center" data-toggle="modal"
+                                        data-target="#addMember">
                                             <span class="btn-inner--icon">
                                                 <i class="fa-regular fa-plus"></i>
                                             </span>
-              <span class="btn-inner--text">{{ 'site.cp.teams.member.addMember.button' | language }}</span>
-            </button>
-          </h5>
-          <div class="modal fade" id="addMember" tabindex="-1" role="dialog" aria-labelledby="addMember"
-               aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <form method="post">
-                  <input type="hidden" name="csrf" value="{{ csrf }}">
-                  <input type="hidden" name="action" value="addMember">
-                  <div class="modal-header">
-                    <h5 class="modal-title"
-                        id="exampleModalLabel">{{ 'site.cp.teams.member.addMember' | language }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label for="user_id"
-                               class="form-control-label">{{ 'site.cp.teams.member.addMember.userId' | language }}</label>
-                        <input class="form-control" type="number" id="user_id" name="user_id"
-                               placeholder="{{ userData['user_id'] }}" required>
-                      </div>
-                    </div>
-                    <div class="col-md-12">
-                      <label for="group"
-                             class="form-control-label">{{ 'site.cp.teams.member.group' | language }}</label>
-                      <select name="group_id" id="group" class="form-select" required>
-                        {% for group in groups %}
-                          <option {% if group['group_id'] == user['group']['group_id'] %}selected{% endif %}
-                                  value="{{ group['group_id'] }}">{{ group['name'] }}</option>
+                                    <span class="btn-inner--text">{{ 'site.cp.teams.member.addMember.button' | language }}</span>
+                                </button>
+                            </h5>
+                            <div class="modal fade" id="addMember" tabindex="-1" role="dialog"
+                                 aria-labelledby="addMember"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <form method="post">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <input type="hidden" name="action" value="addMember">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    id="exampleModalLabel">{{ 'site.cp.teams.member.addMember' | language }}</h5>
+                                                <button type="button" class="btn" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="user_id"
+                                                               class="form-control-label">{{ 'site.cp.teams.member.addMember.userId' | language }}</label>
+                                                        <input class="form-control" type="number" id="user_id"
+                                                               name="user_id"
+                                                               placeholder="{{ userData['user_id'] }}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label for="group"
+                                                           class="form-control-label">{{ 'site.cp.teams.member.group' | language }}</label>
+                                                    <select name="group_id" id="group" class="form-select" required>
+                                                        {% for group in groups %}
+                                                            <option {% if group['group_id'] == user['group']['group_id'] %}selected{% endif %}
+                                                                    value="{{ group['group_id'] }}">{{ group['name'] }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'site.cp.teams.member.addMember.button' | language }}</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+                        {% for user in teamMember %}
+
+                            {% if 'team.removeMember'|checkTeamPermission == true %}
+                                <div class="modal modal-danger fade" id="member_{{ user['user_id'] }}_remove"
+                                     tabindex="-1" role="dialog"
+                                     aria-labelledby="removeMember"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered " role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    id="exampleModalLabel">{{ user['firstname'] }} {{ user['lastname'] }}
+                                                    (kn{{ user['user_id'] }})</h5>
+                                                <button type="button" class="btn" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="py-3 text-center">
+                                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                                    <h5
+                                                            class="heading h4 mt-4">{{ 'site.cp.teams.member.removeMember.modal.remove' | language }}</h5>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" onclick="removeMember(this.id);"
+                                                        id="{{ user['user_id'] }}"
+                                                        class="btn btn-sm btn-white">{{ 'site.cp.teams.member.removeMember.modal.btn' | language }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endfor %}
-                      </select>
                     </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit"
-                            class="btn btn-primary">{{ 'site.cp.teams.member.addMember.button' | language }}</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        {% endif %}
-
-
-        {% for user in teamMember %}
-
-          {% if 'team.removeMember'|checkTeamPermission == true %}
-            <div class="modal modal-danger fade" id="member_{{ user['user_id'] }}_remove" tabindex="-1" role="dialog"
-                 aria-labelledby="removeMember"
-                 aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered " role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title"
-                        id="exampleModalLabel">{{ user['firstname'] }} {{ user['lastname'] }} (kn{{ user['user_id'] }})</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="py-3 text-center">
-                      <i class="fas fa-exclamation-circle fa-4x"></i>
-                      <h5
-                        class="heading h4 mt-4">{{ 'site.cp.teams.member.removeMember.modal.remove' | language }}</h5>
-                    </div>
-                  </div>
-
-                  <div class="modal-footer">
-                    <button type="button" onclick="removeMember(this.id);" id="{{ user['user_id'] }}"
-                            class="btn btn-sm btn-white">{{ 'site.cp.teams.member.removeMember.modal.btn' | language }}</button>
-                  </div>
                 </div>
-              </div>
             </div>
-          {% endif %}
-        {% endfor %}
-      </div>
+        </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

@@ -1,45 +1,49 @@
 {% include '/general/header.twig' %}
-{% include 'cp/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-xl-6 col-lg-6 col-md-8 col-sm-12">
-        <div class="card">
-          <div class="card-header">
-            <div class="justify-content-between align-items-center">
-              <div class="text-center">
-                <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.teams.accept' | language }}</h5>
-                <h6
-                  class="d-block h6 mb-0 text-center">{{ 'site.cp.teams.accept.description'|language|replace({'@name': team['name'] }) }}</h6>
-              </div>
-            </div>
-          </div>
-          <div class="card-body text-center">
-            <form method="post">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-              <input type="hidden" name="action" value="acceptTeam">
-              <button type="submit" class="btn btn-success btn-icon">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-6 col-md-8 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="justify-content-between align-items-center">
+                                    <div class="text-center">
+                                        <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.teams.accept' | language }}</h5>
+                                        <h6
+                                                class="d-block h6 mb-0 text-center">{{ 'site.cp.teams.accept.description'|language|replace({'@name': team['name'] }) }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <form method="post">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="acceptTeam">
+                                    <button type="submit" class="btn btn-success btn-icon">
                                 <span class="btn-inner--icon"><i class="fa-regular fa-check"></i>
                                 </span>
-                <span
-                  class="btn-inner--text">{{ 'site.cp.teams.accept.acceptBtn' | language }}</span>
-              </button>
-            </form>
-            <br>
-            <form method="post">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-              <input type="hidden" name="action" value="denyTeam">
-              <button type="submit" class="btn btn-danger btn-icon btn-sm">
+                                        <span
+                                                class="btn-inner--text">{{ 'site.cp.teams.accept.acceptBtn' | language }}</span>
+                                    </button>
+                                </form>
+                                <br>
+                                <form method="post">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="denyTeam">
+                                    <button type="submit" class="btn btn-danger btn-icon btn-sm">
                                 <span class="btn-inner--icon"><i class="fa-regular fa-circle-x"></i>
                                 </span>
-                <span
-                  class="btn-inner--text">{{ 'site.cp.teams.accept.denyBtn' | language }}</span>
-              </button>
-            </form>
-          </div>
+                                        <span
+                                                class="btn-inner--text">{{ 'site.cp.teams.accept.denyBtn' | language }}</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

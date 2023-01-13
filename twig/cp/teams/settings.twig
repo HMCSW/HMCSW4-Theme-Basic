@@ -1,159 +1,166 @@
 {% include '/general/header.twig' %}
-{% include 'cp/teams/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-xl-12">
-        {% if action != false %}
-          {% if action['success'] == false %}
-            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-          {% else %}
-            {% set alert_color = "success" %} {% set alert_icon = "check" %}
-          {% endif %}
-          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-            <div class="alert-group-prepend">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/teams/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-12">
+                        {% if action != false %}
+                            {% if action['success'] == false %}
+                                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+                            {% else %}
+                                {% set alert_color = "success" %} {% set alert_icon = "check" %}
+                            {% endif %}
+                            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+                                <div class="alert-group-prepend">
                                         <span class="alert-group-icon text-">
                                             <i class="fas fa-{{ alert_icon }}"></i>
                                         </span>
-            </div>
-            <div class="alert-content">
-              {{ action['message'] | language }}
-            </div>
+                                </div>
+                                <div class="alert-content">
+                                    {{ action['message'] | language }}
+                                </div>
 
-          </div>
-        {% endif %}
-        <div class="row">
-          <div class="col-lg-12">
-            <form method="post">
-              <input type="hidden" name="action" value="updateName">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-              <div class="actions-toolbar py-2 mb-4">
-                <h5 class="mb-1">{{ 'site.cp.teams.settings.name' | language }}</h5>
-                <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.name.description' | language }}</p>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="input-name"
-                           class="form-control-label">{{ 'site.cp.teams.settings.name.form' | language }}</label>
-                    <input required value="{{ team['name'] }}" id="input-name" name="name" class="form-control"
-                           type="text" placeholder="{{ 'site.cp.teams.settings.name.form.placeholder' | language }}">
-                  </div>
-                </div>
-              </div>
-              <div class="mt-4">
-                <button type="submit"
-                        class="btn btn-sm btn-primary">{{ 'site.cp.teams.settings.name.btn' | language }}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <hr/>
-        <div class="row">
-          <div class="col-lg-12">
-            <form method="post" enctype="multipart/form-data">
-              <input type="hidden" name="action" value="setIcon">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-              <div class="actions-toolbar py-2 mb-4">
-                <h5 class="mb-1">{{ 'site.cp.teams.settings.icon' | language }}</h5>
-                <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.icon.description' | language }}</p>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="form-group">
-
-                    <input type="file" name="file" id="file" class="custom-input-file"/>
-                    <label for="file">
-                      <i class="fa-regular fa-upload"></i>
-                      <span>{{ 'site.cp.teams.settings.icon.upload' | language }}</span>
-                    </label>
-
-                  </div>
-                </div>
-              </div>
-              <div class="mt-4">
-                <button type="submit"
-                        class="btn btn-sm btn-primary">{{ 'site.cp.teams.settings.icon.upload' | language }}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        {% if "owner"|checkTeamPermission %}
-          <hr/>
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="actions-toolbar py-2 mb-4">
-                <h5 class="mb-1">{{ 'site.cp.teams.settings.deleteTeam' | language }}</h5>
-                <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.deleteTeam.description' | language }}</p>
-              </div>
-              <div class="mt-4">
-                <button type="button" data-toggle="modal" data-target="#deleteTeam"
-                        class="btn btn-sm btn-danger">{{ 'site.cp.teams.settings.deleteTeam.btn' | language }}
-                </button>
-                <div class="modal modal-danger fade" id="deleteTeam" tabindex="-1" role="dialog"
-                     aria-labelledby="deleteTeam" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title h6"
-                            id="modal_title_6">{{ 'site.cp.teams.settings.deleteTeam.modal' | language }}</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-
-                      {% if testDeleteTeam['success'] %}
-
-                        <div class="modal-body">
-                          <div class="py-3 text-center">
-                            <i class="fas fa-exclamation-circle fa-4x"></i>
-                            <h5
-                              class="heading h4 mt-4">{{ 'site.cp.teams.settings.deleteTeam.modal.info' | language }}</h5>
-                          </div>
+                            </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form method="post">
+                                    <input type="hidden" name="action" value="updateName">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <div class="actions-toolbar py-2 mb-4">
+                                        <h5 class="mb-1">{{ 'site.cp.teams.settings.name' | language }}</h5>
+                                        <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.name.description' | language }}</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="input-name"
+                                                       class="form-control-label">{{ 'site.cp.teams.settings.name.form' | language }}</label>
+                                                <input required value="{{ team['name'] }}" id="input-name" name="name"
+                                                       class="form-control"
+                                                       type="text"
+                                                       placeholder="{{ 'site.cp.teams.settings.name.form.placeholder' | language }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-primary">{{ 'site.cp.teams.settings.name.btn' | language }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                          <form method="POST">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                            <input type="hidden" name="action" value="deleteTeam">
-                            <button type="submit"
-                                    class="btn btn-sm btn-white">{{ 'site.cp.teams.settings.deleteTeam.modal.deleteBtn' | language }}</button>
-                          </form>
-                          <button type="button" class="btn btn-sm btn-white"
-                                  data-dismiss="modal">{{ 'site.cp.teams.settings.deleteTeam.modal.cancelBtn' | language }}</button>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="action" value="setIcon">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                    <div class="actions-toolbar py-2 mb-4">
+                                        <h5 class="mb-1">{{ 'site.cp.teams.settings.icon' | language }}</h5>
+                                        <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.icon.description' | language }}</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+
+                                                <input type="file" name="file" id="file" class="custom-input-file"/>
+                                                <label for="file">
+                                                    <i class="fa-regular fa-upload"></i>
+                                                    <span>{{ 'site.cp.teams.settings.icon.upload' | language }}</span>
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-primary">{{ 'site.cp.teams.settings.icon.upload' | language }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                      {% else %}
-                        <div class="modal-body">
-                          <div class="py-3 text-center">
-                            <i class="fas fa-exclamation-circle fa-4x"></i>
-                            <h5
-                              class="heading h4 mt-4">{{ 'site.cp.teams.settings.deleteTeam.modal.reason' | language }}</h5>
-                            <h6 class="heading h5 mt-4">
-                              {% if testDeleteTeam['response']['error_code'] == "owner" %}
-                                {{ 'site.cp.teams.settings.deleteTeam.modal.reason.owner' | language }}
-                              {% elseif testDeleteTeam['response']['error_code'] == "service" %}
-                                {{ 'site.cp.teams.settings.deleteTeam.modal.reason.service' | language }}
-                              {% endif %}
-                            </h6>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-sm btn-white"
-                                  data-dismiss="modal">{{ 'site.cp.teams.settings.deleteTeam.modal.close' | language }}</button>
-                        </div>
-                      {% endif %}
+                        {% if "owner"|checkTeamPermission %}
+                            <hr/>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="actions-toolbar py-2 mb-4">
+                                        <h5 class="mb-1">{{ 'site.cp.teams.settings.deleteTeam' | language }}</h5>
+                                        <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.deleteTeam.description' | language }}</p>
+                                    </div>
+                                    <div class="mt-4">
+                                        <button type="button" data-toggle="modal" data-target="#deleteTeam"
+                                                class="btn btn-sm btn-danger">{{ 'site.cp.teams.settings.deleteTeam.btn' | language }}
+                                        </button>
+                                        <div class="modal modal-danger fade" id="deleteTeam" tabindex="-1" role="dialog"
+                                             aria-labelledby="deleteTeam" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title h6"
+                                                            id="modal_title_6">{{ 'site.cp.teams.settings.deleteTeam.modal' | language }}</h5>
+                                                        <button type="button" class="btn" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+
+                                                    {% if testDeleteTeam['success'] %}
+
+                                                        <div class="modal-body">
+                                                            <div class="py-3 text-center">
+                                                                <i class="fas fa-exclamation-circle fa-4x"></i>
+                                                                <h5
+                                                                        class="heading h4 mt-4">{{ 'site.cp.teams.settings.deleteTeam.modal.info' | language }}</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <form method="POST">
+                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                                <input type="hidden" name="action" value="deleteTeam">
+                                                                <button type="submit"
+                                                                        class="btn btn-sm btn-white">{{ 'site.cp.teams.settings.deleteTeam.modal.deleteBtn' | language }}</button>
+                                                            </form>
+                                                            <button type="button" class="btn btn-sm btn-white"
+                                                                    data-dismiss="modal">{{ 'site.cp.teams.settings.deleteTeam.modal.cancelBtn' | language }}</button>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="modal-body">
+                                                            <div class="py-3 text-center">
+                                                                <i class="fas fa-exclamation-circle fa-4x"></i>
+                                                                <h5
+                                                                        class="heading h4 mt-4">{{ 'site.cp.teams.settings.deleteTeam.modal.reason' | language }}</h5>
+                                                                <h6 class="heading h5 mt-4">
+                                                                    {% if testDeleteTeam['response']['error_code'] == "owner" %}
+                                                                        {{ 'site.cp.teams.settings.deleteTeam.modal.reason.owner' | language }}
+                                                                    {% elseif testDeleteTeam['response']['error_code'] == "service" %}
+                                                                        {{ 'site.cp.teams.settings.deleteTeam.modal.reason.service' | language }}
+                                                                    {% endif %}
+                                                                </h6>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm btn-white"
+                                                                    data-dismiss="modal">{{ 'site.cp.teams.settings.deleteTeam.modal.close' | language }}</button>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <br><br>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
-        {% endif %}
-        <br><br>
-      </div>
+        </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

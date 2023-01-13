@@ -1,221 +1,233 @@
 {% include '/general/header.twig' %}
-{% include 'cp/teams/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      {% include 'cp/terminateUser.twig' %}
-      <div class="col-xl-12">
-        <div class="card card-fluid">
-          <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-              <div class="text-center">
-                <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.services' | language }}</h5>
-              </div>
-              <div class="text-right">
-                <div class="actions mr-n2">
-                  <button class="btn" data-toggle="modal" data-target="#services"><i
-                      class="fa-regular fa-ellipsis"></i></button>
-                </div>
-              </div>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/teams/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    {% include 'cp/terminateUser.twig' %}
+                    <div class="col-xl-12">
+                        <div class="card card-fluid">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-center">
+                                        <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.services' | language }}</h5>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="actions mr-n2">
+                                            <button class="btn" data-toggle="modal" data-target="#services"><i
+                                                        class="fa-regular fa-ellipsis"></i></button>
+                                        </div>
+                                    </div>
 
 
-              <div class="modal fade" id="services" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-centered">
-                  <div class="modal-content">
+                                    <div class="modal fade" id="services" tabindex="-1" role="dialog"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                                            <div class="modal-content">
 
-                    <div class="modal-header">
-                      <h5 class="modal-title h6">{{ 'site.cp.services.all' | language }}</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="fa-solid fa-close"></i>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      {% if team['services']|length == 0 %}
-                        <h6 class="h6 text-center">{{ 'site.cp.services.nothing' | language }}</h6>
-                      {% else %}
-                        <div class="table-responsive">
-                          <table class="table table-cards text-center">
-                            <thead>
-                            <tr>
-                              <th scope="col">#</th>
-                              <th scope="col">{{ 'site.cp.services.table.name' | language }}</th>
-                              <th scope="col">{{ 'site.cp.services.table.state' | language }}</th>
-                              <th scope="col">{{ 'site.cp.services.table.expire' | language }}</th>
-                              <th scope="col"></th>
-                            </tr>
-                            </thead>
-                            <tbody class="list">
-
-
-                            {% for service in team['services'] %}
-                              <tr>
-                                <th scope="row"><span class="text-sm">{{ service['service_id'] }}</span></th>
-                                <td>
-                                  {% if service['service_name'] != NULL %}
-                                    <a
-                                      href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
-                                        class="h6 text-sm font-weight-bold mb-0">{{ service['service_name'] }}</span></a>
-                                    <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
-                                  {% elseif service['external']['name'] != NULL %}
-                                    <a
-                                      href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
-                                        class="h6 text-sm font-weight-bold mb-0">{{ service['external']['name'] }}</span></a>
-                                    <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
-                                  {% else %}
-                                    <a
-                                      href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
-                                        class="h6 text-sm font-weight-bold mb-0">{{ service['name'] }}</span></a>
-                                  {% endif %}
-                                </td>
-                                <td>
-                                  {% if service['state'] == 1 %}
-                                    <span style="color:#40FF00">{{ 'general.services.state.1' | language }}</span>
-                                  {% elseif service['state'] == 2 %}
-                                    <span style="color:#FFBF00">{{ 'general.services.state.2' | language }}</span>
-                                  {% elseif service['state'] == 3 %}
-                                    <span style="color:#FF0000">{{ 'general.services.state.3' | language }}</span>
-                                  {% elseif service['state'] == 4 %}
-                                    <span style="color:#FF0000">{{ 'general.services.state.4' | language }}</span>
-                                  {% elseif service['state'] == 5 %}
-                                    <span style="color:#FF0000">{{ 'general.services.state.5' | language }}</span>
-                                  {% elseif service['state'] == 6 %}
-                                    <span style="color:#FFBF00">{{ 'general.services.state.6' | language }}</span>
-                                  {% elseif service['state'] == 7 %}
-                                    <span style="color:#FF0000">{{ 'general.services.state.7' | language }}</span>
-                                  {% elseif service['state'] == 8 %}
-                                    <span style="color:#FFBF00">{{ 'general.services.state.8' | language }}</span>
-                                  {% else %}
-                                    <span style="color:#FF0000">{{ 'general.services.state.error' | language }}</span>
-                                  {% endif %}
-                                </td>
-                                <td>
-                                  {{ service['at']['expire']|date("d.m.Y H:i") }}
-                                </td>
-                                <td>
-                                  <div class="actions ml-3">
-                                    <a
-                                      href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"
-                                      class="btn btn-primary" data-toggle="tooltip" title=""
-                                      data-original-title="{{ 'site.cp.services.table.show' | language }}">
-                                      <i class="fas fa-eye"></i>
-                                    </a>
-                                    {% if service['locked'] == true %}
-                                      <i class="fas fa-lock"></i>
-                                    {% else %}
-                                      <i class="fas fa-lock-open"></i>
-                                    {% endif %}
-                                  </div>
-                                </td>
-                              </tr>
-                            {% endfor %}
-                            </tbody>
-                          </table>
-                        </div>
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title h6">{{ 'site.cp.services.all' | language }}</h5>
+                                                    <button type="button" class="btn" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <i class="fa-solid fa-close"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {% if team['services']|length == 0 %}
+                                                        <h6 class="h6 text-center">{{ 'site.cp.services.nothing' | language }}</h6>
+                                                    {% else %}
+                                                        <div class="table-responsive">
+                                                            <table class="table table-cards text-center">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th scope="col">#</th>
+                                                                    <th scope="col">{{ 'site.cp.services.table.name' | language }}</th>
+                                                                    <th scope="col">{{ 'site.cp.services.table.state' | language }}</th>
+                                                                    <th scope="col">{{ 'site.cp.services.table.expire' | language }}</th>
+                                                                    <th scope="col"></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody class="list">
 
 
-            </div>
+                                                                {% for service in team['services'] %}
+                                                                    <tr>
+                                                                        <th scope="row"><span
+                                                                                    class="text-sm">{{ service['service_id'] }}</span>
+                                                                        </th>
+                                                                        <td>
+                                                                            {% if service['service_name'] != NULL %}
+                                                                                <a
+                                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
+                                                                                            class="h6 text-sm font-weight-bold mb-0">{{ service['service_name'] }}</span></a>
+                                                                                <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
+                                                                            {% elseif service['external']['name'] != NULL %}
+                                                                                <a
+                                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
+                                                                                            class="h6 text-sm font-weight-bold mb-0">{{ service['external']['name'] }}</span></a>
+                                                                                <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
+                                                                            {% else %}
+                                                                                <a
+                                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
+                                                                                            class="h6 text-sm font-weight-bold mb-0">{{ service['name'] }}</span></a>
+                                                                            {% endif %}
+                                                                        </td>
+                                                                        <td>
+                                                                            {% if service['state'] == 1 %}
+                                                                                <span style="color:#40FF00">{{ 'general.services.state.1' | language }}</span>
+                                                                            {% elseif service['state'] == 2 %}
+                                                                                <span style="color:#FFBF00">{{ 'general.services.state.2' | language }}</span>
+                                                                            {% elseif service['state'] == 3 %}
+                                                                                <span style="color:#FF0000">{{ 'general.services.state.3' | language }}</span>
+                                                                            {% elseif service['state'] == 4 %}
+                                                                                <span style="color:#FF0000">{{ 'general.services.state.4' | language }}</span>
+                                                                            {% elseif service['state'] == 5 %}
+                                                                                <span style="color:#FF0000">{{ 'general.services.state.5' | language }}</span>
+                                                                            {% elseif service['state'] == 6 %}
+                                                                                <span style="color:#FFBF00">{{ 'general.services.state.6' | language }}</span>
+                                                                            {% elseif service['state'] == 7 %}
+                                                                                <span style="color:#FF0000">{{ 'general.services.state.7' | language }}</span>
+                                                                            {% elseif service['state'] == 8 %}
+                                                                                <span style="color:#FFBF00">{{ 'general.services.state.8' | language }}</span>
+                                                                            {% else %}
+                                                                                <span style="color:#FF0000">{{ 'general.services.state.error' | language }}</span>
+                                                                            {% endif %}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{ service['at']['expire']|date("d.m.Y H:i") }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="actions ml-3">
+                                                                                <a
+                                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"
+                                                                                        class="btn btn-primary"
+                                                                                        data-toggle="tooltip" title=""
+                                                                                        data-original-title="{{ 'site.cp.services.table.show' | language }}">
+                                                                                    <i class="fas fa-eye"></i>
+                                                                                </a>
+                                                                                {% if service['locked'] == true %}
+                                                                                    <i class="fas fa-lock"></i>
+                                                                                {% else %}
+                                                                                    <i class="fas fa-lock-open"></i>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-          </div>
-          <div class="card-body">
-            {% if team['services']|length == 0 %}
-              <h6 class="h6 text-center">{{ 'site.cp.services.nothing' | language }}</h6>
-            {% else %}
-              <div class="table-responsive">
-                <table class="table table-cards text-center">
-                  <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">{{ 'site.cp.services.table.name' | language }}</th>
-                    <th scope="col">{{ 'site.cp.services.table.state' | language }}</th>
-                    <th scope="col">{{ 'site.cp.services.table.expire' | language }}</th>
-                    <th scope="col"></th>
-                  </tr>
-                  </thead>
-                  <tbody class="list">
+
+                                </div>
+
+                            </div>
+                            <div class="card-body">
+                                {% if team['services']|length == 0 %}
+                                    <h6 class="h6 text-center">{{ 'site.cp.services.nothing' | language }}</h6>
+                                {% else %}
+                                    <div class="table-responsive">
+                                        <table class="table table-cards text-center">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">{{ 'site.cp.services.table.name' | language }}</th>
+                                                <th scope="col">{{ 'site.cp.services.table.state' | language }}</th>
+                                                <th scope="col">{{ 'site.cp.services.table.expire' | language }}</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="list">
 
 
-                  {% for service in team['services'] %}
-                    {% if service['state'] == 1 or service['state'] == 2 or service['state'] == 4 or service['state'] == 6 or service['state'] == 8 %}
-                      <tr>
-                        <th scope="row"><span class="text-sm">{{ service['service_id'] }}</span></th>
-                        <td>
-                          {% if service['service_name'] != NULL %}
-                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
-                                class="h6 text-sm font-weight-bold mb-0">{{ service['service_name'] }}</span></a>
-                            <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
-                          {% elseif service['external']['name'] != NULL %}
-                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
-                                class="h6 text-sm font-weight-bold mb-0">{{ service['external']['name'] }}</span></a>
-                            <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
-                          {% else %}
-                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
-                                class="h6 text-sm font-weight-bold mb-0">{{ service['name'] }}</span></a>
-                          {% endif %}
-                        </td>
-                        <td>
-                          {% if service['state'] == 1 %}
-                            <span style="color:#40FF00">{{ 'general.services.state.1' | language }}</span>
-                          {% elseif service['state'] == 2 %}
-                            <span style="color:#FFBF00">{{ 'general.services.state.2' | language }}</span>
-                          {% elseif service['state'] == 3 %}
-                            <span style="color:#FF0000">{{ 'general.services.state.3' | language }}</span>
-                          {% elseif service['state'] == 4 %}
-                            <span style="color:#FF0000">{{ 'general.services.state.4' | language }}</span>
-                          {% elseif service['state'] == 5 %}
-                            <span style="color:#FF0000">{{ 'general.services.state.5' | language }}</span>
-                          {% elseif service['state'] == 6 %}
-                            <span style="color:#FFBF00">{{ 'general.services.state.6' | language }}</span>
-                          {% elseif service['state'] == 7 %}
-                            <span style="color:#FF0000">{{ 'general.services.state.7' | language }}</span>
-                          {% elseif service['state'] == 8 %}
-                            <span style="color:#FFBF00">{{ 'general.services.state.8' | language }}</span>
-                          {% else %}
-                            <span style="color:#FF0000">{{ 'general.services.state.error' | language }}</span>
-                          {% endif %}
-                        </td>
-                        <td>
-                          {{ service['at']['expire']|date("d.m.Y H:i") }}
-                        </td>
-                        <td>
-                          <div class="actions ml-3">
-                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"
-                               class="btn btn-primary" data-toggle="tooltip" title=""
-                               data-original-title="{{ 'site.cp.services.table.show' | language }}">
-                              <i class="fas fa-eye"></i>
-                            </a>
-                            {% if service['locked'] %}
-                              <i class="fas fa-lock"></i>
-                            {% else %}
-                              <i class="fas fa-lock-open"></i>
-                            {% endif %}
-                          </div>
-                        </td>
-                      </tr>
-                    {% endif %}
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            {% endif %}
-          </div>
-          <div class="card-footer">
-            <h5 class="text-center">
-              <a href="{{ url }}/p" class="btn btn-primary btn-icon-label text-center">
+                                            {% for service in team['services'] %}
+                                                {% if service['state'] == 1 or service['state'] == 2 or service['state'] == 4 or service['state'] == 6 or service['state'] == 8 %}
+                                                    <tr>
+                                                        <th scope="row"><span
+                                                                    class="text-sm">{{ service['service_id'] }}</span>
+                                                        </th>
+                                                        <td>
+                                                            {% if service['service_name'] != NULL %}
+                                                                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
+                                                                            class="h6 text-sm font-weight-bold mb-0">{{ service['service_name'] }}</span></a>
+                                                                <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
+                                                            {% elseif service['external']['name'] != NULL %}
+                                                                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
+                                                                            class="h6 text-sm font-weight-bold mb-0">{{ service['external']['name'] }}</span></a>
+                                                                <span class="d-block text-sm text-muted">{{ service['name'] }}</span>
+                                                            {% else %}
+                                                                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"><span
+                                                                            class="h6 text-sm font-weight-bold mb-0">{{ service['name'] }}</span></a>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {% if service['state'] == 1 %}
+                                                                <span style="color:#40FF00">{{ 'general.services.state.1' | language }}</span>
+                                                            {% elseif service['state'] == 2 %}
+                                                                <span style="color:#FFBF00">{{ 'general.services.state.2' | language }}</span>
+                                                            {% elseif service['state'] == 3 %}
+                                                                <span style="color:#FF0000">{{ 'general.services.state.3' | language }}</span>
+                                                            {% elseif service['state'] == 4 %}
+                                                                <span style="color:#FF0000">{{ 'general.services.state.4' | language }}</span>
+                                                            {% elseif service['state'] == 5 %}
+                                                                <span style="color:#FF0000">{{ 'general.services.state.5' | language }}</span>
+                                                            {% elseif service['state'] == 6 %}
+                                                                <span style="color:#FFBF00">{{ 'general.services.state.6' | language }}</span>
+                                                            {% elseif service['state'] == 7 %}
+                                                                <span style="color:#FF0000">{{ 'general.services.state.7' | language }}</span>
+                                                            {% elseif service['state'] == 8 %}
+                                                                <span style="color:#FFBF00">{{ 'general.services.state.8' | language }}</span>
+                                                            {% else %}
+                                                                <span style="color:#FF0000">{{ 'general.services.state.error' | language }}</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        <td>
+                                                            {{ service['at']['expire']|date("d.m.Y H:i") }}
+                                                        </td>
+                                                        <td>
+                                                            <div class="actions ml-3">
+                                                                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ service['service_id'] }}"
+                                                                   class="btn btn-primary" data-toggle="tooltip"
+                                                                   title=""
+                                                                   data-original-title="{{ 'site.cp.services.table.show' | language }}">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                                {% if service['locked'] %}
+                                                                    <i class="fas fa-lock"></i>
+                                                                {% else %}
+                                                                    <i class="fas fa-lock-open"></i>
+                                                                {% endif %}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <h5 class="text-center">
+                                    <a href="{{ url }}/p" class="btn btn-primary btn-icon-label text-center">
                                 <span class="btn-inner--icon">
                                     <i class="fa-regular fa-plus"></i>
                                 </span>
-                <span class="btn-inner--text">{{ 'site.cp.services.btn.create' | language }}</span>
-              </a>
-            </h5>
-          </div>
+                                        <span class="btn-inner--text">{{ 'site.cp.services.btn.create' | language }}</span>
+                                    </a>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

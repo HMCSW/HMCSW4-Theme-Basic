@@ -1,146 +1,177 @@
 {% include '/general/header.twig' %}
-{% include 'cp/teams/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-9 order-lg-2">
-        {% if action != false %}
-          {% if action['success'] == false %}
-            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-          {% else %}
-            {% set alert_color = "success" %} {% set alert_icon = "check" %}
-          {% endif %}
-          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-            <div class="alert-group-prepend">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/teams/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-9 order-lg-2">
+                        {% if action != false %}
+                            {% if action['success'] == false %}
+                                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
+                            {% else %}
+                                {% set alert_color = "success" %} {% set alert_icon = "check" %}
+                            {% endif %}
+                            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+                                <div class="alert-group-prepend">
                                         <span class="alert-group-icon text-">
                                             <i class="fas fa-{{ alert_icon }}"></i>
                                         </span>
-            </div>
-            <div class="alert-content">
-              {{ action['message'] | language }}
-            </div>
+                                </div>
+                                <div class="alert-content">
+                                    {{ action['message'] | language }}
+                                </div>
 
-          </div>
-        {% endif %}
-
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-body">
-
-                {% if invoices|length == 0 %}
-                  <h6 class="h6 text-center">{{ 'site.cp.invoices.nothing' | language }}</h6>
-                {% else %}
-                  <div class="table-responsive">
-                    <table class="table table-cards text-center">
-                      <thead>
-                      <tr>
-                        <th scope="col">{{ 'site.cp.invoices.table.id' | language }}</th>
-                        <th scope="col" class="sort">{{ 'site.cp.invoices.table.credits' | language }}</th>
-                        <th scope="col" class="sort">{{ 'site.cp.invoices.table.pay_to' | language }}</th>
-                        <th></th>
-                      </tr>
-                      </thead>
-                      <tbody class="list">
-                      {% for invoice in invoices %}
-
-                        <tr>
-                          <td class="order">
-                            <span class="h6 text-sm font-weight-bold mb-0">B{{ invoice['invoice_id'] }}</span>
-                            <span
-                              class="d-block text-sm text-muted">{{ invoice['created_at']|date("d.m.Y H:i") }}</span>
-                          </td>
-                          <td>
-                            <span class="h6 text-sm font-weight-bold mb-0">{{ invoice['amount']|creditsToEuro }}{{ "symbol"|currency }}</span>
-                          </td>
-                          <td>
-                          <span
-                            class="h6 text-sm font-weight-bold mb-0">{{ invoice['pay_to']|date("d.m.Y H:i") }}</span>
-                          </td>
-
-                          <td>
-                            <div class="d-flex align-items-center justify-content-end">
-                              {% if invoice['state'] == 1 %}
-                                <button type="button" class="btn btn-sm btn-soft-success btn-icon rounded-pill">
-                                  <span class="btn-inner--icon"><i class="fas fa-check"></i></span>
-                                  <span class="btn-inner--text">{{ 'general.invoices.state.1' | language }}</span>
-                                </button>
-                              {% elseif invoice['state'] == 2 %}
-                                {% if 'owner'|checkTeamPermission %}
-                                  {% if userData['credits'] >= invoice['credits'] %}
-                                    <form method="post">
-                                      <input type="hidden" name="action" value="payInvoice">
-                                      <input type="hidden" name="csrf" value="{{ csrf }}">
-                                      <input type="hidden" name="invoice_id" value="{{ invoice['invoice_id'] }}">
-
-                                      <button type="submit" class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
-                                        <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                        <span class="btn-inner--text">{{ 'general.invoices.state.2' | language }}</span>
-                                      </button>
-                                    </form>
-                                  {% else %}
-                                    <button type="button" class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
-                                      <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                      <span class="btn-inner--text">{{ 'site.cp.invoices.noCredits' | language }}</span>
-                                    </button>
-                                  {% endif %}
-                                {% else %}
-                                  <button type="button" class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
-                                    <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                    <span class="btn-inner--text">{{ 'general.invoices.state.2' | language }}</span>
-                                  </button>
-                                {% endif %}
-                              {% elseif invoice['state'] == 3 %}
-                                <button type="button" class="btn btn-sm btn-soft-danger btn-icon rounded-pill">
-                                  <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                  <span class="btn-inner--text">{{ 'general.invoices.state.3' | language }}</span>
-                                </button>
-                              {% elseif invoice['state'] == 4 %}
-                                <button type="button" class="btn btn-sm btn-soft-danger btn-icon rounded-pill">
-                                  <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                  <span class="btn-inner--text">{{ 'general.invoices.state.4' | language }}</span>
-                                </button>
-                              {% elseif invoice['state'] == 5 %}
-                                <button type="button" class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
-                                  <span class="btn-inner--icon"><i class="fas fa-clock"></i></span>
-                                  <span class="btn-inner--text">{{ 'site.cp.invoices.pending' | language }}</span>
-                                </button>
-                              {% else %}
-                                <button type="button" class="btn btn-sm btn-soft-danger btn-icon rounded-pill">
-                                  <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                  <span class="btn-inner--text">{{ 'general.invoices.state.error' | language }}</span>
-                                </button>
-                              {% endif %}
-                              <div class="actions ml-3">
-                                <form method="post" target="_blank">
-                                  <input type="hidden" name="action" value="showInvoiceAsPDF">
-                                  <input type="hidden" name="csrf" value="{{ csrf }}">
-                                  <input type="hidden" name="invoice_id" value="{{ invoice['invoice_id'] }}">
-
-                                  <button type="submit" class="btn btn-primary" data-toggle="tooltip"
-                                          title="{{ 'site.cp.invoices.showPDF' | language }}"><i
-                                      class="far fa-file-alt"></i>
-                                  </button>
-
-                                </form>
-                              </div>
                             </div>
-                          </td>
-                        </tr>
-                      {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
+                        {% endif %}
 
-      </div>
-      {% include 'cp/teams/reselling/nav.twig' %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        {% if invoices|length == 0 %}
+                                            <h6 class="h6 text-center">{{ 'site.cp.invoices.nothing' | language }}</h6>
+                                        {% else %}
+                                            <div class="table-responsive">
+                                                <table class="table table-cards text-center">
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">{{ 'site.cp.invoices.table.id' | language }}</th>
+                                                        <th scope="col"
+                                                            class="sort">{{ 'site.cp.invoices.table.credits' | language }}</th>
+                                                        <th scope="col"
+                                                            class="sort">{{ 'site.cp.invoices.table.pay_to' | language }}</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody class="list">
+                                                    {% for invoice in invoices %}
+
+                                                        <tr>
+                                                            <td class="order">
+                                                                <span class="h6 text-sm font-weight-bold mb-0">B{{ invoice['invoice_id'] }}</span>
+                                                                <span
+                                                                        class="d-block text-sm text-muted">{{ invoice['created_at']|date("d.m.Y H:i") }}</span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="h6 text-sm font-weight-bold mb-0">{{ invoice['amount']|creditsToEuro }}{{ "symbol"|currency }}</span>
+                                                            </td>
+                                                            <td>
+                          <span
+                                  class="h6 text-sm font-weight-bold mb-0">{{ invoice['pay_to']|date("d.m.Y H:i") }}</span>
+                                                            </td>
+
+                                                            <td>
+                                                                <div class="d-flex align-items-center justify-content-end">
+                                                                    {% if invoice['state'] == 1 %}
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-soft-success btn-icon rounded-pill">
+                                                                            <span class="btn-inner--icon"><i
+                                                                                        class="fas fa-check"></i></span>
+                                                                            <span class="btn-inner--text">{{ 'general.invoices.state.1' | language }}</span>
+                                                                        </button>
+                                                                    {% elseif invoice['state'] == 2 %}
+                                                                        {% if 'owner'|checkTeamPermission %}
+                                                                            {% if userData['credits'] >= invoice['credits'] %}
+                                                                                <form method="post">
+                                                                                    <input type="hidden" name="action"
+                                                                                           value="payInvoice">
+                                                                                    <input type="hidden" name="csrf"
+                                                                                           value="{{ csrf }}">
+                                                                                    <input type="hidden"
+                                                                                           name="invoice_id"
+                                                                                           value="{{ invoice['invoice_id'] }}">
+
+                                                                                    <button type="submit"
+                                                                                            class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
+                                                                                        <span class="btn-inner--icon"><i
+                                                                                                    class="fas fa-plus"></i></span>
+                                                                                        <span class="btn-inner--text">{{ 'general.invoices.state.2' | language }}</span>
+                                                                                    </button>
+                                                                                </form>
+                                                                            {% else %}
+                                                                                <button type="button"
+                                                                                        class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
+                                                                                    <span class="btn-inner--icon"><i
+                                                                                                class="fas fa-plus"></i></span>
+                                                                                    <span class="btn-inner--text">{{ 'site.cp.invoices.noCredits' | language }}</span>
+                                                                                </button>
+                                                                            {% endif %}
+                                                                        {% else %}
+                                                                            <button type="button"
+                                                                                    class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
+                                                                                <span class="btn-inner--icon"><i
+                                                                                            class="fas fa-plus"></i></span>
+                                                                                <span class="btn-inner--text">{{ 'general.invoices.state.2' | language }}</span>
+                                                                            </button>
+                                                                        {% endif %}
+                                                                    {% elseif invoice['state'] == 3 %}
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-soft-danger btn-icon rounded-pill">
+                                                                            <span class="btn-inner--icon"><i
+                                                                                        class="fas fa-plus"></i></span>
+                                                                            <span class="btn-inner--text">{{ 'general.invoices.state.3' | language }}</span>
+                                                                        </button>
+                                                                    {% elseif invoice['state'] == 4 %}
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-soft-danger btn-icon rounded-pill">
+                                                                            <span class="btn-inner--icon"><i
+                                                                                        class="fas fa-plus"></i></span>
+                                                                            <span class="btn-inner--text">{{ 'general.invoices.state.4' | language }}</span>
+                                                                        </button>
+                                                                    {% elseif invoice['state'] == 5 %}
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
+                                                                            <span class="btn-inner--icon"><i
+                                                                                        class="fas fa-clock"></i></span>
+                                                                            <span class="btn-inner--text">{{ 'site.cp.invoices.pending' | language }}</span>
+                                                                        </button>
+                                                                    {% else %}
+                                                                        <button type="button"
+                                                                                class="btn btn-sm btn-soft-danger btn-icon rounded-pill">
+                                                                            <span class="btn-inner--icon"><i
+                                                                                        class="fas fa-plus"></i></span>
+                                                                            <span class="btn-inner--text">{{ 'general.invoices.state.error' | language }}</span>
+                                                                        </button>
+                                                                    {% endif %}
+                                                                    <div class="actions ml-3">
+                                                                        <form method="post" target="_blank">
+                                                                            <input type="hidden" name="action"
+                                                                                   value="showInvoiceAsPDF">
+                                                                            <input type="hidden" name="csrf"
+                                                                                   value="{{ csrf }}">
+                                                                            <input type="hidden" name="invoice_id"
+                                                                                   value="{{ invoice['invoice_id'] }}">
+
+                                                                            <button type="submit"
+                                                                                    class="btn btn-primary"
+                                                                                    data-toggle="tooltip"
+                                                                                    title="{{ 'site.cp.invoices.showPDF' | language }}">
+                                                                                <i
+                                                                                        class="far fa-file-alt"></i>
+                                                                            </button>
+
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
     </div>
-    <br><br>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}
