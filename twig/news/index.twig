@@ -1,46 +1,50 @@
 {% include '/general/header.twig' %}
-<div class="main-content">
-  <section class="slice slice-lg min-vh-100 d-flex bg-section-secondary">
+<section class="slice slice-lg">
     <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h4 class="text-center">{{ 'site.news' | language }}</h4>
-          <h5 class="text-center">{{ 'site.news.description' | language }}</h5>
-          <br>
+        <div class="row mb-6 justify-content-center text-center">
+            <div class="col-lg-8 col-md-10">
+                <h4 class="text-center mt-4">{{ 'site.news' | language }}</h4>
+                <h5 class="text-center">{{ 'site.news.description' | language }}</h5>
+                <br>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        {% if news|length == 0 %}
-          <div class="col-xl-8 offset-xl-2 col-md-6">
-            <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden">
-              <div class="align-self-center card-body py-4">
-                <h5>{{ 'site.news.nothing' | language }}</h5>
-              </div>
-            </div>
-          </div>
-        {% else %}
-          {% for article in news %}
-            <div class="col-lg-4">
-              <div class="card bg-cover bg-size--cover card-fluid"
-                   style="background-image:url({{ article["image"] }} )"><span
-                  class="mask bg-dark opacity-5"></span>
-                <div class="card-body pt-10 mt-auto position-relative">
-                  <a href="{{ url }}/news/{{ article['slug'] }}" class="d-block h5 mb-3 text-white stretched-link">{{ article['title'] }}</a>
-                  <p class="mb-0 text-white">{{ article['shortText'] }}...</p>
-                </div>
-                <div class="card-body position-relative delimiter-top">
-                  <div class="d-flex align-items-center">
-                    <div><a href="{{ url }}/news/{{ article['slug'] }}" class="avatar avatar-sm rounded-circle d-inline-block"><img alt="{{ article['user']['firstname'] }} {{ article['user']['lastname'] }}" src="{{ article['user']['avatar'] }}"></a>
+        <div class="row">
+            {% if news|length == 0 %}
+                <div class="col-xl-8 offset-xl-2 col-md-6">
+                    <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden">
+                        <div class="align-self-center card-body py-4">
+                            <h5>{{ 'site.news.nothing' | language }}</h5>
+                        </div>
                     </div>
-                    <div class="pl-3"><a href="{{ url }}/news/{{ article['slug'] }}" class="h6 stretched-link text-white text-sm">{{ article['user']['firstname'] }} {{ article['user']['lastname'] }}</a></div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          {% endfor %}
-        {% endif %}
-      </div>
+            {% else %}
+                {% for article in news %}
+                    <div class="col-lg-4">
+                        <div class="card bg-cover bg-size--cover card-fluid"><span
+                                    class="mask bg-dark opacity-5"></span>
+                            <div class="card-body pt-10 mt-auto position-relative">
+                                <a href="{{ url }}/news/{{ article['slug'] }}"
+                                   class="d-block h5 mb-3 stretched-link">{{ article['title'] }}</a>
+                                <p class="mb-0">{{ article['shortText'] }}...</p>
+                            </div>
+                            <div class="card-body position-relative delimiter-top">
+                                <div class="d-flex align-items-center">
+                                    <div><a href="{{ url }}/news/{{ article['slug'] }}"
+                                            class="avatar avatar-sm rounded-circle d-inline-block"><img height="50"
+                                                                                                        width="50"
+                                                                                                        alt="{{ article['user']['firstname'] }} {{ article['user']['lastname'] }}"
+                                                                                                        src="{{ article['user']['avatar'] }}"></a>
+                                    </div>
+                                    <div class="pl-3"><a href="{{ url }}/news/{{ article['slug'] }}"
+                                                         class="h6 stretched-link text-sm">{{ article['user']['firstname'] }} {{ article['user']['lastname'] }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
-  </section>
-</div>
+</section>
 {% include '/general/footer.twig' %}

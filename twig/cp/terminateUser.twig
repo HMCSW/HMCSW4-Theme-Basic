@@ -1,12 +1,7 @@
 {% if userData['terminatedUser'] == true %}
   <div class="col-lg-12">
     <div class="alert alert-group alert-danger alert-icon" role="alert">
-      <div class="alert-group-prepend">
-                                <span class="alert-group-icon text-">
-                                    <i class="fa-solid fa-exclamation"></i>
-                                </span>
-      </div>
-      <div class="alert-content">
+      <div class="alert-content"><i class="fa-solid fa-exclamation"></i>
         {{ 'general.user.terminated' | language }}
       </div>
     </div>
@@ -15,16 +10,10 @@
 {% if userData['requireIdentityCheck'] == true and userData['restricted'] == true %}
     <div class="col-lg-12">
         <div class="alert alert-group alert-danger alert-icon" role="alert">
-            <div class="alert-group-prepend">
-                                <span class="alert-group-icon text-">
-                                    <i class="fa-solid fa-exclamation"></i>
-                                </span>
-            </div>
-            <div class="alert-content">
+            <div class="alert-content"><i class="fa-solid fa-exclamation"></i>
                 {{ 'general.user.restricted.identity' | language }}
-            </div>
-            <div class="alert-action">
-                <button type="button" class="btn btn-neutral" data-toggle="modal" data-target="#requireIdentityCheck"
+
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#requireIdentityCheck"
                         aria-label="Action Label">{{ 'general.user.restricted.identity.btn' | language }}</button>
             </div>
         </div>

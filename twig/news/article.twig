@@ -1,8 +1,8 @@
 {% include '/general/header.twig' %}
-<section class="slice slice-lg bg-cover bg-size--cover">
+<section class="slice slice-lg">
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-xl-9 col-lg-10">
+    <div class="row mb-6 justify-content-center text-center">
+      <div class="col-lg-8 col-md-10">
         <div class="card mb-n7 position-relative zindex-100">
           <div class="card-body p-md-5">
             <div class=" text-center">
@@ -14,7 +14,7 @@
               <div class="col mb-3 mb-lg-0">
                 <div class="media align-items-center">
                   <span class="avatar rounded-circle mr-3">
-                    <img alt="{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}"
+                    <img alt="{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}" height="50"
                          src="{{ news['user']['icon'] }}">
                   </span>
                   <div class="media-body">
@@ -37,14 +37,6 @@
       </div>
     </div>
   </div>
-  <!-- SVG separator -->
-  <div class="shape-container shape-position-bottom">
-    <svg width="2560px" height="100px" xmlns="http://www.w3.org/2000/svg"
-         preserveAspectRatio="none" x="0px" y="0px" viewBox="0 0 2560 100" style="enable-background:new 0 0 2560 100;"
-         xml:space="preserve" class="">
-                <polygon points="2560 0 2560 100 0 100"></polygon>
-            </svg>
-  </div>
 </section>
 <section class="slice slice-lg pt-10 pb-5">
   <div class="container pb-6">
@@ -58,7 +50,7 @@
           <div class="col mb-3 mb-lg-0">
             <div class="media align-items-center">
               <span class="avatar rounded-circle mr-3">
-                <img alt="{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}"
+                <img alt="{{ news['user']['firstname'] }} {{ news['user']['lastname'] }}" height="50"
                      src="{{ news['user']['icon'] }}">
               </span>
               <div class="media-body">
@@ -77,10 +69,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="shape-container shape-position-bottom">
-    <img alt="SVG" src="{{ url }}/assets/img/svg/separators/line.svg"
-         class="svg-inject fill-section-secondary">
   </div>
 </section>
 <section class="slice slice-lg bg-section-secondary">
@@ -110,7 +98,7 @@
             </div>
             <div class="card-body position-relative delimiter-top">
               <div class="d-flex align-items-center">
-                <div><a href="{{ url }}/news/{{ rArticle['slug'] }}" class="avatar avatar-sm rounded-circle d-inline-block"><img alt="{{ rArticle['user']['firstname'] }} {{ rArticle['user']['lastname'] }}" src="{{ rArticle['user']['avatar'] }}"></a>
+                <div><a href="{{ url }}/news/{{ rArticle['slug'] }}" class="avatar avatar-sm rounded-circle d-inline-block"><img height="100" alt="{{ rArticle['user']['firstname'] }} {{ rArticle['user']['lastname'] }}" src="{{ rArticle['user']['avatar'] }}"></a>
                 </div>
                 <div class="pl-3"><a href="{{ url }}/news/{{ rArticle['slug'] }}" class="h6 stretched-link text-white text-sm">{{ rArticle['user']['firstname'] }} {{ rArticle['user']['lastname'] }}</a></div>
               </div>
