@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ html_lang }}">
+<html lang="{{ html_lang }}" {% if nightMode == "true" %}data-bs-theme="dark"{% endif %}>
 <head>
     <meta charset=utf-8>
     <title>{{ website_title }}</title>
@@ -17,42 +17,6 @@
                }
            }
 
-        {% if nightMode == "device" %}
-        @media (prefers-color-scheme: light) {
-            body > div.preloader {
-                position: fixed;
-                background: #fff;
-                width: 100%;
-                height: 100%;
-                z-index: 1071;
-                opacity: 0;
-                transition: opacity .5s ease;
-                overflow: hidden;
-                pointer-events: none;
-                display: flex;
-                align-items: center;
-                justify-content: center
-            }
-        }
-
-        @media (prefers-color-scheme: dark) {
-            body > div.preloader {
-                position: fixed;
-                background: {% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %};
-                width: 100%;
-                height: 100%;
-                z-index: 1071;
-                opacity: 0;
-                transition: opacity .5s ease;
-                overflow: hidden;
-                pointer-events: none;
-                display: flex;
-                align-items: center;
-                justify-content: center
-            }
-        }
-
-        {% else %}
 
         body > div.preloader {
             position: fixed;
@@ -68,8 +32,6 @@
             align-items: center;
             justify-content: center
         }
-
-        {% endif %}
 
         body:not(.loaded) > div.preloader {
             opacity: 1
@@ -138,7 +100,7 @@
     <meta name="twitter:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
     <meta name="twitter:url" content="{{ url }}"/>
     <meta name="twitter:card" content="{{ website_description }}"/>
-    <meta name="twitter:site" content="{{ config['social']['twitter'] }}"/>
+    <meta name="twitter:site" content="{{ theme['social']['twitter'] }}"/>
     <meta name="twitter:creator" content="{{ name }}"/>
 
     <!-- favicon -->
@@ -237,50 +199,23 @@
                 </div>
             {% else %}
 
-              <div class="text-end">
-                <a class="px-2 nav-item text-white" style=" text-decoration: none" href="{{ url }}/cart"><span id="cartCountHeader">{{ cartCount }}</span>
-                  <i class="fa-regular fa-shopping-cart"></i>
-                </a>
-                <a href="{{ url }}/auth/login"><span class="avatar rounded-circle">
-                            <img height="50" class="rounded" loading="eager" title="{{ userData['name'] }}" alt="{{ userData['name'] }}"
+                <div class="text-end">
+                    <a class="px-2 nav-item text-white" style=" text-decoration: none" href="{{ url }}/cart"><span
+                                id="cartCountHeader">{{ cartCount }}</span>
+                        <i class="fa-regular fa-shopping-cart"></i>
+                    </a>
+                    <a href="{{ url }}/auth/login"><span class="avatar rounded-circle">
+                            <img height="50" class="rounded" loading="eager" title="{{ userData['name'] }}"
+                                 alt="{{ userData['name'] }}"
                                  src="{{ userData['icon'] }}">
                         </span>
-                </a>
-              </div>
+                    </a>
+                </div>
             {% endif %}
         </div>
     </div>
 </header>
 
-
-{% if nightMode == "device" %}
-    <script defer>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            style_dark();
-        } else {
-            style_light();
-        }
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            const newColorScheme = e.matches ? 'dark' : 'light'
-            if (newColorScheme === "dark") {
-                style_dark();
-            } else {
-                style_light();
-            }
-        });
-
-        function style_dark() {
-            document.getElementById('navbar-main').setAttribute("class", "navbar navbar-main navbar-expand-lg shadow navbar-dark bg-dark");
-            document.getElementById('navbar-logo').setAttribute("src", "{{ theme['icons']['banner']['dark']['svg'] }}");
-        }
-
-        function style_light() {
-            document.getElementById('navbar-main').setAttribute("class", "navbar navbar-main navbar-expand-lg shadow navbar-light bg-white");
-            document.getElementById('navbar-logo').setAttribute("src", "{{ theme['icons']['banner']['light']['svg'] }}");
-        }
-    </script>
-{% endif %}
 
 <div id="moveModalHere">
 

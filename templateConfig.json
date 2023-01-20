@@ -2,11 +2,9 @@
   "name": "basic",
   "description": "Basic HMCSW4 theme",
   "version": "1.0.0",
-
-  "keyWords" : "HMCSW4",
+  "keyWords": "HMCSW4",
   "theme-color": "#0174DF",
   "fontAwesome": "https://cdn.hosmatic.com/fontAwesome/6.1",
-
   "defaultNightModeColor": "blue",
   "nightModeColors": {
     "blue": {
@@ -22,7 +20,6 @@
       "disabled_file": "light.css"
     }
   },
-
   "icons": {
     "default": {
       "user": "https://cdn.hosmatic.com/placeholder/user.png",
@@ -62,32 +59,35 @@
       "de_DE": "Deutsch"
     }
   },
-  "social":{
-    "discord":{
-      "invite":"https://discord.gg/w8Syn43",
-      "guild_id":"683279660406013969"
+  "social": {
+    "discord": {
+      "invite": "https://discord.gg/w8Syn43",
+      "guild_id": "683279660406013969"
     },
-    "twitter":"https://twitter.com/hosmatic",
-    "github":"https://github.com/hosmatic/",
-    "facebook":"https://www.facebook.com/hosmatic",
-    "tiktok":"https://www.tiktok.com/@hosmatic.com",
-    "instagram":"https://www.instagram.com/hosmaticcom/"
+    "twitter": "https://twitter.com/hosmatic",
+    "github": "https://github.com/hosmatic/",
+    "facebook": "https://www.facebook.com/hosmatic",
+    "tiktok": "https://www.tiktok.com/@hosmatic.com",
+    "instagram": "https://www.instagram.com/hosmaticcom/"
   },
-  "alert":{
-    "cp":{
-      "info":{
+  "alert": {
+    "cp": {
+      "info": {
         "enabled": true,
-        "color":"red",
-        "message":"Alles gut."
+        "color": "red",
+        "message": "Alles gut."
       }
     },
-    "home":{
-      "info":{
+    "home": {
+      "info": {
         "enabled": true,
-        "color":"green",
-        "message":"Rabatte auf viele Produkte",
-        "pill":"NUR AM 29.11"
+        "color": "green",
+        "message": "Rabatte auf viele Produkte",
+        "pill": "NUR AM 29.11"
       }
     }
-  }
+  },
+  "flags": [
+    "disableDeviceNightMode"
+  ]
 }
