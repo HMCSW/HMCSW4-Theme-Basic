@@ -9,24 +9,38 @@ function cancel(){
 }
 
 function failed(message){
+    resetSession();
     sendNotify(message, "danger")
     cancel();
 }
-function success(){
-    document.location.href = success_url;
-}
-function successToFactor(){
-    document.location.href = successToFactor_url;
+
+var sessionsToSet = [];
+
+function resetSession(){
+    sessionsToSet = [];
 }
 function setSession(name, value, cookie){
+    sessionsToSet.push({name: name, value: value, cookie: cookie});
+}
+
+function setSessions(url){
     $.ajax({
         type: "POST",
-        url: url + "/setSession",
-        data: {"name": name, "value": value, "cookie": cookie}
-    }).done(function (answer) {}).fail(function (err)  {
+        url: apiURL + "/session",
+        data: {sessions: sessionsToSet, url: url}
+    }).done(function (answer) {
+        sessionsToSet = {};
+
+        if(answer.success) {
+            document.location.href = answer.response.url
+        }
+    }).fail(function (err)  {
         failed("unknownError");
     });
+
 }
+
+
 function generateToken(token){
     $.ajax({
         type: "POST",
@@ -38,7 +52,7 @@ function generateToken(token){
         if(answer.success === true){
             setSession("access_token", answer.response.access_token, false);
             setSession("refresh_token", answer.response.refresh_token, true);
-            success();
+            setSessions(success_url)
         } else {
             failed(answer.response.error_code);
         }
@@ -110,7 +124,8 @@ function login(username, password){
                 setSession("twoFactor_types", answer.response.twoFactor.types, false);
                 setSession("twoFactor_userId", answer.response.user_id, false);
                 setSession("twoFactor_refreshToken", true, false);
-                successToFactor();
+
+                setSessions(successToFactor_url);
             }
             cancel();
         } else {
@@ -243,29 +258,38 @@ function Sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
-function startFido2Login(){
-    PuhHosting.fido2.initLogin({
-        actionUrl: apiURL + "/auth/fido2/passwordLess",
-        actionHeader: {
-            "Accept": "application/json"
-        },
+async function startFido2Login() {
+    const {startAuthentication} = SimpleWebAuthnBrowser;
+    // GET authentication options from the endpoint that calls
+    // @simplewebauthn/server -> generateAuthenticationOptions()
+    const resp = await fetch(apiURL + "/auth/fido2/passwordLess/option", {method: 'POST'});
 
-        optionsUrl: apiURL + "/auth/fido2/passwordLess/option",
-        optionsHeader: {
-            "Accept": "application/json"
-        }
-    });
-    PuhHosting.fido2.login({});
-    window.addEventListener("puh-fido2-login-success", evt => {
+    let asseResp;
+    try {
+        // Pass the options to the authenticator and wait for a response
+        asseResp = await startAuthentication(await resp.json());
+        console.log(asseResp)
 
-        if(evt.detail.success === true){
-            sendNotify(getMessage("general.action.message.success"), "success");
-            generateToken(evt.detail.response.loginInfo.auth_code);
+        const verificationResp = await fetch(apiURL + "/auth/fido2/passwordLess", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(asseResp),
+        });
+
+        // Wait for the results of verification
+        const verificationJSON = await verificationResp.json();
+
+        // Show UI appropriate for the `verified` status
+        if (verificationJSON && verificationJSON.verified) {
+            console.log('Successfully authenticated!');
         } else {
-            sendNotify(getMessage("general.action.message.failed") + ": " + evt.detail.response.error_message, "danger");
+            sendNotify(getMessage("general.action.message.failed") + ": "+ verificationJSON.response.error_message, "danger");
         }
-    });
-    window.addEventListener("puh-fido2-login-failure", evt => {
-        sendNotify(getMessage("general.action.message.failed") + ": " + evt.detail.name, "danger");
-    });
+
+    } catch (error) {
+        sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
+    }
+
 }
