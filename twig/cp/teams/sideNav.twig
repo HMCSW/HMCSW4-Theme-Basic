@@ -1,4 +1,4 @@
-<div class="flex-shrink-0 p-3 bg-white" style="width: 280px;">
+<div class="flex-shrink-0 p-3" style="width: 280px;">
     {% if config['dev_mode'] %}
         <div class="col-lg-12">
             <div class="alert alert-group alert-warning alert-icon justify-content-center" role="alert">
@@ -27,50 +27,50 @@
 
 
         <li class="nav-item">
-            <a href="{{ url }}/cp/" class="nav-link link-dark">
+            <a href="{{ url }}/cp/" class="nav-link ">
                 {{ 'site.cp.tab.start' | language }}
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ url }}/cp/teams" class="nav-link link-dark">
+            <a href="{{ url }}/cp/teams" class="nav-link ">
                 {{ 'site.cp.tab.teams' | language }}
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
-               class="nav-link {% if currentSite_TEAMS == "service" %}active{% else %}link-dark{% endif %}">
+            <a href="{{ url }}/cp/teams/{{ team['businessId'] }}"
+               class="nav-link {% if currentSite_TEAMS == "service" %}active{% else %}{% endif %}">
                 {{ 'site.cp.tab.teams.services' | language }}
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/member"
-               class="nav-link {% if currentSite_TEAMS == "member" %}active{% else %}link-dark{% endif %}">
+            <a href="{{ url }}/cp/teams/{{ team['businessId'] }}/member"
+               class="nav-link {% if currentSite_TEAMS == "member" %}active{% else %}{% endif %}">
                 {{ 'site.cp.tab.teams.member' | language }}
             </a>
         </li>
 
         {% if "team.settings"|checkTeamPermission %}
             <li class="nav-item">
-                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/settings"
-                   class="nav-link {% if currentSite_TEAMS == "settings" %}active{% else %}link-dark{% endif %}">
+                <a href="{{ url }}/cp/teams/{{ team['businessId'] }}/settings"
+                   class="nav-link {% if currentSite_TEAMS == "settings" %}active{% else %}{% endif %}">
                     {{ 'site.cp.tab.teams.settings' | language }}
                 </a>
             </li>
         {% endif %}
         {% if "team.sshKey"|checkTeamPermission %}
             <li class="nav-item">
-                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/sshKeys"
-                   class="nav-link {% if currentSite_TEAMS == "sshKeys" %}active{% else %}link-dark{% endif %}">
+                <a href="{{ url }}/cp/teams/{{ team['businessId'] }}/sshKeys"
+                   class="nav-link {% if currentSite_TEAMS == "sshKeys" %}active{% else %}{% endif %}">
                     {{ 'site.cp.tab.teams.sshKeys' | language }}
                 </a>
             </li>
         {% endif %}
         {% if "owner"|checkTeamPermission %}
             <li class="nav-item">
-                <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/groups"
-                   class="nav-link {% if currentSite_TEAMS == "groups" %}active{% else %}link-dark{% endif %}">
+                <a href="{{ url }}/cp/teams/{{ team['businessId'] }}/groups"
+                   class="nav-link {% if currentSite_TEAMS == "groups" %}active{% else %}{% endif %}">
                     {{ 'site.cp.tab.teams.groups' | language }}
                 </a>
             </li>
@@ -78,8 +78,8 @@
         {% if "team.partner"|checkTeamPermission %}
             {% if team['partner'] != false %}
                 <li class="nav-item">
-                    <a href="{{ url }}/cp/teams/{{ team['team_id'] }}/partner"
-                       class="nav-link {% if currentSite_TEAMS == "partner" %}active{% else %}link-dark{% endif %}">
+                    <a href="{{ url }}/cp/teams/{{ team['businessId'] }}/partner"
+                       class="nav-link {% if currentSite_TEAMS == "partner" %}active{% else %}{% endif %}">
                         {{ 'site.cp.tab.teams.partner' | language }}
                     </a>
                 </li>
@@ -96,13 +96,13 @@
                     </button>
                     <div class="collapse  {% if currentSite_TEAMS == "reselling" %}show{% endif %}" id="reselling">
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.general' | language }}</a>
+                            <li><a href="{{ url }}/cp/teams/{{ team['businessId'] }}/reselling" class=" d-inline-flex text-decoration-none rounded">{{ 'site.cp.settings.tab.general' | language }}</a>
                             </li>
-                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/invoice" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.invoice' | language }}</a>
+                            <li><a href="{{ url }}/cp/teams/{{ team['businessId'] }}/reselling/invoice" class=" d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.invoice' | language }}</a>
                             </li>
-                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/api" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.api' | language }}</a>
+                            <li><a href="{{ url }}/cp/teams/{{ team['businessId'] }}/reselling/api" class=" d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.api' | language }}</a>
                             </li>
-                            <li><a href="{{ url }}/cp/teams/{{ team['team_id'] }}/reselling/webhook" class="link-dark d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.webhook' | language }}</a>
+                            <li><a href="{{ url }}/cp/teams/{{ team['businessId'] }}/reselling/webhook" class=" d-inline-flex text-decoration-none rounded">{{ 'site.cp.teams.reselling.tab.webhook' | language }}</a>
                             </li>
                         </ul>
                     </div>
@@ -113,7 +113,7 @@
     </ul>
     <hr />
     <div class="dropdown">
-        <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <a href="#" class="d-flex align-items-center  text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="{{ userData['icon'] }}" alt="{{ userData['name'] }}" width="32" height="32" class="rounded-circle me-2">
             <strong>{{ userData['name'] }}</strong>
         </a>

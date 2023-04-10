@@ -1,6 +1,6 @@
 function updateGeneralPermission(permission, status){
     $.ajax({
-        data: {'permission': permission, 'status': status},
+        data: {'permission': permission, 'status':  status === true ? 1 : 0},
         type: 'PUT',
         url: apiURL + '/user/teams/' + team_id + '/groups/' + group_id + '/permission',
         beforeSend: function (xhr) {

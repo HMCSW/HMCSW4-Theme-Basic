@@ -1,0 +1,62 @@
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ website_title }}</title>
+    <meta name="robots" content="index,follow">
+    <base href="{{ url }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ website_description }}">
+    <meta name="keywords"
+          content="{{ config['name'] }}, {{ theme['keywords'] }}">
+    <meta name="author" content="{{ config['name'] }}"/>
+
+
+    <meta property="og:title" content="{{ website_title }}"/>
+    <meta property="og:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
+    <meta property="og:url" content="{{ url }}"/>
+    <meta property="og:site_name" content="{{ website_title }}"/>
+    <meta property="og:description" content="{{ website_description }}"/>
+    <meta property="og:locale" content="{{ language['current'] }}"/>
+    {% for language in language['all'] %}
+        <meta property="og:locale:alternate" content="{{ language['key'] }}"/>
+    {% endfor %}
+    <meta property="og:type" content="website"/>
+    <link rel="canonical" href="{{ url }}{{ canonical }}"/>
+
+    <meta name="twitter:title" content="{{ website_title }}"/>
+    <meta name="twitter:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
+    <meta name="twitter:url" content="{{ url }}"/>
+    <meta name="twitter:card" content="{{ website_description }}"/>
+    <meta name="twitter:site" content="{{ theme['social']['twitter'] }}"/>
+    <meta name="twitter:creator" content="{{ name }}"/>
+
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ theme['icons']['favicon']['packagePath'] }}/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192"
+          href="{{ theme['icons']['favicon']['packagePath'] }}/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-16x16.png">
+    <link rel="manifest" href="{{ url }}/manifest">
+    <link rel="mask-icon" href="{{ theme['icons']['favicon']['packagePath'] }}/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="{{ name }}">
+    <meta name="application-name" content="{{ name }}">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="{{ theme['icons']['favicon']['packagePath'] }}/mstile-144x144.png">
+    <meta name="msapplication-config" content="{{ theme['icons']['favicon']['packagePath'] }}/browserconfig.xml">
+    <meta name="theme-color" content="{{ theme['theme-color'] }}">
+
+    {% if theme['fontAwesome'] == false %}
+        <link rel=stylesheet href="{{ url }}/assets/libs/@fortawesome/fontawesome-free/css/all.min.css?version={{ version }}">
+    {% else %}
+        <link rel=stylesheet href="{{ theme['fontAwesome'] }}/css/all.min.css?version={{ version }}">
+    {% endif %}
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+
+    {{ true|getJS|raw }}
+    {{ true|getCSS|raw }}
+</head>

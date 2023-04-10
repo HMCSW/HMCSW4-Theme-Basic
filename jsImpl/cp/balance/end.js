@@ -41,7 +41,7 @@ $('#tos').change(function () {
 }).change();
 
 function showPaymentLoadingModal(){
-    $('#paymentLoadingModal').modal({show: true, backdrop: 'static', keyboard: false});
+    $('#paymentLoadingModal').modal('show', {backdrop: 'static', keyboard: false, focus: true});
 }
 
 function validRecaptcha(){

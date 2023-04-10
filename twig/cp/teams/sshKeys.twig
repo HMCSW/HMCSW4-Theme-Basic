@@ -33,7 +33,7 @@
                                             <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.sshKeys.description' | language }}</p>
                                         </div>
                                         <div class="col-6 text-right">
-                                            <button type="submit" data-toggle="modal" data-target="#key-add"
+                                            <button type="submit" data-bs-toggle="modal" data-bs-target="#key-add"
                                                     class="btn btn-lg btn-primary text-right">{{ 'site.cp.teams.sshKeys.add.form.btn' | language }}</button>
 
                                         </div>
@@ -109,11 +109,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="custom-control custom-checkbox">
-                                                        <input required type="checkbox" class="custom-control-input"
+                                                        <input required type="checkbox" class="form-check-input"
                                                                name="key" id="{{ key }}"
                                                                onchange="toggleAutoInstall(this);"
                                                                {% if value['autoInstall'] %}checked{% endif %} >
-                                                        <label class="custom-control-label h6"
+                                                        <label class="form-check-label h6"
                                                                for="{{ key }}">{{ value['name'] }}
                                                             <p class="text-sm">{{ value['fingerPrint'] }}</p>
                                                         </label>

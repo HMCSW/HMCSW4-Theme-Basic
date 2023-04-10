@@ -5,7 +5,7 @@
   <h6>{{ 'site.cp.service.tab.info.service_name' | language }}</h6>
   <h6><b>{{ service['service_name'] }}
       {% if "team.service.setName"|checkTeamPermission %}
-        <button type="button" class="btn btn-sm btn-icon-only" data-toggle="modal" data-target="#setAccessName"><span
+        <button type="button" class="btn btn-sm btn-icon-only" data-bs-toggle="modal" data-bs-target="#setAccessName"><span
             class="btn-inner--icon"><i class="fa fa-pen"></i></span></button>
       {% endif %}</b>
   </h6>
@@ -119,8 +119,8 @@
     <br>
     {% if service['state'] == 1 or service['state'] == 6 %}
       <h6>{{ 'site.cp.service.tab.info.teamspeak.host' | language }}</h6>
-      <h6><b>{{ teamspeak['response']['internal']['host']['ip'] }}
-          :{{ teamspeak['response']['internal']['host']['port'] }}</b></h6>
+      <h6><b>{{ teamspeak['internal']['host']['ip'] }}
+          :{{ teamspeak['internal']['host']['port'] }}</b></h6>
       <br>
     {% endif %}
 
@@ -128,14 +128,14 @@
     {% if service['state'] == 1 or service['state'] == 6 %}
       <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.slots.current' | language }}</h6>
       <h6>
-        <b>{{ teamspeak['response']['external']['info']['slots'] }} {% if teamspeak['response']['external']['info']['slots'] < service['package']['specs']['teamspeakInstance']['slots'] %} ({{ service['package']['specs']['teamspeakInstance']['slots'] }}){% endif %}</b>
+        <b>{{ teamspeak['external']['info']['slots'] }} {% if teamspeak['external']['info']['slots'] < service['package']['specs']['teamspeakInstance']['slots'] %} ({{ service['package']['specs']['teamspeakInstance']['slots'] }}){% endif %}</b>
       </h6>
       <br>
       <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.servers.current' | language }}</h6>
-      <h6><b>{{ teamspeak['response']['external']['info']['server'] }}</b></h6>
+      <h6><b>{{ teamspeak['external']['info']['server'] }}</b></h6>
       <br>
       <h6>{{ 'site.cp.service.tab.info.teamspeak.host' | language }}</h6>
-      <h6><b>{{ teamspeak['response']['internal']['host']['ip'] }}</b></h6>
+      <h6><b>{{ teamspeak['internal']['host']['ip'] }}</b></h6>
       <br>
       <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.credits' | language }}</h6>
       <h6>
@@ -260,12 +260,12 @@
     <h6>{{ 'site.cp.service.tab.info.proxmox.address' | language }}</h6>
     <h6>
       <ul>
-        {% for address in proxmox['response']['internal']['address']['ipv4'] %}
+        {% for address in proxmox['internal']['address']['ipv4'] %}
           <li>
             <b>{{ address['ipv4'] }}</b>
           </li>
         {% endfor %}
-        {% for address in proxmox['response']['internal']['address']['ipv6'] %}
+        {% for address in proxmox['internal']['address']['ipv6'] %}
           <li>
             <b>{{ address['ipv6'] }}</b>
           </li>
@@ -274,7 +274,7 @@
     </h6>
     {% if service['reinstalling'] == "false" and (service['state'] == 1 or service['state'] == 6) %}
       <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
-      <h6><b>{{ proxmox['response']['external']['backups'] | length }}
+      <h6><b>{{ proxmox['external']['backups'] | length }}
           / {{ service['package']['specs']['backups'] }}</b></h6>
       <br>
     {% endif %}

@@ -6,24 +6,7 @@
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-xl-12">
-                        {% if action != false %}
-                            {% if action['success'] == false %}
-                                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-                            {% else %}
-                                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-                            {% endif %}
-                            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                                <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-                                </div>
-                                <div class="alert-content">
-                                    {{ action['message'] | language }}
-                                </div>
-
-                            </div>
-                        {% endif %}
+                        {% include '/general/actionMessage.twig' %}
                         <div class="row">
                             <div class="col-lg-5">
                                 <form method="post">
@@ -91,7 +74,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
 
-                                                <input type="file" name="file" id="file" class="custom-input-file"/>
+                                                <input type="file" name="file" id="file" class="form-control"/>
                                                 <label for="file">
                                                     <i class="fa-regular fa-upload"></i>
                                                     <span>{{ 'site.cp.teams.partner.icon.file' | language }}</span>
@@ -115,8 +98,8 @@
                                     <h5 class="mb-1">{{ 'site.cp.teams.partner.radio' | language }}</h5>
                                     <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.radio.description' | language }}</p>
                                     <br>
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#addRadio">{{ 'site.cp.teams.partner.radio.btn' | language }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#addRadio">{{ 'site.cp.teams.partner.radio.btn' | language }}</button>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-cards align-items-center">
@@ -207,8 +190,8 @@
                                     <h5 class="mb-1">{{ 'site.cp.teams.partner.news' | language }}</h5>
                                     <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.news.description' | language }}</p>
                                     <br>
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                            data-target="#createNews">{{ 'site.cp.teams.partner.news.btn' | language }}</button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#createNews">{{ 'site.cp.teams.partner.news.btn' | language }}</button>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-cards align-items-center">
@@ -318,8 +301,8 @@
                                                 <div class="card-body">
                                                     <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.url' | language }}</h5>
                                                     <h6 class="h6 mb-0 text-center"><a
-                                                                href="{{ url }}/aff/{{ affiliate['response']['name'] }}">{{ url }}
-                                                            /aff/{{ affiliate['info']['response']['name'] }}</a>
+                                                                href="{{ url }}/aff/{{ affiliate['name'] }}">{{ url }}
+                                                            /aff/{{ affiliate['info']['name'] }}</a>
                                                     </h6>
                                                 </div>
                                             </div>
@@ -343,14 +326,14 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            {% if affiliate['logs']['response']|length == 0 %}
+                                                            {% if affiliate['logs']|length == 0 %}
                                                                 <tr>
                                                                     <td>{{ 'site.cp.affiliate.table.nothing' | language }}</td>
                                                                     <td></td>
                                                                     <td></td>
                                                                 </tr>
                                                             {% else %}
-                                                                {% for log in affiliate['logs']['response'] %}
+                                                                {% for log in affiliate['logs'] %}
                                                                     <tr>
                                                                         <td>
                                                                             {% if log['type'] == "click" %}

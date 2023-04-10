@@ -15,7 +15,7 @@
           {% for category in type['category'] %}
             <li class="nav-item">
               <a class="nav-link {% if category['default'] == "true" %} active {% endif %}"
-                 data-toggle="tab" href="#{{ category['name']|lower|slugify }}" role="tab"
+                 data-bs-toggle="tab" href="#{{ category['name']|lower|slugify }}" role="tab"
                  aria-controls="{{ category['name'] }}-tab"
                  aria-selected="{% if category['default'] == "true" %} true {% else %} false {% endif %}">{{ category['name'] }}</a>
             </li>

@@ -26,9 +26,9 @@
                     <div class="row">
                       <div class="col-12">
                         <div class="custom-control custom-radio">
-                          <input required type="radio" class="custom-control-input" name="team_id"
+                          <input required type="radio" class="form-check-input" name="team_id"
                                  value="{{ team['team_id'] }}" id="radio-team-{{ team['team_id'] }}" {% if team_id == team['team_id'] %}checked{% endif %}>
-                          <label class="custom-control-label h6 mb-0 lh-180"
+                          <label class="form-check-label h6 mb-0 lh-180"
                                  for="radio-team-{{ team['team_id'] }}">{{ team['name'] }} {% if team['reselling'] %}[Reselling]{% endif %}</label>
                         </div>
                       </div>

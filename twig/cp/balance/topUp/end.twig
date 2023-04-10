@@ -32,19 +32,19 @@
                             <div class="card-body">
                                 <div class="form-group mb-0 lh-180">
                                     <div class="custom-control custom-checkbox">
-                                        <input required type="checkbox" class="custom-control-input" id="tos"
+                                        <input required type="checkbox" class="form-check-input" id="tos"
                                                name="tos">
 
-                                        <label class="custom-control-label"
+                                        <label class="form-check-label"
                                                for="tos">{{ 'site.cart.end.terms'|language|replace({'@terms': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/terms', '@site': 'site.legal.terms'|language })|raw })|raw }}</label>
                                     </div>
                                 </div>
                                 <div class="form-group mb-0 lh-180">
                                     <div class="custom-control custom-checkbox">
-                                        <input required type="checkbox" class="custom-control-input" id="withdrawal"
+                                        <input required type="checkbox" class="form-check-input" id="withdrawal"
                                                name="withdrawal">
 
-                                        <label class="custom-control-label"
+                                        <label class="form-check-label"
                                                for="withdrawal">{{ 'site.cart.end.withdrawal'|language|replace({'@withdrawal': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/withdrawal', '@site': 'site.legal.withdrawal'|language })|raw })|raw }}</label>
                                     </div>
                                 </div>

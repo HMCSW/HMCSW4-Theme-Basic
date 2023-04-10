@@ -1,147 +1,128 @@
+{{ '<script type="application/javascript" src="{{ url }}/assets/js/simpleWebauthn/index.umd.min.js"></script>'|addJS(true) }}
 {% include '/general/header_noNav.twig' %}
 <section>
-  <div class="container d-flex flex-column">
-    <div class="row align-items-center justify-content-center min-vh-100">
-      <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
-        <div>
-          {% if twoFactor_type %}
-            <div class="mb-5 text-center">
-              <h6 class="h3 mb-1">{{ 'site.auth.twoFactor' | language }}</h6>
-              <p class="text-muted mb-0">{{ 'site.auth.twoFactor.description' | language }}</p>
-            </div>
-            <span class="clearfix"></span>
-            {% if action != false %}
-              {% if action['success'] == false %}
-                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-              {% else %}
-                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-              {% endif %}
-              <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
+    <div class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center min-vh-100">
+            <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+                <div style="display: none" id="enterCode">
+                    <div class="mb-5 text-center">
+                        <div class="mb-5 text-center">
+                            <h6 class="h3 mb-1">{{ 'site.auth.twoFactor' | language }}</h6>
+                            <p class="text-muted mb-0">{{ 'site.auth.twoFactor.description' | language }}</p>
+                        </div>
+                    </div>
+                    <span class="clearfix"></span>
+
+                    {% include '/general/actionMessage.twig' %}
+
+                    <div class="justify-content-center align-middle text-center" id="code-loader"
+                         style="display: none">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div id="code-form" style="display: none">
+
+                        <div class="form-group">
+                            <label for="code"
+                                   class="form-control-label">{{ 'site.auth.twoFactor.form.code' | language }}</label>
+
+                            <input type="text" class="form-control" id="code"
+                                   placeholder="ABC 123 DFG 456">
+
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn btn-lg btn-primary w-100 mb-4" id="submit-code"
+                                    type="button">{{ 'site.auth.twoFactor.submitBtn' | language }}
+                            </button>
+                        </div>
+                        <button class="btn btn-sm btn-info w-50 mb-4" id="selectOtherMethod"
+                                type="button">{{ 'site.auth.twoFactor.cancelBtn' | language }}</button>
+
+                    </div>
                 </div>
-                <div class="alert-content">
-                  {{ action['message'] | language }}
-                </div>
-              </div>
-            {% endif %}
+                <div style="display: none" id="selectMethod">
+                    <div class="mb-5 text-center">
+                        <div class="mb-5 text-center">
+                            <h6 class="h3 mb-1">{{ 'site.auth.twoFactor' | language }}</h6>
+                            <p class="text-muted mb-0">{{ 'site.auth.twoFactor-type.description' | language }}</p>
+                        </div>
+                    </div>
+
+                    <span class="clearfix"></span>
+
+                    {% include '/general/actionMessage.twig' %}
+
+                    <div class="col-lg-12" id="fidoFailMessage" style="display: none">
+                        <div class="alert alert-group alert-danger alert-icon" role="alert">
+                            <div class="alert-group-prepend">
+                                    <span class="alert-group-icon text-">
+                                        <i class="fa fa-exclamation-triangle"></i>
+                                    </span>
+                            </div>
+                            <div class="alert-content">
+                                {{ 'site.auth.twoFactor.fido2Failed'|language }}
+                            </div>
+                            <div class="alert-action">
+                                <button type="button" class="btn btn-danger"
+                                        id="fidoFailBtn">{{ 'site.auth.twoFactor.fido2Failed.retry'|language }}</button>
+                            </div>
+                        </div>
+                    </div>
 
 
-            <form method="post">
-              <input type="hidden" name="action" value="checkCode">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <div class="justify-content-center align-middle text-center" id="allMethodsLoader"
+                         style="display: none">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="form-check" id="exampleMethodCheck" style="display: none">
+                        <input class="form-check-input" type="radio">
+                        <label class="form-check-label"></label>
+                    </div>
+
+                    <div id="fidoInfo" style="display: none">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title text-center"><i class="fa-solid fa-key"></i></h4>
+                                <p class="card-text text-center">Melde Sie sich mit einer Ihrer hinterlegten
+                                    Sicherheitsschlüssel an, um fortzufahren.</p>
+                                <button type="button" id="cancelFido" class="btn btn-primary w-100 btn-sm" style="display: none">
+                                    Andere Methode wählen
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="allMethods" style="display: none">
 
 
-              <div class="form-group">
-                <label for="input-code"
-                       class="form-control-label">{{ 'site.auth.twoFactor.form.code' | language }}</label>
+                    </div>
 
-                <input type="text" name="code" class="form-control" id="input-code" placeholder="ABC 123 DFG 456">
-
-              </div>
-              <div class="mt-4">
-                <button type="submit"
-                        class="btn btn-block btn-primary">{{ 'site.auth.twoFactor.submitBtn' | language }}</button>
-              </div>
-            </form>
-            <form method="post">
-              <input type="hidden" name="action" value="cancelCode">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-              <div class="mt-4">
-                <button type="submit"
-                        class="btn btn-block btn-info btn-sm btn-soft">{{ 'site.auth.twoFactor.cancelBtn' | language }}</button>
-              </div>
-            </form>
-
-          {% else %}
-            <div class="mb-5 text-center">
-              <h6 class="h3 mb-1">{{ 'site.auth.twoFactor' | language }}</h6>
-              <p class="text-muted mb-0">{{ 'site.auth.twoFactor-type.description' | language }}</p>
-            </div>
-            <span class="clearfix"></span>
-            {% if action != false %}
-              {% if action['success'] == false %}
-                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-              {% else %}
-                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-              {% endif %}
-              <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-                </div>
-                <div class="alert-content">
-                  {{ action['message'] | language }}
-                </div>
-              </div>
-            {% endif %}
-
-            <form method="post">
-              <input type="hidden" name="action" value="setType">
-              <input type="hidden" name="csrf" value="{{ csrf }}">
-
-              <div class="form-group">
-                {% if types['totp'] != false %}
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="totp" name="type" value="totp" class="custom-control-input" required
-                           {% if default == "totp" %}checked="checked"{% endif %}>
-                    <label class="custom-control-label"
-                           for="totp">{{ 'site.auth.twoFactor.type.timeBased' | language }}</label>
-                  </div>
-                {% endif %}
-                {% if types['email'] != false %}
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="email" name="type" value="email" class="custom-control-input" required
-                           {% if default == "email" %}checked="checked"{% endif %}>
-                    <label class="custom-control-label"
-                           for="email">{{ 'site.auth.twoFactor.type.email' | language }}</label>
-                  </div>
-                {% endif %}
-                {% if types['phone'] != false %}
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="phoneSMS" name="type" value="phone" class="custom-control-input" required
-                           {% if default == "phoneSMS" %}checked="checked"{% endif %}>
-                    <label class="custom-control-label"
-                           for="phoneSMS">{{ 'site.auth.twoFactor.type.phoneSMS' | language }}</label>
-                  </div>
-                {% endif %}
-                {% if types['backup'] != false %}
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="backup" name="type" value="backup" class="custom-control-input" required
-                           {% if default == "backup" %}checked="checked"{% endif %}>
-                    <label class="custom-control-label"
-                           for="backup">{{ 'site.auth.twoFactor.type.backup' | language }}</label>
-                  </div>
-                {% endif %}
-                {% if count == 0 %}
-                  <div class="alert alert-group alert-danger alert-icon" role="alert">
-                    <div class="alert-group-prepend">
+                    <div class="col-lg-12" id="noMethod" style="display: none">
+                        <div class="alert alert-group alert-danger alert-icon" role="alert">
+                            <div class="alert-group-prepend">
                                         <span class="alert-group-icon text-">
                                             <i class="fas fa-exclamation-triangle"></i>
                                         </span>
+                            </div>
+                            <div class="alert-content">
+                                {{ 'site.auth.action.message.noTwoFactorMethodAvailable' | language }}
+                            </div>
+                        </div>
                     </div>
-                    <div
-                      class="alert-content">{{ 'site.auth.action.message.noTwoFactorMethodAvailable' | language }}</div>
-                  </div>
-                {% endif %}
 
-              </div>
 
-              {% if count != 0 %}
-                <div class="mt-4">
-                  <button type="submit"
-                          class="btn btn-block btn-primary">{{ 'site.auth.twoFactor.selectBtn' | language }}</button>
+                    <button class="btn btn-lg btn-primary w-100 mb-4 mt-4 text-center" style="display: none;" id="selectBTN"
+                            type="button">{{ 'site.auth.twoFactor.selectBtn' | language }}
+                    </button>
+
                 </div>
-              {% endif %}
-            </form>
-
-          {% endif %}
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
-{% include '/general/footer.twig' %}
+{% include '/general/footer_empty.twig' %}

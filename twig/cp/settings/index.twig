@@ -21,24 +21,24 @@
                                         <input type="radio" id="nightMode-on" name="nightMode"
                                                value="on"
                                                {% if userData['night_mode']['state'] == "true" %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="nightMode-on">{{ 'site.cp.settings.nightMode.form.on' | language }}</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input type="radio" id="nightMode-off" name="nightMode"
                                                value="off"
                                                {% if userData['night_mode']['state'] == "false" %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="nightMode-off">{{ 'site.cp.settings.nightMode.form.off' | language }}</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input type="radio" id="nightMode-auto" name="nightMode"
                                                value="auto"
                                                {% if userData['night_mode']['state'] == "auto" %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="nightMode-auto">{{ 'site.cp.settings.nightMode.form.auto' | language }}</label>
                                     </div>
                                 </div>
@@ -51,8 +51,8 @@
                                             <input type="radio" id="nightModeColor-{{ name }}"
                                                    name="nightModeColor" value="{{ name }}"
                                                    {% if userData['night_mode']['color'] == name %}checked{% endif %}
-                                                   class="custom-control-input">
-                                            <label class="custom-control-label"
+                                                   class="form-check-input">
+                                            <label class="form-check-label"
                                                    for="nightModeColor-{{ name }}">{{ value['message'] | language }}</label>
                                         </div>
                                     {% endfor %}
@@ -85,16 +85,16 @@
                                         <input type="radio" id="autoPay-on" name="autoPay"
                                                value="true"
                                                {% if userData['autoPay'] %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="autoPay-on">{{ 'site.cp.settings.autoPay.form.on' | language }}</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input type="radio" id="autoPay-off" name="autoPay"
                                                value="false"
                                                {% if userData['autoPay'] == false %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="autoPay-off">{{ 'site.cp.settings.autoPay.form.off' | language }}</label>
                                     </div>
                                 </div>
@@ -191,11 +191,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-6">
-                                <input type="file" name="file" id="file" class="custom-input-file"/>
-                                <label for="file">
-                                    <i class="fa-regular fa-upload"></i>
-                                    <span>{{ 'site.cp.settings.icon.form.upload' | language }}</span>
-                                </label>
+                                <input type="file" name="file" id="file" class="form-control"/>
                             </div>
                         </div>
                         <div class="mt-4">
@@ -224,16 +220,16 @@
                                         <input type="radio" id="effects-on" name="effects"
                                                value="on"
                                                {% if userData['effects'] %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="effects-on">{{ 'site.cp.settings.effects.form.on' | language }}</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input type="radio" id="effects-off" name="effects"
                                                value="off"
                                                {% if userData['effects'] == false %}checked{% endif %}
-                                               class="custom-control-input">
-                                        <label class="custom-control-label"
+                                               class="form-check-input">
+                                        <label class="form-check-label"
                                                for="effects-off">{{ 'site.cp.settings.effects.form.off' | language }}</label>
                                     </div>
                                 </div>
@@ -277,8 +273,8 @@
                     </div>
 
                     <div class="mt-4">
-                        <button type="button" class="btn btn-danger" data-toggle="modal"
-                                data-target="#deleteAccount">{{ 'site.cp.settings.delete.form.btn' | language }}</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#deleteAccount">{{ 'site.cp.settings.delete.form.btn' | language }}</button>
                     </div>
                     <div class="modal modal-danger fade" id="deleteAccount" tabindex="-1"
                          role="dialog"

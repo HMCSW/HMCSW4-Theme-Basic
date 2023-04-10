@@ -15,7 +15,7 @@
                                 <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.apiToken.description' | language }}</p>
                             </div>
 
-                            {% if apiLog['log']|length != 0 %}
+                            {% if apiLog['items']|length != 0 %}
                                 <div class="card">
                                     <div class="card-body text-center justify-content-center">
                                         <nav>
@@ -24,73 +24,73 @@
                                                 <li
                                                         class="page-item {% if apiLog['pagination']['previous_page'] == 0 %} disabled {% endif %}">
                                                     <a class="page-link"
-                                                       href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page=1"
+                                                       href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page=1"
                                                        tabindex="-1" {% if apiLog['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>First</a>
                                                 </li>
                                                 <li
                                                         class="page-item {% if apiLog['pagination']['previous_page'] == 0 %} disabled {% endif %}">
                                                     <a class="page-link"
-                                                       href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page'] }}"
+                                                       href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['previous_page'] }}"
                                                        tabindex="-1" {% if apiLog['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>Previous</a>
                                                 </li>
 
                                                 {% if apiLog['pagination']['previous_page']-3 > 0 %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page']-3 }}">{{ apiLog['pagination']['previous_page']-3 }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['previous_page']-3 }}">{{ apiLog['pagination']['previous_page']-3 }}</a>
                                                     </li>
                                                 {% endif %}
                                                 {% if apiLog['pagination']['previous_page']-2 > 0 %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page']-2 }}">{{ apiLog['pagination']['previous_page']-2 }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['previous_page']-2 }}">{{ apiLog['pagination']['previous_page']-2 }}</a>
                                                     </li>
                                                 {% endif %}
                                                 {% if apiLog['pagination']['previous_page']-1 > 0 %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page']-1 }}">{{ apiLog['pagination']['previous_page']-1 }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['previous_page']-1 }}">{{ apiLog['pagination']['previous_page']-1 }}</a>
                                                     </li>
                                                 {% endif %}
                                                 {% if apiLog['pagination']['previous_page'] != 0 %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page'] }}">{{ apiLog['pagination']['previous_page'] }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['previous_page'] }}">{{ apiLog['pagination']['previous_page'] }}</a>
                                                     </li>
                                                 {% endif %}
 
                                                 <li class="page-item active" aria-current="page">
                                                     <a class="page-link"
-                                                       href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['current_page'] }}">{{ apiLog['pagination']['current_page'] }}
+                                                       href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['current_page'] }}">{{ apiLog['pagination']['current_page'] }}
                                                         <span class="sr-only">(current)</span></a>
                                                 </li>
 
                                                 {% if apiLog['pagination']['current_page'] != apiLog['pagination']['total_no_of_pages'] %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page'] }}">{{ apiLog['pagination']['next_page'] }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['next_page'] }}">{{ apiLog['pagination']['next_page'] }}</a>
                                                     </li>
                                                 {% endif %}
                                                 {% if apiLog['pagination']['next_page']+1 <= apiLog['pagination']['total_no_of_pages'] %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page']+1 }}">{{ apiLog['pagination']['next_page']+1 }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['next_page']+1 }}">{{ apiLog['pagination']['next_page']+1 }}</a>
                                                     </li>
                                                 {% endif %}
                                                 {% if apiLog['pagination']['next_page']+2 <= apiLog['pagination']['total_no_of_pages'] %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page']+2 }}">{{ apiLog['pagination']['next_page']+2 }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['next_page']+2 }}">{{ apiLog['pagination']['next_page']+2 }}</a>
                                                     </li>
                                                 {% endif %}
                                                 {% if apiLog['pagination']['next_page']+3 <= apiLog['pagination']['total_no_of_pages'] %}
                                                     <li class="page-item"><a class="page-link"
-                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page']+3 }}">{{ apiLog['pagination']['next_page']+3 }}</a>
+                                                                             href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['next_page']+3 }}">{{ apiLog['pagination']['next_page']+3 }}</a>
                                                     </li>
                                                 {% endif %}
 
                                                 <li
                                                         class="page-item {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} disabled {% endif %}">
                                                     <a class="page-link"
-                                                       href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Next</a>
+                                                       href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['next_page'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Next</a>
                                                 </li>
                                                 <li
                                                         class="page-item {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} disabled {% endif %}">
                                                     <a class="page-link"
-                                                       href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['total_no_of_pages'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Last</a>
+                                                       href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['total_no_of_pages'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Last</a>
                                                 </li>
                                             </ul>
                                         </nav>
@@ -113,7 +113,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            {% for log in apiLog['log'] %}
+                                            {% for log in apiLog['items'] %}
                                                 <tr>
                                                     <td>{{ log['status'] }}</td>
                                                     <td>{{ log['method'] }}</td>
@@ -121,8 +121,8 @@
                                                     <td>{{ log['time']|date("d.m.Y H:i:s") }}</td>
                                                     <td>
                                                         <button type="button"
-                                                                class="btn btn-primary" title="" data-toggle="modal"
-                                                                data-target="#seeLog-{{ log['log_id'] }}">
+                                                                class="btn btn-primary" title="" data-bs-toggle="modal"
+                                                                data-bs-target="#seeLog-{{ log['log_id'] }}">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
                                                     </td>
@@ -133,7 +133,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {% for log in apiLog['log'] %}
+                            {% for log in apiLog['items'] %}
                                 <div class="modal fade" tabindex="-1" role="dialog" id="seeLog-{{ log['log_id'] }}">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -168,7 +168,7 @@
                                                 <h5 class="text-left">Response</h5>
                                                 <pre style="background-color: #001f3f; color: #ffffff"><code
                                                             id="response_{{ log['log_id'] }}"></code></pre>
-                                                <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['response']|json_encode|raw }}, undefined, 2);</script>
+                                                <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log|json_encode|raw }}, undefined, 2);</script>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary"

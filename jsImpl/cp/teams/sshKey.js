@@ -1,7 +1,7 @@
 function toggleAutoInstall(object){
 
     $.ajax({
-        data: {'status': object.checked},
+        data: {'status': object.checked === true ? 1 : 0},
         type: 'POST',
         url: apiURL + '/user/teams/' + team_id + '/sshKeys/' + object.id + '/autoInstall',
         beforeSend: function (xhr) {

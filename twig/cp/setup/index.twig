@@ -184,7 +184,7 @@
                          class="form-control-label">{{ 'general.address.birthday' | language }}</label>
                   <input name="birthday" required data-date-format="d.m.Y" type="text" class="form-control"
                          data-mask="00.00.0000" maxlength="9"
-                         id="input-birthday" data-toggle="date"
+                         id="input-birthday" data-bs-toggle="date"
                          value="{% if setup != false %}{{ setup['birthday']['date'] }}{% endif %}"
                          placeholder="{{ 'general.address.birthday.placeholder' | language }}">
                 </div>
@@ -199,16 +199,16 @@
               <div class="row">
                 <div class="form-group offset-lg-1">
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" name="terms" required id="check-terms">
-                    <label class="custom-control-label"
+                    <input type="checkbox" class="form-check-input" name="terms" required id="check-terms">
+                    <label class="form-check-label"
                            for="check-terms">{{ 'site.cp.setup.legal.terms'|language|replace({'@terms': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/terms', '@site': 'site.legal.terms'|language })|raw })|raw }}
                     </label>
                   </div>
                 </div>
                 <div class="form-group offset-lg-1">
                   <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" name="privacy" required id="check-privacy">
-                    <label class="custom-control-label"
+                    <input type="checkbox" class="form-check-input" name="privacy" required id="check-privacy">
+                    <label class="form-check-label"
                            for="check-privacy">{{ 'site.cp.setup.legal.privacy'|language|replace({'@privacy': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/privacy', '@site': 'site.legal.privacy'|language })|raw })|raw }}
                     </label>
                   </div>
@@ -217,8 +217,8 @@
                   <div class="custom-control custom-checkbox">
                     <input
                       type="checkbox" {% if setup != false %} {% if setup['newsletter'] == "true" %} checked {% endif %} {% endif %}
-                      class="custom-control-input" name="newsletter" id="check-newsletter">
-                    <label class="custom-control-label"
+                      class="form-check-input" name="newsletter" id="check-newsletter">
+                    <label class="form-check-label"
                            for="check-newsletter">{{ 'site.cp.setup.legal.newsletter' | language }}</label>
                   </div>
                 </div>

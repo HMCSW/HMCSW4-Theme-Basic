@@ -17,19 +17,20 @@
 
                                 {% for id,address in userData['address'] %}
                                     <div class="card">
-                                        <div class="card-header py-4" id="heading-{{ id }}" data-toggle="collapse"
+                                        <div class="card-header py-4" id="heading-{{ id }}" data-bs-toggle="collapse"
                                              role="button"
-                                             data-target="#collapse-{{ id }}" aria-expanded="false"
+                                             data-bs-target="#collapse-{{ id }}" aria-expanded="false"
                                              aria-controls="collapse-{{ id }}">
                                             <h6>{{ address['firstname'] }} {{ address['lastname'] }}</h6>
                                         </div>
                                         <div id="collapse-{{ id }}" class="collapse" aria-labelledby="heading-{{ id }}"
-                                             data-parent="#accordion-1">
+                                             data-bs-parent="#accordion-1">
                                             <div class="card-body">
+
 
                                                 {% if testIfIdentCheckAvailable == true %}
                                                     {% if address['identityChecked'] == "true" %}
-                                                        <div class="col-md-9 alert alert-group alert-success alert-icon"
+                                                        <div class="alert alert-group alert-success alert-icon"
                                                              role="alert">
                                                             <div class="alert-group-prepend"><span
                                                                         class="alert-group-icon text-"><i
@@ -39,7 +40,7 @@
                                                             </div>
                                                         </div>
                                                     {% elseif address['identityChecked'] == "inProgress" %}
-                                                        <div class="col-md-9 alert alert-group alert-warning alert-icon"
+                                                        <div class="alert alert-group alert-warning alert-icon"
                                                              role="alert">
                                                             <div class="alert-group-prepend"><span
                                                                         class="alert-group-icon text-"><i
@@ -51,12 +52,12 @@
                                                                 <button type="button"
                                                                         onclick="startAddressVerification(this.id)"
                                                                         id="{{ id }}"
-                                                                        class="btn btn-neutral"
+                                                                        class="btn btn-warning"
                                                                         aria-label="Action Label">{{ 'site.cp.settings.address.identityCheck.progress.btn' | language }}</button>
                                                             </div>
                                                         </div>
                                                     {% elseif address['identityChecked'] == "failed" %}
-                                                        <div class="col-md-9 alert alert-group alert-danger alert-icon"
+                                                        <div class="alert alert-group alert-danger alert-icon"
                                                              role="alert">
                                                             <div class="alert-group-prepend"><span
                                                                         class="alert-group-icon text-"><i
@@ -68,7 +69,7 @@
                                                                 <button type="button"
                                                                         onclick="startAddressVerification(this.id)"
                                                                         id="{{ id }}"
-                                                                        class="btn btn-neutral"
+                                                                        class="btn btn-danger"
                                                                         aria-label="Action Label">{{ 'site.cp.settings.address.identityCheck.failed.btn' | language }}</button>
                                                             </div>
                                                         </div>
@@ -76,7 +77,7 @@
                                                         {% if userData['age'] >= 16 %}
 
 
-                                                            <div class="col-md-9 alert alert-group alert-info alert-icon"
+                                                            <div class="alert alert-group alert-info alert-icon"
                                                                  role="alert">
                                                                 <div class="alert-group-prepend"><span
                                                                             class="alert-group-icon text-"><i
@@ -86,9 +87,9 @@
                                                                     {{ 'site.cp.settings.address.identityCheck.available' | language }}
                                                                 </div>
                                                                 <div class="alert-action">
-                                                                    <button type="button" data-toggle="modal"
-                                                                            data-target="#startIdentityCheck-{{ id }}"
-                                                                            class="btn btn-neutral"
+                                                                    <button type="button" data-bs-toggle="modal"
+                                                                            data-bs-target="#startIdentityCheck-{{ id }}"
+                                                                            class="btn btn-info"
                                                                             aria-label="Action Label">{{ 'site.cp.settings.address.identityCheck.available.btn' | language }}</button>
                                                                 </div>
                                                             </div>
@@ -104,11 +105,8 @@
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title h6"
                                                                                 id="modal_title_6">{{ 'site.cp.settings.address.identityCheck.available.modal' | language }}</h5>
-                                                                            <button type="button" class="btn"
-                                                                                    data-dismiss="modal"
-                                                                                    aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
+                                                                            <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
                                                                         </div>
                                                                         <div class="modal-body">
                                                                             <div class="py-3 text-center">
@@ -122,14 +120,14 @@
                                                                             <button type="button"
                                                                                     onclick="startAddressVerification(this.id)"
                                                                                     id="{{ id }}"
-                                                                                    class="btn btn-sm btn-white">{{ 'site.cp.settings.address.identityCheck.available.modal.start' | language }}</button>
+                                                                                    class="btn btn-primary">{{ 'site.cp.settings.address.identityCheck.available.modal.start' | language }}</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
 
                                                         {% else %}
-                                                            <div class="col-md-9 alert alert-group alert-info alert-icon"
+                                                            <div class="alert alert-group alert-info alert-icon"
                                                                  role="alert">
                                                                 <div class="alert-group-prepend"><span
                                                                             class="alert-group-icon text-"><i
@@ -337,14 +335,14 @@
                                     </div>
                                 {% endfor %}
                                 <div class="card">
-                                    <div class="card-header py-4" id="heading-create" data-toggle="collapse"
+                                    <div class="card-header py-4" id="heading-create" data-bs-toggle="collapse"
                                          role="button"
-                                         data-target="#collapse-create" aria-expanded="false"
+                                         data-bs-target="#collapse-create" aria-expanded="false"
                                          aria-controls="collapse-create">
                                         <h6 class="mb-0">{{ 'site.cp.settings.address.createNew' | language }}</h6>
                                     </div>
                                     <div id="collapse-create" class="collapse" aria-labelledby="heading-create"
-                                         data-parent="#accordion-1">
+                                         data-bs-parent="#accordion-1">
                                         <div class="card-body">
                                             <form method="post">
                                                 <input type="hidden" name="action" value="createAddress">

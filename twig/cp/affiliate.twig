@@ -9,7 +9,7 @@
                     <div class="col-xl-12">
                         {% include '/general/actionMessage.twig' %}
 
-                        {% if affiliate['success'] %}
+                        {% if affiliate != false %}
                             <div class="d-none d-md-block d-lg-block d-xl-block">
                                 <div class="row">
                                     <div class="col-md-4">
@@ -50,8 +50,8 @@
                                         <div class="card-body">
                                             <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.url' | language }}</h5>
                                             <h6 class="h6 mb-0 text-center"><a
-                                                        href="{{ url }}/aff/{{ affiliate['response']['affiliate_id'] }}">{{ url }}
-                                                    /aff/{{ affiliate['response']['affiliate_id'] }}</a>
+                                                        href="{{ url }}/aff/{{ affiliate['affiliate_id'] }}">{{ url }}
+                                                    /aff/{{ affiliate['affiliate_id'] }}</a>
                                             </h6>
                                         </div>
                                     </div>
@@ -75,14 +75,14 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody>
-                                                    {% if logs['response']|length == 0 %}
+                                                    {% if logs|length == 0 %}
                                                         <tr>
                                                             <td>{{ 'site.cp.affiliate.table.nothing' | language }}</td>
                                                             <td></td>
                                                             <td></td>
                                                         </tr>
                                                     {% else %}
-                                                        {% for log in logs['response'] %}
+                                                        {% for log in logs %}
                                                             <tr>
                                                                 <td>
                                                                     {% if log['type'] == "click" %}

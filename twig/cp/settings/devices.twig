@@ -1,3 +1,4 @@
+{{ '<script type="application/javascript" src="{{ url }}/assets/js/simpleWebauthn/index.umd.min.js"></script>'|addJS(true) }}
 {% include '/general/header.twig' %}
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -6,62 +7,69 @@
             <div class="row">
                 <div class="col-lg-6">
                     {% include "general/actionMessage.twig" %}
-                    <div class="row">
-                        <div class="col-lg-12" id="qrCodeLogin">
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
-                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.qrCode.description' | language }}</p>
-                            </div>
+                    <div id="deviceQRCodeLogin">
+                        <div class="row">
+                            <div class="col-lg-12" id="qrCodeLogin">
+                                <div class="actions-toolbar py-2 mb-4">
+                                    <h5 class="mb-1">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
+                                    <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.devices.qrCode.description' | language }}</p>
+                                </div>
 
-                            <div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
-                                            <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div id="submitVideo">
-                                                <video width="100%" height="auto" id="video">Gimme Permissions!</video>
-
-                                                <div class="custom-control custom-switch" id="flashToggleDIV">
-                                                    <input type="checkbox" class="custom-control-input" id="flashBox">
-                                                    <label class="custom-control-label"
-                                                           for="flashBox">{{ 'site.cp.settings.devices.qrCode.modal.flash' | language }}</label>
+                                <div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ 'site.cp.settings.devices.qrCode' | language }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="submitVideo">
+                                                    <video width="100%" height="auto" id="video">Gimme Permissions!</video>
+                                                    <div class="row g-3">
+                                                        <div class="col-md-12 form-group">
+                                                            <div class="form-check form-switch" id="flashToggleDIV">
+                                                                <input type="checkbox" class="form-check-input" id="flashBox">
+                                                                <label class="form-check-label"
+                                                                       for="flashBox">{{ 'site.cp.settings.devices.qrCode.modal.flash' | language }}</label>
+                                                            </div>
+                                                            <div class="col-md-12 form-group">
+                                                                <label for="camList"
+                                                                       class="form-label">{{ 'site.cp.settings.devices.qrCode.modal.camera' | language }}</label>
+                                                                <select class="form-select" id="camList">
+                                                                    <option value="environment"
+                                                                            selected>{{ 'site.cp.settings.devices.qrCode.modal.camera.default' | language }}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <label for="camList">{{ 'site.cp.settings.devices.qrCode.modal.camera' | language }}</label>
-                                                <select class="form-select" id="camList">
-                                                    <option value="environment"
-                                                            selected>{{ 'site.cp.settings.devices.qrCode.modal.camera.default' | language }}</option>
-                                                </select>
-                                            </div>
-                                            <div id="submitCode" style="display:none">
-                                                <h4>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.1' | language }}</h4>
-                                                <h6 class="text-danger">{{ 'site.cp.settings.devices.qrCode.modal.submit.text.2' | language }}</h6>
-                                                <h6>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.3' | language }}</h6>
+                                                <div id="submitCode" style="display:none">
+                                                    <h4>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.1' | language }}</h4>
+                                                    <h6 class="text-danger">{{ 'site.cp.settings.devices.qrCode.modal.submit.text.2' | language }}</h6>
+                                                    <h6>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.3' | language }}</h6>
 
-                                                <button type="button" class="btn btn-danger"
-                                                        id="submitCodeBtn">{{ 'site.cp.settings.devices.qrCode.modal.submit.btn' | language }}</button>
-                                            </div>
-                                            <div id="submitSuccess" style="display:none">
-                                                <h4>{{ 'site.cp.settings.devices.qrCode.modal.success' | language }}</h4>
-                                            </div>
-                                            <div id="submitFailed" style="display:none">
-                                                <h5>{{ 'site.cp.settings.devices.qrCode.modal.failed' | language }}</h5>
+                                                    <button type="button" class="btn btn-danger" id="submitCodeBtn">{{ 'site.cp.settings.devices.qrCode.modal.submit.btn' | language }}</button>
+                                                </div>
+                                                <div id="submitSuccess" style="display:none">
+                                                    <h4>{{ 'site.cp.settings.devices.qrCode.modal.success' | language }}</h4>
+                                                </div>
+                                                <div id="submitFailed" style="display:none">
+                                                    <h5>{{ 'site.cp.settings.devices.qrCode.modal.failed' | language }}</h5>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-flex justify-content-start">
+                                    <button class="btn btn-primary" id="openCamera"
+                                            type="button">{{ 'site.cp.settings.devices.qrCode.open' | language }}</button>
+                                </div>
+
                             </div>
-
-                            <button type="button" id="openCamera"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.devices.qrCode.open' | language }}</button>
-
                         </div>
+                        <hr/>
                     </div>
-                    <hr/>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="actions-toolbar py-2 mb-4">
@@ -158,7 +166,7 @@
                                             <td class="text-right">
                                                 <div class="actions">
                                                     <div class="dropdown">
-                                                        <a class="btn" role="button" data-toggle="dropdown"
+                                                        <a class="btn btn-primary" role="button" data-bs-toggle="dropdown"
                                                            aria-haspopup="true" aria-expanded="false"><i
                                                                     class="fas fa-ellipsis-h"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right"
@@ -166,8 +174,9 @@
 
 
                                                             <button type="submit" class="dropdown-item"
-                                                                    data-toggle="modal"
-                                                                    data-target="#device-{{ device['device_id'] }}"><i
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#device-{{ device['device_id'] }}">
+                                                                <i
                                                                         class="fas fa-eye"></i>{{ 'site.cp.settings.devices.table.show' | language }}
                                                             </button>
                                                             <form method="POST">
@@ -224,22 +233,13 @@
                                                                     style='display:none '>
                                                             </iframe>
 
-                                                            <div id="button-{{ device['device_id'] }}"
-                                                                 style="display:block"
-                                                                 data-frameUrl="https://maps.google.de/maps?hl=de&q=%20{{ device['latest_ip']['loc'] | url_encode }}&t=&z=10&ie=utf8&iwloc=b&output=embed"
-                                                                 class="card bg-info hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid align-items-center d-flex justify-content-center">
-                                                                <div class="overflow-hidden align-self-center align-items-center">
-                                                                    <button type="button"
-                                                                            class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon">
-                                        <span class="btn-inner--icon text-white"
-                                              onClick="showIFrame({{ device['device_id'] }});">
-                                           <i class="fa-solid fa-arrows-to-eye"></i>
-                                        </span>
-                                                                    </button>
-
-
-                                                                </div>
-                                                            </div>
+                                                            <button type="button" data-frames="true"
+                                                                    id="button-{{ device['device_id'] }}"
+                                                                    data-frameId="{{ device['device_id'] }}"
+                                                                    class="btn btn-primary" style="display:block"
+                                                                    data-frameUrl="https://maps.google.de/maps?hl=de&q=%20{{ device['latest_ip']['loc'] | url_encode }}&t=&z=10&ie=utf8&iwloc=b&output=embed">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
 
                                                             <h6 class="mb-1">
                                                                 {{ device['latest_ip']['org'] }}

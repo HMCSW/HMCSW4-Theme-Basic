@@ -32,7 +32,7 @@
         <div class="text-right">
           {% if service['reinstalling'] == false and service['state'] == "1" and "team.service.terminate"|checkTeamPermission %}
             {% if service['locked'] == false %}
-              <button type="button" data-toggle="modal" data-target="#terminate_later" class="btn btn-xs btn-neutral">
+              <button type="button" data-bs-toggle="modal" data-bs-target="#terminate_later" class="btn btn-xs btn-neutral">
                 <span class="btn-inner--text">{{ 'site.cp.service.terminate' | language }}</span>
               </button>
             {% else %}
@@ -83,7 +83,7 @@
                         class="heading h4 mt-4">{{ 'site.cp.service.terminate.modal.warn.instant.title' | language }}</h5>
                       <p>{{ 'site.cp.service.terminate.modal.warn.instant.description' | language }}</p>
                       {% if retour['success'] %}
-                        <p>{{ 'site.cp.service.terminate.modal.warn.instant.retour'|language|replace({'@amount': retour['response']['retour']|creditsToEuro ~ "symbol"|currency})|raw }}</p>
+                        <p>{{ 'site.cp.service.terminate.modal.warn.instant.retour'|language|replace({'@amount': retour['retour']|creditsToEuro ~ "symbol"|currency})|raw }}</p>
                       {% endif %}
                     </div>
                   {% endif %}
@@ -184,8 +184,8 @@
 
         {% if service['renewTimes']|length != 0 %}
           <div class="text-right">
-            <button type="button" class="btn btn-sm  btn-secondary  btn-icon-only" data-toggle="modal"
-                    data-target="#renewModal">
+            <button type="button" class="btn btn-sm  btn-secondary  btn-icon-only" data-bs-toggle="modal"
+                    data-bs-target="#renewModal">
             <span class="btn-inner--icon">
                 <i class="fa fa-plus"></i>
             </span>

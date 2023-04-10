@@ -16,7 +16,7 @@ function addProduct(product_id, name, type, authCode){
     }).done(function (answer) {
         $(".modal").modal("hide");
         document.getElementById("cartCount").textContent = answer.response.count;
-        $("#cartModal-add").modal("show");
+        $("#cartModal-add").modal('show');
         if(document.getElementById("cartCountHeader") != null){
             document.getElementById("cartCountHeader").textContent = answer.response.count;
         }
@@ -31,13 +31,13 @@ function addProduct(product_id, name, type, authCode){
             modal.data( "name", name );
             modal.data( "type", type );
             modal.data( "authCode", authCode );
-            modal.modal("show");
+            modal.modal('show');
         } else if(err.status === 404){
-            $("#cartModal-notFound").modal("show");
+            $("#cartModal-notFound").modal('show');
         } else if(err.status === 429){
-            $("#cartModal-limit").modal("show");
+            $("#cartModal-limit").modal('show');
         } else if(err.status === 402){
-            $("#cartModal-cartFull").modal("show");
+            $("#cartModal-cartFull").modal('show');
         } else {
             sendNotify(getMessage("general.action.message.failed"), "danger");
         }
@@ -46,7 +46,7 @@ function addProduct(product_id, name, type, authCode){
 
 function selectDomain(name){
     if(accessToken === ""){
-        $("#cartModal-loginRequired").modal("show");
+        $("#cartModal-loginRequired").modal('show');
         return;
     }
     $.ajax({
@@ -64,7 +64,7 @@ function selectDomain(name){
                 document.getElementById("cartModal-domainNew-btn").setAttribute("data-domainName", answer.response.domainName);
 
 
-                $("#cartModal-domainNew").modal("show");
+                $("#cartModal-domainNew").modal('show');
 
             } else if(answer.response.type === "transfer"){
                 document.getElementById("cartModal-domainTransfer-todayPrice").textContent = answer.response.transfer;
@@ -73,7 +73,7 @@ function selectDomain(name){
                 document.getElementById("cartModal-domainTransfer-btn").setAttribute("data-productId", answer.response.product_id);
                 document.getElementById("cartModal-domainTransfer-btn").setAttribute("data-domainName", answer.response.domainName);
 
-                $("#cartModal-domainTransfer").modal("show");
+                $("#cartModal-domainTransfer").modal('show');
             }
         } else {
 

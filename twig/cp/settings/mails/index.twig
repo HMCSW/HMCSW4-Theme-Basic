@@ -32,8 +32,8 @@
                                                 <td>{{ mail['created_at']|date("d.m.Y H:i") }}</td>
                                                 <td class="text-right">
                                                     <div class="actions ml-3">
-                                                        <a href="{{ url }}/cp/settings/mails/{{ mail['mail_id'] }}"
-                                                           class="btn btn-primary" data-toggle="tooltip" title=""
+                                                        <a href="{{ url }}/cp/settings/mails/{{ mail['businessId'] }}"
+                                                           class="btn btn-primary" data-bs-toggle="tooltip" title=""
                                                            data-original-title="{{ 'site.cp.settings.mails.table.show' | language }}">
                                                             <i class="fas fa-eye"></i>
                                                         </a>

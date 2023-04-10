@@ -1,52 +1,59 @@
-function setupFido2() {
+const { platformAuthenticatorIsAvailable, startRegistration } = SimpleWebAuthnBrowser;
+
+document.getElementById('radio-mode-integrated').disabled = !platformAuthenticatorIsAvailable;
+
+async function setupFido2() {
     const fido_name = document.getElementById('fido-name').value;
 
     let mode;
 
-    if(document.getElementById('radio-mode-physical').checked) {
+    if (document.getElementById('radio-mode-physical').checked) {
         mode = "physical";
     } else {
         mode = "integrated";
     }
 
-    // love you rob schuck
-    PuhHosting.fido2.initRegister({
-        actionUrl: apiURL + '/auth/fido2/register',
-        actionHeader: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Accept': 'application/json'
+    const resp = await fetch(apiURL + '/auth/fido2/register/option', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
         },
-        optionsUrl: apiURL + '/auth/fido2/register/option',
-        optionsHeader: {
-            'Authorization': 'Bearer ' + accessToken,
-            'Accept': 'application/json'
+        body: JSON.stringify({
+            keyName: fido_name,
+            mode: mode
+        })
+    });
+
+    let attResp;
+    try {
+        // Pass the options to the authenticator and wait for a response
+        attResp = await startRegistration(await resp.json());
+
+        // POST the response to the endpoint that calls
+        // @simplewebauthn/server -> verifyRegistrationResponse()
+        const verificationResp = await fetch(apiURL + '/auth/fido2/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken
+            },
+            body: JSON.stringify(attResp),
+        });
+
+        // Wait for the results of verification
+        const verificationJSON = await verificationResp.json();
+
+        // Show UI appropriate for the `verified` status
+        if (verificationJSON.success) {
+            sendNotify(getMessage("general.action.message.success"), 'success');
+            location.reload();
+        } else {
+            sendNotify(getMessage("general.action.message.failed") + ": "+ verificationJSON.response.error_message, "danger");
         }
-    });
-    PuhHosting.fido2.register({
-        keyName: fido_name,
-        mode: mode
-    });
-}
-window.addEventListener('puh-fido2-register-success', evt => {
-    console.log(evt);
-    if(evt.detail.success === true){
-        sendNotify(getMessage("general.action.message.success"), 'success');
-        location.reload();
-    } else {
-        sendNotify(getMessage("general.action.message.failed") + ' : ' + error, 'danger');
+
+    } catch (error) {
+        sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
     }
-});
-window.addEventListener('puh-fido2-register-failure', evt => {
-    console.log(evt);
 
-    sendNotify(getMessage("general.action.message.failed") + ' : ' + evt.detail.name, 'danger');
-//                    if(evt.detail.name === 'NotSupportedError'){
-//                      PuhHosting.fido2.register({
-//                          keyName: document.getElementById('fido-name').value,
-//                          residentKey: false
-//                      });
-//                    } else {
-//                      sendNotify('" . LanguageService::getMessage("general.action.message.failed") . ": ' + evt.detail.name, 'danger');
-//                    }
-
-});
+}

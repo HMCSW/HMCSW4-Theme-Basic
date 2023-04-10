@@ -10,17 +10,17 @@
                         <div class="row">
 
                             {% for team in teams %}
-                                <div class="col-lg-4" id="team_{{ team['team_id'] }}">
+                                <div class="col-lg-4" id="team_{{ team['businessId'] }}">
                                     <div class=" card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
                                         <div class="overflow-hidden align-self-center align-items-center">
-                                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                            <a href="{{ url }}/cp/teams/{{ team['businessId'] }}"
                                                class="d-block align-self-center"></a>
                                         </div>
                                         <div class="card-body py-4">
 
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="text-center">
-                                                    <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                                    <a href="{{ url }}/cp/teams/{{ team['businessId'] }}"
                                                        class="h5 stretched-link lh-150">{{ team['name'] }}</a>
                                                 </div>
                                                 <div class="text-right">
@@ -42,7 +42,7 @@
                                     <div class="overflow-hidden align-self-center align-items-center">
                                         <button type="button"
                                                 class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon"
-                                                data-toggle="modal" data-target="#createTeam">
+                                                data-bs-toggle="modal" data-bs-target="#createTeam">
                                     <span class="btn-inner--icon text-white">
                                         <i class="fa-regular fa-plus"></i>
                                     </span>
@@ -58,10 +58,10 @@
                     <div class="col-xl-12 d-none d-lg-block">
                         <div class="row row-eq-height teams" id="teams">
                             {% for team in teams %}
-                                <div class="col-lg-4" id="team_{{ team['team_id'] }}">
+                                <div class="col-lg-4" id="team_{{ team['businessId'] }}">
                                     <div class=" card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
                                         <div class="overflow-hidden align-self-center align-items-center">
-                                            <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                            <a href="{{ url }}/cp/teams/{{ team['businessId'] }}"
                                                class="d-block align-self-center">
                                                 <img height="300" width="300" alt="{{ team['name'] }}"
                                                      src="{{ team['icon'] }}"
@@ -72,7 +72,7 @@
 
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="text-center">
-                                                    <a href="{{ url }}/cp/teams/{{ team['team_id'] }}"
+                                                    <a href="{{ url }}/cp/teams/{{ team['businessId'] }}"
                                                        class="h5 stretched-link lh-150">{{ team['name'] }}</a>
                                                 </div>
                                                 <div class="text-right">
@@ -94,7 +94,7 @@
                                     <div class="overflow-hidden align-self-center align-items-center">
                                         <button type="button"
                                                 class="btn d-block align-self-center btn-icon-only  icon-xl icon-shape rounded-circle icon"
-                                                data-toggle="modal" data-target="#createTeam">
+                                                data-bs-toggle="modal" data-bs-target="#createTeam">
                                     <span class="btn-inner--icon text-white">
                                         <i class="fa-regular fa-plus"></i>
                                     </span>

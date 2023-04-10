@@ -68,7 +68,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
 
-                                                <input type="file" name="file" id="file" class="custom-input-file"/>
+                                                <input type="file" name="file" id="file" class="form-control"/>
                                                 <label for="file">
                                                     <i class="fa-regular fa-upload"></i>
                                                     <span>{{ 'site.cp.teams.settings.icon.upload' | language }}</span>
@@ -94,7 +94,7 @@
                                         <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.settings.deleteTeam.description' | language }}</p>
                                     </div>
                                     <div class="mt-4">
-                                        <button type="button" data-toggle="modal" data-target="#deleteTeam"
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteTeam"
                                                 class="btn btn-sm btn-danger">{{ 'site.cp.teams.settings.deleteTeam.btn' | language }}
                                         </button>
                                         <div class="modal modal-danger fade" id="deleteTeam" tabindex="-1" role="dialog"
@@ -136,9 +136,9 @@
                                                                 <h5
                                                                         class="heading h4 mt-4">{{ 'site.cp.teams.settings.deleteTeam.modal.reason' | language }}</h5>
                                                                 <h6 class="heading h5 mt-4">
-                                                                    {% if testDeleteTeam['response']['error_code'] == "owner" %}
+                                                                    {% if testDeleteTeam['error_code'] == "owner" %}
                                                                         {{ 'site.cp.teams.settings.deleteTeam.modal.reason.owner' | language }}
-                                                                    {% elseif testDeleteTeam['response']['error_code'] == "service" %}
+                                                                    {% elseif testDeleteTeam['error_code'] == "service" %}
                                                                         {{ 'site.cp.teams.settings.deleteTeam.modal.reason.service' | language }}
                                                                     {% endif %}
                                                                 </h6>

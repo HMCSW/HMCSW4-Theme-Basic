@@ -1,218 +1,92 @@
 <!DOCTYPE html>
 <html lang="{{ html_lang }}" {% if nightMode == "true" %}data-bs-theme="dark"{% endif %}>
-<head>
-    <meta charset=utf-8>
-    <title>{{ website_title }}</title>
 
-    <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
-
-    <style>@keyframes hidePreloader {
-               0% {
-                   width: 100%;
-                   height: 100%
-               }
-               100% {
-                   width: 0;
-                   height: 0
-               }
-           }
-
-
-        body > div.preloader {
-            position: fixed;
-            background: {% if nightMode == "true" %}{% if nightModeColor == "black" %}#1f1f1f{% else %}#1F2D3D{% endif %}{% else %}#fff{% endif %};
-            width: 100%;
-            height: 100%;
-            z-index: 1071;
-            opacity: 0;
-            transition: opacity .5s ease;
-            overflow: hidden;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center
-        }
-
-        body:not(.loaded) > div.preloader {
-            opacity: 1
-        }
-
-        body:not(.loaded) {
-            overflow: hidden
-        }
-
-        body.loaded > div.preloader {
-            animation: hidePreloader .5s linear .5s forwards
-        }
-
-        /* custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 20px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background-color: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: #d6dee1;
-            border-radius: 20px;
-            border: 6px solid transparent;
-            background-clip: content-box;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: #a8bbbf;
-        }
-
-    </style>
-    <script>window.addEventListener("load", function () {
-            setTimeout(function () {
-                document.querySelector("body").classList.add("loaded")
-            }, 300)
-        })
-    </script>
-
-
-    <meta name="robots" content="index,follow">
-    <base href="{{ url }}">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{{ website_description }}">
-    <meta name="keywords"
-          content="{{ config['name'] }}, {{ theme['keywords'] }}">
-    <meta name="author" content="{{ config['name'] }}"/>
-
-
-    <meta property="og:title" content="{{ website_title }}"/>
-    <meta property="og:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
-    <meta property="og:url" content="{{ url }}"/>
-    <meta property="og:site_name" content="{{ website_title }}"/>
-    <meta property="og:description" content="{{ website_description }}"/>
-    <meta property="og:locale" content="{{ language['current'] }}"/>
-    {% for language in language['all'] %}
-        <meta property="og:locale:alternate" content="{{ language['key'] }}"/>
-    {% endfor %}
-    <meta property="og:type" content="website"/>
-    <link rel="canonical" href="{{ url }}{{ canonical }}"/>
-
-    <meta name="twitter:title" content="{{ website_title }}"/>
-    <meta name="twitter:image" content="{{ theme['icons']['favicon']['maskable']['96x96'] }}"/>
-    <meta name="twitter:url" content="{{ url }}"/>
-    <meta name="twitter:card" content="{{ website_description }}"/>
-    <meta name="twitter:site" content="{{ theme['social']['twitter'] }}"/>
-    <meta name="twitter:creator" content="{{ name }}"/>
-
-    <!-- favicon -->
-    <link rel="apple-touch-icon" sizes="180x180"
-          href="{{ theme['icons']['favicon']['packagePath'] }}/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32"
-          href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="192x192"
-          href="{{ theme['icons']['favicon']['packagePath'] }}/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="16x16"
-          href="{{ theme['icons']['favicon']['packagePath'] }}/favicon-16x16.png">
-    <link rel="manifest" href="{{ url }}/manifest">
-    <link rel="mask-icon" href="{{ theme['icons']['favicon']['packagePath'] }}/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="{{ theme['icons']['favicon']['packagePath'] }}/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="{{ name }}">
-    <meta name="application-name" content="{{ name }}">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="msapplication-TileImage" content="{{ theme['icons']['favicon']['packagePath'] }}/mstile-144x144.png">
-    <meta name="msapplication-config" content="{{ theme['icons']['favicon']['packagePath'] }}/browserconfig.xml">
-    <meta name="theme-color" content="{{ theme['theme-color'] }}">
-
-    <link rel=stylesheet
-          href="{{ url }}/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.css?version={{ version }}">
-    {% if theme['fontAwesome'] == false %}
-        <link rel=stylesheet
-              href="{{ url }}/assets/libs/@fortawesome/fontawesome-free/css/all.min.css?version={{ version }}">
-    {% else %}
-        <link rel=stylesheet href="{{ theme['fontAwesome'] }}/css/all.min.css?version={{ version }}">
-    {% endif %}
-    <link rel="stylesheet" type="text/css" href="{{ url }}/assets/css/cookieconsent.min.css?version={{ version }}"/>
-
-    <span id="puhts-relativetime-config" style="display: none">{}</span>
-    <script type="application/javascript" async
-            src="https://cdn-01-services.the-systems.eu/js/puhts/2.1.0/bundle.js?version={{ version }}"></script>
-
-    {#  {% if nightMode == "device" %} #}
-    {#    <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['device'] }}?version={{ version }}" id=stylesheet> #}
-    {#  {% else %} #}
-    {#    {% if nightMode == "true" %} #}
-    {#      <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['enabled_file'] }}?version={{ version }}" id=stylesheet> #}
-    {#    {% else %} #}
-    {#      <link rel=stylesheet href="{{ url }}/include/css/{{ theme['nightModeColors'][nightModeColor]['disabled_file'] }}?version={{ version }}" id=stylesheet> #}
-    {#    {% endif %} #}
-    {#  {% endif %} #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-            crossorigin="anonymous"></script>
-
-    <link href="{{ url }}/include/css/sidebars.css" rel="stylesheet">
-    {{ javaScript['header']|raw }}
-    {{ css|raw }}
-
-
-    <style>
-        body.modal-open {
-            overflow: visible;
-        }
-    </style>
-</head>
+{% include '/general/head.twig' %}
 <body>
-<header class="p-3 text-bg-dark ">
+<header class="p-3 text-bg-dark mb-4 ">
     <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <img src="{{ theme['icons']['banner']['dark']['svg'] }}" width="100" height="32">
-            </a>
+        <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+            <!-- Container wrapper -->
+            <div class="container-fluid">
+                <!-- Toggle button -->
+                <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                >
+                    <i class="fas fa-bars"></i>
+                </button>
 
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-
-                {% if config['dev_mode'] %}
-                    <li class="nav-item nav-item-spaced d-none d-lg-block nav-link text-red"><span class="text-white">DevMode activated</span>
-                    </li>
-                {% endif %}
-                <li><a class="nav-link px-2 text-white" href="{{ url }}">{{ 'header.home' | language }}</a></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link px-2 text-white dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ 'header.products' | language }}
+                <!-- Collapsible wrapper -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Navbar brand -->
+                    <a class="navbar-brand" href="{{ dashURL }}/team">
+                        {% if nightMode == "true" %}
+                            <img alt="{{ name }}" title="{{ name }}" src="{{ theme['icons']['banner']['dark']['svg'] }}"
+                                 id="navbar-logo" loading="lazy" height="30">
+                        {% elseif nightMode == "false" %}
+                            <img alt="{{ name }}" title="{{ name }}"
+                                 src="{{ theme['icons']['banner']['light']['svg'] }}"
+                                 id="navbar-logo" loading="lazy" height="30">
+                        {% else %}
+                            <img alt="{{ name }}" title="{{ name }}"
+                                 src="{{ theme['icons']['banner']['light']['svg'] }}"
+                                 id="navbar-logo" loading="lazy" height="30">
+                        {% endif %}
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for type in products %}
-                            <li><a class="dropdown-item" href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a>
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if config['dev_mode'] %}
+                            <li class="nav-item nav-item-spaced d-none d-lg-block nav-link text-red"><span
+                                        class="text-white">DevMode activated</span>
                             </li>
-                        {% endfor %}
+                        {% endif %}
+                        <li><a class="nav-link px-2 text-white" href="{{ url }}">{{ 'header.home' | language }}</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link px-2 text-white dropdown-toggle" href="#" id="navbarDropdown"
+                               role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ 'header.products' | language }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% for type in products %}
+                                    <li><a class="dropdown-item"
+                                           href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
                     </ul>
-                </li>
-            </ul>
 
 
-            {% if guest %}
-                <div class="text-end">
-                    <a href="{{ url }}/auth/login"
-                       class="btn btn-outline-light me-2">{{ 'header.login' | language }}</a>
-                </div>
-            {% else %}
+                    {% if guest %}
+                        <div class="text-end">
+                            <a href="{{ url }}/auth/login"
+                               class="btn btn-outline-light me-2">{{ 'header.login' | language }}</a>
+                        </div>
+                    {% else %}
 
-                <div class="text-end">
-                    <a class="px-2 nav-item text-white" style=" text-decoration: none" href="{{ url }}/cart"><span
-                                id="cartCountHeader">{{ cartCount }}</span>
-                        <i class="fa-regular fa-shopping-cart"></i>
-                    </a>
-                    <a href="{{ url }}/auth/login"><span class="avatar rounded-circle">
+                        <div class="text-end">
+                            <a class="px-2 nav-item text-white" style=" text-decoration: none"
+                               href="{{ url }}/cart"><span
+                                        id="cartCountHeader">{{ cartCount }}</span>
+                                <i class="fa-regular fa-shopping-cart"></i>
+                            </a>
+                            <a href="{{ url }}/auth/login"><span class="avatar rounded-circle">
                             <img height="50" class="rounded" loading="eager" title="{{ userData['name'] }}"
                                  alt="{{ userData['name'] }}"
                                  src="{{ userData['icon'] }}">
                         </span>
-                    </a>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
+            </div>
+        </nav>
     </div>
 </header>
 

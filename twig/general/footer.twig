@@ -46,7 +46,7 @@
             <div class=col-md-4>
                 <div class="copyright text-sm font-weight-bold text-center">
                     <div class="dropdown">
-                        <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                            aria-expanded="false" data-offset="0,10">
                             <span class="d-none d-lg-inline-block">{{ selectLang['current']['value'] }}</span>
                             <span class="d-lg-none">{{ selectLang['current']['value'] }}</span>
@@ -75,55 +75,7 @@
     </footer>
 </div>
 
-<script src="{{ url }}/assets/js/cookieconsent.min.js"></script>
 
-
-<script data-cfasync="false" src="{{ url }}/assets/js/initServiceWorker.js"></script>
-<script src="{{ url }}/assets/libs/jquery/dist/jquery.min.js"></script>
-<script src="{{ url }}/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{{ url }}/assets/libs/svg-injector/dist/svg-injector.min.js"></script>
-<script src="{{ url }}/assets/libs/in-view/dist/in-view.min.js"></script>
-<script src="{{ url }}/assets/libs/sticky-kit/dist/sticky-kit.min.js"></script>
-<script src="{{ url }}/assets/libs/imagesloaded/imagesloaded.pkgd.min.js"></script>
-<script src="{{ url }}/assets/libs/@fancyapps/fancybox/dist/jquery.fancybox.js"></script>
-<script src="{{ url }}/assets/libs/typed.js/lib/typed.min.js"></script>
-<script src="{{ url }}/assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
-{% if theme['fontAwesome'] == false %}
-  <script src="{{ url }}/assets/libs/@fortawesome/fontawesome-free/all/all.min.js?version={{ version }}"></script>
-{% else %}
-  <script src="{{ theme['fontAwesome'] }}/js/all.min.js?version={{ version }}"></script>
-{% endif %}
-
-<script src="{{ url }}/assets/libs/bootstrap-notify/bootstrap-notify.min.js"></script>
-<link rel="stylesheet" href="{{ url }}/assets/libs/animate.css/animate.min.css">
-<script>
-  function sendNotify(message, status){
-      var notify = $.notify(decodeURI(message).replace( /\+/g, ' ' ), {
-          type: status,
-          allow_dismiss: true,
-      });
-  }
-
-</script>
-
-{{ javaScript['footer']|raw }}
-
-<script>
-    /* MOVE modal body:
-        All HTML code with the class modalBodyToMove
-        must move in div identifier moveModalHere (div in the generic header)
-        to move them out of everything (specially the HTML tables)
-    */
-    var elements = document.querySelectorAll('.modal');
-    var classCount = elements.length;
-    console.log("Number of class modalBodyToMove: "+classCount);
-    if (classCount > 0){
-        for(var i = 0; i < elements.length; i++) {
-            if(!elements[i].classList.contains("modal-no-move")) {
-                document.getElementById('moveModalHere').appendChild(elements[i])
-            }
-        }
-    }
-</script>
+{% include 'general/footerJs.twig' %}
 </body>
 </html>

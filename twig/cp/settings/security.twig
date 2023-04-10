@@ -1,3 +1,4 @@
+{{ '<script type="application/javascript" src="{{ url }}/assets/js/simpleWebauthn/index.umd.min.js"></script>'|addJS(true) }}
 {% include '/general/header.twig' %}
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -245,8 +246,8 @@
                                                 <h5 class="text-danger">{{ 'site.cp.settings.security.disabled' | language }}</h5>
                                             {% endif %}
                                             <div class="mt-4">
-                                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                        data-target="#setupFido2">{{ 'site.cp.settings.security.setupBtn' | language }}
+                                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#setupFido2">{{ 'site.cp.settings.security.setupBtn' | language }}
                                                 </button>
                                             </div>
 
@@ -280,11 +281,11 @@
                                                                                 <div class="col-8">
                                                                                     <div class="custom-control custom-radio">
                                                                                         <input type="radio"
-                                                                                               class="custom-control-input"
+                                                                                               class="form-check-input"
                                                                                                name="radio-mode"
                                                                                                id="radio-mode-physical"
                                                                                                checked>
-                                                                                        <label class="custom-control-label h6 mb-0 lh-180"
+                                                                                        <label class="form-check-label h6 mb-0 lh-180"
                                                                                                for="radio-mode-physical">{{ 'site.cp.settings.security.fido2.mode.physical'|language }}</label>
                                                                                     </div>
                                                                                     <p class="text-sm text-muted mt-2 mb-0">{{ 'site.cp.settings.security.fido2.mode.physical.description'|language }}</p>
@@ -301,10 +302,10 @@
                                                                                 <div class="col-8">
                                                                                     <div class="custom-control custom-radio">
                                                                                         <input type="radio"
-                                                                                               class="custom-control-input"
+                                                                                               class="form-check-input"
                                                                                                name="radio-mode"
                                                                                                id="radio-mode-integrated">
-                                                                                        <label class="custom-control-label h6 mb-0 lh-180"
+                                                                                        <label class="form-check-label h6 mb-0 lh-180"
                                                                                                for="radio-mode-integrated">{{ 'site.cp.settings.security.fido2.mode.integrated'|language }}</label>
                                                                                     </div>
                                                                                     <p class="text-sm text-muted mt-2 mb-0">{{ 'site.cp.settings.security.fido2.mode.integrated.description'|language }}</p>

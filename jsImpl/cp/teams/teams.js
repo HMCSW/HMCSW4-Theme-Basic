@@ -3,7 +3,13 @@ var teamsCache = teams.html();
 teams.sortable({
     placeholder: 'col-lg-4',
     update: function (event, ui) {
-        var data = $(teams).sortable('serialize');
+        var data = "";
+
+        teams = document.querySelectorAll('[id^="team_"]');
+        teams.forEach(function (team, index) {
+            data+= 'team[]='+team.dataset.teamid+'&';
+        });
+
         $.ajax({
             data: data,
             type: 'POST',
@@ -19,4 +25,11 @@ teams.sortable({
             teams.html(teamsCache).sortable('refresh');
         });
     }
+});
+
+$(document).ready(() => {
+    $(document.body).on('click', '.card[data-clickable=true]', (e) => {
+        var href = $(e.currentTarget).data('href');
+        window.location = href;
+    });
 });

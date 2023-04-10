@@ -1,5 +1,7 @@
 {% include '/general/header_noNav.twig' %}
 <section>
+  <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4"
+                href="{{ url }}/auth/login" data-bs-placement="left"><i class="fa fa-home"></i></a>
   <div class="container d-flex flex-column">
     <div class="row align-items-center justify-content-center min-vh-100">
       <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
@@ -11,23 +13,8 @@
             </div>
           </div>
           <span class="clearfix"></span>
-          {% if action != false %}
-            {% if action['success'] == false %}
-              {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-            {% else %}
-              {% set alert_color = "success" %} {% set alert_icon = "check" %}
-            {% endif %}
-            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-              <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-              </div>
-              <div class="alert-content">
-                {{ action['message'] | language }}
-              </div>
-            </div>
-          {% endif %}
+
+          {% include '/general/actionMessage.twig' %}
 
 
           <form method="post" onsubmit="send();">
@@ -35,32 +22,27 @@
             <input type="hidden" name="csrf" value="{{ csrf }}">
 
             <div class="form-group">
-              <label for="input-email" class="form-control-label">{{ 'general.form.email' | language }}</label>
-              <div class="input-group input-group-merge">
-                <input required autocomplete="email" name="email" type="email" class="form-control form-control-prepend"
-                       id="input-email"
-                       placeholder="{{ 'general.form.email.placeholder' | language }}">
-                <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa-regular fa-at"></i></span>
+              <div class="pb-3 mb-3">
+                <div class="position-relative"><i class="fa fa-at fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                  <input class="form-control form-control-lg ps-5" type="email" id="email" name="email" placeholder="{{ 'general.form.email.placeholder' | language }}" required="">
                 </div>
               </div>
             </div>
 
-            <div class="my-4">
+            <div class="d-flex flex-wrap align-items-center justify-content-between pb-4">
               <div id="recaptcha"></div>
-              <br>
             </div>
 
 
             <div class="mt-4">
               <div id="form">
-                <button type="submit"
-                        class="btn btn-block btn-primary">{{ 'site.forgotPW.form.sendCode' | language }}</button>
+                <button class="btn btn-lg btn-primary w-100 mb-4" type="submit">{{ 'site.forgotPW.form.sendCode' | language }}
+                </button>
               </div>
               <div id="loader" style="display: none">
-                <button class="btn btn-block btn-primary" type="button" disabled>
-                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                  <span class="sr-only">{{ 'site.forgotPW.form.sendCode' | language }}</span>
+                <button type="button" class="btn btn-lg btn-primary w-100 mb-4 pe-none">
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  {{ 'site.forgotPW.form.sendCode' | language }}...
                 </button>
               </div>
             </div>
@@ -76,4 +58,4 @@
     </div>
   </div>
 </section>
-{% include '/general/footer.twig' %}
+{% include '/general/footer_empty.twig' %}

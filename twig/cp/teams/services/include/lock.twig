@@ -10,9 +10,9 @@
       <input type="hidden" name="csrf" value="{{ csrf }}">
       <input type="hidden" name="action" value="lockService">
       <div class="custom-control custom-switch">
-        <input type="checkbox" name="lock" class="custom-control-input text-center" id="lockSwitch"
+        <input type="checkbox" name="lock" class="form-check-input text-center" id="lockSwitch"
                onChange="this.form.submit()" {% if service['locked'] %} checked {% endif %}>
-        <label class="custom-control-label text-center" for="lockSwitch"></label>
+        <label class="form-check-label text-center" for="lockSwitch"></label>
       </div>
     </form>
   </h6>

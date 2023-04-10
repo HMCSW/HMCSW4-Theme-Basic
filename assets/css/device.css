@@ -1,6 +1,0 @@
-@import url('./dark.css') (prefers-color-scheme: dark);
-@import url('./light.css') (prefers-color-scheme: light);
-
-@media (prefers-color-scheme: dark) {
-    .navBar_color .navbar-dark::before
-}

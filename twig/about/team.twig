@@ -12,7 +12,7 @@
     <div class="container">
       <div class="row justify-content-center">
 
-        {% for member in admin['response'] %}
+        {% for member in admin %}
           <div class="col-lg-4">
             <div class="card card-fluid hover-translate-y-n10 hover-shadow-lg p-2">
               <img class="card-img-top img-fluid" src="{{ member['icon'] }}" alt="{{ member['username'] }}">
@@ -25,7 +25,7 @@
         {% endfor %}
       </div>
       <div class="row justify-content-center">
-        {% for member in team['response'] %}
+        {% for member in team %}
           <div class="col-lg-3">
             <div class="card card-fluid hover-translate-y-n10 hover-shadow-lg p-2">
               <img class="card-img-top img-fluid" src="{{ member['icon'] }}" alt="{{ member['username'] }}">

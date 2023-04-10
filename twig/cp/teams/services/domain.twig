@@ -1,454 +1,498 @@
 {% include '/general/header.twig' %}
-{% include 'cp/teams/nav.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-
-        <!-- ACTION MESSAGE -->
-        {% if action != false %}
-          {% if action['success'] == false %}
-            {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-          {% else %}
-            {% set alert_color = "success" %} {% set alert_icon = "check" %}
-          {% endif %}
-          <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-            <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
-                  class="fas fa-{{ alert_icon }}"></i></span></div>
-            <div class="alert-content">
-              {{ action['message'] | language }}
-            </div>
-          </div>
-        {% endif %}
-
-        <div class="row">
-          <!-- nav with 4 cards -->
-          {% include 'cp/teams/services/include/info_nav.twig' %}
-
-          <div class="col-sm-12 col-md-12">
-            <div class="card">
-              <div class="card-body text-center">
-                <br>
-                {% include 'cp/teams/services/include/lock.twig' %}
-                <br>
-                <h5 class="text-center">{{ service['service_id'] }}</h5>
-                <h6 class="text-center">{{ service['name'] }}</h6>
-                <h5 class="text-center">{{ service['external']['name'] }}</h5>
-                <h6 class="text-center">{{ service['service_name'] }}</h6>
-                <br>
-                {% include 'cp/teams/services/include/serviceIcons.twig' %}
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-12 col-md-12 ">
-            <div class="card">
-              <div class="card-body">
-
-
-                <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-
-                  {% include 'cp/teams/services/include/tabs_nav.twig' %}
-
-                  {% if "team.service.domain.dns"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link" id="dns-tab" data-toggle="tab" href="#dns" role="tab"
-                         aria-controls="info"
-                         aria-selected="true">{{ 'site.cp.service.tab.domain.dns' | language }}</a>
-                    </li>
-                  {% endif %}
-
-                  {% if "team.service.domain.dnsHelper"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link" id="dnsHelper-tab" data-toggle="tab" href="#dnsHelper" role="tab"
-                         aria-controls="info"
-                         aria-selected="true">{{ 'site.cp.service.tab.domain.dnsHelper' | language }}</a>
-                    </li>
-                  {% endif %}
-
-                  {% if "team.service.domain.dynDNS"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link" id="dynDNS-tab" data-toggle="tab" href="#dynDNS" role="tab"
-                         aria-controls="info"
-                         aria-selected="true">{{ 'site.cp.service.tab.domain.dynDNS' | language }}</a>
-                    </li>
-                  {% endif %}
-
-                  {% if "team.service.domain.nameserver"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link" id="nameserver-tab" data-toggle="tab" href="#nameserver" role="tab"
-                         aria-controls="info"
-                         aria-selected="true">{{ 'site.cp.service.tab.domain.nameserver' | language }}</a>
-                    </li>
-                  {% endif %}
-
-                  {% if "owner"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link" id="authCode-tab" data-toggle="tab" href="#authCode" role="tab"
-                         aria-controls="info"
-                         aria-selected="true">{{ 'site.cp.service.tab.domain.authCode' | language }}</a>
-                    </li>
-                  {% endif %}
-                </ul>
-
-
-                <div class="tab-content" id="myTabContent">
-
-                  {% include 'cp/teams/services/include/tabs.twig' %}
-
-                  {% if "owner"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <div class="tab-pane fade" id="authCode" role="tabpanel" aria-labelledby="authCode-tab">
-                      <br>
-                      <div class="row">
-
-                        <div class="col-6">
-                          <h5 class="text-left">{{ 'site.cp.service.tab.domain.authCode' | language }}</h5>
-                          <h6 class="text-left">{{ 'site.cp.service.tab.domain.authCode.description' | language }}</h6>
-                        </div>
-                        <div class="col-6">
-                          <h5 class="text-right" id="authCode-loaderOff" style="display:block">
-                            <button type="button" class="btn btn-primary btn-icon-only" onclick="getAuthCode();"><span class="btn-inner--icon"><i class="fa-regular fa-eye"></i></span></button>
-                          </h5>
-                          <h5 class="text-right" id="authCode-loaderOn" style="display:none">
-                            <button type="button" class="btn btn-primary btn-icon-only" >
-                              <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                              <span class="sr-only">Loading...</span>
-                            </button>
-                          </h5>
-
-                        </div>
-
-                      </div>
-                      <br>
-
-
-                      <div class="modal fade" id="authCode_modal" tabindex="-1" role="dialog"
-                           aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                          <div class="modal-content">
-
-                            <div class="modal-header">
-                              <h5 class="modal-title h6">{{ 'site.cp.service.tab.domain.authCode' | language }}</h5>
-                              <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <h5>{{ 'site.cp.service.tab.domain.authCode.info' | language }}</h5>
-                              <h6 id="authCode_code"></h6>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary"
-                                      data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  {% endif %}
-
-                  {% if "team.service.domain.dns"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <div class="tab-pane fade" id="dns" role="tabpanel" aria-labelledby="dns-tab">
-                      <br>
-                      <div class="row">
-
-                      <div class="col-6">
-                        <h5 class="text-left">{{ 'site.cp.service.tab.domain.dns' | language }}</h5>
-                      </div>
-                      <div class="col-6">
-                        <h5 class="text-right">
-                          <button type="button" class="btn btn-sm btn-primary btn-icon-only" data-toggle="modal"
-                                                        data-target="#addDNS"><span class="btn-inner--icon"><i class="fa-regular fa-plus"></i></span>
-                          </button>
-                        </h5>
-
-                      </div>
-
-                      </div>
-                      <br>
-
-
-                      <div class="modal fade" id="addDNS" tabindex="-1" role="dialog"
-                           aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                          <div class="modal-content">
-
-                            <div class="modal-header">
-                              <h5 class="modal-title h6">{{ 'site.cp.service.tab.domain.dns' | language }}</h5>
-                              <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-
-                              <div class="form-group">
-                                <label for="addDNS_type"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.type' | language }}</label>
-                                <select class="form-select" onselect="changeDNSType();" id="addDNS_type" name="type">
-                                  <option value="A">A</option>
-                                  <option value="AAAA">AAAA</option>
-                                  <option value="MX">MX</option>
-                                  <option value="CNAME">CNAME</option>
-                                  <option value="TXT">TXT</option>
-                                  <option value="SRV">SRV</option>
-                                  <option value="HTTP_REDIRECT">Redirect (Header)</option>
-                                  <option value="HTTP_FRAME">Redirect (FRAME)</option>
-                                </select>
-                              </div>
-                              <div class="form-group">
-                                <label for="addDNS_name"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.name' | language }}</label>
-                                <input name="name" type="text" id="addDNS_name" class="form-control"
-                                       placeholder="{{ 'site.cp.service.tab.domain.dns.form.name' | language }}">
-                              </div>
-                              <div class="form-group">
-                                <label for="addDNS_value"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.data' | language }}</label>
-                                <input name="data" type="text" id="addDNS_value" class="form-control"
-                                       placeholder="{{ 'site.cp.service.tab.domain.dns.form.data' | language }}">
-                              </div>
-                              <div class="form-group">
-                                <label for="addDNS_ttl"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</label>
-                                <select class="form-select" id="addDNS_ttl" name="ttl">
-                                  <option value="300">300</option>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="modal-footer">
-
-                              <button type="button" class="btn btn-secondary"
-                                      data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                              <button type="button" onclick="addDNS();"
-                                      class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="modal fade" id="updateDNS" tabindex="-1" role="dialog"
-                           aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                          <div class="modal-content">
-
-                            <div class="modal-header">
-                              <h5 class="modal-title h6">{{ 'site.cp.service.tab.domain.dns' | language }}</h5>
-                              <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                              </button>
-                            </div>
-                            <div class="modal-body">
-                              <input type="hidden" name="updateDNS_id" id="updateDNS_id" value="0">
-                              <div class="form-group">
-                                <label for="updateDNS_type"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.type' | language }}</label>
-                                <select class="form-select" id="updateDNS_type" name="type" disabled>
-                                  <option value="A">A</option>
-                                  <option value="AAAA">AAAA</option>
-                                  <option value="MX">MX</option>
-                                  <option value="CNAME">CNAME</option>
-                                  <option value="TXT">TXT</option>
-                                  <option value="SRV">SRV</option>
-                                  <option value="HTTP_REDIRECT">Redirect (Header)</option>
-                                  <option value="HTTP_FRAME">Redirect (FRAME)</option>
-                                </select>
-                              </div>
-                              <div class="form-group">
-                                <label for="updateDNS_name"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.name' | language }}</label>
-                                <input name="name" type="text" id="updateDNS_name" class="form-control"
-                                       placeholder="{{ 'site.cp.service.tab.domain.dns.form.name' | language }}">
-                              </div>
-                              <div class="form-group">
-                                <label for="updateDNS_value"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.data' | language }}</label>
-                                <input name="data" type="text" id="updateDNS_value" class="form-control"
-                                       placeholder="{{ 'site.cp.service.tab.domain.dns.form.data' | language }}">
-                              </div>
-                              <div class="form-group">
-                                <label for="updateDNS_ttl"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</label>
-                                <select class="form-select" id="updateDNS_ttl" name="ttl">
-                                  <option value="300">300</option>
-                                </select>
-                              </div>
-                            </div>
-
-                            <div class="modal-footer">
-
-                              <button type="button" class="btn btn-secondary"
-                                      data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                              <button type="button" onclick="updateDNS();"
-                                      class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                              <button type="button" onclick="deleteDNS();"
-                                      class="btn btn-primary">{{ 'general.modal.deleteBtn' | language }}</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="table-responsive">
-                        <table class="table" id="dnsRecords">
-                          <thead>
-                          <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">{{ 'site.cp.service.tab.domain.dns.table.name' | language }}</th>
-                            <th scope="col">{{ 'site.cp.service.tab.domain.dns.table.data' | language }}</th>
-                            <th scope="col">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</th>
-                            <th scope="col"></th>
-                          </tr>
-                          </thead>
-                          <tbody id="dnsRecords_body">
-
-                          </tbody>
-                        </table>
-
-                      </div>
-                    </div>
-                  {% endif %}
-
-                  {% if "team.service.domain.dnsHelper"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <div class="tab-pane fade" id="dnsHelper" role="tabpanel" aria-labelledby="dnsHelper-tab">
-                      <br>
-                      <h5 class="text-left">{{ 'site.cp.service.tab.domain.dnsHelper' | language }}</h5>
-                      <h6 class="text-left">{{ 'site.cp.service.tab.domain.dnsHelper.description' | language }}</h6>
-                      <br>
-                      <div class="col-lg-12">
-                        <form method="post">
-                          <input type="hidden" name="action" value="dnsHelper">
-                          <input type="hidden" name="csrf" value="{{ csrf }}">
-                          <div class="row">
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label for="another_service_id"
-                                       class="form-control-label">{{ 'site.cp.service.tab.domain.dnsHelper.service' | language }}</label>
-                                <select required name="another_service_id" id="another_service_id" class="form-select"
-                                        required>
-                                  {% for another_service in team['services'] %}
-                                    {% if another_service['state'] == 1 and another_service['hostType'] == "plesk" %}
-                                      <option value="{{ another_service['service_id'] }}">
-                                        ({{ another_service['service_id'] }}
-                                        ) {{ another_service['name'] }} {% if another_service['service_name'] != "" %} | {{ another_service['service_name'] }} {% endif %}
-                                      </option>
-
-                                    {% endif %} %}
-                                  {% endfor %}
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'general.modal.saveBtn' | language }}
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-
-                    </div>
-                  {% endif %}
-
-                  {% if "team.service.domain.dynDNS"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <div class="tab-pane fade" id="dynDNS" role="tabpanel" aria-labelledby="dynDNS-tab">
-                      <br>
-                      <h5 class="text-left">{{ 'site.cp.service.tab.domain.dynDNS' | language }}</h5>
-                      <h6 class="text-left">{{ 'site.cp.service.tab.domain.dynDNS.description' | language }}</h6>
-                      <br>
-                      <div class="col-lg-12">
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/teams/sideNav.twig' %}
+        <div class="col py-3">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-12">
+                        {% include '/general/actionMessage.twig' %}
                         <div class="row">
-                          <div class="col-md-6">
-                            <div class="form-group">
-                              <label for="dynDNS_url"
-                                     class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.url' | language }}</label>
-                              <input type="text" class="form-control" id="dynDNS_url"
-                                     value="{{ apiUrl }}/v1/user/teams/{{ team['team_id'] }}/services/{{ service['service_id'] }}/dynDNS?ipv4=<ipaddr>&ipv6=<ip6addr>&domain=<domain>">
-                            </div>
-                            <div class="form-group">
-                              <label for="dynDNS_domain"
-                                     class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.domain' | language }}</label>
-                              <input type="text" class="form-control" id="dynDNS_domain"
-                                     value="sub.{{ service['external']['name'] }}">
-                            </div>
-                            <div class="form-group">
-                              <label for="dynDNS_user"
-                                     class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.user' | language }}</label>
-                              <input type="text" class="form-control" id="dynDNS_user"
-                                     value="{{ userData['user_id'] }}">
-                            </div>
-                            <div class="form-group">
-                              <label for="dynDNS_password"
-                                     class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.password' | language }}</label>
-                              <input type="text" class="form-control" id="dynDNS_password" value="APIKey">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                            <!-- nav with 4 cards -->
+                            {% include 'cp/teams/services/include/info_nav.twig' %}
 
+                            <div class="col-sm-12 col-md-12">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <br>
+                                        {% include 'cp/teams/services/include/lock.twig' %}
+                                        <br>
+                                        <h5 class="text-center">{{ service['service_id'] }}</h5>
+                                        <h6 class="text-center">{{ service['name'] }}</h6>
+                                        <h5 class="text-center">{{ service['external']['name'] }}</h5>
+                                        <h6 class="text-center">{{ service['service_name'] }}</h6>
+                                        <br>
+                                        {% include 'cp/teams/services/include/serviceIcons.twig' %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12 ">
+                                <div class="card">
+                                    <div class="card-body">
+
+
+                                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+
+                                            {% include 'cp/teams/services/include/tabs_nav.twig' %}
+
+                                            {% if "team.service.domain.dns"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="dns-tab" data-bs-toggle="tab" href="#dns"
+                                                       role="tab"
+                                                       aria-controls="info"
+                                                       aria-selected="true">{{ 'site.cp.service.tab.domain.dns' | language }}</a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.dnsHelper"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="dnsHelper-tab" data-bs-toggle="tab"
+                                                       href="#dnsHelper" role="tab"
+                                                       aria-controls="info"
+                                                       aria-selected="true">{{ 'site.cp.service.tab.domain.dnsHelper' | language }}</a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.dynDNS"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="dynDNS-tab" data-bs-toggle="tab"
+                                                       href="#dynDNS" role="tab"
+                                                       aria-controls="info"
+                                                       aria-selected="true">{{ 'site.cp.service.tab.domain.dynDNS' | language }}</a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.nameserver"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="nameserver-tab" data-bs-toggle="tab"
+                                                       href="#nameserver" role="tab"
+                                                       aria-controls="info"
+                                                       aria-selected="true">{{ 'site.cp.service.tab.domain.nameserver' | language }}</a>
+                                                </li>
+                                            {% endif %}
+
+                                            {% if "owner"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="nav-link" id="authCode-tab" data-bs-toggle="tab"
+                                                       href="#authCode" role="tab"
+                                                       aria-controls="info"
+                                                       aria-selected="true">{{ 'site.cp.service.tab.domain.authCode' | language }}</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+
+
+                                        <div class="tab-content" id="myTabContent">
+
+                                            {% include 'cp/teams/services/include/tabs.twig' %}
+
+                                            {% if "owner"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <div class="tab-pane fade" id="authCode" role="tabpanel"
+                                                     aria-labelledby="authCode-tab">
+                                                    <br>
+                                                    <div class="row">
+
+                                                        <div class="col-6">
+                                                            <h5 class="text-left">{{ 'site.cp.service.tab.domain.authCode' | language }}</h5>
+                                                            <h6 class="text-left">{{ 'site.cp.service.tab.domain.authCode.description' | language }}</h6>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <h5 class="text-right" id="authCode-loaderOff"
+                                                                style="display:block">
+                                                                <button type="button"
+                                                                        class="btn btn-primary btn-icon-only"
+                                                                        onclick="getAuthCode();"><span
+                                                                            class="btn-inner--icon"><i
+                                                                                class="fa-regular fa-eye"></i></span>
+                                                                </button>
+                                                            </h5>
+                                                            <h5 class="text-right" id="authCode-loaderOn"
+                                                                style="display:none">
+                                                                <button type="button"
+                                                                        class="btn btn-primary btn-icon-only">
+                                                                    <span class="spinner-grow spinner-grow-sm"
+                                                                          role="status" aria-hidden="true"></span>
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </button>
+                                                            </h5>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <br>
+
+
+                                                    <div class="modal fade" id="authCode_modal" tabindex="-1"
+                                                         role="dialog"
+                                                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title h6">{{ 'site.cp.service.tab.domain.authCode' | language }}</h5>
+                                                                    <button type="button" class="btn"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <h5>{{ 'site.cp.service.tab.domain.authCode.info' | language }}</h5>
+                                                                    <h6 id="authCode_code"></h6>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.dns"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <div class="tab-pane fade" id="dns" role="tabpanel"
+                                                     aria-labelledby="dns-tab">
+                                                    <br>
+                                                    <div class="row">
+
+                                                        <div class="col-6">
+                                                            <h5 class="text-left">{{ 'site.cp.service.tab.domain.dns' | language }}</h5>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <h5 class="text-right">
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-primary btn-icon-only"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#addDNS"><span
+                                                                            class="btn-inner--icon"><i
+                                                                                class="fa-regular fa-plus"></i></span>
+                                                                </button>
+                                                            </h5>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <br>
+
+
+                                                    <div class="modal fade" id="addDNS" tabindex="-1" role="dialog"
+                                                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title h6">{{ 'site.cp.service.tab.domain.dns' | language }}</h5>
+                                                                    <button type="button" class="btn"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+
+                                                                    <div class="form-group">
+                                                                        <label for="addDNS_type"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.type' | language }}</label>
+                                                                        <select class="form-select"
+                                                                                onselect="changeDNSType();"
+                                                                                id="addDNS_type" name="type">
+                                                                            <option value="A">A</option>
+                                                                            <option value="AAAA">AAAA</option>
+                                                                            <option value="MX">MX</option>
+                                                                            <option value="CNAME">CNAME</option>
+                                                                            <option value="TXT">TXT</option>
+                                                                            <option value="SRV">SRV</option>
+                                                                            <option value="HTTP_REDIRECT">Redirect
+                                                                                (Header)
+                                                                            </option>
+                                                                            <option value="HTTP_FRAME">Redirect
+                                                                                (FRAME)
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="addDNS_name"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.name' | language }}</label>
+                                                                        <input name="name" type="text" id="addDNS_name"
+                                                                               class="form-control"
+                                                                               placeholder="{{ 'site.cp.service.tab.domain.dns.form.name' | language }}">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="addDNS_value"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.data' | language }}</label>
+                                                                        <input name="data" type="text" id="addDNS_value"
+                                                                               class="form-control"
+                                                                               placeholder="{{ 'site.cp.service.tab.domain.dns.form.data' | language }}">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="addDNS_ttl"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</label>
+                                                                        <select class="form-select" id="addDNS_ttl"
+                                                                                name="ttl">
+                                                                            <option value="300">300</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                                                                    <button type="button" onclick="addDNS();"
+                                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal fade" id="updateDNS" tabindex="-1" role="dialog"
+                                                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title h6">{{ 'site.cp.service.tab.domain.dns' | language }}</h5>
+                                                                    <button type="button" class="btn"
+                                                                            data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" name="updateDNS_id"
+                                                                           id="updateDNS_id" value="0">
+                                                                    <div class="form-group">
+                                                                        <label for="updateDNS_type"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.type' | language }}</label>
+                                                                        <select class="form-select" id="updateDNS_type"
+                                                                                name="type" disabled>
+                                                                            <option value="A">A</option>
+                                                                            <option value="AAAA">AAAA</option>
+                                                                            <option value="MX">MX</option>
+                                                                            <option value="CNAME">CNAME</option>
+                                                                            <option value="TXT">TXT</option>
+                                                                            <option value="SRV">SRV</option>
+                                                                            <option value="HTTP_REDIRECT">Redirect
+                                                                                (Header)
+                                                                            </option>
+                                                                            <option value="HTTP_FRAME">Redirect
+                                                                                (FRAME)
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="updateDNS_name"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.name' | language }}</label>
+                                                                        <input name="name" type="text"
+                                                                               id="updateDNS_name" class="form-control"
+                                                                               placeholder="{{ 'site.cp.service.tab.domain.dns.form.name' | language }}">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="updateDNS_value"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.data' | language }}</label>
+                                                                        <input name="data" type="text"
+                                                                               id="updateDNS_value" class="form-control"
+                                                                               placeholder="{{ 'site.cp.service.tab.domain.dns.form.data' | language }}">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="updateDNS_ttl"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</label>
+                                                                        <select class="form-select" id="updateDNS_ttl"
+                                                                                name="ttl">
+                                                                            <option value="300">300</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
+                                                                    <button type="button" onclick="updateDNS();"
+                                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                                    <button type="button" onclick="deleteDNS();"
+                                                                            class="btn btn-primary">{{ 'general.modal.deleteBtn' | language }}</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table" id="dnsRecords">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">{{ 'site.cp.service.tab.domain.dns.table.name' | language }}</th>
+                                                                <th scope="col">{{ 'site.cp.service.tab.domain.dns.table.data' | language }}</th>
+                                                                <th scope="col">{{ 'site.cp.service.tab.domain.dns.table.ttl' | language }}</th>
+                                                                <th scope="col"></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="dnsRecords_body">
+
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.dnsHelper"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <div class="tab-pane fade" id="dnsHelper" role="tabpanel"
+                                                     aria-labelledby="dnsHelper-tab">
+                                                    <br>
+                                                    <h5 class="text-left">{{ 'site.cp.service.tab.domain.dnsHelper' | language }}</h5>
+                                                    <h6 class="text-left">{{ 'site.cp.service.tab.domain.dnsHelper.description' | language }}</h6>
+                                                    <br>
+                                                    <div class="col-lg-12">
+                                                        <form method="post">
+                                                            <input type="hidden" name="action" value="dnsHelper">
+                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group">
+                                                                        <label for="another_service_id"
+                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dnsHelper.service' | language }}</label>
+                                                                        <select required name="another_service_id"
+                                                                                id="another_service_id"
+                                                                                class="form-select"
+                                                                                required>
+                                                                            {% for another_service in team['services'] %}
+                                                                                {% if another_service['state'] == 1 and another_service['hostType'] == "plesk" %}
+                                                                                    <option value="{{ another_service['service_id'] }}">
+                                                                                        ({{ another_service['service_id'] }}
+                                                                                        ) {{ another_service['name'] }} {% if another_service['service_name'] != "" %} | {{ another_service['service_name'] }} {% endif %}
+                                                                                    </option>
+
+                                                                                {% endif %} %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-4">
+                                                                <button type="submit"
+                                                                        class="btn btn-sm btn-primary">{{ 'general.modal.saveBtn' | language }}
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.dynDNS"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <div class="tab-pane fade" id="dynDNS" role="tabpanel"
+                                                     aria-labelledby="dynDNS-tab">
+                                                    <br>
+                                                    <h5 class="text-left">{{ 'site.cp.service.tab.domain.dynDNS' | language }}</h5>
+                                                    <h6 class="text-left">{{ 'site.cp.service.tab.domain.dynDNS.description' | language }}</h6>
+                                                    <br>
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="dynDNS_url"
+                                                                           class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.url' | language }}</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="dynDNS_url"
+                                                                           value="{{ apiUrl }}/v1/user/teams/{{ team['team_id'] }}/services/{{ service['service_id'] }}/dynDNS?ipv4=<ipaddr>&ipv6=<ip6addr>&domain=<domain>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="dynDNS_domain"
+                                                                           class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.domain' | language }}</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="dynDNS_domain"
+                                                                           value="sub.{{ service['external']['name'] }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="dynDNS_user"
+                                                                           class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.user' | language }}</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="dynDNS_user"
+                                                                           value="{{ userData['user_id'] }}">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="dynDNS_password"
+                                                                           class="form-control-label">{{ 'site.cp.service.tab.domain.dynDNS.password' | language }}</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="dynDNS_password" value="APIKey">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            {% endif %}
+
+                                            {% if "team.service.domain.nameserver"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                                <div class="tab-pane fade" id="nameserver" role="tabpanel"
+                                                     aria-labelledby="nameserver-tab">
+                                                    <br>
+                                                    <h5 class="text-left">{{ 'site.cp.service.tab.domain.nameserver' | language }}</h5>
+                                                    <br>
+
+                                                    <div id="nameserver-loaderOn" style="display:none">
+                                                        <div class="spinner-grow text-primary" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div id="nameserver-loaderOff">
+
+                                                        <div class="col-md-8">
+                                                            <div class="form-group">
+                                                                <label for="ns1">NS1</label>
+                                                                <input required value="{{ domain['external']['ns1'] }}"
+                                                                       name="ns1" id="ns1" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="{{ domain['internal']['defaultNS'][0] }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ns2">NS2</label>
+                                                                <input required value="{{ domain['external']['ns2'] }}"
+                                                                       name="ns2" id="ns2" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="{{ domain['internal']['defaultNS'][1] }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ns3">NS3</label>
+                                                                <input value="{{ domain['external']['ns3'] }}"
+                                                                       name="ns3" id="ns3" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="{{ domain['internal']['defaultNS'][2] }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ns4">NS4</label>
+                                                                <input value="{{ domain['external']['ns4'] }}"
+                                                                       name="ns4" id="ns4" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="{{ domain['internal']['defaultNS'][3] }}">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="ns5">NS5</label>
+                                                                <input value="{{ domain['external']['ns5'] }}"
+                                                                       name="ns5" id="ns5" type="text"
+                                                                       class="form-control"
+                                                                       placeholder="{{ domain['internal']['defaultNS'][4] }}">
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" onclick="setNameserver();"
+                                                                class="btn btn-primary">{{ 'site.cp.service.tab.domain.nameserver.save' | language }}</button>
+
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                  {% endif %}
-
-                  {% if "team.service.domain.nameserver"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                    <div class="tab-pane fade" id="nameserver" role="tabpanel" aria-labelledby="nameserver-tab">
-                      <br>
-                      <h5 class="text-left">{{ 'site.cp.service.tab.domain.nameserver' | language }}</h5>
-                      <br>
-
-                      <div id="nameserver-loaderOn" style="display:none">
-                        <div class="spinner-grow text-primary" role="status">
-                          <span class="sr-only">Loading...</span>
-                        </div>
-                      </div>
-
-                      <div id="nameserver-loaderOff">
-
-                        <div class="col-md-8">
-                          <div class="form-group">
-                            <label for="ns1">NS1</label>
-                            <input required value="{{ domain['external']['ns1'] }}" name="ns1" id="ns1" type="text"
-                                   class="form-control"
-                                   placeholder="{{ domain['internal']['defaultNS'][0] }}">
-                          </div>
-                          <div class="form-group">
-                            <label for="ns2">NS2</label>
-                            <input required value="{{ domain['external']['ns2'] }}" name="ns2" id="ns2" type="text"
-                                   class="form-control"
-                                   placeholder="{{ domain['internal']['defaultNS'][1] }}">
-                          </div>
-                          <div class="form-group">
-                            <label for="ns3">NS3</label>
-                            <input value="{{ domain['external']['ns3'] }}" name="ns3" id="ns3" type="text"
-                                   class="form-control"
-                                   placeholder="{{ domain['internal']['defaultNS'][2] }}">
-                          </div>
-                          <div class="form-group">
-                            <label for="ns4">NS4</label>
-                            <input value="{{ domain['external']['ns4'] }}" name="ns4" id="ns4" type="text"
-                                   class="form-control"
-                                   placeholder="{{ domain['internal']['defaultNS'][3] }}">
-                          </div>
-                          <div class="form-group">
-                            <label for="ns5">NS5</label>
-                            <input value="{{ domain['external']['ns5'] }}" name="ns5" id="ns5" type="text"
-                                   class="form-control"
-                                   placeholder="{{ domain['internal']['defaultNS'][4] }}">
-                          </div>
-                        </div>
-                        <button type="button" onclick="setNameserver();"
-                                class="btn btn-primary">{{ 'site.cp.service.tab.domain.nameserver.save' | language }}</button>
-
-                      </div>
-                    </div>
-                  {% endif %}
-
-
                 </div>
-              </div>
             </div>
-          </div>
-
         </div>
-      </div>
     </div>
-  </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

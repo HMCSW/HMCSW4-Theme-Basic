@@ -54,10 +54,10 @@
                                                                 <input type="checkbox" name="permission[]"
                                                                        onchange="updateGeneralPermission('{{ key }}', this.checked);"
                                                                        value="{{ key }}"
-                                                                       class="custom-control-input text-left"
+                                                                       class="form-check-input text-left"
                                                                        {% if key in group['permissions']['general'] %}checked{% endif %}
                                                                        id="permission-{{ key|slugify }}">
-                                                                <label class="custom-control-label text-center"
+                                                                <label class="form-check-label text-center"
                                                                        for="permission-{{ key|slugify }}"></label>
                                                             </div>
 
@@ -98,11 +98,11 @@
                                                                 <div class="custom-control custom-switch">
                                                                     <input type="checkbox" name="permission[]"
                                                                            value="{{ key }}"
-                                                                           class="custom-control-input text-left"
+                                                                           class="form-check-input text-left"
                                                                            onchange="updateServicePermission('{{ key }}', this.checked, '{{ serviceInfo['service_id'] }}')"
                                                                            {% if key in group['permissions']['service'][serviceInfo['service_id']] %}checked{% endif %}
                                                                            id="permission-{{ key|slugify }}-{{ serviceInfo['service_id'] }}">
-                                                                    <label class="custom-control-label text-center"
+                                                                    <label class="form-check-label text-center"
                                                                            for="permission-{{ key|slugify }}-{{ serviceInfo['service_id'] }}"></label>
                                                                 </div>
 

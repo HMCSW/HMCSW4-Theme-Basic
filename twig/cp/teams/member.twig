@@ -59,7 +59,7 @@
                                                             <div class="dropdown">
                                                                 <button class="btn btn-sm btn-secondary dropdown-toggle"
                                                                         id="editMember-{{ user['user_id'] }}-dropDown"
-                                                                        type="button" data-toggle="dropdown"
+                                                                        type="button" data-bs-toggle="dropdown"
                                                                         aria-haspopup="true" aria-expanded="false">
                                                                     {{ user['group']['name'] }}
                                                                 </button>
@@ -79,16 +79,16 @@
                                                         <div class="actions text-right ml-3">
                                                             {% if user['group']['group_id'] != 0 and user['user_id'] != userData['user_id'] %}
                                                                 {% if 'team.removeMember'|checkTeamPermission == true %}
-                                                                    <a data-toggle="modal"
-                                                                       data-target="#member_{{ user['user_id'] }}_remove"
+                                                                    <a data-bs-toggle="modal"
+                                                                       data-bs-target="#member_{{ user['user_id'] }}_remove"
                                                                        class="btn btn-primary"
                                                                        title="{{ 'site.cp.teams.member.removeMember' | language }}">
                                                                         <i class="fa fa-trash"></i>
                                                                     </a>
                                                                 {% endif %}
                                                             {% elseif user['group']['group_id'] != 0 and user['user_id'] == userData['user_id'] %}
-                                                                <a href="#" class="btn btn-primary" data-toggle="modal"
-                                                                   data-target="#leaveTeam"
+                                                                <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                                                                   data-bs-target="#leaveTeam"
                                                                    title="{{ 'site.cp.teams.member.leaveTeam' | language }}">
                                                                     <i class="fa fa-door-closed"></i>
                                                                 </a>
@@ -141,8 +141,8 @@
 
                         {% if 'team.addMember'|checkTeamPermission == true %}
                             <h5 class="text-center">
-                                <button class="btn btn-primary btn-icon-label text-center" data-toggle="modal"
-                                        data-target="#addMember">
+                                <button class="btn btn-primary btn-icon-label text-center" data-bs-toggle="modal"
+                                        data-bs-target="#addMember">
                                             <span class="btn-inner--icon">
                                                 <i class="fa-regular fa-plus"></i>
                                             </span>

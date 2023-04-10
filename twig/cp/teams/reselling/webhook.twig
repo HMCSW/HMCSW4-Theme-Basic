@@ -161,8 +161,8 @@
                                                                 <td>
                                                                     <button type="button"
                                                                             class="btn btn-primary" title=""
-                                                                            data-toggle="modal"
-                                                                            data-target="#seeLog-{{ log['log_id'] }}">
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#seeLog-{{ log['log_id'] }}">
                                                                         <i class="fas fa-eye"></i>
                                                                     </button>
                                                                 </td>
@@ -194,7 +194,7 @@
                                                             <h5 class="text-left">Response</h5>
                                                             <pre style="background-color: #001f3f; color: #ffffff"><code
                                                                         id="response_{{ log['log_id'] }}"></code></pre>
-                                                            <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['response']|json_encode|raw }}, undefined, 2);</script>
+                                                            <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log|json_encode|raw }}, undefined, 2);</script>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"

@@ -36,13 +36,13 @@
                                                 <td>{{ token['lastuse_at'] | date('d.m.Y H:i') }}</td>
                                                 <td class="text-right">
                                                     <div class="actions ml-3">
-                                                        <a href="{{ url }}/cp/settings/developer/token/{{ token['token_id'] }}"
+                                                        <a href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}"
                                                            class="btn btn-primary"
                                                            data-original-title="{{ 'site.cp.settings.mails.table.show' | language }}">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <button type="button" data-toggle="modal"
-                                                                data-target="#token-{{ token['token_id'] }}"
+                                                        <button type="button" data-bs-toggle="modal"
+                                                                data-bs-target="#token-{{ token['businessId'] }}"
                                                                 class="btn btn-primary">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
@@ -51,7 +51,7 @@
                                             </tr>
                                             <tr class="table-divider"></tr>
 
-                                            <div class="modal fade" id="token-{{ token['token_id'] }}" tabindex="-1"
+                                            <div class="modal fade" id="token-{{ token['businessId'] }}" tabindex="-1"
                                                  role="dialog"
                                                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -73,8 +73,8 @@
                                                             <form method="post">
                                                                 <input type="hidden" name="action" value="deleteToken">
                                                                 <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                                <input type="hidden" name="token_id"
-                                                                       value="{{ token['token_id'] }}">
+                                                                <input type="hidden" name="businessId"
+                                                                       value="{{ token['businessId'] }}">
 
                                                                 <button type="submit"
                                                                         class="btn btn-danger">{{ 'general.modal.deleteBtn' | language }}</button>
@@ -97,7 +97,7 @@
                                         class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.apiToken.create.description' | language }}</p>
                             </div>
                             <div class="mt-4">
-                                <button type="submit" data-toggle="modal" data-target="#token-create"
+                                <button type="submit" data-bs-toggle="modal" data-bs-target="#token-create"
                                         class="btn btn-lg btn-primary">{{ 'general.modal.createBtn' | language }}</button>
                             </div>
 
@@ -170,12 +170,12 @@
                                                 <td>{{ hook['events']|length }}</td>
                                                 <td class="text-right">
                                                     <div class="actions ml-3">
-                                                        <a href="{{ url }}/cp/settings/developer/hook/{{ hook['webhook_id'] }}"
+                                                        <a href="{{ url }}/cp/settings/developer/hook/{{ hook['businessId'] }}"
                                                            class="btn btn-primary">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <button type="button" data-toggle="modal"
-                                                                data-target="#hook-{{ hook['webhook_id'] }}"
+                                                        <button type="button" data-bs-toggle="modal"
+                                                                data-bs-target="#hook-{{ hook['businessId'] }}"
                                                                 class="btn btn-primary">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
@@ -184,7 +184,7 @@
                                             </tr>
                                             <tr class="table-divider"></tr>
 
-                                            <div class="modal fade" id="hook-{{ hook['webhook_id'] }}" tabindex="-1"
+                                            <div class="modal fade" id="hook-{{ hook['businessId'] }}" tabindex="-1"
                                                  role="dialog"
                                                  aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -201,7 +201,7 @@
                                                                 <input type="hidden" name="action" value="save">
                                                                 <input type="hidden" name="csrf" value="{{ csrf }}">
                                                                 <input type="hidden" name="hook_id"
-                                                                       value="{{ hook['webhook_id'] }}">
+                                                                       value="{{ hook['businessId'] }}">
 
                                                                 <div class="form-group">
                                                                     <label
@@ -248,7 +248,7 @@
                                                                 <input type="hidden" name="action" value="deleteHook">
                                                                 <input type="hidden" name="csrf" value="{{ csrf }}">
                                                                 <input type="hidden" name="hook_id"
-                                                                       value="{{ hook['webhook_id'] }}">
+                                                                       value="{{ hook['businessId'] }}">
 
                                                                 <button type="submit"
                                                                         class="btn btn-danger">{{ 'general.modal.deleteBtn' | language }}</button>
@@ -271,7 +271,7 @@
                                         class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.webhook.create.description' | language }}</p>
                             </div>
                             <div class="mt-4">
-                                <button type="submit" data-toggle="modal" data-target="#hook-create"
+                                <button type="submit" data-bs-toggle="modal" data-bs-target="#hook-create"
                                         class="btn btn-lg btn-primary">{{ 'general.modal.createBtn' | language }}</button>
                             </div>
 

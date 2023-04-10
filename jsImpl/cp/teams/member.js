@@ -29,7 +29,6 @@ function removeMember(user_id){
         },
     }).done(function (answer) {
         if(answer.success === true){
-            document.getElementById('icon-'+ user_id).remove()
             document.getElementById('user-'+ user_id).remove()
             $('.modal').modal('hide');
 

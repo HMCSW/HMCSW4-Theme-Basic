@@ -2,6 +2,7 @@ function requireIdentityCheck(){
     startIdentityCheck(0,
         function (answer, interval) {
             if(newWindow.closed === true){
+                clearInterval(interval);
                 window.location.reload();
             }
         }, function (err) {
