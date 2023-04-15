@@ -3,7 +3,7 @@
 {% else %}
   <h6 class="text-center"><i class="fas fa-lock-open fa-2x"></i></h6>
 {% endif %}
-{% if "team.service.lock"|checkServicePermission %}
+{% if "team.service.lock"|checkTeamPermission %}
   <h6 class="text-center">{{ 'site.cp.service.locked' | language }}</h6>
   <h6 class="text-center">
     <form method="post" class="text-center">
