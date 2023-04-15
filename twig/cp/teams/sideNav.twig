@@ -59,7 +59,7 @@
                 </a>
             </li>
         {% endif %}
-        {% if "team.sshKey"|checkTeamPermission %}
+        {% if "team.sshKeys"|checkTeamPermission %}
             <li class="nav-item">
                 <a href="{{ url }}/cp/teams/{{ team['businessId'] }}/sshKeys"
                    class="nav-link {% if currentSite_TEAMS == "sshKeys" %}active{% else %}{% endif %}">
