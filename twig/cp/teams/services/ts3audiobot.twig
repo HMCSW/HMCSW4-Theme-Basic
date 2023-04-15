@@ -15,7 +15,7 @@
                             <div class="col-sm-12 col-md-6 py-4">
                                 <div class="card h-100">
                                     <div class="card-body text-center">
-                                        {% if "team.service.lock"|checkTeamPermission %}
+                                        {% if "team.service.lock"|checkServicePermission %}
                                             <br>
                                             {% if service['locked'] %}
                                                 <h6 class="text-center"><i class="fas fa-lock fa-2x"></i></h6>
