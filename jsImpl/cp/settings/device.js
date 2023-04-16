@@ -44,10 +44,14 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
                 option.text = camera.label;
                 camList.add(option);
             }));
+        }).catch((err) => {
+            document.getElementById('deviceQRCodeLogin').style = 'display: hidden';
+            stopScan();
         });
+
         flashToggle.addEventListener('click', () => {
             scanner.toggleFlash()
-                .then(() => flashToggle.checked = scanner.isFlashOn() ? true : false)
+                .then(() => flashToggle.checked = !!scanner.isFlashOn())
                 .catch(e => flashToggle.checked = false);
         });
 
