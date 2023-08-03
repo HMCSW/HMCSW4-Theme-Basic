@@ -2,172 +2,240 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body text-center">
-                                <div class="row justify-content-center">
-                                    <div class="col-lg-2">
-                                        <h6>{{ 'site.cp.ticket.answer' | language }}</h6>
-                                        <hr/>
-                                        <h6>
-                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#ticketAnswer">
-                                                {{ 'site.cp.ticket.answer.btn' | language }}
-                                            </button>
-                                        </h6>
-                                        <div class="modal fade" id="ticketAnswer" tabindex="-1" role="dialog"
-                                             aria-labelledby="ticketAnswerLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                                <div class="modal-content">
-                                                    <form method="post">
-                                                        <input type="hidden" name="action" value="answerTicket">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="exampleModalLabel">{{ 'site.cp.ticket.answer.modal' | language }}</h5>
-                                                            <button type="button" class="btn" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <i class="fa-solid fa-close"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <label for="input-message"
-                                                                       class="form-control-label">{{ 'site.cp.ticket.answer.modal.message' | language }}</label>
-                                                                <textarea id="input-message" name="message" required
-                                                                          class="form-control"
-                                                                          placeholder="{{ 'site.cp.ticket.answer.modal.message.placeholder' | language }}"
-                                                                          rows="8"></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                                            <button type="submit"
-                                                                    class="btn btn-primary">{{ 'general.modal.sendBtn' | language }}</button>
-                                                        </div>
-                                                    </form>
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-ticket text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ ticket['title'] }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/ticket" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            {% if ticket['state'] != 4 %}
+                                <button type="button" class="btn btn-secondary btn-icon" data-bs-toggle="dropdown">
+                                    <i class="fa fa-gear"></i></button>
+
+                                <div class="dropdown-menu my-1">
+                                    <form method="post">
+                                        <input type="hidden" name="action" value="closeTicket">
+                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                                        <button type="submit" class="dropdown-item">
+                                            {{ 'site.cp.ticket.close.btn' | language }}
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#ticketAnswer"
+                                    class="btn btn-secondary btn-icon">
+                                <i class="fa fa-pen-to-square"></i>
+                            </button>
+                        </div>
+
+                        <div class="modal fade" id="ticketAnswer" tabindex="-1" role="dialog"
+                             aria-labelledby="ticketAnswerLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <form method="post" enctype="multipart/form-data" id="ticketAnswer">
+                                        <input type="hidden" name="action" value="answerTicket">
+                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{ 'site.cp.ticket.answer.modal' | language }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row g-3">
+                                                <div class="form-group">
+                                                    <label for="input-message"
+                                                           class="form-label">{{ 'site.cp.ticket.answer.modal.message' | language }}</label>
+                                                    <textarea id="input-message" name="message" required
+                                                              class="form-control"
+                                                              placeholder="{{ 'site.cp.ticket.answer.modal.message.placeholder' | language }}"
+                                                              rows="8"></textarea>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="file-input" class="form-label">{{ 'site.cp.ticket.answer.modal.message.file' | language }}</label>
+                                                    <input class="form-control" type="file" id="file-input" multiple accept="application/pdf,.png,.jpg,.jpeg,.mp4" name="files[]">
+                                                    <div class="form-text">{{ 'site.cp.ticket.answer.modal.message.file.help' | language }}</div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </div>
-                                    <div class="col-lg-2">
-                                        {% if ticket['state'] != 4 %}
-                                            <h6>{{ 'site.cp.ticket.close' | language }}</h6>
-                                            <hr/>
-                                            <h6>
-                                                <form method="post">
-                                                    <input type="hidden" name="action" value="closeTicket">
-                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                    <button type="submit" class="btn btn-danger">
-                                                        {{ 'site.cp.ticket.close.btn' | language }}
-                                                    </button>
-                                                </form>
-                                            </h6>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <h4 class="text-center">{{ 'site.cp.ticket' | language }}</h4>
-                                        <h5 class="text-center">{{ ticket['ticket_id'] }}</h5>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        {% if ticket['service']['service_id'] != 0 %}
-                                            <h6>{{ 'site.cp.ticket.service' | language }}</h6>
-                                            <hr/>
-                                            <h5>{{ ticket['service']['name'] }}</h5>
-                                            <h5>{{ ticket['service']['service_id'] }}</h5>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <h6>{{ 'site.cp.ticket.area' | language }}</h6>
-                                        <hr/>
-                                        <h5>
-                                            {% if ticket['area'] == 1 %}
-                                                {{ 'general.tickets.area.1' | language }}
-                                            {% elseif ticket['area'] == 2 %}
-                                                {{ 'general.tickets.area.2' | language }}
-                                            {% elseif ticket['area'] == 3 %}
-                                                {{ 'general.tickets.area.3' | language }}
-                                            {% elseif ticket['area'] == 4 %}
-                                                {{ 'general.tickets.area.4' | language }}
-                                            {% elseif ticket['area'] == 5 %}
-                                                {{ 'general.tickets.area.5' | language }}
-                                            {% elseif ticket['area'] == 6 %}
-                                                {{ 'general.tickets.area.6' | language }}
-                                            {% elseif ticket['area'] == 7 %}
-                                                {{ 'general.tickets.area.7' | language }}
-                                            {% elseif ticket['area'] == 8 %}
-                                                {{ 'general.tickets.area.8' | language }}
-                                            {% elseif ticket['area'] == 9 %}
-                                                {{ 'general.tickets.area.9' | language }}
-                                            {% elseif ticket['area'] == 10 %}
-                                                {{ 'general.tickets.area.10' | language }}
-                                            {% else %}
-                                                {{ 'general.tickets.area.error' | language }}
-                                            {% endif %}
-                                        </h5>
-                                        <h5>
-                                            {% if ticket['state'] == 1 %}
-                                                <span style="color:#76ff03">{{ 'general.tickets.state.1' | language }}</span>
-                                            {% elseif ticket['state'] == 2 %}
-                                                <span style="color:#ff9800">{{ 'general.tickets.state.2' | language }}</span>
-                                            {% elseif ticket['state'] == 3 %}
-                                                <span style="color:#ff9800">{{ 'general.tickets.state.3' | language }}</span>
-                                            {% elseif ticket['state'] == 4 %}
-                                                <span class="text-muted">{{ 'general.tickets.state.4' | language }}</span>
-                                            {% else %}
-                                                <span style="color:#FF0000">{{ 'general.tickets.state.error' | language }}</span>
-                                            {% endif %}
-                                        </h5>
-                                    </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" id="ticketAnswerBtn"
+                                                    class="btn btn-primary">{{ 'general.modal.sendBtn' | language }}</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr/>
-                    {% for message in ticket['messages'] %}
-                        {% if message['type'] != "team" %}
-                            <div class="col-lg-6 offset-lg-6">
-                                <div class="card  bg-primary">
-                                    <div class="card-body">
-                                        <div class="media-comment-bubble">
-                                            <h6 class="mt-0 text-white"><img alt="{{ message['user']['name'] }}" class="rounded-circle shadow mr-4"
-                                                                             src="{{ message['user']['icon'] }}" style="width: 25px;"> {{ message['user']['name'] }} </h6>
-                                            <p class="text-white lh-160">{{ message['message']|nl2br }}</p>
-                                            <div class="icon-actions">
-                                                <a class="love active">
-                                                    <span class="text-white">{{ message['at']['created']|date("d.m.Y H:i") }}</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                        {% else %}
-                            <div class="col-lg-7">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h6 class="mt-0"><img alt="{{ message['user']['name'] }}" class="rounded-circle shadow mr-4"
-                                                              src="{{ message['user']['icon'] }}" style="width: 25px;"> {{ message['user']['name'] }} </h6>
-                                        <p class="lh-160">{{ message['message']|nl2br }}</p>
-                                        <div class="icon-actions">
-                                            <a class="love active">
-                                                <span>{{ message['at']['created']|date("d.m.Y H:i") }}</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
+                    <dl>
+                        <dt>{{ 'site.cp.ticket.area' | language }}</dt>
+                        <dd>{% if ticket['area'] == 1 %}
+                                {{ 'general.tickets.area.1' | language }}
+                            {% elseif ticket['area'] == 2 %}
+                                {{ 'general.tickets.area.2' | language }}
+                            {% elseif ticket['area'] == 3 %}
+                                {{ 'general.tickets.area.3' | language }}
+                            {% elseif ticket['area'] == 4 %}
+                                {{ 'general.tickets.area.4' | language }}
+                            {% elseif ticket['area'] == 5 %}
+                                {{ 'general.tickets.area.5' | language }}
+                            {% elseif ticket['area'] == 6 %}
+                                {{ 'general.tickets.area.6' | language }}
+                            {% elseif ticket['area'] == 7 %}
+                                {{ 'general.tickets.area.7' | language }}
+                            {% elseif ticket['area'] == 8 %}
+                                {{ 'general.tickets.area.8' | language }}
+                            {% elseif ticket['area'] == 9 %}
+                                {{ 'general.tickets.area.9' | language }}
+                            {% elseif ticket['area'] == 10 %}
+                                {{ 'general.tickets.area.10' | language }}
+                            {% else %}
+                                {{ 'general.tickets.area.error' | language }}
+                            {% endif %}
+                        </dd>
+                        <dt>{{ 'site.cp.ticket.state' | language }}</dt>
+                        <dd>{% if ticket['state'] == 1 %}
+                                <span style="color:#76ff03">{{ 'general.tickets.state.1' | language }}</span>
+                            {% elseif ticket['state'] == 2 %}
+                                <span style="color:#ff9800">{{ 'general.tickets.state.2' | language }}</span>
+                            {% elseif ticket['state'] == 3 %}
+                                <span style="color:#ff9800">{{ 'general.tickets.state.3' | language }}</span>
+                            {% elseif ticket['state'] == 4 %}
+                                <span class="text-muted">{{ 'general.tickets.state.4' | language }}</span>
+                            {% else %}
+                                <span style="color:#FF0000">{{ 'general.tickets.state.error' | language }}</span>
+                            {% endif %}
+                        </dd>
+                        {% if ticket['service']['service_id'] != 0 %}
+                            <dt>{{ 'site.cp.ticket.service' | language }}</dt>
+                            <dd>{{ ticket['service']['name'] }} - {{ ticket['service']['service_id'] }}</dd>
                         {% endif %}
-                    {% endfor %}
+                    </dl>
+
+                    <div class="row py-4">
+                        <div tabindex="0" role="region" aria-label="scrollable content">
+                            <div class="simplebar-content">
+                                <!-- Message-->
+
+
+                                {% for message in ticket['messages'] %}
+                                    {% if message['type'] == "team" %}
+                                        <div class="mb-3" style="max-width: 392px;">
+                                            <div class="d-flex align-items-end mb-2">
+                                                <div class="flex-shrink-0 pe-2 me-1"><img class="rounded-circle"
+                                                                                          src="{{ message['user']['icon'] }}"
+                                                                                          width="48"
+                                                                                          alt="{{ message['user']['name'] }}">
+                                                </div>
+                                                <div class="message-box-start text-dark">{{ message['message']|nl2br }}
+                                                </div>
+                                            </div>
+
+                                            <div class="row justify-content-end">
+                                                {% for file in message['files'] %}
+                                                    <div class="mb-1 col-lg-6">
+                                                        <div class="card h-100 rounded-3 p-3 ">
+                                                            <div class="d-flex align-items-center">
+                                                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ file['name'] }}
+                                                                    <div class="d-flex align-items-center">
+                                                                        {% if file['extension'] == "pdf" %}
+                                                                            <i class="fas fa-file-pdf"></i>
+                                                                        {% else %}
+                                                                            <i class="fas fa-file"></i>
+                                                                        {% endif %}
+                                                                        <div class="ps-2 fs-sm">
+                                                                            <div class="text-dark">{{ file['fileSize'] }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </h3>
+                                                                <div class="d-flex ms-auto">
+                                                                    <form method="post">
+                                                                        <input name="file_id"
+                                                                               value="{{ file['file_id'] }}"
+                                                                               type="hidden">
+                                                                        <input type="hidden" name="action"
+                                                                               value="downloadFile">
+                                                                        <input type="hidden" name="csrf"
+                                                                               value="{{ csrf }}">
+                                                                        <button type="submit"
+                                                                                class="nav-link text-secondary fs-xl fw-normal py-1 pe-0 ps-1 ms-2">
+                                                                            <i class="fa-regular fa-download"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                {% endfor %}
+                                            </div>
+                                            <div class="fs-xs text-muted text-end">{{ message['at']['created']|date }}
+                                                - {{ message['user']['name'] }}</div>
+                                        </div>
+                                    {% else %}
+                                        <div class="ms-auto mb-3" style="max-width: 392px;">
+                                            <div class="d-flex align-items-end mb-2">
+                                                <div class="message-box-end bg-primary text-white">{{ message['message']|nl2br }}</div>
+                                                <div class="flex-shrink-0 ps-2 ms-1"><img class="rounded-circle"
+                                                                                          src="{{ message['user']['icon'] }}"
+                                                                                          width="48"
+                                                                                          alt="{{ message['user']['name'] }}">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                {% for file in message['files'] %}
+                                                    <div class="mb-1 col-lg-6">
+                                                        <div class="card h-100 rounded-3 p-3 ">
+                                                            <div class="d-flex align-items-center">
+                                                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ file['name'] }}
+                                                                    <div class="d-flex align-items-center">
+                                                                        {% if file['extension'] == "pdf" %}
+                                                                            <i class="fas fa-file-pdf"></i>
+                                                                        {% else %}
+                                                                            <i class="fas fa-file"></i>
+                                                                        {% endif %}
+                                                                        <div class="ps-2 fs-sm">
+                                                                            <div class="text-dark">{{ file['fileSize'] }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </h3>
+                                                                <div class="d-flex ms-auto">
+                                                                    <form method="post">
+                                                                        <input name="file_id"
+                                                                               value="{{ file['file_id'] }}"
+                                                                               type="hidden">
+                                                                        <input type="hidden" name="action"
+                                                                               value="downloadFile">
+                                                                        <input type="hidden" name="csrf"
+                                                                               value="{{ csrf }}">
+                                                                        <button type="submit"
+                                                                                class="nav-link text-secondary fs-xl fw-normal py-1 pe-0 ps-1 ms-2">
+                                                                            <i class="fa-regular fa-download"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class="fs-xs text-muted">{{ message['at']['created']|date }}</div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>

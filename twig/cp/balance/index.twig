@@ -2,153 +2,166 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                {% include 'general/actionMessage.twig' %}
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            {% include 'general/actionMessage.twig' %}
+            {% include 'cp/terminateUser.twig' %}
+            {% include 'cp/emailActivation.twig' %}
+            {% include 'cp/themeAlert.twig' %}
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-wallet text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.tab.balance' | language }}</h2>
 
-                <div class="row justify-content-center">
-                    {% include 'cp/terminateUser.twig' %}
-                    <div class="col-lg-6">
-                        <div class="card card-fluid">
-                            <div class="card-header">
-                                <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.current' | language }}</h5>
+                        {% if userData['email_activation'] == "true" %}
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <button data-bs-toggle="modal" data-bs-target="#sendBalance"
+                                        class="btn btn-dark">
+                                    {{ 'site.cp.balance.send' | language }}
+                                </button>
                             </div>
-                            <div class="card-body align-items-center">
-                                <h4 class="align-items-center text-center">{{ userData['credits'] | creditsToEuro }}{{ "symbol"|currency }}</h4>
-                                <br><br>
+                        {% endif %}
+                    </div>
+                    <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.current' | language }}</h5>
 
+                    <h4 class="align-items-center text-center">{{ userData['credits'] | creditsToEuro }}{{ "symbol"|currency }}</h4>
 
-                                <div class="row justify-content-center">
-                                    <h4 class="text-center">
-                                        <button data-bs-toggle="modal" data-bs-target="#sendBalance" type="submit"
-                                                class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.send' | language }}
-                                        </button>
-                                    </h4>
-                                </div>
+                    {% if userData['email_activation'] == "true" %}
+                        <div class="modal fade" tabindex="-1" id="sendBalance" role="dialog"
+                             aria-labelledby="myLargeModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
 
-                                <div class="modal fade" tabindex="-1" id="sendBalance" role="dialog"
-                                     aria-labelledby="myLargeModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-
-                                            <div class="modal-header">
-                                                <h5 class="modal-title h6"
-                                                    id="myLargeModalLabel">{{ 'site.cp.balance.send' | language }}</h5>
-                                                <button type="button" class="btn" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <form method="post">
-                                                    <input type="hidden" name="action" value="sendBalance">
-                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                    <div class="row">
-                                                        <div class="col-lg-8 offset-lg-2">
-                                                            <div class="form-group">
-                                                                <label for="input-user_id"
-                                                                       class="form-control-label">{{ 'site.cp.balance.send.user_id' | language }}</label>
-                                                                <input name="user_id" required type="number"
-                                                                       class="form-control form-control-prepend"
-                                                                       id="input-user_id"
-                                                                       placeholder="{{ 'site.cp.balance.send.user_id.placeholder' | language }}">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-lg-8 offset-lg-2">
-                                                            <div class="form-group">
-                                                                <label for="input-amount"
-                                                                       class="form-control-label">{{ 'site.cp.balance.send.amount.euro' | language }}</label>
-                                                                <input name="amount" value="1" min="0.01" max="100"
-                                                                       required type="text"
-                                                                       class="form-control form-control-prepend"
-                                                                       id="input-amount"
-                                                                       placeholder="{{ 'site.cp.balance.send.amount.euro.placeholder' | language }}">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row justify-content-center">
-                                                        <h4 class="text-center">
-                                                            <button type="submit"
-                                                                    class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.send.btn' | language }}</button>
-                                                        </h4>
-                                                    </div>
-                                                </form>
+                                    <form method="post">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">{{ 'site.cp.balance.send' | language }}</h4>
+                                            <button class="btn-close" type="button" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" name="action" value="sendBalance">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <div class="row g-4 pb-2 pb-sm-3">
+                                                <div class="form-group">
+                                                    <label for="input-email"
+                                                           class="form-label">{{ 'site.cp.balance.send.email' | language }}</label>
+                                                    <input name="email" required type="email"
+                                                           class="form-control form-control-prepend"
+                                                           id="input-email"
+                                                           placeholder="{{ 'site.cp.balance.send.email.placeholder' | language }}">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="input-amount"
+                                                           class="form-label">{{ 'site.cp.balance.send.amount.euro' | language }}</label>
+                                                    <input name="amount" value="1" min="0.01" max="100" required
+                                                           type="text"
+                                                           class="form-control form-control-prepend" id="input-amount"
+                                                           placeholder="{{ 'site.cp.balance.send.amount.euro.placeholder' | language }}">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+
+                                        <div class="modal-footer flex-column flex-sm-row">
+                                            <button type="submit"
+                                                    class="btn btn-primary w-100 w-sm-auto ms-sm-3">{{ 'site.cp.balance.send.btn' | language }}</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
-                <div class="row justify-content-center">
+            </section>
+            {% if userData['restricted'] != true %}
+                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4 ">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                    class="fa fa-people-arrows text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.balance.topUp' | language }}</h2>
+                        </div>
+                        {% if userData['email_activation'] == "true" %}
+                            <form method="post">
+                                <input type="hidden" name="action" value="topUp">
+                                <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                    <div class="col-lg-6">
-                        <div class="card card-fluid">
-                            <div class="card-header">
-                                <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.topUp' | language }}</h5>
-                            </div>
-                            <div class="card-body text-center">
-
-                                <form method="post">
-                                    <input type="hidden" name="action" value="topUp">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                    <div class="row">
-                                        <div class="form-group col-lg-6 offset-lg-3">
-                                            <label for="input-amount"
-                                                   class="form-control-label">{{ 'site.cp.balance.topUp.amount' | language }}</label>
-                                            <input name="amount" value="1" min="1" required type="text"
-                                                   class="form-control form-control-prepend"
-                                                   id="input-amount"
-                                                   placeholder="{{ 'site.cp.balance.topUp.amount.placeholder' | language }}">
+                                <div class="row align-items-center ">
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fa fa-euro"></i></span>
+                                            <input class="form-control" type="text" name="amount" value="1" min="1"
+                                                   required
+                                                   placeholder="{{ 'site.cp.balance.topUp.amount.placeholder' | language }}"
+                                                   id="current-amount">
                                         </div>
                                     </div>
-                                    <div class="row justify-content-center">
-                                        <h4 class="text-center">
-                                            <button type="submit"
-                                                    class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.topUp.btn' | language }}</button>
-                                        </h4>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                                </div>
 
-                    <div class="col-lg-6">
-                        <div class="card card-fluid">
-                            <div class="card-header">
-                                <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.giftcode' | language }}</h5>
-                            </div>
-                            <div class="card-body text-center">
-
-                                <form method="post">
-                                    <input type="hidden" name="action" value="useGiftcode">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                    <div class="row">
-                                        <div class="form-group col-lg-8 offset-lg-2">
-                                            <label for="input-giftcode"
-                                                   class="form-control-label">{{ 'site.cp.balance.giftcode.code' | language }}</label>
-                                            <input name="giftcode" required type="text"
-                                                   class="form-control form-control-prepend input-mask"
-                                                   data-mask="00000-00000-00000-00000-00000" id="input-giftcode"
-                                                   placeholder="12345-67890-12345-67890-12345">
-                                        </div>
+                                <div class="d-flex justify-content-start pt-5">
+                                    <button class="btn btn-primary"
+                                            type="submit">{{ 'site.cp.balance.topUp.btn' | language }}</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div class="col-lg-12">
+                                <div class="alert alert-group alert-warning alert-icon" role="alert">
+                                    <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-regular fa-triangle-exclamation"></i>
+                                </span>
                                     </div>
-                                    <div class="row justify-content-center">
-                                        <h4 class="text-center">
-                                            <button type="submit"
-                                                    class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.balance.giftcode.btn' | language }}</button>
-                                        </h4>
+                                    <div class="alert-content">
+                                        {{ 'site.cp.balance.emailNotVerified' | language }}
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
-                </div>
-            </div>
+                </section>
+                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4 ">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                    class="fa fa-people-arrows text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.balance.giftcode' | language }}</h2>
+                        </div>
+
+                        {% if userData['email_activation'] == "true" %}
+                            <form method="post">
+                                <input type="hidden" name="action" value="useGiftcode">
+                                <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                <div class="row align-items-center ">
+                                    <div class="col-sm-6">
+                                        <label class="form-label"
+                                               for="current-giftcode">{{ 'site.cp.balance.giftcode.code' | language }}</label>
+                                        <input class="form-control" name="giftcode" required type="text"
+                                               data-mask="00000-00000-00000-00000-00000" id="input-giftcode"
+                                               placeholder="12345-67890-12345-67890-12345">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-start pt-5">
+                                    <button class="btn btn-primary"
+                                            type="submit">{{ 'site.cp.balance.giftcode.btn' | language }}</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <div class="col-lg-12">
+                                <div class="alert alert-group alert-warning alert-icon" role="alert">
+                                    <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-regular fa-triangle-exclamation"></i>
+                                </span>
+                                    </div>
+                                    <div class="alert-content">
+                                        {{ 'site.cp.balance.emailNotVerified' | language }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </section>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -2,162 +2,162 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                {% include 'general/actionMessage.twig' %}
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <form method="post">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                            <input type="hidden" name="action" value="next">
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <div class="d-flex align-items-center"><i
+                                    class="fa fa-wallet text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.tab.balance' | language }}</h2>
 
-                            {% if payments['moreTime']|length != 0 %}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <span class="h5">{{ 'site.cart.method.moreTime'|language }}</span>
-                                            </div>
-                                            <div class="text-right">
-                                                <div class="actions mr-n2">
-                                                    <a href="{{ url }}/cp/settings/payment" class="btn"><i
-                                                                class="fa fa-eye"></i></a>
-                                                    <a href="{{ url }}/cp/settings/payment" class="btn"><i
-                                                                class="fa fa-plus"></i></a>
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <button type="submit" name="action" value="cancelTopUp"
+                                        class="btn btn-dark">
+                                    {{ 'site.cp.balance.topUp.cancel.btn' | language }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <form method="post">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <div class="row pt-sm-2 pt-lg-0">
+                    <div class="col-md-8">
+                        <section class="card mb-4">
+                            <div class="card-body">
+
+                                {% if payments['moreTime']|length != 0 %}
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="h5">{{ 'site.cart.method.moreTime'|language }}</span>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% for key, payment in payments['moreTime'] %}
-                                        <div class="col-md-6">
-                                            <div class="card card-fluid">
-                                                <div class="card-body">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="custom-control custom-radio">
-                                                                <input required type="radio"
-                                                                       class="form-check-input" name="payment"
-                                                                       value="{{ key }}" id="radio-payment-{{ key }}">
-                                                                <label class="form-check-label h6 mb-0 lh-180"
-                                                                       for="radio-payment-{{ key }}">{{ payment['name'] }}</label>
-                                                            </div>
-                                                        </div>
+                                                <div class="text-right">
+                                                    <div class="actions mr-n2">
+                                                        <a href="{{ dashURL }}/settings/payment" class="action-item"><i
+                                                                    class="fa fa-eye"></i></a>
+                                                        <a href="{{ dashURL }}/settings/payment" class="action-item"><i
+                                                                    class="fa fa-plus"></i></a>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    {% endfor %}
-                                </div>
-                                <br>
-                            {% endif %}
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <span class="h5">{{ 'site.cart.method.oneTime'|language }}</span>
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="actions mr-n2">
-                                                <a href="{{ url }}/about/payment" class="btn"><i
-                                                            class="fa fa-eye"></i></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% for key, payment in payments['oneTime'] %}
-                                    <div class="col-md-6">
-                                        <div class="card card-fluid">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <div class="custom-control custom-radio">
+                                        {% for key, payment in payments['moreTime'] %}
+                                            <div class="col-md-6">
+                                                <div class="card overflow-hidden mb-2">
+                                                    <div class="card-body">
+                                                        <div class="form-check">
                                                             <input required type="radio" class="form-check-input"
                                                                    name="payment"
                                                                    value="{{ key }}" id="radio-payment-{{ key }}">
-                                                            <label class="form-check-label h6 mb-0 lh-180"
+                                                            <label class="form-check-label h6 mb-0"
                                                                    for="radio-payment-{{ key }}">{{ payment['name'] }}</label>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        {% endfor %}
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span class="h5">{{ 'site.cart.method.oneTime'|language }}</span>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="actions mr-n2">
+                                                    <a href="{{ url }}/about/payment" class="action-item"><i
+                                                                class="fa fa-eye"></i></a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                {% endfor %}
+                                    {% for key, payment in payments['oneTime'] %}
+                                        <div class="col-md-6">
+                                            <div class="card overflow-hidden mb-2">
+                                                <div class="card-body">
+                                                    <div class="form-check">
+                                                        <input required type="radio" class="form-check-input"
+                                                               name="payment"
+                                                               value="{{ key }}" id="radio-payment-{{ key }}">
+                                                        <label class="form-check-label h6 mb-0"
+                                                               for="radio-payment-{{ key }}">{{ payment['name'] }}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
 
-                            </div>
-                            {% if config['payment']['bank_transfer']['enabled'] %}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <h6
-                                                                class="h6 mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer' | language }}</h6>
-                                                        <br>
-                                                        <p
-                                                                class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.info' | language }}</p>
-                                                        <br>
-                                                        <p
-                                                                class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.ownerName' | language }}
-                                                            : {{ config['payment']['bank_transfer']['data']['owner'] }}</p>
-                                                        <p
-                                                                class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.iban' | language }} {{ config['payment']['bank_transfer']['data']['iban'] }}</p>
-                                                        <p
-                                                                class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.bic' | language }} {{ config['payment']['bank_transfer']['data']['bic'] }}</p>
-                                                        <p
-                                                                class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.bankName' | language }} {{ config['payment']['bank_transfer']['data']['bank_name'] }}</p>
-                                                        <p
-                                                                class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.purpose' | language }}
-                                                            :
-                                                            kn{{ userData['user_id'] }}</p>
+                                </div>
+
+                                {% if config['payment']['bank_transfer']['enabled'] %}
+                                    <div class="row mb-4">
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <h6 class="h6 mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer' | language }}</h6>
+                                                            <br>
+                                                            <p class="mb-0 lh-180">{{ 'site.cp.balance.topUp.method.bankTransfer.info' | language }}</p>
+                                                            <br>
+                                                            <dl>
+                                                                <dt>{{ 'site.cp.balance.topUp.method.bankTransfer.ownerName' | language }}</dt>
+                                                                <dd>{{ config['payment']['bank_transfer']['data']['owner'] }}</dd>
+                                                                <dt>{{ 'site.cp.balance.topUp.method.bankTransfer.iban' | language }}</dt>
+                                                                <dd>{{ config['payment']['bank_transfer']['data']['iban'] }}</dd>
+                                                                <dt>{{ 'site.cp.balance.topUp.method.bankTransfer.bic' | language }}</dt>
+                                                                <dd>{{ config['payment']['bank_transfer']['data']['bic'] }}</dd>
+                                                                <dt>{{ 'site.cp.balance.topUp.method.bankTransfer.bankName' | language }}</dt>
+                                                                <dd>{{ config['payment']['bank_transfer']['data']['bank_name'] }}</dd>
+                                                                <dt>{{ 'site.cp.balance.topUp.method.bankTransfer.purpose' | language }}</dt>
+                                                                <dd>kn{{ userData['user_id'] }}</dd>
+                                                            </dl>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endif %}
-
-                            {% if payments['oneTime']|length == 0 and payments['moreTime']|length == 0 %}
-                                <div class="col-md-12">
-                                    <div class="alert alert-group alert-danger alert-icon" role="alert">
-                                        <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
-                                                        class="fa-regular fa-triangle-exclamation"></i></span>
-                                        </div>
-                                        <div class="alert-content">
-                                            {{ 'site.cart.payment.noAvailable' | language }}
+                                {% endif %}
+                                {% if payments['oneTime']|length == 0 and payments['moreTime']|length == 0 %}
+                                    <div class="col-md-12">
+                                        <div class="alert alert-group alert-danger alert-icon" role="alert">
+                                            <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                                            class="fa-regular fa-triangle-exclamation"></i></span>
+                                            </div>
+                                            <div class="alert-content">
+                                                {{ 'site.cart.payment.noAvailable' | language }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% else %}
-                                <div class="row justify-content-center">
-                                    <h4 class="text-center">
-                                        <button type="submit" class="btn btn-primary btn-lg hover-scale-110">
-                                            {{ 'site.cp.balance.topUp.btn' | language }}
-                                        </button>
-                                    </h4>
-                                </div>
-                            {% endif %}
-                        </form>
-                        <div class="row justify-content-center">
-                            <form method="post" class="col-lg-8">
-                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                <input type="hidden" name="action" value="cancelTopUp">
-                                <div class="row justify-content-center">
-                                    <h4 class="text-center">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            {{ 'site.cp.balance.topUp.cancel.btn' | language }}
-                                        </button>
-                                    </h4>
-                                </div>
-                            </form>
-                        </div>
+                                {% endif %}
+                            </div>
+                        </section>
                     </div>
                     {% include 'cp/balance/topUp/sideNav.twig' %}
                 </div>
-            </div>
+                {% if payments['oneTime']|length != 0 or payments['moreTime']|length != 0 %}
+                    <div class="row">
+                        <section class="card border-0">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-end">
+
+                                    <button type="submit" class="btn btn-success ms-3" name="action" value="next"
+                                            type="submit">{{ 'site.cp.balance.topUp.btn' | language }}</button>
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                {% endif %}
+            </form>
         </div>
     </div>
 </div>

@@ -1,0 +1,25 @@
+{% if theme['alert']['cp']['info']['enabled'] %}
+  {% if theme['alert']['cp']['info']['color'] == "green" %}
+    {% set alert_color = "success" %}
+    {% set alert_icon = "check" %}
+  {% elseif theme['alert']['cp']['info']['color'] == "yellow" %}
+    {% set alert_color = "warning" %}
+    {% set alert_icon = "exclamation" %}
+  {% elseif theme['alert']['cp']['info']['color'] == "red" %}
+    {% set alert_color = "danger" %}
+    {% set alert_icon = "exclamation-triangle" %}
+  {% elseif theme['alert']['cp']['info']['color'] == "blue" %}
+    {% set alert_color = "primary" %}
+    {% set alert_icon = "info" %}
+  {% else %}
+    {% set alert_color = "success" %}
+    {% set alert_icon = "check" %}
+  {% endif %}
+  <div class="col-md-12">
+    <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
+      <div class="alert-content">
+        <i class="fas fa-{{ alert_icon }}"></i>
+        {{ theme['alert']['cp']['info']['message']|raw }}</div>
+    </div>
+  </div>
+{% endif %}

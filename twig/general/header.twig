@@ -42,12 +42,12 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         {% if config['dev_mode'] %}
                             <li class="nav-item nav-item-spaced d-none d-lg-block nav-link text-red"><span
-                                        class="text-white">DevMode activated</span>
+                                        class="">DevMode activated</span>
                             </li>
                         {% endif %}
-                        <li><a class="nav-link px-2 text-white" href="{{ url }}">{{ 'header.home' | language }}</a></li>
+                        <li><a class="nav-link px-2 " href="{{ url }}">{{ 'header.home' | language }}</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link px-2 text-white dropdown-toggle" href="#" id="navbarDropdown"
+                            <a class="nav-link px-2  dropdown-toggle" href="#" id="navbarDropdown"
                                role="button"
                                data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ 'header.products' | language }}
@@ -71,7 +71,7 @@
                     {% else %}
 
                         <div class="text-end">
-                            <a class="px-2 nav-item text-white" style=" text-decoration: none"
+                            <a class="px-2 nav-item " style=" text-decoration: none"
                                href="{{ url }}/cart"><span
                                         id="cartCountHeader">{{ cartCount }}</span>
                                 <i class="fa-regular fa-shopping-cart"></i>

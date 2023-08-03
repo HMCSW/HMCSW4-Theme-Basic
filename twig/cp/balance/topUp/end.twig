@@ -2,90 +2,75 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                {% include 'general/actionMessage.twig' %}
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <div class="d-flex align-items-center"><i
+                                    class="fa fa-wallet text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.tab.balance' | language }}</h2>
 
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-
-                                    <div class="col-12">
-                                        <h6 class="mb-0 lh-180">
-                                            {{ 'site.cart.end.payWith'|language|replace({'@method': paymentMethod|raw })|raw }}
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mb-0 lh-180">
-                                    <div data-callback="unGreyButton" id="recaptcha"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="form-group mb-0 lh-180">
-                                    <div class="custom-control custom-checkbox">
-                                        <input required type="checkbox" class="form-check-input" id="tos"
-                                               name="tos">
-
-                                        <label class="form-check-label"
-                                               for="tos">{{ 'site.cart.end.terms'|language|replace({'@terms': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/terms', '@site': 'site.legal.terms'|language })|raw })|raw }}</label>
-                                    </div>
-                                </div>
-                                <div class="form-group mb-0 lh-180">
-                                    <div class="custom-control custom-checkbox">
-                                        <input required type="checkbox" class="form-check-input" id="withdrawal"
-                                               name="withdrawal">
-
-                                        <label class="form-check-label"
-                                               for="withdrawal">{{ 'site.cart.end.withdrawal'|language|replace({'@withdrawal': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/withdrawal', '@site': 'site.legal.withdrawal'|language })|raw })|raw }}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="mt-4 text-left col-lg-6">
-
-                                <div>
-                                    <form method="post">
-                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                        <input type="hidden" name="action" value="cancelTopUp">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            {{ 'site.cp.balance.topUp.cancel.btn' | language }}
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="mt-4 text-right col-lg-6">
-                                <button id="btn_submit" onclick="startOrder();" type="button"
-                                        class="btn btn-animated btn-success btn-animated-x hover-scale-110">
-                                    <span class="btn-inner--visible">{{ 'site.cp.balance.topUp.btn' | language }}</span>
-                                    <span class="btn-inner--hidden"><i class="fa-regular fa-credit-card"></i>
-                                    </span>
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <button type="submit" name="action" value="cancelTopUp"
+                                        class="btn btn-dark">
+                                    {{ 'site.cp.balance.topUp.cancel.btn' | language }}
                                 </button>
-                                <button id="btn_loading" type="button"
-                                        class="btn btn-animated btn-success btn-animated-x hover-scale-110"
-                                        style="display: none;">
-                                    <span class="btn-inner--visible"> {{ 'site.cp.balance.topUp.btn' | language }}</span>
-                                    <span class="btn-inner--hidden">
-                                        <span class="spinner-border spinner-border-sm" role="status"
-                                              aria-hidden="true"></span>
-                                        <span class="sr-only">Loading...</span>
-                                    </span>
-                                </button>
-
                             </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            {% include 'general/actionMessage.twig' %}
+            <div class="row pt-sm-2 pt-lg-0">
+                <div class="col-md-8">
+                    <section class="card mb-4">
+                        <div class="card-body">
+                            <div class="col-12">
+                                <h6 class="mb-0 lh-180">
+                                    {{ 'site.cart.end.payWith'|language|replace({'@method': paymentMethod|raw })|raw }}
+                                </h6>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="card mb-4">
+                        <div class="card-body">
+                            <div class="mb-0 lh-180">
+                                <div data-callback="unGreyButton" id="recaptcha"></div>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="card mb-4">
+                        <div class="card-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tos" name="tos" required>
+                                <label class="form-check-label" for="tos">{{ 'site.cart.end.terms'|language|replace({'@terms': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/terms', '@site': 'site.legal.terms'|language })|raw })|raw }}</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="withdrawal" name="withdrawal" required>
+                                <label class="form-check-label" for="withdrawal">{{ 'site.cart.end.withdrawal'|language|replace({'@withdrawal': '<a href="@url">@site</a>'|replace({'@url': url ~ '/legal/withdrawal', '@site': 'site.legal.withdrawal'|language })|raw })|raw }}</label>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                {% include 'cp/balance/topUp/sideNav.twig' %}
+            </div>
+
+            <div class="row">
+                <section class="card border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+                            <button id="btn_submit" onclick="startOrder();" type="button" class="btn btn-success ms-3"
+                                    type="submit">{{ 'site.cp.balance.topUp.btn' | language }}</button>
+                            <button id="btn_loading"  type="button" style="display: none;" class="btn btn-primary pe-none ms-3">
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                {{ 'site.cp.balance.topUp.btn' | language }}
+                            </button>
+
                         </div>
                     </div>
-                    {% include 'cp/balance/topUp/sideNav.twig' %}
-                </div>
+                </section>
             </div>
         </div>
     </div>

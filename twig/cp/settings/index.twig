@@ -2,345 +2,339 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="row">
-                <div class="col-lg-6">
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            {% include 'cp/terminateUser.twig' %}
+            {% include 'cp/emailActivation.twig' %}
+            {% include 'general/actionMessage.twig' %}
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-gear text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.tab.settings' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Basic info-->
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-sun-dust text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.nightMode' | language }}</h2>
+                    </div>
                     <form method="post">
                         <input type="hidden" name="action" value="updateNightMode">
                         <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                        <div class="actions-toolbar py-2 mb-4">
-                            <h5 class="mb-1">{{ 'site.cp.settings.nightMode' | language }}</h5>
-                            <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.nightMode.description' | language }}</p>
-                        </div>
-
-                        <div class="row">
+                        <div class="row align-items-center g-3 g-sm-4 pb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="nightMode-on" name="nightMode"
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="nightMode-on" name="nightMode"
                                                value="on"
-                                               {% if userData['night_mode']['state'] == "true" %}checked{% endif %}
-                                               class="form-check-input">
+                                               {% if userData['night_mode']['state'] == "true" %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="nightMode-on">{{ 'site.cp.settings.nightMode.form.on' | language }}</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="nightMode-off" name="nightMode"
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="nightMode-off" name="nightMode"
                                                value="off"
-                                               {% if userData['night_mode']['state'] == "false" %}checked{% endif %}
-                                               class="form-check-input">
+                                               {% if userData['night_mode']['state'] == "false" %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="nightMode-off">{{ 'site.cp.settings.nightMode.form.off' | language }}</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="nightMode-auto" name="nightMode"
-                                               value="auto"
-                                               {% if userData['night_mode']['state'] == "auto" %}checked{% endif %}
-                                               class="form-check-input">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="nightMode-auto"
+                                               name="nightMode" value="auto"
+                                               {% if userData['night_mode']['state'] == "auto" %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="nightMode-auto">{{ 'site.cp.settings.nightMode.form.auto' | language }}</label>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    {% for name, value in theme['nightModeColors'] %}
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" id="nightModeColor-{{ name }}"
-                                                   name="nightModeColor" value="{{ name }}"
-                                                   {% if userData['night_mode']['color'] == name %}checked{% endif %}
-                                                   class="form-check-input">
-                                            <label class="form-check-label"
-                                                   for="nightModeColor-{{ name }}">{{ value['message'] | language }}</label>
-                                        </div>
-                                    {% endfor %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="nightMode-device"
+                                               name="nightMode" value="device"
+                                               {% if userData['night_mode']['state'] == "device" %}checked{% endif %}>
+                                        <label class="form-check-label"
+                                               for="nightMode-device">{{ 'site.cp.settings.nightMode.form.device' | language }}</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.nightMode.form.btn' | language }}</button>
+                        <div class="d-flex justify-content-end pt-3">
+                            <button class="btn btn-primary"
+                                    type="submit">{{ 'site.cp.settings.nightMode.form.btn' | language }}</button>
                         </div>
                     </form>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-lg-6">
+            </section>
+
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-file-invoice-dollar text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.autoPay' | language }}</h2>
+                    </div>
                     <form method="post">
                         <input type="hidden" name="action" value="updateAutoPay">
                         <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                        <div class="actions-toolbar py-2 mb-4">
-                            <h5 class="mb-1">{{ 'site.cp.settings.autoPay' | language }}</h5>
-                            <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.autoPay.description' | language }}</p>
-                        </div>
-
-                        <div class="row">
+                        <div class="row align-items-center g-3 g-sm-4 pb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="autoPay-on" name="autoPay"
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="autoPay-on" name="autoPay"
                                                value="true"
-                                               {% if userData['autoPay'] %}checked{% endif %}
-                                               class="form-check-input">
+                                               {% if userData['autoPay'] %}checked{% endif %}>
                                         <label class="form-check-label"
-                                               for="autoPay-on">{{ 'site.cp.settings.autoPay.form.on' | language }}</label>
+                                               for="nightMode-on">{{ 'site.cp.settings.autoPay.form.on' | language }}</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="autoPay-off" name="autoPay"
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="autoPay-off" name="autoPay"
                                                value="false"
-                                               {% if userData['autoPay'] == false %}checked{% endif %}
-                                               class="form-check-input">
+                                               {% if userData['autoPay'] == false %}checked{% endif %}>
                                         <label class="form-check-label"
-                                               for="autoPay-off">{{ 'site.cp.settings.autoPay.form.off' | language }}</label>
+                                               for="nightMode-off">{{ 'site.cp.settings.autoPay.form.off' | language }}</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.autoPay.form.btn' | language }}</button>
+                        <div class="d-flex justify-content-end pt-3">
+                            <button class="btn btn-primary"
+                                    type="submit">{{ 'site.cp.settings.autoPay.form.btn' | language }}</button>
                         </div>
                     </form>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-lg-6">
-                    <form method="post">
-                        <input type="hidden" name="action" value="updateEmail">
-                        <input type="hidden" name="csrf" value="{{ csrf }}">
+            </section>
 
-                        <div class="actions-toolbar py-2 mb-4">
-                            <h5 class="mb-1">{{ 'site.cp.settings.email' | language }}</h5>
-                            <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.email.description' | language }}</p>
-                        </div>
 
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="input-email"
-                                       class="form-control-label">{{ 'site.cp.settings.email.form.newEmail' | language }}</label>
-                                <input name="email" required type="email"
-                                       class="form-control form-control-prepend"
-                                       id="input-email"
-                                       placeholder="{{ 'site.cp.settings.email.form.newEmail.placeholder' | language }}">
-                            </div>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-envelope text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.email' | language }}</h2>
+                    </div>
+                    <div class="row align-items-center g-3 g-sm-4 pb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label"
+                                   for="email">{{ 'site.cp.settings.email.form.newEmail' | language }}</label>
+                            <input class="form-control" type="email" required name="email"
+                                   placeholder="{{ 'site.cp.settings.email.form.newEmail.placeholder' | language }}"
+                                   id="email">
                         </div>
-                        <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.email.form.btn' | language }}</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="d-flex justify-content-end pt-3">
+                        <button class="btn btn-primary ms-3" id="updateEmail"
+                                type="submit">{{ 'site.cp.settings.email.form.btn' | language }}</button>
+                    </div>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-lg-6">
-                    <form method="post">
-                        <input type="hidden" name="action" value="updatePassword">
-                        <input type="hidden" name="csrf" value="{{ csrf }}">
+            </section>
 
-                        <div class="actions-toolbar py-2 mb-4">
-                            <h5 class="mb-1">{{ 'site.cp.settings.password' | language }}</h5>
-                            <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.password.description' | language }}</p>
-                        </div>
 
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="input-oldPassword"
-                                       class="form-control-label">{{ 'site.cp.settings.email.form.oldPassword' | language }}</label>
-                                <input name="oldPassword" required type="password"
-                                       class="form-control form-control-prepend"
-                                       id="input-oldPassword"
-                                       placeholder="{{ 'site.cp.settings.email.form.oldPassword.placeholder' | language }}">
+            <!-- Password-->
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-lock-keyhole text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.password' | language }}</h2>
+                    </div>
+                    <div class="row align-items-center g-3 g-sm-4 pb-3">
+                        <div class="col-sm-6">
+                            <label class="form-label"
+                                   for="current-pass">{{ 'site.cp.settings.email.form.oldPassword' | language }}</label>
+                            <div class="password-toggle">
+                                <input class="form-control" type="password"
+                                       placeholder="{{ 'site.cp.settings.email.form.oldPassword.placeholder' | language }}"
+                                       name="oldPassword" required
+                                       id="current-pass">
+                                <label class="password-toggle-btn" aria-label="Show/hide password">
+                                    <input class="password-toggle-check" type="checkbox"><span
+                                            class="password-toggle-indicator"></span>
+                                </label>
                             </div>
                         </div>
-
-                        <div class="row">
-
-                            <div class="form-group col-md-6">
-                                <label for="input-newPassword"
-                                       class="form-control-label">{{ 'site.cp.settings.email.form.newPassword' | language }}</label>
-                                <input name="newPassword" required type="password"
-                                       class="form-control form-control-prepend"
-                                       id="input-newPassword"
-                                       placeholder="{{ 'site.cp.settings.email.form.newPassword.placeholder' | language }}">
+                        <div class="col-sm-6">
+                            <label class="form-label"
+                                   for="new-pass">{{ 'site.cp.settings.email.form.newPassword' | language }}</label>
+                            <div class="password-toggle">
+                                <input class="form-control" type="password" id="new-pass"
+                                       placeholder="{{ 'site.cp.settings.email.form.newPassword.placeholder' | language }}"
+                                       name="newPassword" required>
+                                <label class="password-toggle-btn" aria-label="Show/hide password">
+                                    <input class="password-toggle-check" type="checkbox"><span
+                                            class="password-toggle-indicator"></span>
+                                </label>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.password.form.btn' | language }}</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="d-flex justify-content-end pt-3">
+                        <button class="btn btn-primary ms-3"
+                                id="updatePassword">{{ 'site.cp.settings.password.form.btn' | language }}</button>
+                    </div>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-lg-6">
+            </section>
+
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-image text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.icon' | language }}</h2>
+                    </div>
                     <form method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="action" value="uploadIcon">
                         <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                        <div class="actions-toolbar py-2 mb-4">
-                            <h5 class="mb-1">{{ 'site.cp.settings.icon' | language }}</h5>
-                            <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.icon.description' | language }}</p>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <input type="file" name="file" id="file" class="form-control"/>
+                        <div class="row align-items-center g-3 g-sm-4 pb-3">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="file-input"></label>
+                                    <input class="form-control" name="file" type="file" id="file-input">
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.icon.form.btn' | language }}</button>
+                        <div class="d-flex justify-content-end pt-3">
+
+                            <div class="btn-group" role="group" aria-label="Solid button group">
+                                <button class="btn btn-primary" name="action" value="uploadIcon"
+                                        type="submit">{{ 'site.cp.settings.icon.form.btn' | language }}</button>
+                                {% if userData['iconId'] != 0 %}
+                                    <button class="btn btn-danger" name="action" value="removeIcon"
+                                            type="submit">{{ 'site.cp.settings.icon.form.btn.delete' | language }}</button>
+                                {% endif %}
+                            </div>
                         </div>
                     </form>
                 </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-lg-6">
+            </section>
+
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-snowflake text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.effects' | language }}</h2>
+                    </div>
                     <form method="post">
                         <input type="hidden" name="action" value="updateEffects">
                         <input type="hidden" name="csrf" value="{{ csrf }}">
 
-                        <div class="actions-toolbar py-2 mb-4">
-                            <h5 class="mb-1">{{ 'site.cp.settings.effects' | language }}</h5>
-                            <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.effects.description' | language }}</p>
-                        </div>
-
-                        <div class="row">
+                        <div class="row align-items-center g-3 g-sm-4 pb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="effects-on" name="effects"
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="effects-on" name="effects"
                                                value="on"
-                                               {% if userData['effects'] %}checked{% endif %}
-                                               class="form-check-input">
+                                               {% if userData['effects'] %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="effects-on">{{ 'site.cp.settings.effects.form.on' | language }}</label>
                                     </div>
-                                    <div class="custom-control custom-radio">
-                                        <input type="radio" id="effects-off" name="effects"
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="effects-off" name="effects"
                                                value="off"
-                                               {% if userData['effects'] == false %}checked{% endif %}
-                                               class="form-check-input">
+                                               {% if userData['effects'] == false %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="effects-off">{{ 'site.cp.settings.effects.form.off' | language }}</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4">
-                            <button type="submit"
-                                    class="btn btn-sm btn-primary">{{ 'site.cp.settings.effects.form.btn' | language }}</button>
+                        <div class="d-flex justify-content-end pt-3">
+                            <button class="btn btn-primary"
+                                    type="submit">{{ 'site.cp.settings.effects.form.btn' | language }}</button>
                         </div>
                     </form>
                 </div>
-            </div>
+            </section>
+
 
             {% if userData['dataRequest'] != "true" %}
-                <hr/>
-                <div class="row">
-                    <div class="col-lg-12">
+
+                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                    class="fa fa-compact-disc text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.settings.data' | language }}</h2>
+                            <p class="text-sm text-muted mb-0">
+                                &nbsp;&nbsp;{{ 'site.cp.settings.data.description' | language }}</p>
+                        </div>
                         <form method="post">
                             <input type="hidden" name="action" value="dataRequest">
                             <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.data' | language }}</h5>
-                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.data.description' | language }}</p>
-                            </div>
-                            <div class="mt-4">
-                                <button type="submit"
-                                        class="btn btn-sm btn-primary">{{ 'site.cp.settings.data.form.btn' | language }}</button>
+                            <div class="d-flex flex-column flex-sm-row justify-content-end pt-4 mt-sm-2 mt-md-3">
+                                <button class="btn btn-primary"
+                                        type="submit">{{ 'site.cp.settings.data.form.btn' | language }}
+                                </button>
                             </div>
                         </form>
                     </div>
-                </div>
+                </section>
             {% endif %}
-            <hr/>
-            <div class="row">
-                <div class="col-lg-12">
 
-                    <div class="actions-toolbar py-2 mb-4">
-                        <h5 class="mb-1">{{ 'site.cp.settings.delete' | language }}</h5>
-                        <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.delete.description' | language }}</p>
+            <!-- Delete account-->
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fas fa-trash text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.delete' | language }}</h2>
                     </div>
-
-                    <div class="mt-4">
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#deleteAccount">{{ 'site.cp.settings.delete.form.btn' | language }}</button>
+                    <div class="alert alert-warning d-flex mb-4"><i class="fa fa-exclamation-triangle fs-xl me-2"></i>
+                        <p class="mb-0">{{ 'site.cp.settings.delete.modal.description' | language }}</p>
                     </div>
-                    <div class="modal modal-danger fade" id="deleteAccount" tabindex="-1"
-                         role="dialog"
-                         aria-labelledby="modal_5" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                {% if checkCanDelete['success'] == true %}
+                    <div class="d-flex flex-column flex-sm-row justify-content-end pt-4 mt-sm-2 mt-md-3">
+                        <button class="btn btn-danger" type="button" data-bs-toggle="modal"
+                                data-bs-target="#deleteAccount"><i
+                                    class="fa fa-trash ms-n1 me-2"></i>{{ 'site.cp.settings.delete.form.btn' | language }}
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-                                    <form method="post">
-                                        <input type="hidden" name="action" value="deleteAccount">
-                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                        <div class="modal-header">
-                                            <h5 class="modal-title h6"
-                                                id="modal_title_6">{{ 'site.cp.settings.delete.modal' | language }}</h5>
-                                            <button type="button" class="btn" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <i class="fa-solid fa-close"></i>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="py-3 text-center">
-                                                <i class="fas fa-exclamation-circle fa-4x"></i>
-                                                <h5 class="heading h4 mt-4">{{ 'site.cp.settings.delete.modal.stop' | language }}</h5>
-                                                <p>{{ 'site.cp.settings.delete.modal.description' | language }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-white">{{ 'site.cp.settings.delete.modal.submit' | language }}</button>
-                                            <button type="button" class="btn btn-sm btn-white"
-                                                    data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                        </div>
-                                    </form>
-                                {% else %}
-                                    <div class="modal-header">
-                                        <h5 class="modal-title h6"
-                                            id="modal_title_6">{{ 'site.cp.settings.delete.modal' | language }}</h5>
-                                        <button type="button" class="btn" data-dismiss="modal"
-                                                aria-label="Close">
-                                            <i class="fa-solid fa-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="py-3 text-center">
-                                            <i class="fas fa-exclamation-circle fa-4x"></i>
-                                            <h5
-                                                    class="heading h4 mt-4">{{ 'site.cp.settings.delete.modal.deleteTeams' | language }}</h5>
-                                            <p>{{ 'site.cp.settings.delete.modal.deleteTeams.description' | language }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-sm btn-white"
-                                                data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                    </div>
-
-                                {% endif %}
+            <div class="modal modal-danger fade" id="deleteAccount" tabindex="-1" role="dialog"
+                 aria-labelledby="modal_5" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        {% if checkCanDelete == true %}
+                            <div class="modal-header">
+                                <h5 class="modal-title h6"
+                                    id="modal_title_6">{{ 'site.cp.settings.delete.modal' | language }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
-                        </div>
+                            <div class="modal-body">
+                                <div class="py-3 text-center">
+                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                    <h5 class="heading h4 mt-4">{{ 'site.cp.settings.delete.modal.stop' | language }}</h5>
+                                    <p>{{ 'site.cp.settings.delete.modal.description' | language }}</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary w-100 w-sm-auto mb-3 mb-sm-0"
+                                        data-bs-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
+                                <button type="button" id="deleteAccountSubmit"
+                                        class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.settings.delete.modal.submit' | language }}</button>
+                            </div>
+                        {% else %}
+                            <div class="modal-header">
+                                <h5 class="modal-title h6"
+                                    id="modal_title_6">{{ 'site.cp.settings.delete.modal' | language }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+
+                            </div>
+                            <div class="modal-body">
+                                <div class="py-3 text-center">
+                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                    <h5
+                                            class="heading h4 mt-4">{{ 'site.cp.settings.delete.modal.deleteTeams' | language }}</h5>
+                                    <p>{{ 'site.cp.settings.delete.modal.deleteTeams.description' | language }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <br><br>
         </div>
     </div>
-</div>
-</div>
 </div>
 {% include '/general/footer.twig' %}

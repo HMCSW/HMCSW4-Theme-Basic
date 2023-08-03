@@ -1,5 +1,5 @@
 {
-  "name": "basic",
+  "name": "basic-rework",
   "description": "Basic HMCSW4 theme",
   "version": "1.0.0",
   "keyWords": "HMCSW4",
@@ -7,18 +7,7 @@
   "fontAwesome": "https://cdn.hosmatic.com/fontAwesome/6.1",
   "defaultNightModeColor": "blue",
   "nightModeColors": {
-    "blue": {
-      "message": "site.cp.settings.nightMode.form.color.blue",
-      "device": "device.css",
-      "enabled_file": "dark.css",
-      "disabled_file": "light.css"
-    },
-    "black": {
-      "message": "site.cp.settings.nightMode.form.color.black",
-      "device": "device_dark.css",
-      "enabled_file": "dark_black.css",
-      "disabled_file": "light.css"
-    }
+    
   },
   "icons": {
     "default": {
