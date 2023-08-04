@@ -7,7 +7,12 @@
   "fontAwesome": "https://cdn.hosmatic.com/fontAwesome/6.1",
   "defaultNightModeColor": "blue",
   "nightModeColors": {
-    
+    "blue": {
+      "message": "site.cp.settings.nightMode.form.color.blue",
+      "device": "device.css",
+      "enabled_file": "dark.css",
+      "disabled_file": "light.css"
+    }
   },
   "icons": {
     "default": {
