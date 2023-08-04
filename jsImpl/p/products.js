@@ -1,13 +1,16 @@
 var callback;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-function addToCart(productId){
+function addToCart(btn){
+    var productId = btn.id;
+    var locationId = document.getElementById('location-'+productId).value;
+
     if(accessToken === ''){
         $('#cartModal-loginRequired').modal('show');
         return;
     }
 
     $.ajax({
-        data: {'product_id': productId},
+        data: {'product_id': productId, 'location_id': locationId},
         type: 'POST',
         url: apiURL + '/user/cart/addProduct',
         beforeSend: function (xhr) {
@@ -21,8 +24,11 @@ function addToCart(productId){
         }
     }).fail(function (err)  {
         if(err.responseJSON.response.error_message === "requireIdentityCheck"){
-            $("#cartModal-requireIdentityCheck" ).data( "productId", productId );
-            $('#cartModal-requireIdentityCheck').modal('show');
+            startIdentityCheck(function () {
+                addToCart(productId);
+            }, function () {
+                sendNotify(getMessage("general.action.message.failed"), 'danger');
+            });
         } else if(err.status === 404){
             $('#cartModal-notFound').modal('show');
         } else if(err.status === 429){
@@ -35,17 +41,14 @@ function addToCart(productId){
     });
 }
 
-function startAddressVerification() {
-    startIdentityCheck(0,
-        async function (answer, interval) {
-            $('#cartModal-requireIdentityCheck').modal('hide');
-            clearInterval(interval);
-            await sleep(200);
-            addToCart($("#cartModal-requireIdentityCheck").data("productId"));
-        },
-        function (err) {
-            $('#cartModal-requireIdentityCheck').modal('hide');
-            sendNotify(getMessage("general.action.message.failed"),'danger');
-        }
-    );
+window.onload = function(){
+
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+    }
+
+    $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').on('shown', function (e) {
+        window.location.hash = e.target.hash;
+    });
 }

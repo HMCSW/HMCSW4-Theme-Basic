@@ -2,203 +2,222 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                {% include 'general/actionMessage.twig' %}
-                <div class="row">
-                    {% include 'cp/terminateUser.twig' %}
-                    {% set count = 0 %}
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card  p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-money-check-pen text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.tab.subscription' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% if subscriptions|length == 0 %}
+                        <div class="col-lg-12 mt-4">
+                            <div class="alert alert-group alert-warning alert-icon" role="alert">
+                                <div class="alert-group-prepend"><span class="alert-group-icon text-"><i
+                                                class="fa fa-exclamation-triangle"></i></span>
+                                </div>
+                                <div class="alert-content">
+                                    <b>{{ 'site.cp.tab.subscription.noSubscription' | language }}</b>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+            {% set count = 0 %}
+            {% for subscription in subscriptions %}
+                <section class="card  py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                    <div class="card-body">
+                        <div class="row row-grid align-items-center">
+                            <div class="col-lg-5">
+                                <div class="media align-items-center">
+                                    <div class="media-body">
+                                        <div class="d-flex align-items-center ">
+                                            {% if subscription['state'] == 1 %}
+                                                <i class="fa-solid fa-play text-primary lead pe-1 me-2"></i>
+                                            {% elseif subscription['state'] == 2 %}
+                                                <i class="fa-solid fa-pause text-warning lead pe-1 me-2"></i>
+                                            {% elseif subscription['state'] == 3 %}
+                                                <i class="fa-solid fa-x text-danger lead pe-1 me-2"></i>
+                                            {% elseif subscription['state'] == 4 %}
+                                                <i class="fa-solid fa-clock text-warning lead pe-1 me-2"></i>
+                                            {% elseif subscription['state'] == 5 %}
+                                                <i class="fa-solid fa-wrench text-warning lead pe-1 me-2"></i>
+                                            {% endif %}
+                                            <h2 class="h4 mb-0">{{ subscription['name'] }}</h2>
+                                        </div>
+                                        <p class="text-muted lh-150 text-sm mb-0">
+                                            {{ 'site.cp.subscription.expireOn'|language|replace({'@on': subscription['expire_at']|date }) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
 
-                    {% for subscription in subscriptions %}
-                        <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
-                            <div class="card-body">
-                                <div class="row row-grid align-items-center">
-                                    <div class="col-lg-5">
-                                        <div class="media align-items-center">
-                                            <div class="media-body">
-                                                <div class="d-flex align-items-center ">
-                                                    {% if subscription['state'] == 1 %}
-                                                        <i class="fa-solid fa-play text-primary lead pe-1 me-2"></i>
-                                                    {% elseif subscription['state'] == 2 %}
-                                                        <i class="fa-solid fa-pause text-warning lead pe-1 me-2"></i>
-                                                    {% elseif subscription['state'] == 3 %}
-                                                        <i class="fa-solid fa-x text-danger lead pe-1 me-2"></i>
-                                                    {% elseif subscription['state'] == 4 %}
-                                                        <i class="fa-solid fa-clock text-warning lead pe-1 me-2"></i>
-                                                    {% elseif subscription['state'] == 5 %}
-                                                        <i class="fa-solid fa-wrench text-warning lead pe-1 me-2"></i>
-                                                    {% endif %}
-                                                    <h2 class="h4 mb-0">{{ subscription['name'] }}</h2>
-                                                </div>
-                                                <p class="text-muted lh-150 text-sm mb-0">
-                                                    {{ 'site.cp.subscription.expireOn'|language|replace({'@on': subscription['expire_at']|date }) }}
+                            <div class="col-lg-3">
+                                <div class="media align-items-center">
+
+                                    {{ subscription['amount'] | creditsToEuro }}{{ "symbol"|currency }}
+                                    {% if subscription['period'] == "monthly" %}
+                                        {{ 'general.time.monthly' | language }}
+                                    {% elseif subscription['period'] == "yearly" %}
+                                        {{ 'general.time.yearly' | language }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-auto flex-fill mt-4 mt-sm-0 text-sm-right">
+                                {% if subscription['state'] == 1 %}
+                                    <div class="btn-group" role="group" aria-label="Outline button group">
+                                        <button type="button" data-bs-toggle="modal"
+                                                data-bs-target="#sub-{{ subscription['subscription_id'] }}-cancelModal"
+                                                class="btn btn-outline-danger">{{ 'site.cp.subscription.cancelBtn'|language }}</button>
+                                        <button type="button" data-bs-toggle="modal"
+                                                data-bs-target="#sub-{{ subscription['subscription_id'] }}-manage"
+                                                class="btn btn-outline-info">{{ 'site.cp.subscription.manageBtn'|language }}</button>
+                                    </div>
+                                {% elseif subscription['state'] == 2 %}
+                                    <div class="btn-group" role="group" aria-label="Outline button group">
+                                        <button type="button" data-bs-toggle="modal"
+                                                data-bs-target="#sub-{{ subscription['subscription_id'] }}-reactivateModal"
+                                                class="btn btn-outline-warning">{{ 'site.cp.subscription.reactivateModal'|language }}</button>
+                                        <button type="button" data-bs-toggle="modal"
+                                                data-bs-target="#sub-{{ subscription['subscription_id'] }}-manage"
+                                                class="btn btn-outline-info">{{ 'site.cp.subscription.manageBtn'|language }}</button>
+                                    </div>
+                                {% else %}
+                                    <div class="btn-group" role="group" aria-label="Outline button group">
+                                        <button type="button" data-bs-toggle="modal"
+                                                data-bs-target="#sub-{{ subscription['subscription_id'] }}-manage"
+                                                class="btn btn-outline-info">{{ 'site.cp.subscription.manageBtn'|language }}</button>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="modal
+                 fade" id="sub-{{ subscription['subscription_id'] }}-manage"
+                                 tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">{{ subscription['name'] }}</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="py-3 text-center">
+                                                <i class="fas fa-money-check-alt fa-4x"></i>
+                                                <h5 class="heading h4 mt-4">{{ 'site.cp.subscription.editActive.payment' | language }}</h5>
+                                                <form method="post">
+                                                    <input type="hidden" name="action" value="setMethod">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                    <input type="hidden" name="subscription_id"
+                                                           value="{{ subscription['subscription_id'] }}">
+
+                                                    <label for="method_id"
+                                                           class="form-label">{{ 'site.cp.subscription.editActive.payment.method' | language }}</label>
+                                                    <select id="method_id" name="method_id" class="form-select"
+                                                            onchange="this.form.submit()">
+                                                        <option {% if subscription['method_id'] == 0 %}selected{% endif %}
+                                                                value="0">{{ 'site.cp.subscription.editActive.payment.method.manuel' | language }}</option>
+                                                        {% for methodType in methods %}
+                                                            {% for method in methodType %}
+                                                                <option {% if subscription['method_id'] == method['method_id'] %}selected{% endif %}
+                                                                        value="{{ method['method_id'] }}">{{ method['description'] }}</option>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </form>
+                                                <hr class="mt-4 mb-4"/>
+                                                <h5 class="h5">{{ 'site.cp.subscription.editActive.manuelRenew' | language }}</h5>
+                                                <h6 class="h6">{{ 'site.cp.subscription.editActive.manuelRenew.amount'|language|replace({'@amount': subscription['amount']|creditsToEuro ~ "symbol"|currency }) }}</h6>
+                                                <form method="post">
+                                                    <input type="hidden" name="subscription_id"
+                                                           value="{{ subscription['subscription_id'] }}">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                    <input type="hidden" name="action" value="manuelRenew">
+                                                    <button type="submit"
+                                                            class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.subscription.editActive.manuelRenew.btn' | language }}</button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal modal-danger fade"
+                                 id="sub-{{ subscription['subscription_id'] }}-cancelModal"
+                                 tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">{{ 'site.cp.subscription.cancel' | language }}</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="py-3 text-center">
+                                                <i class="fas fa-exclamation-circle fa-4x"></i>
+                                                <h5 class="heading h4 mt-4">{{ 'site.cp.subscription.cancel.title' | language }}</h5>
+                                                <p>{{ 'site.cp.subscription.cancel.description' | language }}
                                                 </p>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-lg-3">
-                                        <div class="media align-items-center">
-
-                                            {{ subscription['amount'] | creditsToEuro }}{{ "symbol"|currency }}
-                                            {% if subscription['period'] == "monthly" %}
-                                                {{ 'general.time.monthly' | language }}
-                                            {% elseif subscription['period'] == "yearly" %}
-                                                {{ 'general.time.yearly' | language }}
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="col-auto flex-fill mt-4 mt-sm-0 text-sm-right">
-                                        {% if subscription['state'] == 1 %}
-                                            <div class="btn-group" role="group" aria-label="Outline button group">
-                                                <button type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#sub-{{ subscription['subscription_id'] }}-cancelModal"
-                                                        class="btn btn-outline-danger">{{ 'site.cp.subscription.cancelBtn'|language }}</button>
-                                                <button type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#sub-{{ subscription['subscription_id'] }}-manage"
-                                                        class="btn btn-outline-info">{{ 'site.cp.subscription.manageBtn'|language }}</button>
-                                            </div>
-                                        {% elseif subscription['state'] == 2 %}
-                                            <div class="btn-group" role="group" aria-label="Outline button group">
-                                                <button type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#sub-{{ subscription['subscription_id'] }}-reactivateModal"
-                                                        class="btn btn-outline-warning">{{ 'site.cp.subscription.reactivateModal'|language }}</button>
-                                                <button type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#sub-{{ subscription['subscription_id'] }}-manage"
-                                                        class="btn btn-outline-info">{{ 'site.cp.subscription.manageBtn'|language }}</button>
-                                            </div>
-                                        {% else %}
-                                            <div class="btn-group" role="group" aria-label="Outline button group">
-                                                <button type="button" data-bs-toggle="modal"
-                                                        data-bs-target="#sub-{{ subscription['subscription_id'] }}-manage"
-                                                        class="btn btn-outline-info">{{ 'site.cp.subscription.manageBtn'|language }}</button>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="modal
-                 fade" id="sub-{{ subscription['subscription_id'] }}-manage"
-                                         tabindex="-1" role="dialog">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">{{ subscription['name'] }}</h4>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="py-3 text-center">
-                                                        <i class="fas fa-money-check-alt fa-4x"></i>
-                                                        <h5 class="heading h4 mt-4">{{ 'site.cp.subscription.editActive.payment' | language }}</h5>
-                                                        <form method="post">
-                                                            <input type="hidden" name="action" value="setMethod">
-                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                            <input type="hidden" name="subscription_id"
-                                                                   value="{{ subscription['subscription_id'] }}">
-
-                                                            <label for="method_id" class="form-label" >{{ 'site.cp.subscription.editActive.payment.method' | language }}</label>
-                                                            <select id="method_id" name="method_id" class="form-select"
-                                                                    onchange="this.form.submit()">
-                                                                <option {% if subscription['method_id'] == 0 %}selected{% endif %}
-                                                                        value="0">{{ 'site.cp.subscription.editActive.payment.method.manuel' | language }}</option>
-                                                                {% for methodType in methods %}
-                                                                    {% for method in methodType %}
-                                                                        <option {% if subscription['method_id'] == method['method_id'] %}selected{% endif %}
-                                                                                value="{{ method['method_id'] }}">{{ method['description'] }}</option>
-                                                                    {% endfor %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </form>
-                                                        <hr class="mt-4 mb-4"/>
-                                                        <h5 class="h5">{{ 'site.cp.subscription.editActive.manuelRenew' | language }}</h5>
-                                                        <h6 class="h6">{{ 'site.cp.subscription.editActive.manuelRenew.amount'|language|replace({'@amount': subscription['amount']|creditsToEuro ~ "symbol"|currency }) }}</h6>
-                                                        <form method="post">
-                                                            <input type="hidden" name="subscription_id"
-                                                                   value="{{ subscription['subscription_id'] }}">
-                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                            <input type="hidden" name="action" value="manuelRenew">
-                                                            <button type="submit"
-                                                                    class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.subscription.editActive.manuelRenew.btn' | language }}</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal modal-danger fade"
-                                         id="sub-{{ subscription['subscription_id'] }}-cancelModal"
-                                         tabindex="-1" role="dialog">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">{{ 'site.cp.subscription.cancel' | language }}</h4>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="py-3 text-center">
-                                                        <i class="fas fa-exclamation-circle fa-4x"></i>
-                                                        <h5 class="heading h4 mt-4">{{ 'site.cp.subscription.cancel.title' | language }}</h5>
-                                                        <p>{{ 'site.cp.subscription.cancel.description' | language }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="modal-footer flex-column flex-sm-row">
-                                                    <form method="post">
-                                                        <input type="hidden" name="subscription_id"
-                                                               value="{{ subscription['subscription_id'] }}">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="action" value="cancel">
-                                                        <button type="submit"
-                                                                class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.subscription.cancel.btn' | language }}</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal modal-success fade"
-                                         id="sub-{{ subscription['subscription_id'] }}-reactivateModal"
-                                         tabindex="-1" role="dialog">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title h6"
-                                                        id="modal_title_6">{{ 'site.cp.subscription.reactivate' | language }}</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="py-3 text-center">
-                                                        <i class="fas fa-exclamation-circle fa-4x"></i>
-                                                        <h5 class="heading h4 mt-4">{{ 'site.cp.subscription.reactivate.title' | language }}</h5>
-                                                        <p>{{ 'site.cp.subscription.reactivate.description' | language }}
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div class="modal-footer flex-column flex-sm-row">
-                                                    <form method="post">
-                                                        <input type="hidden" name="subscription_id"
-                                                               value="{{ subscription['subscription_id'] }}">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="action" value="reactivate">
-                                                        <button type="submit"
-                                                                class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.subscription.reactivate.btn' | language }}</button>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                        <div class="modal-footer flex-column flex-sm-row">
+                                            <form method="post">
+                                                <input type="hidden" name="subscription_id"
+                                                       value="{{ subscription['subscription_id'] }}">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <input type="hidden" name="action" value="cancel">
+                                                <button type="submit"
+                                                        class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.subscription.cancel.btn' | language }}</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-                    {% endfor %}
-                </div>
-            </div>
+                            <div class="modal modal-success fade"
+                                 id="sub-{{ subscription['subscription_id'] }}-reactivateModal"
+                                 tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title h6"
+                                                id="modal_title_6">{{ 'site.cp.subscription.reactivate' | language }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="py-3 text-center">
+                                                <i class="fas fa-exclamation-circle fa-4x"></i>
+                                                <h5 class="heading h4 mt-4">{{ 'site.cp.subscription.reactivate.title' | language }}</h5>
+                                                <p>{{ 'site.cp.subscription.reactivate.description' | language }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer flex-column flex-sm-row">
+                                            <form method="post">
+                                                <input type="hidden" name="subscription_id"
+                                                       value="{{ subscription['subscription_id'] }}">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <input type="hidden" name="action" value="reactivate">
+                                                <button type="submit"
+                                                        class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.subscription.reactivate.btn' | language }}</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {% endfor %}
         </div>
     </div>
 </div>

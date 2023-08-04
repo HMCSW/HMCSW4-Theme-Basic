@@ -1,0 +1,43 @@
+<script>
+    root = document.getElementsByTagName('html')[0];
+    // window.onload = function () {
+    {% if nightMode == "device" %}
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setNightmode(true)
+    } else {
+        setNightmode(false)
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        const newColorScheme = e.matches ? 'dark' : 'light'
+        if (newColorScheme === "dark") {
+            setNightmode(true)
+        } else {
+            setNightmode(false)
+        }
+    });
+
+
+
+    {% elseif nightMode == "true" %}
+    setNightmode(true)
+    {% else %}
+    setNightmode(false)
+    {% endif %}
+    //}
+
+
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    async function setNightmode(state) {
+        if (state === true) {
+            root.setAttribute("data-bs-theme", "dark");
+        } else {
+            root.setAttribute("data-bs-theme", "light");
+        }
+    }
+
+
+
+</script>

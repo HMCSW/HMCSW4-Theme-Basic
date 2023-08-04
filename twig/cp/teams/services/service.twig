@@ -2,164 +2,157 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/teams/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-12">
-                        {% include '/general/actionMessage.twig' %}
-                        <div class="row">
-                            {% include 'cp/teams/services/include/info_nav.twig' %}
-                            <div class="col-sm-12 col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <br>
-                                        {% include 'cp/teams/services/include/lock.twig' %}
-                                        <br>
-                                        {% include 'cp/teams/services/include/serviceIcons.twig' %}
+        <!-- Page content-->
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <div class="row">
+                {% include 'cp/teams/services/include/info_nav.twig' %}
+                <div class="col-lg-12 pb-2 pb-sm-4">
+                    <section class="card  p-md-2 p-xl-3 p-xxl-4 h-100">
+
+                        <div class="card-body m-0 p-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    {% include 'cp/teams/services/include/lock.twig' %}
+                                </div>
+                                <div class="col-4">
+                                    <h6 class="text-center">
+                                        {{ service['service_id'] }}
+                                    </h6>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-end">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="card card-fluid">
-                                    <div class="card-body">
-                                        <br>
-                                        <h5 class="text-center"><b>{{ service['service_id'] }}</b></h5>
-                                        <h6 class="text-center">{{ service['name'] }}</h6>
-                                        <h6 class="text-center">{{ service['service_name'] }}</h6>
-                                        <br>
-                                        <h6 class="text-center">{{ 'site.cp.service.info.reinstall' | language }}</h6>
+                        </div>
+                        <div class="card-body m-0 p-3">
+                            <h4 class="text-center"><i class="fa-duotone fa-2x fa-server"></i></h4>
+                            <h6 class="text-center">{{ service['name'] }}</h6>
+                            <h6 class="text-center">{{ service['service_name'] }}</h6>
 
-                                        {% if service['locked'] == false and service['reinstalling'] == false and service['state'] == "1" and "team.service.reinstall"|checkTeamPermission %}
+                            <h5 class="text-center">{{ service['external']['name'] }}</h5>
+                        </div>
+                    </section>
+                </div>
 
-                                            <h6 class="text-center">
-                                                <a class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                                   data-bs-target="#reinstall">{{ 'site.cp.service.info.reinstall' | language }}</a>
-                                            </h6>
-                                            <div class="modal modal-danger fade" id="reinstall" tabindex="-1"
-                                                 role="dialog"
-                                                 aria-labelledby="reinstall" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title h6">{{ 'site.cp.service.info.reinstall.modal' | language }}</h5>
-                                                            <button type="button" class="btn" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <i class="fa-solid fa-close"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="py-3 text-center">
-                                                                <i class="fas fa-exclamation-circle fa-4x"></i>
-                                                                <h5
-                                                                        class="heading h4 mt-4">{{ 'site.cp.service.info.reinstall.modal.warn.title' | language }}</h5>
-                                                                <p>{{ 'site.cp.service.info.reinstall.modal.warn.description' | language }}</p>
+                <div class="col-lg-12 pb-2 pb-sm-4">
+                    <section class="card ">
+                        <div class="card-body">
+
+                            <ul class="nav nav-tabs  justify-content-center" id="myTab" role="tablist">
+
+                                {% include 'cp/teams/services/include/tabs_nav.twig' %}
+                                {% if "team.service.external.rdns"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                    <a href="#rDNS" class="nav-link" data-bs-toggle="tab"
+                                       role="tab">{{ 'site.cp.service.tab.basicService.rDNS' | language }}</a>
+                                {% endif %}
+
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+
+                                {% include 'cp/teams/services/include/tabs.twig' %}
+
+                                {% if "team.service.external.rdns"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                    <div class="tab-pane fade" id="rDNS" role="tabpanel" aria-labelledby="rDNS-tab">
+                                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
+                                            <i
+                                                    class="fa fa-mobile-signal text-primary lead pe-1 me-2"></i>
+                                            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.basicService.rDNS' | language }}</h2>
+                                            <div class="btn-group me-2 mb-2 ms-auto" role="group">
+                                                <button type="button" data-bs-toggle="modal" data-bs-target="#createRDns"
+                                                        class="btn btn-dark btn-icon">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal fade" id="createRDns" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered"
+                                                 role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5
+                                                                class="modal-title h6">{{ 'site.cp.service.tab.basicService.rDNS.create' | language }}</h5>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+
+                                                    <script>
+                                                        function rDnsSelect(select) {
+                                                            var rDns = select.options[select.selectedIndex].text;
+                                                            var arrayOfStrings = rDns.split("/");
+
+                                                            document.getElementById('rDns_name').value = arrayOfStrings[0];
+                                                        }
+                                                    </script>
+                                                    <div class="modal-body">
+
+                                                        <div class="row g-3">
+                                                            <div class="form-group">
+                                                                <label for="ip_id"
+                                                                       class="form-label">{{ 'site.cp.service.tab.basicService.rDNS.net' | language }}</label>
+                                                                <select name="ip_id" id="ip_id" class="form-select"
+                                                                        onchange="rDnsSelect(this);"
+                                                                        required>
+                                                                    <option disabled
+                                                                            selected>{{ 'site.cp.service.tab.basicService.rDNS.net.select' | language }}</option>
+                                                                    {% for address in data['rDnsAv']['ipv4'] %}
+                                                                        <option value="{{ address['ipv4_id'] }}"
+                                                                                content="{{ address['ipv4'] }}">{{ address['ipv4'] }}</option>
+                                                                    {% endfor %}
+                                                                    {% for address in data['rDnsAv']['ipv6'] %}
+                                                                        <option value="{{ address['ipv6_id'] }}"
+                                                                                content="{{ address['ipv6'] }}">{{ address['ipv6'] }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="rDns_name"
+                                                                       class="form-label">{{ 'site.cp.service.tab.basicService.rDNS.address' | language }}</label>
+                                                                <input id="rDns_name" class="form-control" name="name"
+                                                                       value="" placeholder="127.0.0.1"
+                                                                       required>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="form-label"
+                                                                       for="rDns_content">{{ 'site.cp.service.tab.basicService.rDNS.content' | language }}</label>
+                                                                <input id="rDns_content" class="form-control" name="content"
+                                                                       placeholder="mail.example.com" required>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer">
-                                                            <form method="POST">
-                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                                <input type="hidden" name="action" value="reinstall">
-                                                                <button type="submit"
-                                                                        class="btn btn-sm btn-white">{{ 'site.cp.service.info.reinstall.modal.submit' | language }}</button>
-                                                            </form>
-                                                            <button type="button" class="btn btn-sm btn-white"
-                                                                    data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" onclick="createRDNS(this);"
+                                                                class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        {% else %}
-                                            <h6 class="text-center"><a
-                                                        class="btn btn-warning btn-sm disabled">{{ 'site.cp.service.info.reinstall' | language }}</a>
-                                            </h6>
-                                        {% endif %}
-                                        <br>
-                                        {% if service['reinstalling'] == false and (service['state'] == "1" or service['state'] == "6") and "team.service.loginInService"|checkTeamPermission %}
-                                            <h6 class="text-center">{{ 'site.cp.service.info.login' | language }}</h6>
-                                            {% if service['host']['autoLogin'] == "true" %}
-                                                <h6 class="text-center">
-                                                    <form target="_blank" method="POST">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="action" value="login">
-                                                        <button type="submit" class="btn btn-primary btn-sm">Login
-                                                        </button>
-                                                    </form>
-                                                </h6>
-                                            {% else %}
-                                                <h6 class="text-center">{{ 'site.cp.service.info.login.notAvailable' | language }}</h6>
-                                            {% endif %}
-                                        {% endif %}
-                                        <br>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12 col-md-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
-
-                                            {% include 'cp/teams/services/include/tabs_nav.twig' %}
-
-                                            {% if service['host']['host_id'] != 0 %}
-                                                <li class="nav-item" role="presentation">
-                                                    <a class="nav-link" id="host-tab" data-bs-toggle="tab" href="#host"
-                                                       role="tab" aria-controls="host"
-                                                       aria-selected="false">{{ 'site.cp.service.tab.host' | language }}
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-
-                                        <div class="tab-content" id="myTabContent">
-
-                                            {% include 'cp/teams/services/include/tabs.twig' %}
-
-                                            {% if service['host']['host_id'] != 0 %}
-                                                <div class="tab-pane fade" id="host" role="tabpanel"
-                                                     aria-labelledby="host-tab">
-                                                    <br>
-                                                    <h5
-                                                            class="text-left">{{ 'site.cp.service.tab.host' | language }}</h5>
-                                                    <br>
-                                                    <h6>{{ 'site.cp.service.tab.host.name' | language }}</h6>
-                                                    <h6><b>{{ service['host']['name'] }}</b></h6>
-                                                    <br>
-                                                    <h6>{{ 'site.cp.service.tab.host.domain' | language }}</h6>
-                                                    <h6><b>{{ service['host']['domain'] }}</b></h6>
-                                                    <br>
-                                                    <h6>{{ 'site.cp.service.tab.host.ipaddress' | language }}</h6>
-                                                    <h6><b>{{ service['host']['ip']['v4'] }}</b> /
-                                                        <b>{{ service['host']['ip']['v6'] }}</b></h6>
-                                                    <br>
-                                                    <h6>{{ 'site.cp.service.tab.host.state' | language }}</h6>
-                                                    <h6><b>
-                                                            {% if service['host']['state'] == 1 %}
-                                                                <span
-                                                                        style="color:#40FF00">{{ 'general.hosts.state.1' | language }}</span>
-                                                            {% elseif service['host']['state'] == 2 %}
-                                                                <span
-                                                                        style="color:#FFBF00">{{ 'general.hosts.state.2' | language }}</span>
-                                                            {% elseif service['host']['state'] == 2 %}
-                                                                <span
-                                                                        style="color:#FF0000">{{ 'general.hosts.state.3' | language }}</span>
-                                                            {% else %}
-                                                                <span
-                                                                        style="color:#FF0000">{{ 'general.hosts.state.error' | language }}</span>
-                                                            {% endif %}
-                                                        </b></h6>
-                                                    <br>
-                                                </div>
-                                            {% endif %}
+                                        </div>
 
 
+                                        <div class="row g-3">
+
+                                            <div class="table-responsive">
+                                                <table class="table align-middle" id="rdns">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>{{ 'site.cp.service.tab.basicService.rDNS.address' | language }}</td>
+                                                        <td>{{ 'site.cp.service.tab.basicService.rDNS.content' | language }}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="rdns_body">
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>

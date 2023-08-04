@@ -59,6 +59,44 @@ function validRecaptcha(){
     });
 }
 
+function createOrder(sessionCode){
+    $.ajax({
+        data: {'amount': amount, sessionCode: sessionCode},
+        type: 'POST',
+        url: apiURL + '/user/order/startTopUp',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer '+ accessToken);
+        },
+    }).done(function (answer) {
+        if(answer.success === true){
+            if(answer.response.requireIdentityCheck === true) {
+                startIdentityCheck(function () {
+                    createOrder(null);
+                }, function () {
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                });
+            } else if(answer.response.requireSessionCode === true){
+                startTwoFactorConfirmation(answer.response.sessionCode, function () {
+                    createOrder(answer.response.sessionCode);
+                }, function () {
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                });
+            } else {
+                startPayment(answer.response.order_id, paymentMethod);
+            }
+
+        } else {
+            sendNotify(getMessage("general.action.message.failed"), 'danger');
+            unhideBTN();
+        }
+    }).fail(function (err)  {
+        sendNotify(getMessage("general.action.message.failed"), 'danger');
+        unhideBTN();
+    });
+}
+
 function startOrder(){
     hideBTN();
     if(!isCaptchaChecked){
@@ -70,25 +108,7 @@ function startOrder(){
         url: apiURL + '/auth/captcha'
     }).done(function (answer) {
         if(answer.success === true){
-            $.ajax({
-                data: {'amount': amount},
-                type: 'POST',
-                url: apiURL + '/user/order/startTopUp',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer '+ accessToken);
-                },
-            }).done(function (answer) {
-                if(answer.success === true){
-                    startPayment(answer.response.order_id, paymentMethod);
-
-                } else {
-                    sendNotify(getMessage("general.action.message.failed"), 'danger');
-                    unhideBTN();
-                }
-            }).fail(function (err)  {
-                sendNotify(getMessage("general.action.message.failed"), 'danger');
-                unhideBTN();
-            });
+            createOrder(null);
         } else {
             sendNotify(getMessage("general.action.message.failed"), 'danger');
             unhideBTN();

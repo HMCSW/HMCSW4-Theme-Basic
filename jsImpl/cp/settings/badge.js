@@ -8,7 +8,7 @@ badges.sortable({
         $.ajax({
             data: data,
             type: 'POST',
-            url: apiUrl + '/user/settings/badges/sort',
+            url: apiURL + '/user/settings/badges/sort',
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
             },

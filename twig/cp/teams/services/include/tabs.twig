@@ -1,426 +1,547 @@
 <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-  <br>
-  <h5 class="text-left">{{ 'site.cp.service.tab.info' | language }}</h5>
-  <br>
-  <h6>{{ 'site.cp.service.tab.info.service_name' | language }}</h6>
-  <h6><b>{{ service['service_name'] }}
-      {% if "team.service.setName"|checkTeamPermission %}
-        <button type="button" class="btn btn-sm btn-icon-only" data-bs-toggle="modal" data-bs-target="#setAccessName"><span
-            class="btn-inner--icon"><i class="fa fa-pen"></i></span></button>
-      {% endif %}</b>
-  </h6>
-  {% if "team.service.setName"|checkTeamPermission %}
-    <div class="modal fade" id="setAccessName" tabindex="-1" role="dialog" aria-labelledby="setAccessName"
-         aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ 'site.cp.service.setName' | language }}</h5>
-            <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <form method="post">
-            <input type="hidden" name="csrf" value="{{ csrf }}">
-            <input type="hidden" name="action" value="setAccessName">
-            <div class="modal-body">
-              <div class="form-group">
-                <label for="accessName"
-                       class="form-control-label">{{ 'site.cp.service.setName.form' | language }}</label>
-                <input class="form-control" id="accessName" name="name" value="{{ service['service_name'] }}"
-                       placeholder="{{ service['name'] }}">
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary"
-                      data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-              <button type="submit" class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-            </div>
-          </form>
-        </div>
-      </div>
+    <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                class="fa fa-info text-primary lead pe-1 me-2"></i>
+        <h2 class="h4 mb-0">{{ 'site.cp.service.tab.info' | language }}</h2>
     </div>
-  {% endif %}
-  <br>
+    <h6>{{ 'site.cp.service.tab.info.service_name' | language }}</h6>
+    <h6><b>{{ service['service_name'] }}
+            {% if "team.service.setName"|checkTeamPermission %}
+                <button type="button" class="btn btn-icon btn-sm btn-outline-primary" data-bs-toggle="modal"
+                        data-bs-target="#setAccessName"><i class="fa fa-pen"></i></button>
+            {% endif %}</b>
+    </h6>
+    {% if "team.service.setName"|checkTeamPermission %}
+        <div class="modal fade" id="setAccessName" tabindex="-1" role="dialog" aria-labelledby="setAccessName"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="setAccessName">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ 'site.cp.service.setName' | language }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
 
-  {% if service['type']['hostType'] == "RB_PleskLicense" %}
-    <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
-    <h6><b>{{ service['name'] }}</b> ({{ service['package']['external_name'] }})</h6>
-    <br>
-    {% if service['state'] == 1 or service['state'] == 6 %}
-      <h6>{{ 'site.cp.service.tab.info.plesk_license.key' | language }}</h6>
-      <h6><b>{{ license['external']['key'] }}</b></h6>
-      <br>
-      <h6>{{ 'site.cp.service.tab.info.plesk_license.license' | language }}</h6>
-      <h6><b>{{ license['external']['license'] }}</b></h6>
-      <br>
+                                <div class="form-group">
+                                    <label for="accessName"
+                                           class="form-label">{{ 'site.cp.service.setName.form' | language }}</label>
+                                    <input class="form-control" id="accessName" name="name"
+                                           value="{{ service['service_name'] }}"
+                                           placeholder="{{ service['name'] }}">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit"
+                                    class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     {% endif %}
-  {% elseif service['type']['hostType'] == "pterodactyl" %}
-    <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
-    <h6><b>{{ service['name'] }}</b></h6>
     <br>
 
-    <h6>{{ 'site.cp.service.tab.info.egg_name' | language }}</h6>
-    <h6><b>{{ service['package']['specs']['pterodactyl']['egg']['name'] }}</b></h6>
-    <br>
-
-    <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['disk'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['disk'] }}GB
-        {% endif %}
-      </b>
-    </h6>
-    <br>
-
-    <h6>{{ 'site.cp.service.tab.info.database' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['databases'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['databases'] }}
-        {% endif %}
-      </b>
-    </h6>
-    <br>
-
-    <h6>{{ 'site.cp.service.tab.info.subdomain' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['subdomains'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['subdomains'] }}
-        {% endif %}
-      </b>
-    </h6>
-    <br>
-
-    <h6>{{ 'site.cp.service.tab.info.memory' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['memory'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['memory'] }}MB
-        {% endif %}
-      </b>
-    </h6>
-  {% elseif service['type']['hostType'] == "teamspeak_server" %}
-    <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
-    <h6><b>{{ service['name'] }}</b></h6>
-    <br>
-    <h6>{{ 'site.cp.service.tab.info.teamspeak.slots' | language }}</h6>
-    <h6><b>{{ service['package']['service_info']['slots'] }}</b></h6>
-    <br>
-    {% if service['state'] == 1 or service['state'] == 6 %}
-      <h6>{{ 'site.cp.service.tab.info.teamspeak.host' | language }}</h6>
-      <h6><b>{{ teamspeak['internal']['host']['ip'] }}
-          :{{ teamspeak['internal']['host']['port'] }}</b></h6>
-      <br>
-    {% endif %}
-
-  {% elseif service['type']['hostType'] == "teamspeak_instance" %}
-    {% if service['state'] == 1 or service['state'] == 6 %}
-      <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.slots.current' | language }}</h6>
-      <h6>
-        <b>{{ teamspeak['external']['info']['slots'] }} {% if teamspeak['external']['info']['slots'] < service['package']['specs']['teamspeakInstance']['slots'] %} ({{ service['package']['specs']['teamspeakInstance']['slots'] }}){% endif %}</b>
-      </h6>
-      <br>
-      <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.servers.current' | language }}</h6>
-      <h6><b>{{ teamspeak['external']['info']['server'] }}</b></h6>
-      <br>
-      <h6>{{ 'site.cp.service.tab.info.teamspeak.host' | language }}</h6>
-      <h6><b>{{ teamspeak['internal']['host']['ip'] }}</b></h6>
-      <br>
-      <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.credits' | language }}</h6>
-      <h6>
-        <b>{{ service['package']['specs']['teamspeakInstance']['credits']|creditsToEuro }}{{ "symbol"|currency }} {{ 'site.cp.service.tab.info.teamspeakInstance.credits.slots' | language }}</b>
-      </h6>
-      <h6><b> + {{ service['package']['specs']['teamspeakInstance']['base']|creditsToEuro }}{{ "symbol"|currency }}</b>
-      </h6>
-      <br>
-    {% endif %}
-  {% elseif service['type']['hostType'] == "plesk" %}
+    {% if service['type']['hostType'] == "mailCow" %}
     <h6>{{ 'site.cp.service.tab.info.domain' | language }}</h6>
     <h6>
-      <b>
-        {% if service['package']['specs']['domains'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['domains'] }}
-        {% endif %}
-      </b>
-    </h6>
-    <br>
-
-    <h6>{{ 'site.cp.service.tab.info.subdomain' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['subdomains'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['subdomains'] }}
-        {% endif %}
-      </b>
+        <b>
+            {% if service['package']['specs']['domains'] == "-1" %}
+                {{ 'site.products.specs.unlimited' | language }}
+            {% else %}
+                {{ service['package']['specs']['domains'] }}
+            {% endif %}
+        </b>
     </h6>
     <br>
 
     <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
     <h6>
-      <b>
-        {% if service['package']['specs']['disk'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['disk'] }}GB
-        {% endif %}
-        {% if service['package']['specs']['disk_type'] == "ssd" %}
-          (SSD)
-        {% elseif service['package']['specs']['disk_type'] == "nvme" %}
-          (NVME)
-        {% elseif service['package']['specs']['disk_type'] == "hdd" %}
-          (HDD)
-        {% elseif service['package']['specs']['disk_type'] == "floppy" %}
-          (Floppy)
-        {% endif %}
-      </b>
+        <b>
+            {% if service['package']['specs']['disk'] == "-1" %}
+                {{ 'site.products.specs.unlimited' | language }}
+            {% else %}
+                {{ service['package']['specs']['disk'] }}GB
+            {% endif %}
+        </b>
     </h6>
     <br>
 
-    <h6>{{ 'site.cp.service.tab.info.database' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['databases'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['databases'] }}
-        {% endif %}
-      </b>
-    </h6>
-    <br>
     <h6>{{ 'site.cp.service.tab.info.email' | language }}</h6>
     <h6>
-      <b>
-        {% if service['package']['specs']['emails'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['emails'] }}
-        {% endif %}
-      </b>
+        <b>
+            {% if service['package']['specs']['emails'] == "-1" %}
+                {{ 'site.products.specs.unlimited' | language }}
+            {% else %}
+                {{ service['package']['specs']['emails'] }}
+            {% endif %}
+        </b>
     </h6>
     <br>
+    {% elseif service['type']['hostType'] == "external" %}
+        {% if data['address']['ipv4'] is not empty or data['address']['ipv6'] is not empty %}
+            <br>
+            <h6>{{ 'site.cp.service.tab.info.basicService.address' | language }}</h6>
+            <div class="row g-1">
+                {% for address in data['address']['ipv4'] %}
+                    <div class="mb-1 col-lg-6">
+                        <div class="card h-100 rounded-3 p-3 ">
+                            <div class="d-flex align-items-center">
+                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv4'] }}
+                                    <div class="d-flex align-items-center">
+                                        <div class="fs-sm">
+                                            <div class="text-dark">{{ 'site.cp.service.tab.info.basicService.address.gateway' | language ~ ": " ~ address['ipv4_gateway'] }}</div>
+                                        </div>
+                                    </div>
+                                </h3>
+                            </div>
 
-    <h6>{{ 'site.cp.service.tab.info.traffic' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['traffic'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['traffic'] }}GB
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for address in data['address']['ipv6'] %}
+                    <div class="mb-1 col-lg-6">
+                        <div class="card h-100 rounded-3 p-3 ">
+                            <div class="d-flex align-items-center">
+                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv6'] }}
+                                    <div class="d-flex align-items-center">
+                                        <div class="fs-sm">
+                                            <div class="text-dark">{{ 'site.cp.service.tab.info.basicService.address.gateway' | language ~ ": " ~ address['ipv6_gateway'] }}</div>
+                                        </div>
+                                    </div>
+                                </h3>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-      </b>
-    </h6>
-  {% elseif service['type']['hostType'] == "proxmox" %}
-    <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
-    <h6><b>{{ service['name'] }}</b></h6>
-    <br>
-    <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
-    <h6>
-      <b>
-        {% if service['package']['specs']['disk'] == "-1" %}
-          {{ 'site.products.specs.unlimited' | language }}
-        {% else %}
-          {{ service['package']['specs']['disk'] }}GB
+    {% elseif service['type']['hostType'] == "RB_PleskLicense" %}
+        <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
+        <h6><b>{{ service['name'] }}</b> ({{ service['package']['external_name'] }})</h6>
+        <br>
+        {% if service['state'] == 1 or service['state'] == 6 %}
+            <h6>{{ 'site.cp.service.tab.info.plesk_license.key' | language }}</h6>
+            <h6><b>{{ license['external']['key'] }}</b></h6>
+            <br>
+            <h6>{{ 'site.cp.service.tab.info.plesk_license.license' | language }}</h6>
+            <h6><b>{{ license['external']['license'] }}</b></h6>
+            <br>
         {% endif %}
-        {% if service['package']['specs']['disk_type'] == "ssd" %}
-          (SSD)
-        {% elseif service['package']['specs']['disk_type'] == "nvme" %}
-          (NVME)
-        {% elseif service['package']['specs']['disk_type'] == "hdd" %}
-          (HDD)
-        {% elseif service['package']['specs']['disk_type'] == "floppy" %}
-          (Floppy)
-        {% endif %}
-      </b>
-    </h6>
-    <br>
-    <h6>{{ 'site.cp.service.tab.info.cpu' | language }}</h6>
-    <h6><b>{{ service['package']['specs']['cpu']/100 }}</b></h6>
-    <br>
-    <h6>{{ 'site.cp.service.tab.info.memory' | language }}</h6>
-    <h6><b>{{ service['package']['specs']['memory'] }}MB</b></h6>
-    <br>
-    <h6>{{ 'site.cp.service.tab.info.traffic' | language }}</h6>
-    <h6><b>{{ service['package']['specs']['traffic'] }}GB</b></h6>
-    <br>
-    <h6>{{ 'site.cp.service.tab.info.proxmox.address' | language }}</h6>
-    <h6>
-      <ul>
-        {% for address in proxmox['internal']['address']['ipv4'] %}
-          <li>
-            <b>{{ address['ipv4'] }}</b>
-          </li>
-        {% endfor %}
-        {% for address in proxmox['internal']['address']['ipv6'] %}
-          <li>
-            <b>{{ address['ipv6'] }}</b>
-          </li>
-        {% endfor %}
-      </ul>
-    </h6>
-    {% if service['reinstalling'] == "false" and (service['state'] == 1 or service['state'] == 6) %}
-      <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
-      <h6><b>{{ proxmox['external']['backups'] | length }}
-          / {{ service['package']['specs']['backups'] }}</b></h6>
-      <br>
-    {% endif %}
+    {% elseif service['type']['hostType'] == "pterodactyl" %}
+        <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
+        <h6><b>{{ service['name'] }}</b></h6>
+        <br>
 
-  {% elseif service['type']['hostType'] == "domain" %}
-  {% elseif service['type']['hostType'] == "ts3audiobot" %}
-  {% elseif service['type']['hostType'] == "teamspeak_instance" %}
-  {% elseif service['type']['hostType'] == "external" %}
-    <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
-    <h6><b>{{ service['name'] }}</b></h6>
-  {% endif %}
-  {% for name,value in service['package']['specs']['customSpecs'] %}
-    <br>
-    <h6>{{ name }}</h6>
-    <h6><b>{{ value }}</b></h6>
-  {% endfor %}
-  <br>
+        <h6>{{ 'site.cp.service.tab.info.egg_name' | language }}</h6>
+        <h6><b>{{ service['package']['specs']['pterodactyl']['egg']['name'] }}</b></h6>
+        <br>
 
-
-  {% if service['type']['hostType'] != "RB_Domain" and service['type']['hostType'] != "RB_PleskLicense" %}
-    {% if service['package']['service_info'] is iterable %}
-      {% if service['package']['service_info']|length != 0 %}
-        <h6>{{ 'site.cp.service.tab.info.extra' | language }}</h6>
+        <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
         <h6>
-          <ul>
-            {% for key, value in service['package']['service_info'] %}
-              <li>
-                <b>{{ key }}</b>: {{ value }}
-              </li>
-            {% endfor %}
-          </ul>
+            <b>
+                {% if service['package']['specs']['disk'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['disk'] }}GB
+                {% endif %}
+            </b>
         </h6>
         <br>
 
-      {% endif %}
+        <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['backups'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['backups'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.database' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['databases'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['databases'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+
+        <h6>{{ 'site.cp.service.tab.info.subdomain' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['subdomains'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['subdomains'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+
+        <h6>{{ 'site.cp.service.tab.info.memory' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['memory'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['memory'] }}MB
+                {% endif %}
+            </b>
+        </h6>
+    {% elseif service['type']['hostType'] == "teamspeak_server" %}
+        <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
+        <h6><b>{{ service['name'] }}</b></h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.teamspeak.slots' | language }}</h6>
+        <h6><b>{{ service['service_info']['slots'] }}</b></h6>
+        <br>
+        {% if service['state'] == 1 or service['state'] == 6 %}
+            <h6>{{ 'site.cp.service.tab.info.teamspeak.host' | language }}</h6>
+            <h6><b>{{ teamspeak['internal']['host']['ip'] ~":"~ teamspeak['internal']['host']['port'] }}</b></h6>
+            <br>
+        {% endif %}
+
+    {% elseif service['type']['hostType'] == "teamspeak_instance" %}
+        {% if service['state'] == 1 or service['state'] == 6 %}
+            <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.slots.current' | language }}</h6>
+            <h6>
+                <b>{{ teamspeak['external']['info']['slots'] }} {% if teamspeak['external']['info']['slots'] < service['package']['specs']['teamspeakInstance']['slots'] %} ({{ service['package']['specs']['teamspeakInstance']['slots'] }}){% endif %}</b>
+            </h6>
+            <br>
+            <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.servers.current' | language }}</h6>
+            <h6><b>{{ teamspeak['external']['info']['server'] }}</b></h6>
+            <br>
+            <h6>{{ 'site.cp.service.tab.info.teamspeak.host' | language }}</h6>
+            <h6><b>{{ teamspeak['internal']['host']['ip'] }}</b></h6>
+            <br>
+            <h6>{{ 'site.cp.service.tab.info.teamspeakInstance.credits' | language }}</h6>
+            <h6>
+                <b>{{ service['package']['specs']['teamspeakInstance']['credits']|creditsToEuro }}{{ "symbol"|currency }} {{ 'site.cp.service.tab.info.teamspeakInstance.credits.slots' | language }}</b>
+            </h6>
+            <h6><b>
+                    + {{ service['package']['specs']['teamspeakInstance']['base']|creditsToEuro }}{{ "symbol"|currency }}</b>
+            </h6>
+            <br>
+        {% endif %}
+    {% elseif service['type']['hostType'] == "plesk" %}
+        <h6>{{ 'site.cp.service.tab.info.domain' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['domains'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['domains'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+
+        <h6>{{ 'site.cp.service.tab.info.subdomain' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['subdomains'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['subdomains'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+
+        <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['disk'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['disk'] }}GB
+                {% endif %}
+                {% if service['package']['specs']['disk_type'] == "ssd" %}
+                    (SSD)
+                {% elseif service['package']['specs']['disk_type'] == "nvme" %}
+                    (NVME)
+                {% elseif service['package']['specs']['disk_type'] == "hdd" %}
+                    (HDD)
+                {% elseif service['package']['specs']['disk_type'] == "floppy" %}
+                    (Floppy)
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+
+        <h6>{{ 'site.cp.service.tab.info.database' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['databases'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['databases'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.email' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['emails'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['emails'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+
+        <h6>{{ 'site.cp.service.tab.info.traffic' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['traffic'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['traffic'] }}GB
+                {% endif %}
+            </b>
+        </h6>
+    {% elseif service['type']['hostType'] == "proxmox" %}
+        <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
+        <h6><b>{{ service['name'] }}</b></h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['disk'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['disk'] }}GB
+                {% endif %}
+                {% if service['package']['specs']['disk_type'] == "ssd" %}
+                    (SSD)
+                {% elseif service['package']['specs']['disk_type'] == "nvme" %}
+                    (NVME)
+                {% elseif service['package']['specs']['disk_type'] == "hdd" %}
+                    (HDD)
+                {% elseif service['package']['specs']['disk_type'] == "floppy" %}
+                    (Floppy)
+                {% endif %}
+            </b>
+        </h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.cpu' | language }}</h6>
+        <h6><b>{{ service['package']['specs']['cpu']/100 }}</b></h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.memory' | language }}</h6>
+        <h6><b>{{ service['package']['specs']['memory'] }}MB</b></h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.traffic' | language }}</h6>
+        <h6><b>{{ service['package']['specs']['traffic'] }}GB</b></h6>
+        <br>
+        <h6>{{ 'site.cp.service.tab.info.proxmox.address' | language }}</h6>
+        <div class="row g-1">
+            {% for address in proxmox['internal']['address']['ipv4'] %}
+                <div class="mb-1 col-lg-6">
+                    <div class="card h-100 rounded-3 p-3 ">
+                        <div class="d-flex align-items-center">
+                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv4'] }}
+                                <div class="d-flex align-items-center">
+                                    <div class="fs-sm">
+                                        <div class="text-dark">{{ 'site.cp.service.tab.info.proxmox.address.gateway' | language ~ ": " ~ address['ipv4_gateway'] }}</div>
+                                    </div>
+                                </div>
+                            </h3>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+            {% for address in proxmox['internal']['address']['ipv6'] %}
+                <div class="mb-1 col-lg-6">
+                    <div class="card h-100 rounded-3 p-3 ">
+                        <div class="d-flex align-items-center">
+                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv6'] }}
+                                <div class="d-flex align-items-center">
+                                    <div class="fs-sm">
+                                        <div class="text-dark">{{ 'site.cp.service.tab.info.proxmox.address.gateway' | language ~ ": " ~ address['ipv6_gateway'] }}</div>
+                                    </div>
+                                </div>
+                            </h3>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if service['reinstalling'] == "false" and (service['state'] == 1 or service['state'] == 6) %}
+            <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
+            <h6><b>{{ proxmox['response']['external']['backups'] | length }}
+                    / {{ service['package']['specs']['backups'] }}</b></h6>
+            <br>
+        {% endif %}
+
+    {% elseif service['type']['hostType'] == "domain" %}
+    {% elseif service['type']['hostType'] == "ts3audiobot" %}
+    {% elseif service['type']['hostType'] == "teamspeak_instance" %}
+    {% elseif service['type']['hostType'] == "external" %}
+        <h6>{{ 'site.cp.service.tab.info.name' | language }}</h6>
+        <h6><b>{{ service['name'] }}</b></h6>
     {% endif %}
-  {% endif %}
+    {% for name,value in service['package']['specs']['customSpecs'] %}
+        <br>
+        <h6>{{ name }}</h6>
+        <h6><b>{{ value }}</b></h6>
+    {% endfor %}
+    <br>
+
+
+    {% if service['type']['hostType'] != "RB_Domain" and service['type']['hostType'] != "RB_PleskLicense" %}
+        {% if service['package']['service_info'] is iterable %}
+            {% if service['package']['service_info']|length != 0 %}
+                <h6>{{ 'site.cp.service.tab.info.extra' | language }}</h6>
+                <h6>
+                    <ul>
+                        {% for key, value in service['package']['service_info'] %}
+                            <li>
+                                <b>{{ key }}</b>: {{ value }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </h6>
+                <br>
+
+            {% endif %}
+        {% endif %}
+    {% endif %}
 
 
 </div>
 
 {% if "owner"|checkTeamPermission %}
-  <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
-    <br>
-    <h5 class="text-left">{{ 'site.cp.service.tab.team' | language }}</h5>
-    <br>
-    <h6>{{ 'site.cp.service.tab.team.currentTeam'|language|replace({'@name': team['name']})|raw }}</h6>
+    <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
+        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                    class="fa fa-people-arrows text-primary lead pe-1 me-2"></i>
+            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.team' | language }}</h2>
+        </div>
 
-    {% if teams|length != 0 %}
-    <hr/>
-    <h5>{{ 'site.cp.service.tab.team.changeTeam' | language }}</h5>
-    <div class="col-lg-12">
-      <form method="post">
-        <input type="hidden" name="action" value="setTeam">
-        <input type="hidden" name="csrf" value="{{ csrf }}">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="teamId"
-                     class="form-control-label">{{ 'site.cp.service.tab.team.changeTeam.team' | language }}</label>
-              <select required name="team_id" id="teamId" class="form-select" required>
-                {% for team_id, team in teams %}
-                  <option value="{{ team_id }}">{{ team['name'] }}</option>
-                {% endfor %}
-              </select>
+        <div class="row g-3 mb-4">
+            <h6>{{ 'site.cp.service.tab.team.currentTeam'|language|replace({'@name': team['name']})|raw }}</h6>
+        </div>
+        {% if teams|length != 0 %}
+            <div class="row g-3 mb-4">
+                <hr/>
+                <div class="col-lg-12">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
+                        <i
+                                class="fa fa-repeat text-primary lead pe-1 me-2"></i>
+                        <h2 class="h5 mb-0">{{ 'site.cp.service.tab.team.changeTeam' | language }}</h2>
+                    </div>
+                    <form method="post">
+                        <input type="hidden" name="action" value="setTeam">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="teamId"
+                                           class="form-label">{{ 'site.cp.service.tab.team.changeTeam.team' | language }}</label>
+                                    <select required name="team_id" id="teamId" class="form-select " required>
+                                        {% for team_id, team in teams %}
+                                            <option value="{{ team_id }}">{{ team['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit"
+                                    class="btn btn-sm btn-primary">{{ 'site.cp.service.tab.team.changeTeam.setBtn' | language }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="mt-4">
-          <button type="submit"
-                  class="btn btn-sm btn-primary">{{ 'site.cp.service.tab.team.changeTeam.setBtn' | language }}
-          </button>
-        </div>
-      </form>
+        {% endif %}
     </div>
-    {% endif %}
-  </div>
 {% endif %}
 
 {% if "team.service.invoice"|checkTeamPermission %}
-  <div class="tab-pane fade" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
-    <br>
-    <h5 class="text-left">{{ 'site.cp.service.tab.invoice' | language }}</h5>
-    <br>
-    <div class="row">
-
-      <div class="col-sm-12 col-lg-5">
-        <h6 class="text-left">{{ 'site.cp.service.tab.invoice.overview' | language }}</h6>
-        {% if invoices|length == 0 %}
-          <h6 class="text-left">{{ 'site.cp.service.tab.invoice.nothing' | language }}</h6>
-        {% else %}
-          <table class="table">
-            <tbody>
-            {% for invoice in invoices %}
-              <tr>
-                <td>
-
-                  <h6>
-                    <b>
-                      {% if invoice['state'] == 1 %}
-                        <span style="color:#40FF00">{{ 'general.invoices.state.1' | language }}</span>
-                      {% elseif invoice['state'] == 2 %}
-                        <span style="color:#FFBF00">{{ 'general.invoices.state.2' | language }}</span>
-                      {% elseif invoice['state'] == 3 %}
-                        <span style="color:#FF0000">{{ 'general.invoices.state.3' | language }}</span>
-                      {% elseif invoice['state'] == 4 %}
-                        <span style="color:#ff0000">{{ 'general.invoices.state.4' | language }}</span>
-                      {% elseif invoice['state'] == 5 %}
-                        <span style="color:#FFBF00">{{ 'general.invoices.state.pending' | language }}</span>
-                      {% else %}
-                        <span style="color:#FF0000">{{ 'general.invoices.state.error' | language }}</span>
-                      {% endif %}
-                    </b>
-                  </h6>
-                  <h6>{{ 'site.cp.service.tab.invoice.created' | language }}
-                    : {{ invoice['created_at']|date("d.m.Y H:i") }}</h6>
-                  <h6>{{ 'site.cp.service.tab.invoice.pay_to' | language }}
-                    : {{ invoice['pay_to']|date("d.m.Y H:i") }}</h6>
-                  <h6>{{ 'site.cp.service.tab.invoice.id' | language }}: {{ invoice['invoice_id'] }}</h6>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
-      </div>
-      {% if "owner"|checkTeamPermission and paymentMethods|length != 0 %}
-        <div class="col-sm-12 col-lg-2 d-none d-xl-block"></div>
-        <div class="col-sm-12 col-lg-5">
-          <h6 class="text-left">{{ 'site.cp.service.tab.invoice.automaticPayment' | language }}</h6>
-          <form method="post">
-            <input type="hidden" name="action" value="setPaymentMethod">
-            <input type="hidden" name="csrf" value="{{ csrf }}">
-            <label for="method_id">Method</label>
-            <select id="method_id" name="method_id" class="form-control" onchange="this.form.submit()">
-              <option {% if service['allowAutomaticPayment']['id'] == 0 %}selected{% endif %} value="0">{% if userData['autoPay'] == true %}Balance{% else %}Manuell{% endif %}</option>
-              {% for methodType in paymentMethods %}
-                {% for method in methodType %}
-                  <option {% if service['allowAutomaticPayment']['id'] == method['method_id'] %}selected{% endif %}
-                          value="{{ method['method_id'] }}">{{ method['description'] }}</option>
-                {% endfor %}
-              {% endfor %}
-            </select>
-          </form>
+    <div class="tab-pane fade" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
+        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                    class="fa fa-balance-scale text-primary lead pe-1 me-2"></i>
+            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.invoice' | language }}</h2>
+            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                <a href="{{ dashURL }}/invoice" target="_blank" class="btn btn-dark btn-icon">
+                    <i class="fa-solid fa-eye"></i>
+                </a>
+            </div>
         </div>
-      {% endif %}
+
+        <div class="row">
+
+            <div class="col-sm-12 col-lg-6">
+                <h6 class="text-left">{{ 'site.cp.service.tab.invoice.overview' | language }}</h6>
+                {% if invoices|length == 0 %}
+                    <h6 class="text-left">{{ 'site.cp.service.tab.invoice.nothing' | language }}</h6>
+                {% else %}
+                    {% for invoice in invoices %}
+                        <dl class="row">
+                            <dt class="col-sm-6">
+                                {% if invoice['state'] == 1 %}
+                                    <span style="color:#40FF00">{{ 'general.invoices.state.1' | language }}</span>
+                                {% elseif invoice['state'] == 2 %}
+                                    <span style="color:#FFBF00">{{ 'general.invoices.state.2' | language }}</span>
+                                {% elseif invoice['state'] == 3 %}
+                                    <span style="color:#FF0000">{{ 'general.invoices.state.3' | language }}</span>
+                                {% elseif invoice['state'] == 4 %}
+                                    <span style="color:#ff0000">{{ 'general.invoices.state.4' | language }}</span>
+                                {% elseif invoice['state'] == 5 %}
+                                    <span style="color:#FFBF00">{{ 'general.invoices.state.pending' | language }}</span>
+                                {% else %}
+                                    <span style="color:#FF0000">{{ 'general.invoices.state.error' | language }}</span>
+                                {% endif %}
+                                &nbsp;
+                            </dt>
+                            <dd class="col-sm-6"></dd>
+                            <dt class="col-sm-6">{{ 'site.cp.service.tab.invoice.created' | language }}&nbsp;</dt>
+                            <dd class="col-sm-6">{{ invoice['created_at']|date }}</dd>
+                            <dt class="col-sm-6">{{ 'site.cp.service.tab.invoice.pay_to' | language }}&nbsp;</dt>
+                            <dd class="col-sm-6">{{ invoice['pay_to']|date }}</dd>
+                            <dt class="col-sm-6">{{ 'site.cp.service.tab.invoice.id' | language }}&nbsp;</dt>
+                            <dd class="col-sm-6">{{ invoice['invoice_id'] }}</dd>
+                        </dl>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% if "owner"|checkTeamPermission and paymentMethods|length != 0 %}
+                <div class="col-sm-12 col-lg-6">
+                    <h6 class="text-left">{{ 'site.cp.service.tab.invoice.automaticPayment' | language }}</h6>
+                    <form method="post">
+                        <input type="hidden" name="action" value="setPaymentMethod">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <label for="method_id"
+                               class="form-label">{{ 'site.cp.service.tab.invoice.automaticPayment.method' | language }}</label>
+                        <select id="method_id" name="method_id" class="form-select" onchange="this.form.submit()">
+                            <option {% if service['allowAutomaticPayment']['id'] == 0 %}selected{% endif %}
+                                    value="0">{% if userData['autoPay'] == true %}{{ 'site.cp.service.tab.invoice.automaticPayment.method.balance' | language }}{% else %}{{ 'site.cp.service.tab.invoice.automaticPayment.method.manuel' | language }}{% endif %}</option>
+                            {% for methodType in paymentMethods %}
+                                {% for method in methodType %}
+                                    <option {% if service['allowAutomaticPayment']['id'] == method['method_id'] %}selected{% endif %}
+                                            value="{{ method['method_id'] }}">{{ method['description'] }}</option>
+                                {% endfor %}
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
     </div>
-  </div>
 {% endif %}

@@ -2,22 +2,28 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-
-                    {% include '/general/actionMessage.twig' %}
-                    <div class="row">
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-bell text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.tab.maillog' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/settings" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            <a href="{{ dashURL }}" class="btn btn-secondary btn-icon">
+                                <i class="fa-solid fa-arrow-left-long-to-line"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row g-4">
                         <div class="col-lg-12">
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.mails' | language }}</h5>
-                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.mails.description' | language }}</p>
-                            </div>
                             {% if mails|length == 0 %}
                                 {{ 'site.cp.settings.mails.table.empty' | language }}
                             {% else %}
                                 <div class="table-responsive">
-                                    <table class="table table-cards align-items-center">
+                                    <table class="table table-cards align-items-center align-middle">
                                         <thead>
                                         <tr>
                                             <th scope="col">{{ 'site.cp.settings.mails.table.title' | language }}</th>
@@ -29,13 +35,11 @@
                                         {% for mail in mails %}
                                             <tr>
                                                 <th scope="row">{{ mail['title'] }}</th>
-                                                <td>{{ mail['created_at']|date("d.m.Y H:i") }}</td>
+                                                <td>{{ mail['created_at']|date }}</td>
                                                 <td class="text-right">
                                                     <div class="actions ml-3">
-                                                        <a href="{{ url }}/cp/settings/mails/{{ mail['businessId'] }}"
-                                                           class="btn btn-primary" data-bs-toggle="tooltip" title=""
-                                                           data-original-title="{{ 'site.cp.settings.mails.table.show' | language }}">
-                                                            <i class="fas fa-eye"></i>
+                                                        <a href="{{ dashURL }}/settings/mails/{{ mail['businessId'] }}" class="btn btn-secondary btn-sm btn-icon">
+                                                            <i class="fa fa-eye"></i>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -49,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>

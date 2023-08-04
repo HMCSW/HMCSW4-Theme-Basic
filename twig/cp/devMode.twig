@@ -1,0 +1,12 @@
+{% if config['dev_mode'] %}
+    <div class="col-lg-12">
+        <div class="alert alert-group alert-warning alert-icon" role="alert">
+            <div class="alert-content">
+                <i class="fa fa-exclamation-triangle"></i>
+                <b>The DevMode is activated! Expect higher loading times. Caching is disabled. Do not use in
+                    productive
+                    mode. </b>
+            </div>
+        </div>
+    </div>
+{% endif %}

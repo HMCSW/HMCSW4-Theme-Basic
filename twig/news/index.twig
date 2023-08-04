@@ -1,50 +1,36 @@
 {% include '/general/header.twig' %}
-<section class="slice slice-lg">
-    <div class="container">
-        <div class="row mb-6 justify-content-center text-center">
-            <div class="col-lg-8 col-md-10">
-                <h4 class="text-center mt-4">{{ 'site.news' | language }}</h4>
-                <h5 class="text-center">{{ 'site.news.description' | language }}</h5>
-                <br>
+<section class="container pt-5 mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="pt-lg-3 pb-lg-4 pb-2 breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url }}">{{ 'header.home' | language }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'site.news' | language }}</li>
+        </ol>
+    </nav>
+    <div class="row mb-4">
+        {% if news|length == 0 %}
+            <div class="col-xl-8 offset-xl-2 col-md-6">
+                <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden">
+                    <div class="align-self-center card-body py-4">
+                        <h5>{{ 'site.news.nothing' | language }}</h5>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            {% if news|length == 0 %}
-                <div class="col-xl-8 offset-xl-2 col-md-6">
-                    <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden">
-                        <div class="align-self-center card-body py-4">
-                            <h5>{{ 'site.news.nothing' | language }}</h5>
+        {% else %}
+            {% for article in news %}
+                <div class="col-lg-3 mb-4">
+                    <div class="card mb-4 h-100">
+                        <img src="{{ article["image"] }}" class="card-img-top" alt="Card image">
+                        <div class="card-body">
+                            <a href="{{ url }}/news/{{ article['slug'] }}"
+                               class="text-white stretched-link text-decoration-none">
+                                <h4 class="card-title">{{ article['title'] }}</h4>
+                                <p class="card-text">{{ article['shortText'] }}...</p>
+                            </a>
                         </div>
                     </div>
                 </div>
-            {% else %}
-                {% for article in news %}
-                    <div class="col-lg-4">
-                        <div class="card bg-cover bg-size--cover card-fluid"><span
-                                    class="mask bg-dark opacity-5"></span>
-                            <div class="card-body pt-10 mt-auto position-relative">
-                                <a href="{{ url }}/news/{{ article['slug'] }}"
-                                   class="d-block h5 mb-3 stretched-link">{{ article['title'] }}</a>
-                                <p class="mb-0">{{ article['shortText'] }}...</p>
-                            </div>
-                            <div class="card-body position-relative delimiter-top">
-                                <div class="d-flex align-items-center">
-                                    <div><a href="{{ url }}/news/{{ article['slug'] }}"
-                                            class="avatar avatar-sm rounded-circle d-inline-block"><img height="50"
-                                                                                                        width="50"
-                                                                                                        alt="{{ article['user']['firstname'] }} {{ article['user']['lastname'] }}"
-                                                                                                        src="{{ article['user']['avatar'] }}"></a>
-                                    </div>
-                                    <div class="pl-3"><a href="{{ url }}/news/{{ article['slug'] }}"
-                                                         class="h6 stretched-link text-sm">{{ article['user']['firstname'] }} {{ article['user']['lastname'] }}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
+            {% endfor %}
+        {% endif %}
     </div>
 </section>
 {% include '/general/footer.twig' %}

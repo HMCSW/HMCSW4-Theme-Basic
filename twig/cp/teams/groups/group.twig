@@ -2,155 +2,171 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/teams/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-12">
-                        {% if action != false %}
-                            {% if action['success'] == false %}
-                                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-                            {% else %}
-                                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-                            {% endif %}
-                            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                                <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-                                </div>
-                                <div class="alert-content">
-                                    {{ action['message'] | language }}
-                                </div>
-
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <div class="row">
+                {% include 'cp/terminateUser.twig' %}
+                {% include 'general/actionMessage.twig' %}
+                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                    class="fa fa-user-group text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.groups' | language }} - {{ group['name'] }}</h2>
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <a href="{{ dashURL }}/teams/{{ team['businessId'] }}/groups" class="btn btn-dark btn-icon">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                </a>
+                                <button type="submit" class="btn btn-secondary btn-icon" data-bs-toggle="modal"
+                                        data-bs-target="#editGroup">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button type="submit" class="btn btn-danger btn-icon" data-bs-toggle="modal"
+                                        data-bs-target="#deleteGroup">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
                             </div>
-                        {% endif %}
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-body text-center justify-content-center">
-
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <thead>
-                                                <tr>
-                                                    <td class="text-center">#</td>
-                                                    <td class="text-left">{{ 'site.cp.teams.groups.form.permission' | language }}</td>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-
-                                                <tr>
-                                                    <th class="text-left">
-                                                        <h4><span
-                                                                    class="h6 font-weight-bold mb-0">{{ 'site.cp.teams.groups.globalPerms' | language }}</span>
-                                                        </h4>
-                                                    </th>
-                                                    <th class="text-left"></th>
-                                                </tr>
-                                                {% for key, value in allPermissions['general'] %}
-                                                    <tr>
-                                                        <th class="text-center">
-                                                            <div class="custom-control custom-switch">
-                                                                <input type="checkbox" name="permission[]"
-                                                                       onchange="updateGeneralPermission('{{ key }}', this.checked);"
-                                                                       value="{{ key }}"
-                                                                       class="form-check-input text-left"
-                                                                       {% if key in group['permissions']['general'] %}checked{% endif %}
-                                                                       id="permission-{{ key|slugify }}">
-                                                                <label class="form-check-label text-center"
-                                                                       for="permission-{{ key|slugify }}"></label>
-                                                            </div>
-
-                                                        </th>
-                                                        <th class="text-left">{{ value|language }}</th>
-                                                    </tr>
-
-                                                {% endfor %}
-                                                </tbody>
-
-                                                {% for serviceId, service in allPermissions['service'] %}
-                                                    <tr class="table-divider"></tr>
-                                                    {% set serviceInfo = service['service'] %}
-                                                    <tbody>
-                                                    <tr>
-                                                        <th class="text-left">
-                                                            {% if serviceInfo['service_name'] != NULL %}
-                                                                <a
-                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ serviceInfo['service_id'] }}"><span
-                                                                            class="h6 font-weight-bold mb-0">{{ serviceInfo['service_name'] }}</span></a>
-                                                                <span class="d-block text-sm text-muted">{{ serviceInfo['name'] }}</span>
-                                                            {% elseif serviceInfo['external']['name'] != NULL %}
-                                                                <a
-                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ serviceInfo['service_id'] }}"><span
-                                                                            class="h6 font-weight-bold mb-0">{{ serviceInfo['external']['name'] }}</span></a>
-                                                                <span class="d-block text-sm text-muted">{{ serviceInfo['name'] }}</span>
-                                                            {% else %}
-                                                                <a
-                                                                        href="{{ url }}/cp/teams/{{ team['team_id'] }}/service/{{ serviceInfo['service_id'] }}"><span
-                                                                            class="h6 font-weight-bold mb-0">{{ serviceInfo['name'] }}</span></a>
-                                                            {% endif %}
-                                                        </th>
-                                                    </tr>
-
-                                                    {% for key, value in service['permission'] %}
-                                                        <tr>
-                                                            <th class="text-center">
-                                                                <div class="custom-control custom-switch">
-                                                                    <input type="checkbox" name="permission[]"
-                                                                           value="{{ key }}"
-                                                                           class="form-check-input text-left"
-                                                                           onchange="updateServicePermission('{{ key }}', this.checked, '{{ serviceInfo['service_id'] }}')"
-                                                                           {% if key in group['permissions']['service'][serviceInfo['service_id']] %}checked{% endif %}
-                                                                           id="permission-{{ key|slugify }}-{{ serviceInfo['service_id'] }}">
-                                                                    <label class="form-check-label text-center"
-                                                                           for="permission-{{ key|slugify }}-{{ serviceInfo['service_id'] }}"></label>
-                                                                </div>
-
-                                                            </th>
-                                                            <th class="text-left">{{ value|language }}</th>
-                                                        </tr>
-
-                                                    {% endfor %}
-                                                    </tbody>
-                                                {% endfor %}
-
-                                            </table>
-
-                                        </div>
-                                    </div>
-                                    <div class="card-footer text-center justify-content-center">
-
+                            <div class="modal fade" id="deleteGroup" tabindex="-1" role="dialog" aria-labelledby="deleteGroup"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
                                         <form method="post">
                                             <input type="hidden" name="csrf" value="{{ csrf }}">
                                             <input type="hidden" name="action" value="deleteGroup">
-
-                                            <button type="submit"
-                                                    class="btn btn-danger btn-sm">{{ 'site.cp.teams.groups.deleteGroup' | language }}</button>
-
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">{{ 'site.cp.teams.groups.deleteGroup' | language }}</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="col-md-12">
+                                                    <p>{{ 'site.cp.teams.groups.deleteGroupConfirm' | language }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit"
+                                                        class="btn btn-danger w-100 w-sm-auto ms-sm-3">{{ 'site.cp.teams.groups.deleteGroup' | language }}</button>
+                                            </div>
                                         </form>
                                     </div>
-                                    <div class="card-footer text-center justify-content-center">
-                                        <h5>{{ 'site.cp.teams.groups.groupName.update' | language }}</h5>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="editGroup" tabindex="-1" role="dialog" aria-labelledby="deleteGroup"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
                                         <form method="post">
                                             <input type="hidden" name="csrf" value="{{ csrf }}">
                                             <input type="hidden" name="action" value="updateGroup">
-                                            <div class="form-group col-lg-6 col-sm-12 offset-lg-3 text-center justify-content-center">
-                                                <label for="groupName">{{ 'site.cp.teams.groups.form.groupName' | language }}</label>
-                                                <input id="groupName" type="text"
-                                                       class="form-control text-center justify-content-center"
-                                                       name="name"
-                                                       value="{{ group['name'] }}">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">{{ 'site.cp.teams.groups.groupName.update' | language }}</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
                                             </div>
-                                            <br>
-                                            <button type="submit"
-                                                    class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                            <div class="modal-body">
+                                                <div class="row g-3">
+                                                    <div class="col-md-12 form-group">
+                                                        <label for="groupName" class="form-label">{{ 'site.cp.teams.groups.form.groupName' | language }}</label>
+                                                        <input id="groupName" type="text" class="form-control"
+                                                               name="name"
+                                                               value="{{ group['name'] }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit"
+                                                        class="btn btn-primary w-100 w-sm-auto ms-sm-3">{{ 'general.modal.saveBtn' | language }}</button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <td >#</td>
+                                    <td>{{ 'site.cp.teams.groups.form.permission' | language }}</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <th class="text-left align-middle">{{ 'site.cp.teams.groups.globalPerms' | language }}</th>
+                                    <th class="text-left"></th>
+                                </tr>
+                                {% for key, value in allPermissions['general'] %}
+                                    <tr>
+                                        <th>
+                                            <div class="form-check">
+                                                <input type="checkbox" name="permission[]"
+                                                       onchange="updateGeneralPermission('{{ key }}', this.checked);"
+                                                       value="{{ key }}" class="form-check-input text-left"
+                                                       {% if key in group['permissions']['general'] %}checked{% endif %}
+                                                       id="permission-{{ key|slugify }}">
+                                                <label class="form-check-label"
+                                                       for="permission-{{ key|slugify }}"></label>
+                                            </div>
+
+                                        </th>
+                                        <th class="text-left">{{ value|language }}</th>
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+
+                                {% for serviceId, service in allPermissions['service'] %}
+                                    <tr class="table-divider"></tr>
+                                    {% set serviceInfo = service['service'] %}
+                                    <tbody>
+                                    <tr>
+                                        <th class="text-left align-middle">
+                                            {% if serviceInfo['service_name'] != NULL %}
+                                                <a class="text-decoration-none"
+                                                   href="{{ dashURL }}/teams/{{ team['businessId'] }}/service/{{ serviceInfo['service_id'] }}"><span
+                                                            class="h6 text-sm font-weight-bold mb-0">{{ serviceInfo['service_name'] }}</span></a>
+                                                <span class="d-block text-sm text-muted">{{ serviceInfo['name'] }}</span>
+                                            {% elseif serviceInfo['external']['name'] != NULL %}
+                                                <a class="text-decoration-none"
+                                                   href="{{ dashURL }}/teams/{{ team['businessId'] }}/service/{{ serviceInfo['service_id'] }}"><span
+                                                            class="h6 text-sm font-weight-bold mb-0">{{ serviceInfo['external']['name'] }}</span></a>
+                                                <span class="d-block text-sm text-muted">{{ serviceInfo['name'] }}</span>
+                                            {% else %}
+                                                <a class="text-decoration-none"
+                                                   href="{{ dashURL }}/teams/{{ team['businessId'] }}/service/{{ serviceInfo['service_id'] }}"><span
+                                                            class="h6 text-sm font-weight-bold mb-0">{{ serviceInfo['name'] }}</span></a>
+                                            {% endif %}
+                                        </th>
+                                        <th class="text-left"></th>
+                                    </tr>
+
+                                    {% for key, value in service['permission'] %}
+                                        <tr>
+                                            <th>
+                                                <div class="form-check">
+                                                    <input type="checkbox" name="permission[]"
+                                                           onchange="updateServicePermission('{{ key }}', this.checked, '{{ serviceInfo['service_id'] }}');"
+                                                           value="{{ key }}" class="form-check-input text-left"
+                                                           {% if key in group['permissions']['service'][serviceInfo['service_id']] %}checked{% endif %}
+                                                           id="permission-{{ key|slugify }}-{{ serviceInfo['service_id'] }}">
+                                                    <label class="form-check-label"
+                                                           for="permission-{{ key|slugify }}-{{ serviceInfo['service_id'] }}"></label>
+                                                </div>
+
+                                            </th>
+                                            <th class="text-left">{{ value|language }}</th>
+                                        </tr>
+
+                                    {% endfor %}
+                                    </tbody>
+                                {% endfor %}
+
+                            </table>
+
+                        </div>
+
                     </div>
-                </div>
+                </section>
             </div>
         </div>
     </div>

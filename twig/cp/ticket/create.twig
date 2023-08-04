@@ -2,80 +2,83 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-12">
-                        <div class="card card-fluid">
-                            <h3 class="text-center">{{ 'site.cp.ticket.create' | language }}</h3>
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card  py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-ticket text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.ticket.create' | language }}</h2>
 
-                            <form method="post">
-                                <input type="hidden" name="action" value="createTicket">
-                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="form-group col-lg-6">
-                                                <label for="input-title"
-                                                       class="form-control-label">{{ 'site.cp.ticket.create.title' | language }}</label>
-                                                <input name="title" required type="text"
-                                                       class="form-control form-control-prepend" id="input-title"
-                                                       placeholder="{{ 'site.cp.ticket.create.title.placeholder' | language }}">
-                                            </div>
-                                            <div class="form-group col-lg-6">
-                                                <label for="input-service"
-                                                       class="form-control-label">{{ 'site.cp.ticket.create.service_id' | language }}</label>
-                                                <select id="input-service" name="service_id" class="form-select">
-                                                    <option value="0">{{ 'site.cp.ticket.create.service_id.nothing'|language }}</option>
-                                                    {% for service in services %}
-                                                        <option value="{{ service['service_id'] }}">{{ service['service_id'] }}
-                                                            - {{ service['name'] }} |
-                                                            {% if service['state'] == 1 %}
-                                                                {{ 'general.services.state.1' | language }}
-                                                            {% elseif service['state'] == 2 %}
-                                                                {{ 'general.services.state.2' | language }}
-                                                            {% elseif service['state'] == 3 %}
-                                                                {{ 'general.services.state.3' | language }}
-                                                            {% elseif service['state'] == 4 %}
-                                                                {{ 'general.services.state.4' | language }}
-                                                            {% elseif service['state'] == 5 %}
-                                                                {{ 'general.services.state.5' | language }}
-                                                            {% elseif service['state'] == 6 %}
-                                                                {{ 'general.services.state.6' | language }}
-                                                            {% elseif service['state'] == 7 %}
-                                                                {{ 'general.services.state.7' | language }}
-                                                            {% elseif service['state'] == 8 %}
-                                                                {{ 'general.services.state.8' | language }}
-                                                            {% else %}
-                                                                {{ 'general.services.state.error' | language }}
-                                                            {% endif %}
-                                                        </option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-lg-12">
-                                                <label for="input-message"
-                                                       class="form-control-label">{{ 'site.cp.ticket.create.message' | language }}</label>
-                                                <textarea name="message" id="input-message" class="form-control"
-                                                          placeholder="{{ 'site.cp.ticket.create.message.placeholder' | language }}"
-                                                          rows="5"></textarea>
-                                            </div>
-
-                                        </div>
-                                        <div class="row justify-content-center">
-                                            <h4 class="text-center">
-                                                <button type="submit" class="btn btn-primary btn-lg hover-scale-110">
-                                                    {{ 'site.cp.ticket.create.btn' | language }}
-                                                </button>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/ticket" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
                         </div>
                     </div>
+
+                    <form method="post" enctype="multipart/form-data" id="ticketCreate">
+                        <input type="hidden" name="action" value="createTicket">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <div class="row g-3">
+                            <div class="form-group col-lg-6">
+                                <label for="input-title"
+                                       class="form-label">{{ 'site.cp.ticket.create.title' | language }}</label>
+                                <input name="title" required type="text"
+                                       class="form-control form-control-prepend" id="input-title"
+                                       placeholder="{{ 'site.cp.ticket.create.title.placeholder' | language }}">
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="input-service"
+                                       class="form-label">{{ 'site.cp.ticket.create.service_id' | language }}</label>
+                                <select id="input-service" name="service_id" class="form-select">
+                                    <option value="0">{{ 'site.cp.ticket.create.service_id.nothing'|language }}</option>
+                                    {% for service in services %}
+                                        <option value="{{ service['service_id'] }}">{{ service['service_id'] }}
+                                            - {{ service['name'] }} |
+                                            {% if service['state'] == 1 %}
+                                                {{ 'general.services.state.1' | language }}
+                                            {% elseif service['state'] == 2 %}
+                                                {{ 'general.services.state.2' | language }}
+                                            {% elseif service['state'] == 3 %}
+                                                {{ 'general.services.state.3' | language }}
+                                            {% elseif service['state'] == 4 %}
+                                                {{ 'general.services.state.4' | language }}
+                                            {% elseif service['state'] == 5 %}
+                                                {{ 'general.services.state.5' | language }}
+                                            {% elseif service['state'] == 6 %}
+                                                {{ 'general.services.state.6' | language }}
+                                            {% elseif service['state'] == 7 %}
+                                                {{ 'general.services.state.7' | language }}
+                                            {% elseif service['state'] == 8 %}
+                                                {{ 'general.services.state.8' | language }}
+                                            {% else %}
+                                                {{ 'general.services.state.error' | language }}
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label for="input-message"
+                                       class="form-label">{{ 'site.cp.ticket.create.message' | language }}</label>
+                                <textarea name="message" id="input-message" class="form-control"
+                                          placeholder="{{ 'site.cp.ticket.create.message.placeholder' | language }}"
+                                          rows="5"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="file-input" class="form-label">{{ 'site.cp.ticket.create.file' | language }}</label>
+                                <input class="form-control" type="file" id="file-input" multiple accept="application/pdf,.png,.jpg,.jpeg,.mp4" name="files[]">
+                                <div class="form-text">{{ 'site.cp.ticket.create.file.help' | language }}</div>
+                            </div>
+
+                            <div class="d-flex justify-content-end pt-3">
+                                <button class="btn btn-primary ms-3" id="ticketCreateBtn"
+                                        type="submit">{{ 'site.cp.ticket.create.btn' | language }}</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>

@@ -6,9 +6,8 @@
       <div class="modal-header">
         <h5 class="modal-title h6"
             id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
@@ -26,9 +25,8 @@
       <div class="modal-header">
         <h5 class="modal-title h6"
             id="modal_title_6">{{ 'site.products.cart.modal.success' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
@@ -53,9 +51,8 @@
       <div class="modal-header">
         <h5 class="modal-title h6"
             id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
@@ -74,9 +71,8 @@
       <div class="modal-header">
         <h5 class="modal-title h6"
             id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
@@ -96,9 +92,8 @@
       <div class="modal-header">
         <h5 class="modal-title h6"
             id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
@@ -116,9 +111,8 @@
       <div class="modal-header">
         <h5 class="modal-title h6"
             id="modal_title_6">{{ 'site.products.cart.modal.error' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
@@ -137,33 +131,31 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title h6" id="modal_title_6">{{ 'general.action.message.failed' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
           <i class="fas fa-exclamation-circle fa-4x"></i>
           <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.domainNotAvailable' | language }}</h5>
-
-          <hr class="divider divider-fade"/>
+          <hr class="mb-4"/>
           <h3 class="heading" id="cartModal-domainTransfer-name">%NAME%</h3>
           <h4 class="heading">{{ 'site.products.cart.modal.transferDomain' | language }}</h4>
           <h5 class="heading">
             {{ 'site.products.cart.modal.transferDomain.price'|language|replace({'@today': '<span id="cartModal-domainTransfer-todayPrice"></span>', '@next': '<span id="cartModal-domainTransfer-nextPrice"></span>'})|raw }}
           </h5>
           <div class="form-group">
-            <label for="cartModal-domainTransfer-authCode" class="form-control-label">Authcode</label>
+            <label for="cartModal-domainTransfer-authCode" class="form-label">Authcode</label>
             <input required id="cartModal-domainTransfer-authCode" type="text" name="authCode"
-                   class="form-control form-control-emphasized" style="text-align: center"
+                   class="form-control" style="text-align: center"
                    placeholder="ABCD-DEFGH-1234-5678">
           </div>
-
-          <button type="button" onclick="addProduct(getAttribute('data-productId'), getAttribute('data-domainName'), 'transfer', document.getElementById('cartModal-domainTransfer-authCode').value);" data-productId="" data-domainName="" id="cartModal-domainTransfer-btn" class="btn btn-white btn-animated btn-animated-x">
-            <span class="btn-inner--visible">{{ 'site.products.buyNow' | language }}</span>
-            <span class="btn-inner--hidden"><i class="fa-regular fa-shopping-cart"></i></span>
-          </button>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="addProduct(getAttribute('data-productId'), getAttribute('data-domainName'), 'transfer', document.getElementById('cartModal-domainTransfer-authCode').value, this);" data-productId="" data-domainName="" id="cartModal-domainTransfer-btn" class="btn btn-primary">
+          {{ 'site.products.buyNow' | language }}
+        </button>
       </div>
     </div>
   </div>
@@ -175,25 +167,25 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title h6" id="modal_title_6">{{ 'general.action.message.success' | language }}</h5>
-        <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="py-3 text-center">
           <i class="fas fa-check-circle fa-4x"></i>
           <h5 class="heading h4 mt-4">{{ 'site.products.cart.modal.error.domainAvailable' | language }}</h5>
-          <hr class="divider divider-fade"/>
+          <hr class="mb-4"/>
 
           <h3 class="heading" id="cartModal-domainNew-name">%NAME%</h3>
           <h5 class="heading">
             {{ 'site.products.cart.modal.transferDomain.price'|language|replace({'@today': '<span id="cartModal-domainNew-todayPrice"></span>', '@next': '<span id="cartModal-domainNew-nextPrice"></span>'})|raw }}
           </h5>
-          <button type="button" onclick="addProduct(getAttribute('data-productId'), getAttribute('data-domainName'), 'new', '');" data-productId="" data-domainName="" id="cartModal-domainNew-btn" class="btn btn-white btn-animated btn-animated-x">
-            <span class="btn-inner--visible">{{ 'site.products.buyNow' | language }}</span>
-            <span class="btn-inner--hidden"><i class="fa-regular fa-shopping-cart"></i></span>
-          </button>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="addProduct(getAttribute('data-productId'), getAttribute('data-domainName'), 'new', '', this);" data-productId="" data-domainName="" id="cartModal-domainNew-btn" class="btn btn-primary ">
+          {{ 'site.products.buyNow' | language }}
+        </button>
       </div>
     </div>
   </div>

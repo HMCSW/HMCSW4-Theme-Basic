@@ -2,93 +2,121 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/teams/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-9 order-lg-2">
-                        {% if action != false %}
-                            {% if action['success'] == false %}
-                                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-                            {% else %}
-                                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-                            {% endif %}
-                            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                                <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-                                </div>
-                                <div class="alert-content">
-                                    {{ action['message'] | language }}
-                                </div>
-
-                            </div>
-                        {% endif %}
-
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
-                                    <div class="card-body">
-                                        <h6 class="text-center"><i class="fas fa-2x fa-money-bill"></i></h6>
-                                        <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.dayOfPayment' | language }}</h5>
-                                        <h4 class="text-center">{{ team['reselling']['dayOfPayment'] }}.</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
-                                    <div class="card-body">
-                                        <h6 class="text-center"><i class="fas fa-2x fa-server"></i></h6>
-                                        <h5 class="text-center">{{ 'site.cp.index.card.services' | language }}</h5>
-                                        <h4 class="text-center">{{ team['services']|length }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-4">
-                                <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
-                                    <div class="card-body">
-                                        <h6 class="text-center"><i class="fas fa-2x fa-file-invoice-dollar"></i></h6>
-                                        <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.nextInvoice' | language }}</h5>
-                                        <h4 class="text-center">{{ nextInvoice['amount']|creditsToEuro }}{{ "symbol"|currency }}</h4>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            {% include 'cp/terminateUser.twig' %}
+            {% include 'general/actionMessage.twig' %}
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-user-cowboy text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.reselling' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/teams/{{ team['businessId'] }}" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
                         </div>
-                        {% if "owner"|checkTeamPermission %}
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
-                                        <div class="card-body">
-                                            <h5 class="text-center">{{ 'site.cp.index.card.payment' | language }}</h5>
-                                            <form method="post">
-                                                <input type="hidden" name="action" value="setMethod">
-                                                <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                                <label for="method_id">Method</label>
-                                                <select id="method_id" name="method_id" class="form-control"
-                                                        onchange="this.form.submit()">
-                                                    <option {% if team['reselling']['method_id'] == 0 %}selected{% endif %}
-                                                            value="0">Manuell
-                                                    </option>
-                                                    {% for methodType in methods %}
-                                                        {% for method in methodType %}
-                                                            <option {% if service['allowAutomaticPayment']['id'] == method['method_id'] %}selected{% endif %}
-                                                                    value="{{ method['method_id'] }}">{{ method['description'] }}</option>
-                                                        {% endfor %}
-                                                    {% endfor %}
-                                                </select>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-
                     </div>
                 </div>
-                <br><br>
+            </section>
+            <div class="row mb-4">
+                <div class="col-lg-4">
+                    <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+                        <div class="card-body">
+                            <h6 class="text-center"><i class="fas fa-2x fa-money-bill"></i></h6>
+                            <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.dayOfPayment' | language }}</h5>
+                            <h4 class="text-center">{{ team['reselling']['dayOfPayment'] }}.</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+                        <div class="card-body">
+                            <h6 class="text-center"><i class="fas fa-2x fa-server"></i></h6>
+                            <h5 class="text-center">{{ 'site.cp.index.card.services' | language }}</h5>
+                            <h4 class="text-center">{{ team['services']|length }}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid">
+                        <div class="card-body">
+                            <h6 class="text-center"><i class="fas fa-2x fa-file-invoice-dollar"></i></h6>
+                            <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.nextInvoice' | language }}</h5>
+                            <h4 class="text-center">{{ nextInvoice['amount']|creditsToEuro }}{{ "symbol"|currency }}</h4>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            {% if "owner"|checkTeamPermission %}
+                <div class="row justify-content-center">
+                    <div class="col-lg-4">
+                        <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid h-100">
+                            <div class="card-body">
+                                <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.payment' | language }}</h5>
+                                <form method="post" class="mt-auto align-self-end w-100">
+                                    <input type="hidden" name="action" value="setMethod">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                    <label for="method_id"
+                                           class="form-label">{{ 'site.cp.teams.reselling.start.card.payment.method' | language }}</label>
+                                    <select id="method_id" name="method_id" class="form-select" onchange="this.form.submit()">
+                                        <option {% if team['reselling']['method_id'] == 0 %}selected{% endif %}
+                                                value="0">{{ 'site.cp.teams.reselling.start.card.payment.method.manuel' | language }}</option>
+                                        {% for methodType in methods %}
+                                            {% for method in methodType %}
+                                                <option {% if team['reselling']['method_id'] == method['method_id'] %}selected{% endif %}
+                                                        value="{{ method['method_id'] }}">{{ method['description'] }}</option>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid h-100">
+                            <div class="card-body">
+                                <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.address' | language }}</h5>
+                                <form method="post" class="mt-auto align-self-end w-100">
+                                    <input type="hidden" name="action" value="setAddress">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                    <label for="address_id"
+                                           class="form-label">{{ 'site.cp.teams.reselling.start.card.address.select' | language }}</label>
+                                    <select id="address_id" name="address_id" class="form-select" onchange="this.form.submit()">
+                                        <option {% if selectedAddressId == 0 or selectedAddressId == null %}selected{% endif %}
+                                                value="0">{{ 'site.cp.teams.reselling.start.card.address.select.default' | language }}</option>
+                                        {% for address in addresses %}
+                                            <option {% if selectedAddressId == address['address_id'] %}selected{% endif %}
+                                                    value="{{ address['address_id'] }}">{% if address['company'] != null %}{{ "("~address['company']~")" }}{% endif %} {{ address['name'] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card hover-translate-y-n3 hover-shadow-lg overflow-hidden card-fluid h-100">
+                            <div class="card-body">
+                                <h5 class="text-center">{{ 'site.cp.teams.reselling.start.card.invoiceMail' | language }}</h5>
+                                <form method="post" class="mt-auto align-self-end w-100">
+                                    <input type="hidden" name="action" value="setInvoiceMail">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                                    <div class="form-group">
+                                        <label for="invoiceMail"
+                                               class="form-label">{{ 'site.cp.teams.reselling.start.card.invoiceMail.mail' | language }}</label>
+                                        <input id="invoiceMail" name="invoiceMail" class="form-control" type="email" value="{{ invoiceMail }}"
+                                               onchange="this.form.submit()" placeholder="{{ 'general.form.email.placeholder'|language }}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

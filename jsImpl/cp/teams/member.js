@@ -8,8 +8,8 @@ function editMember(object){
         },
     }).done(function (answer) {
         if(answer.success === true){
-            document.getElementById('editMember-'+ object.dataset.userid +'-name').innerHTML = answer.response.name
-            document.getElementById('editMember-'+ object.dataset.userid +'-dropDown').innerHTML = answer.response.name
+            document.getElementById('editMember-'+ object.dataset.userid +'-name').innerHTML = answer.response.group.name
+            document.getElementById('editMember-'+ object.dataset.userid +'-dropDown').innerHTML = answer.response.group.name
 
             sendNotify(getMessage("general.action.message.success"), 'success');
         } else {

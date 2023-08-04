@@ -2,6 +2,19 @@ var interval;
 interval = setInterval(function(){ checkOrder( orderId) }, 2000);
 
 
+function showWaitingMessage(){
+    document.getElementById('waitingMessage').style.display = 'block';
+    document.getElementById('spinner').classList = 'spinner-border text-warning';
+}
+function showFailedMessage(){
+    document.getElementById('waitingMessage').style.display = 'none';
+    document.getElementById('failedMessage').style.display = 'block';
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('failedIcon').style = 'width: 3rem; height: 3rem;';
+}
+
+
+let failCount = 0;
 function checkOrder(order_id){
     $.ajax({
         data: {'order_id': order_id},
@@ -28,5 +41,13 @@ function checkOrder(order_id){
                 }
             }
         }
-    }).fail(function (err)  {});
+    }).fail(function (err)  {
+        failCount++;
+        if(failCount > 15){
+            showWaitingMessage();
+        }
+        if(failCount > 40){
+            showFailedMessage();
+        }
+    });
 }

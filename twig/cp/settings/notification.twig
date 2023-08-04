@@ -2,104 +2,64 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-
-                    {% include '/general/actionMessage.twig' %}
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.notification' | language }}</h5>
-                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.notification.description' | language }}</p>
-                            </div>
-
-                            <form method="post">
-                                <input type="hidden" name="action" value="saveNotification">
-                                <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                <div class="card">
-                                    <div class="list-group list-group-flush">
-                                        <div class="list-group-item d-flex w-100 justify-content-between">
-                                            <div>
-                                                <h6
-                                                        class="font-weight-light mb-1">{{ 'site.cp.settings.notification.type.1' | language }}</h6>
-                                                <span
-                                                        class="text-sm text-muted">{{ 'site.cp.settings.notification.type.1.description' | language }}</span>
-                                            </div>
-                                            <div>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="form-check-input"
-                                                           id="shop-notification-1" name="type[]"
-                                                           value="newsletter"
-                                                           onChange="this.form.submit()" {% if "newsletter" in userData['notification'] %} checked {% endif %}>
-                                                    <label class="form-check-label"
-                                                           for="shop-notification-1"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item d-flex w-100 justify-content-between">
-                                            <div>
-                                                <h6
-                                                        class="font-weight-light mb-1">{{ 'site.cp.settings.notification.type.2' | language }}</h6>
-                                                <span
-                                                        class="text-sm text-muted">{{ 'site.cp.settings.notification.type.2.description' | language }}</span>
-                                            </div>
-                                            <div>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="form-check-input"
-                                                           id="shop-notification-2" name="type[]"
-                                                           value="deviceInfo"
-                                                           onChange="this.form.submit()" {% if "deviceInfo" in userData['notification'] %} checked {% endif %}>
-                                                    <label class="form-check-label"
-                                                           for="shop-notification-2"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item d-flex w-100 justify-content-between">
-                                            <div>
-                                                <h6
-                                                        class="font-weight-light mb-1">{{ 'site.cp.settings.notification.type.3' | language }}</h6>
-                                                <span
-                                                        class="text-sm text-muted">{{ 'site.cp.settings.notification.type.3.description' | language }}</span>
-                                            </div>
-                                            <div>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="form-check-input"
-                                                           id="shop-notification-3" name="type[]"
-                                                           value="ipInfo"
-                                                           onChange="this.form.submit()"{% if "ipInfo" in userData['notification'] %} checked {% endif %}>
-                                                    <label class="form-check-label"
-                                                           for="shop-notification-3"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item d-flex w-100 justify-content-between">
-                                            <div>
-                                                <h6
-                                                        class="font-weight-light mb-1">{{ 'site.cp.settings.notification.type.4' | language }}</h6>
-                                                <span
-                                                        class="text-sm text-muted">{{ 'site.cp.settings.notification.type.4.description' | language }}</span>
-                                            </div>
-                                            <div>
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="form-check-input"
-                                                           id="shop-notification-4" name="type[]"
-                                                           value="statusInfo"
-                                                           onChange="this.form.submit()" {% if "statusInfo" in userData['notification'] %} checked {% endif %}>
-                                                    <label class="form-check-label"
-                                                           for="shop-notification-4"></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            {% include 'cp/terminateUser.twig' %}
+            {% include 'general/actionMessage.twig' %}
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-5">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-comment text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.notification' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/settings" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            <a href="{{ dashURL }}" class="btn btn-secondary btn-icon">
+                                <i class="fa-solid fa-arrow-left-long-to-line"></i>
+                            </a>
                         </div>
                     </div>
+                    <div id="checkboxList">
+                        <form method="post">
+                            <input type="hidden" name="action" value="saveNotification">
+                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                            <div class="form-check form-switch d-flex pb-md-2 mb-4">
+                                <input class="form-check-input flex-shrink-0" type="checkbox" id="newsletter"
+                                       name="type[]"
+                                       value="newsletter"
+                                       onChange="this.form.submit()" {% if "newsletter" in userData['notification'] %} checked {% endif %}>
+                                <label class="form-check-label ps-3 ps-sm-4" for="newsletter">
+                                    <span class="h6 d-block mb-2">{{ 'site.cp.settings.notification.type.1' | language }}</span>
+                                    <span class="fs-sm text-muted">{{ 'site.cp.settings.notification.type.1.description' | language }}</span></label>
+                            </div>
+                            <div class="form-check form-switch d-flex pb-md-2 mb-4">
+                                <input class="form-check-input flex-shrink-0" type="checkbox" id="deviceInfo" name="type[]"
+                                       value="deviceInfo"
+                                       onChange="this.form.submit()" {% if "deviceInfo" in userData['notification'] %} checked {% endif %}>
+                                <label class="form-check-label ps-3 ps-sm-4" for="deviceInfo">
+                                    <span class="h6 d-block mb-2">{{ 'site.cp.settings.notification.type.2' | language }}</span>
+                                    <span class="fs-sm text-muted">{{ 'site.cp.settings.notification.type.2.description' | language }}</span></label>
+                            </div>
+                            <div class="form-check form-switch d-flex pb-md-2 mb-4">
+                                <input class="form-check-input flex-shrink-0" type="checkbox"  name="type[]"
+                                       value="ipInfo" id="ipInfo"
+                                       onChange="this.form.submit()"{% if "ipInfo" in userData['notification'] %} checked {% endif %}>
+                                <label class="form-check-label ps-3 ps-sm-4" for="ipInfo">
+                                    <span class="h6 d-block mb-2">{{ 'site.cp.settings.notification.type.3' | language }}</span>
+                                    <span class="fs-sm text-muted">{{ 'site.cp.settings.notification.type.3.description' | language }}</span></label>
+                            </div>
+                            <div class="form-check form-switch d-flex pb-md-2 mb-4">
+                                <input class="form-check-input flex-shrink-0" type="checkbox" name="type[]"
+                                       value="statusInfo" id="statusInfo"
+                                       onChange="this.form.submit()" {% if "statusInfo" in userData['notification'] %} checked {% endif %}>
+                                <label class="form-check-label ps-3 ps-sm-4" for="statusInfo">
+                                    <span class="h6 d-block mb-2">{{ 'site.cp.settings.notification.type.4' | language }}</span>
+                                    <span class="fs-sm text-muted">{{ 'site.cp.settings.notification.type.4.description' | language }}</span></label>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>

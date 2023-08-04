@@ -1,52 +1,99 @@
 {% include '/general/header.twig' %}
-<section class="slice slice-sm bg-section-secondary">
-  <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-12">
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+  <div class="row pt-sm-2 pt-lg-0">
+    {% include '/general/actionMessage.twig' %}
+    <div class="col-12">
+      <section class="card border-0 mb-4">
+        <div class="card-body">
           <div class="actions-toolbar py-2 mb-4 text-center">
             <h4 class="mb-1">{{ 'site.cart' | language }}</h4>
             <h5 class="mb-1">{{ 'site.cart.start.title' | language }}</h5>
             <p class="text-sm text-muted mb-0">{{ 'site.cart.start.info' | language }}</p>
           </div>
-        </div>
-      </div>
-      {% include 'cart/nav.twig' %}
-      <br><br>
-      <!-- Shopping cart table -->
-      <div class="row justify-content-center">
-        <div class="table-responsive">
-          <table class="table table-cards align-items-center">
-            <thead>
-            <tr>
-              <th scope="col" class="sort" data-sort="product">{{ 'site.cart.start.tab.name' | language }}</th>
-              <th scope="col" class="sort" data-sort="id">{{ 'site.cart.start.tab.id' | language }}</th>
-              <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.credits' | language }}</th>
-              <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody class="list">
-            {% for item in cart['items'] %}
+          {% include 'cart/nav.twig' %}
+          {% if emailVerified != true %}
+            <div class="col-lg-12">
+              <div class="alert alert-group alert-warning alert-icon" role="alert">
+                <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
+                </div>
+                <div class="alert-content">
+                  {{ 'site.cart.emailNotVerified'|language }}
+                </div>
+                <div class="alert-action">
+                  <form method="post">
+                    <input type="hidden" name="action" value="sendVerifyEmail">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <button type="submit" class="btn btn-warning"
+                            aria-label="Action Label">{{ 'site.cp.settings.emailNotVerified.btn' | language }}</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <br><br>
+          <div class="table-responsive">
+            <table class="table table-cards align-items-center align-middle">
+              <thead>
               <tr>
-                {% if item['info']['available'] == false %}
-                  <th scope="row">
-                    <span class="h6 text-sm font-weight-bold mb-0">{{ 'site.cart.item.notAvailable' | language }}</span>
-                    <span class="d-block text-sm text-muted">{{ item['name'] }}</span>
-                  </th>
-
-                {% else %}
-                  <th scope="row">
-                    <span class="h6 text-sm font-weight-bold mb-0">{{ item['name'] }}</span>
-
-                    {% if item['description'] != false %}
-                      <span class="d-block text-sm text-muted">{{ item['description'] }}</span>
-                    {% endif %}
-                  </th>
+                <th scope="col" class="sort"
+                    data-sort="product">{{ 'site.cart.start.tab.name' | language }}</th>
+                <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.qty' | language }}</th>
+                {% if cart['amount']['vat']['enabled'] %}
+                <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.vat' | language }}</th>
                 {% endif %}
+                {% if cart['info']['discountCode'] %}
+                <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.price' | language }}</th>
+                  <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.discount' | language }}</th>
+                {% endif %}
+                <th scope="col" class="sort" data-sort="price">{{ 'site.cart.start.tab.total' | language }}</th>
+                <th scope="col"></th>
+              </tr>
+              </thead>
+              <tbody class="list">
+              {% for item in cart['items'] %}
+                <tr>
+                  {% if item['info']['available'] == false %}
+                    <th scope="row">
+                      <span
+                        class="h6 text-sm font-weight-bold mb-0">{{ 'site.cart.item.notAvailable' | language }}</span>
+                      <span class="d-block text-sm text-muted">{{ item['name'] }}</span>
+                    </th>
+                  {% else %}
+                    <th scope="row">
+                      <span class="h6 text-sm font-weight-bold mb-0">{{ item['name'] }}</span>
+                      {% if item['description'] != false %}
+                        <span
+                          class="d-block text-sm text-muted">{{ item['description'] }} ({{ item['info']['product_id'] }})</span>
+                      {% else %}
+                        <span class="d-block text-sm text-muted">{{ item['info']['product_id'] }}</span>
+                      {% endif %}
+                    </th>
+                  {% endif %}
+                  <td>1</td>
+                  {% if cart['amount']['vat']['enabled'] %}
+                  <td>
+                    <span
+                      class="h6 text-sm font-weight-bold mb-0">{{ item['amount']['vat']['tax']|creditsToEuro(",", true) }}</span>
+                    <span class="d-block text-sm text-muted">{{ item['amount']['vat']['percent'] }}%</span>
+                  </td>
+                  {% endif %}
+                  {% if cart['info']['discountCode'] %}
+                    <td>
+                    <span
+                      class="h6 text-sm font-weight-bold mb-0">{{ (item['amount']['noDiscount']-item['amount']['setup']) |creditsToEuro(",", true) }}</span>
+                    </td>
+                    <td>
+                    <span
+                      class="h6 text-sm font-weight-bold mb-0">{{ item['amount']['discount']|creditsToEuro(",", true) }}</span>
+                    </td>
+                  {% endif %}
 
-                <td>{{ item['info']['product_id'] }}</td>
-                <td class="total">
+                  <td>
                   <span class="h6 text-sm font-weight-bold mb-0">
-                    {{ (item['amount']['full']-item['amount']['setup']) | creditsToEuro }}{{ "symbol"|currency }}
+                    {{ (item['amount']['full']-item['amount']['setup']) | creditsToEuro(",", true) }}
                     {% if item['info']['period'] == "monthly" %}
                       {{ 'general.time.monthly' | language }}
                     {% elseif item['info']['period'] == "yearly" %}
@@ -56,58 +103,107 @@
                     {% endif %}
                   </span>
 
-                  {% if item['amount']['setup'] != 0 %}
-                    <span class="d-block text-sm text-muted">
-                      {{ 'site.cart.item.setupFee' | language }}: {{ item['amount']['setup']|creditsToEuro }}
+                    {% if item['amount']['setup'] != 0 %}
+                      <span class="d-block text-sm text-muted">
+                      {{ 'site.cart.item.setupFee' | language }}: {{ item['amount']['setup']|creditsToEuro(",", true) }}
                     </span>
-                  {% endif %}
-                </td>
-                <td class="text-right">
-                  <div class="actions ml-3">
-                    <form method="post">
-                      <input type="hidden" name="csrf" value="{{ csrf }}">
-                      <input type="hidden" name="action" value="removeItem">
-                      <input type="hidden" name="item_id" value="{{ item['item_id'] }}">
-                      <button type="submit" class="btn text-danger mr-2" data-bs-toggle="tooltip" title=""
-                              data-original-title="{{ 'site.cart.start.btn.removeItem' | language }}">
-                        <i class="fas fa-trash-alt"></i>
-                      </button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-              <tr class="table-divider"></tr>
-            {% endfor %}
+                    {% endif %}
+                  </td>
+                  <td class="text-right">
+                    <div class="actions ml-3">
+                      <form method="post">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <input type="hidden" name="action" value="removeItem">
+                        <input type="hidden" name="item_id" value="{{ item['item_id'] }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger btn-icon">
+                          <i class="fas fa-trash-alt"></i>
+                        </button>
 
-            </tbody>
-          </table>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="table-divider"></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div class="card mt-5 bg-secondary">
+      </section>
+    </div>
+  </div>
+  <div class="row pt-sm-2 pt-lg-0">
+    <div class="col-lg-6 mb-4 col-md-12">
+      <section class="card border-0 h-100">
+        <div class="card-body">
+          <div class="form-group">
+            {% if cart['info']['discountCode'] == false %}
+              <form method="post" id="form">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <input type="hidden" name="action" value="testDiscountCode">
+                <div class="row justify-content-between align-items-center">
+                  <div class="col-lg-6 col-md-6 col-sm-12">
+                    <input name="discountCode" type="text" class="form-control  w-100"
+                           placeholder="{{ 'site.cart.form.discountCode' | language }}">
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-12">
+                    <button type="submit"
+                            class="btn btn-info w-100 mt-2 mt-md-0">{{ 'site.cart.form.discountCode.test' | language }}</button>
+                  </div>
+                </div>
+              </form>
+            {% else %}
+              <form method="post" id="form">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <input type="hidden" name="action" value="removeDiscountCode">
+
+                <div class="row justify-content-between align-items-center">
+                  <div class="col-lg-6 col-md-6 col-sm-12">
+                    <input name="discountCode" type="text" class="form-control  w-100"
+                           value="{{ cart['info']['discountCode']['name'] }}" disabled
+                           placeholder="{{ 'site.cart.form.discountCode' | language }}">
+                  </div>
+
+                  <div class="col-lg-6 col-md-6 col-sm-12">
+                    <button type="submit"
+                            class="btn btn-danger  w-100 mt-2 mt-md-0">{{ 'site.cart.form.discountCode.remove' | language }}</button>
+                  </div>
+                </div>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="col-lg-6 mb-4 col-md-12">
+      <section class="card border-0 h-100">
         <div class="card-body">
           <div class="row justify-content-between align-items-center">
-            <div class="col-md-6 order-md-2 mb-4 mb-md-0">
-              <div class="d-flex align-items-center justify-content-md-end">
-                <span class="h6 d-inline-block mr-3 mb-0">{{ 'site.cart.start.total' | language }}</span>
-                <span class="h4 mb-0">
-                                        {% autoescape %}
-                                          {% set credits = "@credits @symbol"|replace({'@credits': cart['amount']['full'] | creditsToEuro, '@symbol': 'symbol'|currency}) %}
-                                          {{ 'site.cart.start.credits'|language|replace({'@credits': credits }) }}
-                                        {% endautoescape %}
-                                    </span>
+            <div class="col-lg-6 col-md-6 col-sm-12 text-center d-xs-block d-md-none mb-4">
+              <div class="total">
+                <span class="h6 text-sm font-weight-bold mb-0">{{ 'site.cart.start.total' | language }}</span>
+                <span
+                  class="d-block">{{ 'site.cart.start.credits'|language|replace({'@credits': "@credits @symbol"|replace({'@credits': cart['amount']['full'] | creditsToEuro, '@symbol': 'symbol'|currency }) }) }}</span>
               </div>
             </div>
-            <div class="col-md-6 order-md-1">
-              <a type="button" href="{{ url }}/cart/state/giftcode" class="btn btn-animated btn-primary btn-animated-y">
-                <span class="btn-inner--visible">{{ 'site.cart.start.btn.next' | language }}</span>
-                <span class="btn-inner--hidden"><i class="fas fa-shopping-cart"></i></span>
-              </a>
-              <a href="{{ url }}/p"
-                 class="btn btn-link text-sm font-weight-bold">{{ 'site.cart.start.btn.back' | language }}</a>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              {% if emailVerified == true %}
+                <a type="button" href="{{ url }}/cart/state/setup"
+                   class="btn btn-primary w-100 mt-2 mt-sm-0">{{ 'site.cart.start.btn.next' | language }}
+                </a>
+              {% endif %}
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 text-end d-none d-md-block">
+              <div class="total">
+                <span class="h6 text-sm font-weight-bold mb-0">{{ 'site.cart.start.total' | language }}</span>
+                <span
+                  class="d-block">{{ 'site.cart.start.credits'|language|replace({'@credits': "@credits @symbol"|replace({'@credits': cart['amount']['full'] | creditsToEuro, '@symbol': 'symbol'|currency }) }) }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+    </div>
   </div>
-</section>
+</div>
 {% include '/general/footer.twig' %}

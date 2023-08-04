@@ -1,110 +1,102 @@
 {% include '/general/header.twig' %}
-<section class="slice slice-lg bg-section-secondary min-vh-100 bg-cover bg-size--cover"
-         style="background-image: url(/assets/img/backgrounds/img-1.jpg);">
-  <span class="mask bg-primary opacity-9"></span>
-  <div class="container pt-5">
-    <div class="row justify-content-center">
-      <div class="col-lg-9">
-        <h2 class="mb-4 text-center text-white">{{ 'site.faq.start.how' | language }}</h2>
-        <form method="post">
-          <input type="hidden" name="csrf" value="{{ csrf }}">
-          <input type="hidden" name="action" value="search">
+<section class="container d-flex flex-column justify-content-center min-vh-100">
+    <nav aria-label="breadcrumb">
+        <ol class="pt-lg-3 pb-lg-4 pb-2 breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url }}">{{ 'header.home' | language }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'site.faq' | language }}</li>
+        </ol>
+    </nav>
+    <div class="container pt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <h2 class="mb-4 text-center">{{ 'site.faq.start.how' | language }}</h2>
+                <form method="post">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <input type="hidden" name="action" value="search">
 
-          <div class="form-group bg-neutral rounded-pill mb-0 px-2 py-2 shadow">
-            <div class="row">
-              <div class="col">
-                <div class="input-group input-group-merge shadow-none">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text bg-transparent border-0"><i
-                        class="fa-regular fa-magnifying-glass"></i></span>
-                  </div>
-                  <input name="topic" type="text" class="form-control form-control-flush shadow-none"
-                         placeholder="{{ 'site.faq.start.search' | language }}">
-                </div>
-              </div>
-              <div class="col-auto">
-                <button type="submit"
-                        class="btn btn-block btn-dark rounded-pill">{{ 'site.faq.start.searchBtn' | language }}</button>
-              </div>
+                    <div class="form-group bg-neutral mb-0 py-2">
+                        <div class="row">
+                            <div class="input-group rounded-pill"><span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
+                                <input type="search" onFocus="this.select()" autofocus  name="topic" class="form-control" placeholder="{{ 'site.faq.start.search' | language }}">
+                                <button type="submit" class="btn btn-primary">{{ 'site.faq.start.searchBtn' | language }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <div class="container position-relative zindex-100">
-    <div class="my-5 text-center">
-      <h6 class="text-white font-weight-light mb-0">{{ 'site.faq.start.choose' | language }}</h6>
-    </div>
-    <!-- Categories -->
-    <div class="row justify-content-center">
-      <div class="col-lg-9 col-xl-12">
-        <div class="row">
-          <div class="col-xl-3 col-lg-6 mb-xl-n8">
-            <div class="card hover-translate-y-n10 hover-shadow-lg">
-              <div class="card-body p-5 text-center">
-                <div class="pb-4">
-                  <img alt="Image placeholder" src="/assets/img/svg/icons/Code.svg" class="svg-inject img-fluid"
-                       style="height: 40px">
-                </div>
-                <div class="pt-2">
-                  <a href="{{ url }}/faq/account"
-                     class="h6 stretched-link mb-0">{{ 'site.faq.start.category.start' | language }}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-6 mb-xl-n8">
-            <div class="card hover-translate-y-n10 hover-shadow-lg">
-              <div class="card-body p-5 text-center">
-                <div class="pb-4">
-                  <img alt="Image placeholder" src="/assets/img/svg/icons/Desk.svg" class="svg-inject img-fluid"
-                       style="height: 40px">
-                </div>
-                <div class="pt-2">
-                  <a href="{{ url }}/faq/services"
-                     class="h6 stretched-link mb-0">{{ 'site.faq.start.category.services' | language }}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-6 mb-xl-n8">
-            <div class="card hover-translate-y-n10 hover-shadow-lg">
-              <div class="card-body p-5 text-center">
-                <div class="pb-4">
-                  <img alt="Image placeholder" src="/assets/img/svg/icons/Money_Bag.svg" class="svg-inject img-fluid"
-                       style="height: 40px">
-                </div>
-                <div class="pt-2">
-                  <a href="{{ url }}/faq/payment"
-                     class="h6 stretched-link mb-0">{{ 'site.faq.start.category.payment' | language }}</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-3 col-lg-6 mb-xl-n8">
-            <div class="card hover-translate-y-n10 hover-shadow-lg">
-              <div class="card-body p-5 text-center">
-                <div class="pb-4">
-                  <img alt="Image placeholder" src="/assets/img/svg/icons/Group.svg" class="svg-inject img-fluid"
-                       style="height: 40px">
-                </div>
-                <div class="pt-2">
-                  <a href="{{ url }}/faq/support"
-                     class="h6 stretched-link mb-0">{{ 'site.faq.start.category.support' | language }}</a>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-  <!-- SVG Separator -->
-  <div class="shape-container shape-position-bottom ">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" preserveAspectRatio="none">
-      <path d="M 0 0 c 0 0 200 50 500 50 s 500 -50 500 -50 v 101 h -1000 v -100 z"></path>
-    </svg>
-  </div>
+    <div class="container position-relative zindex-100 mb-4">
+        <div class="my-5 text-center">
+            <h6 class="font-weight-light mb-0">{{ 'site.faq.start.choose' | language }}</h6>
+        </div>
+        <!-- Categories -->
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-12">
+                <div class="row g-3">
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-xl-n8">
+                        <div class="card hover-translate-y-n10 hover-shadow-lg">
+                            <div class="card-body p-5 text-center">
+                                <div class="pb-4">
+                                    <img alt="Account" src="/assets/img/svg/icons/Code.svg"
+                                         class="svg-inject img-fluid"
+                                         style="height: 40px">
+                                </div>
+                                <div class="pt-2">
+                                    <a href="{{ url }}/faq/account"
+                                       class="h6 stretched-link mb-0 text-decoration-none">{{ 'site.faq.start.category.start' | language }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-xl-n8">
+                        <div class="card hover-translate-y-n10 hover-shadow-lg">
+                            <div class="card-body p-5 text-center">
+                                <div class="pb-4">
+                                    <img alt="Services" src="/assets/img/svg/icons/Desk.svg"
+                                         class="svg-inject img-fluid"
+                                         style="height: 40px">
+                                </div>
+                                <div class="pt-2">
+                                    <a href="{{ url }}/faq/services"
+                                       class="h6 stretched-link mb-0 text-decoration-none">{{ 'site.faq.start.category.services' | language }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-xl-n8">
+                        <div class="card hover-translate-y-n10 hover-shadow-lg">
+                            <div class="card-body p-5 text-center">
+                                <div class="pb-4">
+                                    <img alt="Payment" src="/assets/img/svg/icons/Money_Bag.svg"
+                                         class="svg-inject img-fluid"
+                                         style="height: 40px">
+                                </div>
+                                <div class="pt-2">
+                                    <a href="{{ url }}/faq/payment"
+                                       class="h6 stretched-link mb-0 text-decoration-none">{{ 'site.faq.start.category.payment' | language }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-xl-n8">
+                        <div class="card hover-translate-y-n10 hover-shadow-lg">
+                            <div class="card-body p-5 text-center">
+                                <div class="pb-4">
+                                    <img alt="Support" src="/assets/img/svg/icons/Group.svg"
+                                         class="svg-inject img-fluid"
+                                         style="height: 40px">
+                                </div>
+                                <div class="pt-2">
+                                    <a href="{{ url }}/faq/support"
+                                       class="h6 stretched-link mb-0 text-decoration-none">{{ 'site.faq.start.category.support' | language }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% include '/general/footer.twig' %}

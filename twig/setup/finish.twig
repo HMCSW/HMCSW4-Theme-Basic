@@ -1,0 +1,79 @@
+{% include '/general/header_noNav.twig' %}
+<section>
+    <div class="container d-flex flex-column">
+        <div class="row align-items-center justify-content-center min-vh-100">
+
+            <section class="col-md-8 col-lg-8 col-xl-8 py-6 py-md-0">
+                <br><h4 class="text-center"><img class="rounded mx-auto d-block w-15" width="100"
+                                                 src="{{ theme['icons']['icon']['500x500'] }}"
+                                                 alt="{{ config['name'] }}"></h4>
+                <h4 class="text-center">{{ 'site.cp.setup'|language|replace({'@name': config['name'] }) }}</h4>
+                <h6 class="text-center">{{ 'site.cp.setup.description' | language }}</h6>
+                <br>
+                <form method="post">
+                    <input type="hidden" name="action" value="finishSetup">
+                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                    <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                        <div class="card-header">
+                            <h5 class="text-center">{{ 'site.cp.setup.finish.address' | language }}</h5>
+                            <h6 class="text-center text-muted">{{ 'site.cp.setup.finish.address.description' | language }}</h6>
+                        </div>
+                        <div class="card-body">
+                            {% if setup['company'] != "" %}
+                                <h6 class="text-center">{{ setup['company'] }}</h6>
+                            {% endif %}
+                            <h6 class="text-center">
+                                {% if setup['address']['sex'] == "m" %}
+                                    {{ 'general.address.sex.m' | language }}
+                                {% elseif setup['address']['sex'] == "w" %}
+                                    {{ 'general.address.sex.w' | language }}
+                                {% elseif setup['address']['sex'] == "d" %}
+                                    {{ 'general.address.sex.d' | language }}
+                                {% elseif setup['address']['sex'] == "0" %}
+                                    {{ 'general.address.sex.0' | language }}
+                                {% endif %}
+                            </h6>
+                            <h6 class="text-center">
+                                {{ setup['address']['firstname'] }} {{ setup['address']['lastname'] }}
+                            </h6>
+                            <h6 class="text-center">
+                                {{ setup['address']['street'] }} {{ setup['address']['street_nr'] }}
+                            </h6>
+                            <h6 class="text-center">
+                                {{ setup['address']['postcode'] }} {{ setup['address']['city'] }}
+                            </h6>
+                            {% if setup['address']['state'] != "" %}
+                                <h6 class="text-center">
+                                    {{ setup['address']['state'] }}
+                                </h6>
+                            {% endif %}
+                            <h6 class="text-center">
+                                {{ country }}
+                            </h6>
+                        </div>
+                    </section>
+                    <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                        <div class="card-header">
+                            <h5 class="text-center">{{ 'site.cp.setup.finish' | language }}</h5>
+                            <h6 class="text-center text-muted">{{ 'site.cp.setup.finish.description' | language }}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <button type="submit"
+                                        class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.setup.finish.btn' | language }}</button>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="text-center">
+                                <a href="{{ dashURL }}/setup" class="btn btn-danger btn-sm">
+                                    {{ 'site.cp.setup.cancel.btn' | language }}
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </section>
+        </div>
+    </div>
+</section>
+{% include '/general/footer.twig' %}

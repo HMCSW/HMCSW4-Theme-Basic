@@ -6,12 +6,8 @@
   {% endif %}
 
   <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-    <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-    </div>
     <div class="alert-content">
+        <i class="fas fa-{{ alert_icon }}"></i>
       {{ action['message'] | language }}
     </div>
   </div>

@@ -1,7 +1,7 @@
 var callback;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-function addProduct(product_id, name, type, authCode){
+function addProduct(product_id, name, type, authCode, btn){
     $.ajax({
         type: "POST",
         url: apiURL + "/user/cart/addProduct",
@@ -24,14 +24,11 @@ function addProduct(product_id, name, type, authCode){
         $(".modal").modal("hide");
 
         if(err.responseJSON.response.error_message === "requireIdentityCheck") {
-
-            modal = $("#cartModal-requireIdentityCheck");
-
-            modal.data( "productId", product_id );
-            modal.data( "name", name );
-            modal.data( "type", type );
-            modal.data( "authCode", authCode );
-            modal.modal('show');
+            startIdentityCheck(function () {
+                addProduct(product_id, name, type, authCode, btn);
+            }, function () {
+                sendNotify(getMessage("general.action.message.failed"), 'danger');
+            });
         } else if(err.status === 404){
             $("#cartModal-notFound").modal('show');
         } else if(err.status === 429){
@@ -44,17 +41,21 @@ function addProduct(product_id, name, type, authCode){
     });
 }
 
-function selectDomain(name){
+function selectDomain(btn){
     if(accessToken === ""){
         $("#cartModal-loginRequired").modal('show');
         return;
     }
+    name = btn.id;
+    btn.disabled = true;
+
+
     $.ajax({
         type: "POST",
         url: apiURL + "/p/domain/checkDomain",
         data: {name:name},
     }).done(function (answer) {
-        console.log(answer);
+        btn.disabled = false;
         if(answer.success === true){
             if(answer.response.type === "new"){
                 document.getElementById("cartModal-domainNew-todayPrice").textContent = answer.response.credits;
@@ -79,6 +80,7 @@ function selectDomain(name){
 
         }
     }).fail(function ()  {
+        btn.disabled = false;
         sendNotify(getMessage("general.action.message.failed"), "danger");
     });
 }
@@ -228,25 +230,4 @@ function addRow(item, value){
             );
     }
 
-}
-
-function startAddressVerification() {
-    startIdentityCheck(0,
-        async function (answer, interval) {
-            modal = $("#cartModal-requireIdentityCheck");
-            modal.modal('hide');
-            clearInterval(interval);
-            await sleep(200);
-            addProduct(
-                modal.data("productId"),
-                modal.data("name"),
-                modal.data("type"),
-                modal.data("authCode"),
-            );
-        },
-        function (err) {
-            $('#cartModal-requireIdentityCheck').modal('hide');
-            sendNotify(getMessage("general.action.message.failed"),'danger');
-        }
-    );
 }

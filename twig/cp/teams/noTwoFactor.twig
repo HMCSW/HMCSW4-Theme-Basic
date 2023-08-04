@@ -1,0 +1,14 @@
+{% if team['checkTwoFactorAccess'] != true %}
+    <div class="col-lg-12">
+        <div class="alert alert-group alert-danger alert-icon" role="alert">
+            <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-solid fa-exclamation"></i>
+                                </span>
+            </div>
+            <div class="alert-content">
+                {{ 'site.cp.tab.teams.noTwoFactor' | language }}
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -2,403 +2,407 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/teams/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-12">
-                        {% include '/general/actionMessage.twig' %}
-                        <div class="row">
-                            <div class="col-lg-5">
-                                <form method="post">
-                                    <input type="hidden" name="action" value="updateInfo">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                    <div class="actions-toolbar py-2 mb-4">
-                                        <h5 class="mb-1">{{ 'site.cp.teams.partner.name' | language }}</h5>
-                                        <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.name.description' | language }}</p>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="input-name"
-                                                       class="form-control-label">{{ 'site.cp.teams.partner.name.form' | language }}</label>
-                                                <input required value="{{ team['partner']['name'] }}" id="input-name"
-                                                       name="name"
-                                                       class="form-control"
-                                                       type="text"
-                                                       placeholder="{{ 'site.cp.teams.partner.name.form' | language }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="input-description"
-                                                       class="form-control-label">{{ 'site.cp.teams.partner.description.form' | language }}</label>
-                                                <input required value="{{ team['partner']['description'] }}"
-                                                       id="input-description"
-                                                       name="description" class="form-control"
-                                                       type="text"
-                                                       placeholder="{{ 'site.cp.teams.partner.description.form' | language }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="input-url"
-                                                       class="form-control-label">{{ 'site.cp.teams.partner.url.form' | language }}</label>
-                                                <input required value="{{ team['partner']['url'] }}" id="input-url"
-                                                       name="url" class="form-control"
-                                                       type="url"
-                                                       placeholder="{{ 'site.cp.teams.partner.url.form' | language }}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button type="submit"
-                                                class="btn btn-sm btn-primary">{{ 'site.cp.teams.partner.name.btn' | language }}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-lg-5 offset-lg-1">
-                                <form method="post" enctype="multipart/form-data">
-                                    <input type="hidden" name="action" value="setIcon">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                    <div class="actions-toolbar py-2 mb-4">
-                                        <h5 class="mb-1">{{ 'site.cp.teams.partner.icon' | language }}</h5>
-                                        <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.icon.description' | language }}</p>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-
-                                                <input type="file" name="file" id="file" class="form-control"/>
-                                                <label for="file">
-                                                    <i class="fa-regular fa-upload"></i>
-                                                    <span>{{ 'site.cp.teams.partner.icon.file' | language }}</span>
-                                                </label>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button type="submit"
-                                                class="btn btn-sm btn-primary">{{ 'site.cp.teams.partner.icon.upload' | language }}
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            {% include 'cp/terminateUser.twig' %}
+            {% include 'general/actionMessage.twig' %}
+            {% include 'cp/teams/noTwoFactor.twig' %}
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-handshake text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.partner' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/teams/{{ team['businessId'] }}" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
                         </div>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <div class="actions-toolbar py-2 mb-4">
-                                    <h5 class="mb-1">{{ 'site.cp.teams.partner.radio' | language }}</h5>
-                                    <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.radio.description' | language }}</p>
-                                    <br>
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#addRadio">{{ 'site.cp.teams.partner.radio.btn' | language }}</button>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-cards align-items-center">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">{{ 'site.cp.teams.partner.radio.table.name' | language }}</th>
-                                            <th scope="col">{{ 'site.cp.teams.partner.radio.table.url' | language }}</th>
-                                            <th scope="col">{{ 'site.cp.teams.partner.radio.table.delete' | language }}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% if team['partner']['radio']|length == 0 %}
-                                            <tr>
-                                                <th scope="row"></th>
-                                                <td>{{ 'site.cp.teams.partner.radio.table.nothing' | language }}</td>
-                                                <td></td>
-                                            </tr>
-                                        {% endif %}
-
-                                        {% for radio in team['partner']['radio'] %}
-                                            <tr>
-                                                <th scope="row">{{ radio['name'] }}</th>
-                                                <td>{{ radio['url'] }}</td>
-                                                <td>
-                                                    <form method="post">
-                                                        <input type="hidden" name="action" value="deleteRadio">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="radio_id"
-                                                               value="{{ radio['radio_id'] }}">
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <span class="btn-inner--icon"><i
-                                                                        class="far fa-trash-alt"></i></span>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-
-                                        </tbody>
-                                    </table>
-                                </div>
-
-
-                                <div class="modal fade" id="addRadio" tabindex="-1" role="dialog"
-                                     aria-labelledby="addRadio"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">{{ 'site.cp.teams.partner.radio.modal' | language }}</h5>
-                                            </div>
-                                            <form method="post">
-                                                <input type="hidden" name="action" value="createRadio">
-                                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="radio-name"
-                                                               class="form-control-label">{{ 'site.cp.teams.partner.radio.modal.name' | language }}</label>
-                                                        <input id="radio-name" type="text" name="name"
-                                                               placeholder="{{ 'site.cp.teams.partner.radio.modal.name.placeholder' | language }}"
-                                                               class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="radio-url"
-                                                               class="form-control-label">{{ 'site.cp.teams.partner.radio.modal.url' | language }}</label>
-                                                        <input id="radio-url" type="url" name="url"
-                                                               placeholder="{{ 'site.cp.teams.partner.radio.modal.url.placeholder' | language }}"
-                                                               class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                            data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                                                    <button type="submit"
-                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <div class="actions-toolbar py-2 mb-4">
-                                    <h5 class="mb-1">{{ 'site.cp.teams.partner.news' | language }}</h5>
-                                    <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.news.description' | language }}</p>
-                                    <br>
-                                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#createNews">{{ 'site.cp.teams.partner.news.btn' | language }}</button>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-cards align-items-center">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">{{ 'site.cp.teams.partner.news.table.title' | language }}</th>
-                                            <th scope="col">{{ 'site.cp.teams.partner.news.table.created' | language }}</th>
-                                            <th scope="col">{{ 'site.cp.teams.partner.news.table.status' | language }}</th>
-                                            <th scope="col">{{ 'site.cp.teams.partner.news.table.delete' | language }}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% if team['partner']['news']|length == 0 %}
-                                            <tr>
-                                                <th scope="row"></th>
-                                                <td>{{ 'site.cp.teams.partner.news.table.nothing' | language }}</td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
-                                        {% endif %}
-                                        {% for news in team['partner']['news'] %}
-                                            <tr>
-                                                <th scope="row">{{ news['title'] }}</th>
-                                                <td>{{ news['created_at']|date("d.m.Y H:i") }}</td>
-                                                <td>
-                                                    {% if news['status'] == "false" %}
-                                                        {{ 'site.cp.teams.partner.news.table.status.false' | language }}
-                                                    {% elseif news['status'] == "deny" %}
-                                                        {{ 'site.cp.teams.partner.news.table.status.deny' | language }}
-                                                    {% elseif news['status'] == "true" %}
-                                                        {{ 'site.cp.teams.partner.news.table.status.true' | language }}
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    <form method="post">
-                                                        <input type="hidden" name="action" value="deleteNews">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="news_id"
-                                                               value="{{ news['news_id'] }}">
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <span class="btn-inner--icon"><i
-                                                                        class="far fa-trash-alt"></i></span>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-
-                            <div class="modal fade" id="createNews" tabindex="-1" role="dialog"
-                                 aria-labelledby="createNews"
-                                 aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">{{ 'site.cp.teams.partner.news.modal' | language }}</h5>
-                                        </div>
-                                        <form method="post">
-                                            <input type="hidden" name="action" value="createNews">
-                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="news-title"
-                                                           class="form-control-label">{{ 'site.cp.teams.partner.news.modal.title' | language }}</label>
-                                                    <input id="news-title" type="text" name="title"
-                                                           placeholder="{{ 'site.cp.teams.partner.news.modal.title' | language }}"
-                                                           class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="news-message"
-                                                           class="form-control-label">{{ 'site.cp.teams.partner.news.modal.message' | language }}</label>
-                                                    <textarea id="news-message" type="text" name="message"
-                                                              placeholder="{{ 'site.cp.teams.partner.news.modal.message' | language }}"
-                                                              class="form-control"></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                                                <button type="submit"
-                                                        class="btn btn-primary">{{ 'general.modal.sendBtn' | language }}</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr/>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <div class="actions-toolbar py-2 mb-4">
-                                    <h5 class="mb-1">{{ 'site.cp.teams.partner.affiliate' | language }}</h5>
-                                    <p class="text-sm text-muted mb-0">{{ 'site.cp.teams.partner.affiliate.description' | language }}</p>
-                                    <br>
-                                </div>
-                                {% if affiliate['info']['success'] %}
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-fluid">
-                                                <div class="card-body">
-                                                    <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.url' | language }}</h5>
-                                                    <h6 class="h6 mb-0 text-center"><a
-                                                                href="{{ url }}/aff/{{ affiliate['name'] }}">{{ url }}
-                                                            /aff/{{ affiliate['info']['name'] }}</a>
-                                                    </h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="card card-fluid">
-                                                <div class="card-header">
-                                                    <h5
-                                                            class="d-block h5 mb-0 text-center">{{ 'site.cp.affiliate.log' | language }}</h5>
-                                                </div>
-
-                                                <div class="card-body">
-
-                                                    <div class="table-responsive">
-                                                        <table class="table">
-                                                            <thead>
-                                                            <tr>
-                                                                <th scope="col">{{ 'site.cp.affiliate.table.type' | language }}</th>
-                                                                <th scope="col">{{ 'site.cp.affiliate.table.amount' | language }}</th>
-                                                                <th scope="col">{{ 'site.cp.affiliate.table.at' | language }}</th>
-                                                            </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            {% if affiliate['logs']|length == 0 %}
-                                                                <tr>
-                                                                    <td>{{ 'site.cp.affiliate.table.nothing' | language }}</td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            {% else %}
-                                                                {% for log in affiliate['logs'] %}
-                                                                    <tr>
-                                                                        <td>
-                                                                            {% if log['type'] == "click" %}
-                                                                                {{ 'site.cp.affiliate.table.type.click' | language }}
-                                                                            {% elseif log['type'] == "register" %}
-                                                                                {{ 'site.cp.affiliate.table.type.register' | language }}
-                                                                            {% elseif log['type'] == "service" %}
-                                                                                {{ 'site.cp.affiliate.table.type.service' | language }}
-                                                                                ({{ log['service']['name'] }})
-                                                                            {% endif %}
-                                                                        </td>
-                                                                        <td>{{ log['amount'] | creditsToEuro }}{{ "symbol"|currency }}</td>
-                                                                        <td>{{ log['created_at']|date("d.m.Y H:i") }}</td>
-                                                                    </tr>
-                                                                {% endfor %}
-                                                            {% endif %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h6
-                                                            class="h6 text-center">{{ 'site.cp.affiliate.payOut' | language }}</h6>
-
-                                                    <form method="post" class="text-center">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="action" value="payOut">
-                                                        <button type="submit"
-                                                                class="btn btn-primary">{{ 'site.cp.affiliate.payOut.btn' | language }}</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h5 class="h5 text-center">{{ 'site.cp.affiliate.create' | language }}</h5>
-                                                    <h6
-                                                            class="h6 text-center">{{ 'site.cp.affiliate.description' | language }}</h6>
-                                                    <form method="post" class="text-center">
-                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                        <input type="hidden" name="action" value="createAffiliate">
-                                                        <button type="submit"
-                                                                class="text-center btn btn-primary">{{ 'site.cp.affiliate.create.btn' | language }}</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
                     </div>
                 </div>
-                <br><br>
-            </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" name="action" value="updateInfo">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <div class="d-flex align-items-center">
+                            <h2 class="h4 mb-0">{{ 'site.cp.teams.partner.name' | language }}</h2>
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <button type="submit" class="btn btn-dark btn-icon">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted mt-2">{{ 'site.cp.teams.partner.name.description' | language }}</p>
+
+                        <div class="row g-3">
+
+                            <div class="form-group col-md-6">
+                                <label for="input-name"
+                                       class="form-label">{{ 'site.cp.teams.partner.name.form' | language }}</label>
+                                <input required value="{{ team['partner']['name'] }}" id="input-name" name="name"
+                                       class="form-control"
+                                       type="text" placeholder="{{ 'site.cp.teams.partner.name.form' | language }}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="input-description"
+                                       class="form-label">{{ 'site.cp.teams.partner.description.form' | language }}</label>
+                                <input required value="{{ team['partner']['description'] }}" id="input-description"
+                                       name="description" class="form-control"
+                                       type="text"
+                                       placeholder="{{ 'site.cp.teams.partner.description.form' | language }}">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="input-url"
+                                       class="form-label">{{ 'site.cp.teams.partner.url.form' | language }}</label>
+                                <input required value="{{ team['partner']['url'] }}" id="input-url" name="url"
+                                       class="form-control"
+                                       type="url" placeholder="{{ 'site.cp.teams.partner.url.form' | language }}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="setIcon">
+                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                        <div class="d-flex align-items-center">
+                            <div class="dropdown"><a
+                                        class="d-flex flex-column justify-content-end position-relative overflow-hidden rounded-circle bg-size-cover bg-position-center flex-shrink-0"
+                                        aria-expanded="false"
+                                        style="width: 80px; height: 80px; background-image: url({{ team['partner']['icon'] }});"><span
+                                            class="d-block text-light text-center lh-1 pb-1"
+                                            style="background-color: rgba(0,0,0,.5)"><i
+                                                class="fa fa-camera"></i></span></a>
+                            </div>
+                            <div class="ps-3">
+                                <h3 class="h6 mb-1">{{ 'site.cp.teams.partner.icon' | language }}</h3>
+                                <p class="fs-sm text-muted mb-0">{{ 'site.cp.teams.partner.icon.description' | language }}</p>
+                            </div>
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <button type="submit" class="btn btn-dark btn-icon">
+                                    <i class="fa-solid fa-upload"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-sm text-muted mt-2"></p>
+                        <div class="form-group col-md-6">
+
+                            <label class="col-form-label" for="file-input"></label>
+                            <input class="form-control" name="file" type="file" id="file-input">
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <h2 class="h4 mb-0">{{ 'site.cp.teams.partner.radio' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <button type="button" class="btn btn-dark btn-icon" data-bs-toggle="modal"
+                                    data-bs-target="#addRadio">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-muted mt-2">{{ 'site.cp.teams.partner.radio.description' | language }}</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-cards align-items-center align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col">{{ 'site.cp.teams.partner.radio.table.name' | language }}</th>
+                                <th scope="col">{{ 'site.cp.teams.partner.radio.table.url' | language }}</th>
+                                <th scope="col">{{ 'site.cp.teams.partner.radio.table.delete' | language }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if team['partner']['radio']|length == 0 %}
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>{{ 'site.cp.teams.partner.radio.table.nothing' | language }}</td>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
+
+                            {% for radio in team['partner']['radio'] %}
+                                <tr>
+                                    <th scope="row">{{ radio['name'] }}</th>
+                                    <td>{{ radio['url'] }}</td>
+                                    <td>
+                                        <form method="post">
+                                            <input type="hidden" name="action" value="deleteRadio">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <input type="hidden" name="radio_id" value="{{ radio['radio_id'] }}">
+                                            <button type="submit" class="btn btn-sm btn-icon btn-danger">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal fade" id="addRadio" tabindex="-1" role="dialog" aria-labelledby="addRadio"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form method="post">
+                                    <input type="hidden" name="action" value="createRadio">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{ 'site.cp.teams.partner.radio.modal' | language }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+
+                                            <div class="form-group">
+                                                <label for="radio-name"
+                                                       class="form-label">{{ 'site.cp.teams.partner.radio.modal.name' | language }}</label>
+                                                <input id="radio-name" type="text" name="name"
+                                                       placeholder="{{ 'site.cp.teams.partner.radio.modal.name.placeholder' | language }}"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="radio-url"
+                                                       class="form-label">{{ 'site.cp.teams.partner.radio.modal.url' | language }}</label>
+                                                <input id="radio-url" type="url" name="url"
+                                                       placeholder="{{ 'site.cp.teams.partner.radio.modal.url.placeholder' | language }}"
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit"
+                                                class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <h2 class="h4 mb-0">{{ 'site.cp.teams.partner.news' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <button type="button" class="btn btn-dark btn-icon" data-bs-toggle="modal"
+                                    data-bs-target="#createNews">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-muted mt-2">{{ 'site.cp.teams.partner.news.description' | language }}</p>
+
+                    <div class="table-responsive">
+                        <table class="table table-cards align-items-center align-middle ">
+                            <thead>
+                            <tr>
+                                <th scope="col">{{ 'site.cp.teams.partner.news.table.title' | language }}</th>
+                                <th scope="col">{{ 'site.cp.teams.partner.news.table.created' | language }}</th>
+                                <th scope="col">{{ 'site.cp.teams.partner.news.table.status' | language }}</th>
+                                <th scope="col">{{ 'site.cp.teams.partner.news.table.delete' | language }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if team['partner']['news']|length == 0 %}
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>{{ 'site.cp.teams.partner.news.table.nothing' | language }}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
+                            {% for news in team['partner']['news'] %}
+                                <tr>
+                                    <th scope="row">{{ news['title'] }}</th>
+                                    <td>{{ news['created_at']|date }}</td>
+                                    <td>
+                                        {% if news['status'] == "false" %}
+                                            {{ 'site.cp.teams.partner.news.table.status.false' | language }}
+                                        {% elseif news['status'] == "deny" %}
+                                            {{ 'site.cp.teams.partner.news.table.status.deny' | language }}
+                                        {% elseif news['status'] == "true" %}
+                                            {{ 'site.cp.teams.partner.news.table.status.true' | language }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form method="post">
+                                            <input type="hidden" name="action" value="deleteNews">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <input type="hidden" name="news_id" value="{{ news['news_id'] }}">
+                                            <button type="submit" class="btn btn-sm btn-icon btn-danger">
+                                                <i
+                                                        class="far fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="modal fade" id="createNews" tabindex="-1" role="dialog" aria-labelledby="createNews"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form method="post">
+                                    <input type="hidden" name="action" value="createNews">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">{{ 'site.cp.teams.partner.news.modal' | language }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            <div class="form-group">
+                                                <label for="news-title"
+                                                       class="form-label">{{ 'site.cp.teams.partner.news.modal.title' | language }}</label>
+                                                <input id="news-title" type="text" name="title"
+                                                       placeholder="{{ 'site.cp.teams.partner.news.modal.title' | language }}"
+                                                       class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="news-message"
+                                                       class="form-label">{{ 'site.cp.teams.partner.news.modal.message' | language }}</label>
+                                                <textarea id="news-message" type="text" name="message"
+                                                          placeholder="{{ 'site.cp.teams.partner.news.modal.message' | language }}"
+                                                          class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit"
+                                                class="btn btn-primary">{{ 'general.modal.sendBtn' | language }}</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <h2 class="h4 mb-0">{{ 'site.cp.teams.partner.affiliate' | language }}</h2>
+                    </div>
+                    <p class="text-sm text-muted mt-2">{{ 'site.cp.teams.partner.affiliate.description' | language }}</p>
+                    {% if affiliate != false %}
+                        <div class="d-none d-md-block d-lg-block d-xl-block">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6 class="text-center"><i class="fas fa-2x fa-mouse-pointer"></i></h6>
+                                    <h4
+                                            class="text-center">{{ 'site.cp.affiliate.card.click' | language }}</h4>
+                                    <h4 class="text-center">{{ stats['click_count'] }}</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="text-center"><i class="fas fa-2x fa-user-circle"></i></h6>
+                                    <h4 class="text-center">{{ 'site.cp.affiliate.card.register' | language }}</h4>
+                                    <h4 class="text-center">{{ stats['user_count'] }}</h4>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="text-center"><i class="fas fa-2x fa-shopping-cart"></i></h6>
+                                    <h4 class="text-center">{{ 'site.cp.affiliate.card.order' | language }}</h4>
+                                    <h4 class="text-center">{{ stats['service_count'] }}</h4>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="row py-4">
+                            <div class="col-md-12">
+                                <h6 class="h6 text-center">{{ 'site.cp.affiliate.payOut' | language }}</h6>
+                                <form method="post" class="text-center">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="payOut">
+                                    <button type="submit"
+                                            class="btn btn-primary">{{ 'site.cp.affiliate.payOut.btn' | language }}</button>
+                                </form>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row py-4">
+                            <div class="col-md-12">
+                                <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.url' | language }}</h5>
+                                <h6 class="h6 mb-0 text-center"><a
+                                            href="{{ url }}/aff/{{ affiliate['affiliate_id'] }}">{{ url ~"/aff/"~ affiliate['name'] }}</a>
+                                </h6>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <div class="row py-4">
+                            <div class="col-md-12">
+                                <h5 class="h5 mb-0 text-center">{{ 'site.cp.affiliate.log' | language }}</h5>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">{{ 'site.cp.affiliate.table.type' | language }}</th>
+                                            <th scope="col">{{ 'site.cp.affiliate.table.amount' | language }}</th>
+                                            <th scope="col">{{ 'site.cp.affiliate.table.at' | language }}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if logs|length == 0 %}
+                                            <tr>
+                                                <td>{{ 'site.cp.affiliate.table.nothing' | language }}</td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        {% else %}
+                                            {% for log in logs %}
+                                                <tr>
+                                                    <td>
+                                                        {% if log['type'] == "click" %}
+                                                            {{ 'site.cp.affiliate.table.type.click' | language }}
+                                                        {% elseif log['type'] == "register" %}
+                                                            {{ 'site.cp.affiliate.table.type.register' | language }}
+                                                        {% elseif log['type'] == "service" %}
+                                                            {{ 'site.cp.affiliate.table.type.service' | language }}
+                                                            ({{ log['service']['name'] }})
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>{{ log['amount'] | creditsToEuro }}{{ "symbol"|currency }}</td>
+                                                    <td>{{ log['created_at']|date }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="d-none d-md-block d-lg-block d-xl-block">
+                            <div class="card-body">
+                                <h5 class="h5 text-center">{{ 'site.cp.affiliate.create' | language }}</h5>
+                                <h6
+                                        class="h6 text-center">{{ 'site.cp.affiliate.description' | language }}</h6>
+                                <form method="post" class="text-center">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="createAffiliate">
+                                    <button type="submit"
+                                            class="text-center btn btn-primary">{{ 'site.cp.affiliate.create.btn' | language }}</button>
+                                </form>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+            </section>
         </div>
+
     </div>
 </div>
 {% include '/general/footer.twig' %}

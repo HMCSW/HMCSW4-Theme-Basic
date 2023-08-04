@@ -1,209 +1,204 @@
 {% include '/general/header.twig' %}
-<section>
-  <div class="container d-flex align-items-center text-center text-lg-left py-5 py-lg-6 border-bottom">
-    <div class="col px-0">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="h1 mb-2">{{ 'site.status' | language }}</h2>
-          <h6 class="font-weight-light text-muted">{{ 'site.status.description' | language }}</h6>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<section class="slice slice-lg">
+<section class="container pt-5 mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="pt-lg-3 pb-lg-4 pb-2 breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url }}">{{ 'header.home' | language }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ 'site.status' | language }}</li>
+        </ol>
+    </nav>
+    <div class="row mb-4">
+        {% include 'general/themeAlert.twig' %}
+        {% if status['maintenance']|length != 0 %}
+            {% for m in status['maintenance'] %}
+                <div class="col-lg-12">
+                    <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid mb-4">
+                        <div class="card-body py-5 text-center h-100">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h5 class="h3">{{ 'site.status.maintenance' | language }}</h5>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5 class="h3">{{ m['title'] }}</h5>
+                                    {% if m['state'] == 1 %}
+                                        <span
+                                                class="badge bg-warning badge-pill">{{ 'site.status.maintenance.state.1' | language }}</span>
+                                    {% elseif m['state'] == 2 %}
+                                        <span
+                                                class="badge bg-danger badge-pill">{{ 'site.status.maintenance.state.2' | language }}</span>
+                                    {% elseif m['state'] == 3 %}
+                                        <span
+                                                class="badge bg-primary badge-pill">{{ 'site.status.maintenance.state.3' | language }}</span>
+                                    {% elseif m['state'] == 4 or m['state'] == 0 %}
+                                        <span
+                                                class="badge bg-info badge-pill">{{ 'site.status.maintenance.state.4' | language }}</span>
+                                    {% endif %}
 
-  {% if status['maintenance']|length != 0 %}
-    <div class="container">
-      <div class="row mt-4">
-        {% for m in status['maintenance'] %}
-          <div class="col-lg-12">
-            <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
-              <div class="card-body py-5 text-center h-100">
-                <div class="row">
-                  <div class="col-lg-12">
-                    <h5 class="h3">{{ 'site.status.maintenance' | language }}</h5>
-                  </div>
-                  <div class="col-lg-6">
-                    <h5 class="h3">{{ m['title'] }}</h5>
-                    {% if m['state'] == 1 %}
-                      <span
-                        class="badge badge-warning badge-pill">{{ 'site.status.maintenance.state.1' | language }}</span>
-                    {% elseif m['state'] == 2 %}
-                      <span
-                        class="badge badge-danger badge-pill">{{ 'site.status.maintenance.state.2' | language }}</span>
-                    {% elseif m['state'] == 3 %}
-                      <span
-                        class="badge badge-primary badge-pill">{{ 'site.status.maintenance.state.3' | language }}</span>
-                    {% elseif m['state'] == 4 or m['state'] == 0 %}
-                      <span
-                        class="badge badge-info badge-pill">{{ 'site.status.maintenance.state.4' | language }}</span>
-                    {% endif %}
-
-                    <p><br>{{ m['message']|nl2br }}</p>
-                    <h4 class="h6">
-                      {% autoescape %}
-                        {% set text = 'site.status.maintenance.created_at'|language|replace({'@date': m['created_at']|date("d.m.Y - H:i") }) %}
-                        {{ text|raw }}
-                      {% endautoescape %}
-                    </h4>
-                    <h4 class="h6">
-                      {% autoescape %}
-                        {% set text = 'site.status.maintenance.start_at'|language|replace({'@date': m['start_at']|date("d.m.Y - H:i") }) %}
-                        {{ text|raw }}
-                      {% endautoescape %}
-                    </h4>
-                    <h4 class="h6">
-                      {% autoescape %}
-                        {% set text = 'site.status.maintenance.finish_at'|language|replace({'@date': m['finish_at']|date("d.m.Y - H:i") }) %}
-                        {{ text|raw }}
-                      {% endautoescape %}
-                    </h4>
-                  </div>
-                  <div class="col-lg-6">
-                    <h5 class="h5">{{ 'site.status.maintenance.component' | language }}</h5>
-                    {% for component in m['component_id'] %}
-                      <p>{{ status['all'][component]['name'] }}</p>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
-  <div class="container">
-    <div class="row mt-4">
-      {% if offline == 0 %}
-        <div class="col-md-12">
-          <div class="alert alert-group alert-success alert-icon" role="alert">
-            <div class="alert-group-prepend">
-                        <span class="alert-group-icon text-">
-                            <i class="fas fa-check"></i>
-                        </span>
-            </div>
-            <div class="alert-content">
-              <b>{{ 'site.status.alert.online' | language }}</b>
-            </div>
-          </div>
-        </div>
-      {% else %}
-        <div class="col-md-12">
-          <div class="alert alert-group alert-danger alert-icon" role="alert">
-            <div class="alert-group-prepend">
-                        <span class="alert-group-icon text-">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </span>
-            </div>
-            <div class="alert-content">
-              <b>{{ 'site.status.alert.offline' | language }}</b>
-            </div>
-          </div>
-        </div>
-      {% endif %}
-
-      {% for group in status['groups'] %}
-        <div class="col-lg-12">
-          <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
-            <div class="card-body py-5 text-center h-100">
-              <h5 class="h2">{{ group['name'] }}</h5>
-              <ul class="list-group">
-                {% for components in group['components'] %}
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ components['name'] }}
-                    {% if components['state'] == 1 %}
-                      <span class="badge badge-success badge-pill">{{ 'site.status.state.1' | language }}</span>
-                    {% elseif components['state'] == 2 %}
-                      <span class="badge badge-warning badge-pill">{{ 'site.status.state.2' | language }}</span>
-                    {% elseif components['state'] == 3 %}
-                      <span class="badge badge-danger badge-pill">{{ 'site.status.state.3' | language }}</span>
-                    {% elseif components['state'] == 4 %}
-                      <span class="badge badge-info badge-pill">{{ 'site.status.state.4' | language }}</span>
-                    {% elseif components['state'] == 5 %}
-                      <span class="badge badge-primary badge-pill">{{ 'site.status.state.5' | language }}</span>
-                    {% elseif components['state'] == 6 or components['state'] == 0 %}
-                      <span class="badge badge-danger badge-pill">{{ 'site.status.state.6' | language }}</span>
-                    {% endif %}
-                  </li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-
-
-  <div class="container d-flex align-items-center text-center text-lg-left py-5 py-lg-6 border-top">
-    <div class="col px-0">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="h1 mb-2">{{ 'site.status.incident' | language }}</h2>
-          <h6 class="font-weight-light text-muted">{{ 'site.status.incident.description' | language }}</h6>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="row mt-4">
-      {% if status['incidents']|length != 0 %}
-        {% for incident in status['incidents'] %}
-          <div class="col-lg-12">
-            <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
-              <div class="card-body py-5 h-100">
-                <h5 class="h3 text-center">{{ incident['title'] }}</h5>
-                <div class="row">
-                  <div class="col-6">
-                    <h5 class="h5 text-center">{{ 'site.status.incidents.history' | language }}</h5>
-
-                    <div class="list-group list-group-flush">
-                      {% for update in incident['updates'] %}
-                        <a class="list-group-item list-group-item-action">
-                          <div class="d-flex" >
-                            <div class="flex-fill ml-3">
-                              <div class="h6 text-sm mb-0">
-                                {% if update['state'] == 1 %}
-                                  {{ 'site.status.incident.state.1' | language }}
-                                {% elseif update['state'] == 2 %}
-                                  {{ 'site.status.incident.state.2' | language }}
-                                {% elseif update['state'] == 3 %}
-                                  {{ 'site.status.incident.state.3' | language }}
-                                {% elseif update['state'] == 4 %}
-                                  {{ 'site.status.incident.state.4' | language }}
-                                {% endif %}
-                                <small
-                                  class="float-right text-muted">{{ update['created_at']|date("d.m.Y - H:i") }}</small>
-                              </div>
-                              <p class="lh-140 mb-0">
-                                {{ update['text']|nl2br }}
-                              </p>
+                                    <p><br>{{ m['message']|nl2br }}</p>
+                                    <h4 class="h6">
+                                        {% autoescape %}
+                                            {% set text = 'site.status.maintenance.created_at'|language|replace({'@date': m['created_at']|date }) %}
+                                            {{ text|raw }}
+                                        {% endautoescape %}
+                                    </h4>
+                                    <h4 class="h6">
+                                        {% autoescape %}
+                                            {% set text = 'site.status.maintenance.start_at'|language|replace({'@date': m['start_at']|date }) %}
+                                            {{ text|raw }}
+                                        {% endautoescape %}
+                                    </h4>
+                                    <h4 class="h6">
+                                        {% autoescape %}
+                                            {% set text = 'site.status.maintenance.finish_at'|language|replace({'@date': m['finish_at']|date }) %}
+                                            {{ text|raw }}
+                                        {% endautoescape %}
+                                    </h4>
+                                </div>
+                                <div class="col-lg-6">
+                                    <h5 class="h5">{{ 'site.status.maintenance.component' | language }}</h5>
+                                    {% for component in m['component_id'] %}
+                                        <p>{{ status['all'][component]['name'] }}</p>
+                                    {% endfor %}
+                                </div>
                             </div>
-                          </div>
-                        </a>
-                      {% endfor %}
+                        </div>
                     </div>
-                  </div>
-                  <div class="col-6 text-center">
-                    <h5 class="h5">{{ 'site.status.incidents.component' | language }}</h5>
-                    {% for component in incident['component'] %}
-                      <p>{{ status['all'][component]['name'] }}</p>
-                    {% endfor %}
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="col-lg-12">
-          <h3 class="text-center">{{ 'site.status.incident.nothing' | language }}</h3>
-        </div>
-      {% endif %}
-    </div>
-  </div>
+            {% endfor %}
+        {% endif %}
+        <div class="container mb-4">
+            <div class="row mt-4">
+                {% if offline == 0 %}
+                    <div class="col-md-12">
+                        <div class="alert alert-group alert-success alert-icon" role="alert">
+                            <div class="alert-content">
+                                <i class="fas fa-check"></i>
+                                <b>{{ 'site.status.alert.online' | language }}</b>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-md-12">
+                        <div class="alert alert-group alert-danger alert-icon" role="alert">
+                            <div class="alert-content">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <b>{{ 'site.status.alert.offline' | language }}</b>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
 
+                {% for group in status['groups'] %}
+                    <div class="col-lg-12">
+                        <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid mb-4">
+                            <div class="card-body py-5 text-center h-100">
+                                <h5 class="h2">{{ group['name'] }}</h5>
+                                <ul class="list-group">
+                                    {% for components in group['components'] %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {{ components['name'] }}
+                                            {% if components['state'] == 1 %}
+                                                <span class="badge bg-success badge-pill">{{ 'site.status.state.1' | language }}</span>
+                                            {% elseif components['state'] == 2 %}
+                                                <span class="badge bg-warning badge-pill">{{ 'site.status.state.2' | language }}</span>
+                                            {% elseif components['state'] == 3 %}
+                                                <span class="badge bg-danger badge-pill">{{ 'site.status.state.3' | language }}</span>
+                                            {% elseif components['state'] == 4 %}
+                                                <span class="badge bg-info badge-pill">{{ 'site.status.state.4' | language }}</span>
+                                            {% elseif components['state'] == 5 %}
+                                                <span class="badge bg-primary badge-pill">{{ 'site.status.state.5' | language }}</span>
+                                            {% elseif components['state'] == 6 or components['state'] == 0 %}
+                                                <span class="badge bg-danger badge-pill">{{ 'site.status.state.6' | language }}</span>
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <div class="container align-items-center text-center text-lg-left py-5 py-lg-6 border-top">
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-12 text-center">
+                    <h2 class="h1 mb-2">{{ 'site.status.incident' | language }}</h2>
+                    <h6 class="font-weight-light text-muted">{{ 'site.status.incident.description' | language }}</h6>
+                </div>
+            </div>
+            <div class="row">
+                {% if status['incidents']|length != 0 %}
+                    {% for incident in status['incidents'] %}
+                        <div class="col-lg-12 mb-4">
+                            <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid">
+                                <div class="card-body py-5 h-100">
+                                    <h5 class="h3 text-center">{{ incident['title'] }}</h5>
+                                    <div class="text-center">
+                                        {% if incident['state'] == 1 %}
+                                            <span
+                                                    class="badge bg-danger text-center">{{ 'site.status.incident.state.1' | language }}</span>
+                                        {% elseif incident['state'] == 2 %}
+                                            <span
+                                                    class="badge bg-warning text-center">{{ 'site.status.incident.state.2' | language }}</span>
+                                        {% elseif incident['state'] == 3 %}
+                                            <span
+                                                    class="badge bg-success text-center">{{ 'site.status.incident.state.3' | language }}</span>
+                                        {% elseif incident['state'] == 4 %}
+                                            <span
+                                                    class="badge bg-danger text-center">{{ 'site.status.incident.state.4' | language }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="h5 text-center">{{ 'site.status.incidents.history' | language }}</h5>
+
+                                            <div class="list-group list-group-flush">
+                                                {% for update in incident['updates'] %}
+                                                    <a class="list-group-item list-group-item-action">
+                                                        <div class="d-flex">
+                                                            <div class="flex-fill ml-3">
+                                                                <div class="h6 text-sm mb-0">
+                                                                    {% if update['state'] == 1 %}
+                                                                        {{ 'site.status.incident.state.1' | language }}
+                                                                    {% elseif update['state'] == 2 %}
+                                                                        {{ 'site.status.incident.state.2' | language }}
+                                                                    {% elseif update['state'] == 3 %}
+                                                                        {{ 'site.status.incident.state.3' | language }}
+                                                                    {% elseif update['state'] == 4 %}
+                                                                        {{ 'site.status.incident.state.4' | language }}
+                                                                    {% endif %}
+                                                                    <small
+                                                                            class="float-right text-muted">{{ update['created_at']|date }}</small>
+                                                                </div>
+                                                                <p class="lh-140 mb-0">
+                                                                    {{ update['text']|nl2br }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <h5 class="h5">{{ 'site.status.incidents.component' | language }}</h5>
+                                            {% for component in incident['component'] %}
+                                                <p>{{ status['all'][component]['name'] }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-lg-12">
+                        <h3 class="text-center">{{ 'site.status.incident.nothing' | language }}</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </section>
+
 {% include '/general/footer.twig' %}

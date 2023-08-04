@@ -57,6 +57,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ url }}/cp/donation" class="nav-link {% if currentSite_CP == "donation" %}active{% endif %}">
+                {{ 'site.cp.tab.donation' | language }}
+            </a>
+        </li>
+        <li>
             <a href="{{ url }}/cp/subscription" class="nav-link {% if currentSite_CP == "subscription" %}active{% endif %}">
                 {{ 'site.cp.tab.subscription' | language }}
             </a>

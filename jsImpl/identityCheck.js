@@ -1,73 +1,122 @@
-function requireIdentityCheck(){
-    startIdentityCheck(0,
-        function (answer, interval) {
-            if(newWindow.closed === true){
-                clearInterval(interval);
-                window.location.reload();
+window.addEventListener('load', async event => {
+    initIdentityCheckRequired();
+});
+
+function startIdentityCheck(successCallback, failedCallback, address_id, skipWindow){
+    var event = new CustomEvent('IdentityCheckRequired', {detail: {address_id: address_id, skipWindow: skipWindow, successCallback: successCallback, failedCallback: failedCallback }});
+    document.dispatchEvent(event);
+}
+
+async function initIdentityCheckRequired() {
+    var sessionCodeSave;
+    let modal = $('#identityCheckRequired');
+
+    document.addEventListener("IdentityCheckRequired", e => {
+        startIdentityCheck();
+
+
+        function end(){
+            modal.off();
+            modal.modal('hide', {});
+            document.getElementById("reopenIdentityCheck").removeEventListener("click", reopen);
+            document.getElementById("startIdentityCheck").removeEventListener("click", startCheck);
+            document.getElementById("reopenIdentityCheck").style.display = "none";
+            document.getElementById("startIdentityCheck").style.display = "block";
+        }
+
+        function done(){
+            end();
+            e.detail.successCallback();
+        }
+
+        function fail(){
+            end();
+            e.detail.failedCallback();
+        }
+
+        function startIdentityCheck() {
+            if(e.detail.skipWindow === true) {
+                startCheck();
+            } else {
+
+                modal.modal('show', {backdrop: 'static', keyboard: false, focus: true});
+
+                modal.on('hidden.bs.modal', function (e) {
+                    fail();
+                });
+                document.getElementById("startIdentityCheck").addEventListener("click", startCheck);
             }
-        }, function (err) {
-            $('.modal').modal('hide');
-            sendNotify(getMessage("general.action.message.failed"),'danger');
         }
-    );
-}
 
-function startIdentityCheck(address_id = 0, onSuccess, onError){
-    url;
-    if(address_id !== 0){
-        url = apiURL + '/user/settings/userInfo/address/'+address_id+'/identityCheck';
-    } else {
-        url = apiURL + '/user/settings/userInfo/address/identityCheck';
-    }
+        function checkIdentityCheck(){
 
-    $.ajax({
-        type: 'POST',
-        url: url,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-        },
-    }).done(function (answer) {
-        if(answer.success === true){
-            popupCenter(answer.response.url, 'IdentityCheck', 500, 750);
-            interval = setInterval(function(){
-                if(newWindow.closed === true){
-                    onSuccess(answer, interval);
+            if(e.detail.address_id !== undefined){
+                requestUrl = apiURL + '/user/settings/userInfo/address/'+e.detail.address_id+'/identityCheck/status/';
+            } else {
+                requestUrl = apiURL + '/user/settings/userInfo/address/identityCheck/status/';
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: requestUrl,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                },
+            }).done(function (answer) {
+                if(answer.success){
+                    if(answer.response.status == "true"){
+                        done();
+                    } else {
+                        fail();
+                    }
+                } else {
+                    fail();
                 }
-            }, 500);
-        } else {
-            getAlreadyStartedCheck(address_id, onSuccess, onError);
+            }).fail(function (err)  {
+                fail();
+            });
         }
-    }).fail(function (err)  {
-        getAlreadyStartedCheck(address_id, onSuccess, onError);
-    });
-}
+        function reopen(){
+            newWindow.focus();
+        }
 
-function getAlreadyStartedCheck(address_id = 0, onSuccess, onError){
-    url;
-    if(address_id !== 0){
-        url = apiURL + '/user/settings/userInfo/address/'+address_id+'/identityCheck';
-    } else {
-        url = apiURL + '/user/settings/userInfo/address/identityCheck';
-    }
+        function startCheck(){
+            document.getElementById("startIdentityCheck").removeEventListener("click", startCheck);
+            document.getElementById("reopenIdentityCheck").style.display = "block";
+            document.getElementById("reopenIdentityCheck").addEventListener("click", reopen);
 
-    $.ajax({
-        type: 'GET',
-        url: url,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-        },
-    }).done(function (answer1) {
-        if(answer1.success === true) {
-            popupCenter(answer1.response.url, 'IdentityCheck', 500, 750);
-            interval = setInterval(function(){
-                if(newWindow.closed === true){
-                    onSuccess(answer1, interval);
+            document.getElementById("startIdentityCheck").style.display = "none";
+
+            if(e.detail.address_id !== undefined){
+                requestUrl = apiURL + '/user/settings/userInfo/address/'+e.detail.address_id+'/identityCheck/full';
+            } else {
+                requestUrl = apiURL + '/user/settings/userInfo/address/identityCheck/full';
+            }
+            $.ajax({
+                type: 'POST',
+                url: requestUrl,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                },
+            }).done(function (answer) {
+                if(answer.success === true){
+                    popupCenter(answer.response.url, 'IdentityCheck', 500, 750);
+                    interval = setInterval(function(){
+
+                        if(newWindow.closed === true){
+                            clearInterval(interval);
+                            checkIdentityCheck();
+                        }
+                    }, 500);
+                } else {
+                    fail();
                 }
-            }, 500);
-        } else {
-            onError(answer1);
+            }).fail(function (err)  {
+                fail();
+            });
         }
-    }).fail(function (err1)  {
-        onError(err1);
+
+
     });
+
 }

@@ -1,6 +1,6 @@
 const {startAuthentication, browserSupportsWebAuthn} = SimpleWebAuthnBrowser;
 //
-async function startFido2Login() {
+async function startFido2LoginTwoFactor() {
     document.getElementById('fidoFailMessage').style = "display:none";
 
     const resp = await fetch(apiURL + "/auth/fido2/login/option", {method: 'POST', headers: {
@@ -23,112 +23,112 @@ async function startFido2Login() {
         const verificationJSON = await verificationResp.json();
 
         if (verificationJSON && verificationJSON.success) {
-            generateToken(sessionCode);
+            generateTokenTwoFactor(sessionCode);
         } else {
-            fidoFail();
+            fidoFailTwoFactor();
             sendNotify(getMessage("general.action.message.failed") + ": "+ verificationJSON.response.error_message, "danger");
         }
     } catch (error) {
-        fidoFail();
+        fidoFailTwoFactor();
         sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
     }
 
 }
 
-window.addEventListener('load', event => {
-    init();
+window.addEventListener('load', async event => {
+    await import(url + '/assets/js/simpleWebauthn/index.umd.min.js');
+    initTwoFactor();
 });
 
 var fidoAvailable = false;
 var methods = {};
 var currentMethod;
 
-function init() {
-    document.getElementById('selectMethod').style = "display:block";
-    document.getElementById('allMethodsLoader').style = "display:block";
+function initTwoFactor() {
+    document.getElementById('selectMethod-twofactor').style = "display:block";
+    document.getElementById('allMethodsLoader-twofactor').style = "display:block";
 
-    getMethods().done(function (answer) {
-
+    getMethodsTwoFactor().done(function (answer) {
         if (answer.success) {
             if (answer.response.types.length > 0) {
                 for (let i = 0; i < answer.response.types.length; i++) {
-                    addMethod(answer.response.types[i]);
+                    addMethodTwoFactor(answer.response.types[i]);
                 }
                 methods = answer.response.types;
                 let methodsCount = methods.length;
 
                 if(methodsCount === 0){
-                    document.getElementById('noMethod').style = "display:block";
-                    document.getElementById('allMethodsLoader').style = "display:none";
+                    document.getElementById('noMethod-twofactor').style = "display:block";
+                    document.getElementById('allMethodsLoader-twofactor').style = "display:none";
                 } else {
-                    document.getElementById('allMethodsLoader').style = "display:none";
+                    document.getElementById('allMethodsLoader-twofactor').style = "display:none";
                     if(fidoAvailable){
-                        fido2Site(methodsCount > 1);
+                        fido2SiteTwoFactor(methodsCount > 1);
                     } else {
-                        startSelectProcess();
+                        startSelectProcessTwoFactor();
                     }
                 }
             } else {
-                document.getElementById('noMethod').style = "display:block";
-                document.getElementById('allMethodsLoader').style = "display:none";
+                document.getElementById('noMethod-twofactor').style = "display:block";
+                document.getElementById('allMethodsLoader-twofactor').style = "display:none";
             }
         }
     }).fail(function (err) {
-        document.getElementById('noMethod').style = "display:block";
-        document.getElementById('allMethodsLoader').style = "display:none";
+        document.getElementById('noMethod-twofactor').style = "display:block";
+        document.getElementById('allMethodsLoader-twofactor').style = "display:none";
     })
 
 }
 
-function fidoFail(){
-    document.getElementById("cancelFido").removeAttribute("disabled");
-    document.getElementById('fidoFailMessage').style = "display:block";
+function fidoFailTwoFactor(){
+    document.getElementById("cancelFido-twofactor").removeAttribute("disabled");
+    document.getElementById('fidoFailMessage-twofactor').style = "display:block";
 
-    document.getElementById('fidoFailBtn').addEventListener('click', fidoRetry);
+    document.getElementById('fidoFailBtn-twofactor').addEventListener('click', fidoRetryTwoFactor);
 }
 
-function fidoRetry(){
-    document.getElementById('fidoFailBtn').removeEventListener('click', fidoRetry);
-    document.getElementById('fidoFailMessage').style = "display:none";
-    document.getElementById("cancelFido").setAttribute("disabled", "true");
-    startFido2Login();
+function fidoRetryTwoFactor(){
+    document.getElementById('fidoFailBtn-twofactor').removeEventListener('click', fidoRetryTwoFactor);
+    document.getElementById('fidoFailMessage-twofactor').style = "display:none";
+    document.getElementById("cancelFido-twofactor").setAttribute("disabled", "true");
+    startFido2LoginTwoFactor();
 }
 
-function fido2Site(otherMethodsAvailable = false){
-    document.getElementById("code-loader").style = "display:none";
-    document.getElementById("code-form").style = "display:none";
-    document.getElementById("enterCode").style = "display:none";
-    document.getElementById("allMethods").style = "display:none";
-    document.getElementById("selectBTN").style = "display:none";
-    document.getElementById("cancelFido").style = "display:none";
+function fido2SiteTwoFactor(otherMethodsAvailable = false){
+    document.getElementById("code-loader-twofactor").style = "display:none";
+    document.getElementById("code-form-twofactor").style = "display:none";
+    document.getElementById("enterCode-twofactor").style = "display:none";
+    document.getElementById("allMethods-twofactor").style = "display:none";
+    document.getElementById("selectBTN-twofactor").style = "display:none";
+    document.getElementById("cancelFido-twofactor").style = "display:none";
 
-    document.getElementById("selectMethod").style = "display:block";
-    document.getElementById("fidoInfo").style = "display:block";
-    document.getElementById("cancelFido").setAttribute("disabled", "true");
+    document.getElementById("selectMethod-twofactor").style = "display:block";
+    document.getElementById("fidoInfo-twofactor").style = "display:block";
+    document.getElementById("cancelFido-twofactor").setAttribute("disabled", "true");
     if(otherMethodsAvailable){
-        document.getElementById("cancelFido").style = "display:block";
-        document.getElementById("cancelFido").addEventListener("click", cancelFido);
+        document.getElementById("cancelFido-twofactor").style = "display:block";
+        document.getElementById("cancelFido-twofactor").addEventListener("click", cancelFidoTwoFactor);
     }
 
-    startFido2Login();
+    startFido2LoginTwoFactor();
 }
 
-function cancelFido(){
-    document.getElementById("cancelFido").removeEventListener("click", cancelFido);
-    document.getElementById("fidoFailMessage").style = "display:none";
-    document.getElementById("fidoInfo").style = "display:none";
+function cancelFidoTwoFactor(){
+    document.getElementById("cancelFido-twofactor").removeEventListener("click", cancelFidoTwoFactor);
+    document.getElementById("fidoFailMessage-twofactor").style = "display:none";
+    document.getElementById("fidoInfo-twofactor").style = "display:none";
 
-    startSelectProcess();
+    startSelectProcessTwoFactor();
 }
 
-function startSelectProcess(fido = false){
-    document.getElementById("allMethods").style = "display:block";
-    document.getElementById("selectBTN").style = "display:block";
+function startSelectProcessTwoFactor(fido = false){
+    document.getElementById("allMethods-twofactor").style = "display:block";
+    document.getElementById("selectBTN-twofactor").style = "display:block";
 
-    document.getElementById("enterCode").style = "display:none"
-    document.getElementById("selectMethod").style = "display:block";
+    document.getElementById("enterCode-twofactor").style = "display:none"
+    document.getElementById("selectMethod-twofactor").style = "display:block";
 
-    let option = document.getElementById("fidoOption");
+    let option = document.getElementById("fidoOption-twofactor");
     if(typeof(option) != 'undefined' && option != null) {
         if (fido) {
             option.style = "display:block";
@@ -137,11 +137,11 @@ function startSelectProcess(fido = false){
         }
     }
 
-    document.getElementById("selectBTN").addEventListener("click", selectBTN);
+    document.getElementById("selectBTN-twofactor").addEventListener("click", selectBTNTwoFactor);
 }
 
-function submitCode(){
-    let value = document.getElementById("code").value;
+function submitCodeTwoFactor(){
+    let value = document.getElementById("code-twofactor").value;
     if(value.length > 0){
          $.ajax({
             type: "PATCH",
@@ -149,10 +149,10 @@ function submitCode(){
             data: {sessionCode: sessionCode, method: currentMethod, code: value }
         }).done(function (answer) {
             if(answer.success){
-                document.getElementById("code-loader").style = "display:block";
-                document.getElementById("code-form").style = "display:none";
+                document.getElementById("code-loader-twofactor").style = "display:block";
+                document.getElementById("code-form-twofactor").style = "display:none";
 
-                generateToken(sessionCode);
+                generateTokenTwoFactor(sessionCode);
             } else {
                 sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
             }
@@ -162,60 +162,60 @@ function submitCode(){
     }
 }
 
-function submitCodeEmptyCheck(){
-    let code = document.getElementById("code");
+function submitCodeEmptyCheckTwoFactor(){
+    let code = document.getElementById("code-twofactor");
     let value = code.value;
 
-    document.getElementById("submit-code").addEventListener("click", submitCode);
+    document.getElementById("submit-code-twofactor").addEventListener("click", submitCodeTwoFactor);
     if(value.length <= 0){
-        document.getElementById("submit-code").setAttribute("disabled", "true");
+        document.getElementById("submit-code-twofactor").setAttribute("disabled", "true");
     } else {
-        document.getElementById("submit-code").removeAttribute("disabled");
+        document.getElementById("submit-code-twofactor").removeAttribute("disabled");
     }
 }
 
-function selectBTN(){
-    document.getElementById("selectBTN").removeEventListener("click", selectBTN);
-    let selectedMethod = getSelectedMethod();
+function selectBTNTwoFactor(){
+    document.getElementById("selectBTN").removeEventListener("click", selectBTNTwoFactor);
+    let selectedMethod = getSelectedMethodTwoFactor();
     if(selectedMethod !== undefined){
-        document.getElementById("enterCode").style = "display:block"
-        document.getElementById("selectMethod").style = "display:none";
+        document.getElementById("enterCode-twofactor").style = "display:block"
+        document.getElementById("selectMethod-twofactor").style = "display:none";
 
-        document.getElementById("selectOtherMethod").addEventListener("click", selectOtherMethod);
-        document.getElementById("submit-code").setAttribute("disabled", "true");
+        document.getElementById("selectOtherMethod-twofactor").addEventListener("click", selectOtherMethodTwoFactor);
+        document.getElementById("submit-code-twofactor").setAttribute("disabled", "true");
 
-        document.getElementById("code-loader").style = "display:block";
-        document.getElementById("code-form").style = "display:none";
+        document.getElementById("code-loader-twofactor").style = "display:block";
+        document.getElementById("code-form-twofactor").style = "display:none";
 
         if(selectedMethod === "fido2"){
-            fido2Site(true);
+            fido2SiteTwoFactor(true);
         } else {
-            setMethod(selectedMethod).done(function (answer) {
-                document.getElementById("code-loader").style = "display:none";
-                document.getElementById("code-form").style = "display:block";
+            setMethodTwoFactor(selectedMethod).done(function (answer) {
+                document.getElementById("code-loader-twofactor").style = "display:none";
+                document.getElementById("code-form-twofactor").style = "display:block";
                 currentMethod = selectedMethod;
 
-                document.getElementById("code").focus({preventScroll: true, focusVisible: true});
-                document.getElementById("code").addEventListener('input', submitCodeEmptyCheck);
+                document.getElementById("code-twofactor").focus({preventScroll: true, focusVisible: true});
+                document.getElementById("code-twofactor").addEventListener('input', submitCodeEmptyCheckTwoFactor);
             }).fail(function (err) {
                 sendNotify(getMessage("general.action.message.failed"), "danger")
-                document.getElementById("enterCode").style = "display:none"
-                document.getElementById("code-loader").style = "display:none";
-                document.getElementById("selectMethod").style = "display:block";
-                startSelectProcess(true);
+                document.getElementById("enterCode-twofactor").style = "display:none"
+                document.getElementById("code-loader-twofactor").style = "display:none";
+                document.getElementById("selectMethod-twofactor").style = "display:block";
+                startSelectProcessTwoFactor(true);
             });
         }
     }
 }
 
-function selectOtherMethod(){
-    document.getElementById("selectOtherMethod").removeEventListener("click", selectBTN);
-    document.getElementById("code").removeEventListener('change', submitCodeEmptyCheck);
-    document.getElementById("submit-code").removeEventListener("click", submitCode);
-    startSelectProcess(true);
+function selectOtherMethodTwoFactor(){
+    document.getElementById("selectOtherMethod-twofactor").removeEventListener("click", selectBTNTwoFactor);
+    document.getElementById("code-twofactor").removeEventListener('change', submitCodeEmptyCheckTwoFactor);
+    document.getElementById("submit-code-twofactor").removeEventListener("click", submitCodeTwoFactor);
+    startSelectProcessTwoFactor(true);
 }
 
-function getSelectedMethod(){
+function getSelectedMethodTwoFactor(){
     const radioButtons = document.querySelectorAll('input[name="method"]');
     let selected;
     for (const radioButton of radioButtons) {
@@ -227,13 +227,13 @@ function getSelectedMethod(){
     return selected;
 }
 
-function addMethod(method) {
+function addMethodTwoFactor(method) {
     if(method === "fido2"){
         if(browserSupportsWebAuthn) {
             fidoAvailable = true;
         }
     }
-    example = document.getElementById('exampleMethodCheck').cloneNode(true);
+    example = document.getElementById('exampleMethodCheck-twofactor').cloneNode(true);
     example.removeAttribute("style");
     example.removeAttribute("id")
 
@@ -247,10 +247,10 @@ function addMethod(method) {
         example.id = "fidoOption";
     }
 
-    document.getElementById('allMethods').appendChild(example);
+    document.getElementById('allMethods-twofactor').appendChild(example);
 }
 
-function getMethods() {
+function getMethodsTwoFactor() {
     return $.ajax({
         type: "POST",
         url: apiURL + "/auth/login/twoFactor/methods",
@@ -258,7 +258,7 @@ function getMethods() {
     });
 }
 
-function setMethod(method){
+function setMethodTwoFactor(method){
     return $.ajax({
         type: "POST",
         url: apiURL + "/auth/login/twoFactor/twoFactor",
@@ -267,7 +267,7 @@ function setMethod(method){
 }
 
 
-function generateToken(token){
+function generateTokenTwoFactor(token){
     $.ajax({
         type: "POST",
         url: apiURL + "/auth/login/generateAccessToken",
@@ -280,10 +280,10 @@ function generateToken(token){
             setSession("refresh_token", answer.response.refresh_token, true);
             setSessions(success_url)
         } else {
-            failed(answer.response.error_code);
+            sendNotify(answer.response.error_code);
         }
     }).fail(function (err)  {
-        failed(getMessage("general.action.message.failed"));
+        sendNotify(getMessage("general.action.message.failed"));
     });
 }
 

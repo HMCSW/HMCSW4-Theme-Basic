@@ -1,20 +1,13 @@
-{% if service['locked'] %}
-  <h6 class="text-center"><i class="fas fa-lock fa-2x"></i></h6>
-{% else %}
-  <h6 class="text-center"><i class="fas fa-lock-open fa-2x"></i></h6>
-{% endif %}
 {% if "team.service.lock"|checkTeamPermission %}
-  <h6 class="text-center">{{ 'site.cp.service.locked' | language }}</h6>
-  <h6 class="text-center">
-    <form method="post" class="text-center">
-      <input type="hidden" name="csrf" value="{{ csrf }}">
-      <input type="hidden" name="action" value="lockService">
-      <div class="custom-control custom-switch">
-        <input type="checkbox" name="lock" class="form-check-input text-center" id="lockSwitch"
-               onChange="this.form.submit()" {% if service['locked'] %} checked {% endif %}>
-        <label class="form-check-label text-center" for="lockSwitch"></label>
-      </div>
-    </form>
-  </h6>
-  <br>
+
+    <div class="form-check form-switch mode-switch">
+        <input type="checkbox" class="form-check-input" name="lock" id="lock"
+               onchange="updateLock(this.checked)" {% if service['locked'] %} checked {% endif %}>
+        <label for="lock" class="form-check-label">
+            <i class="fas fa-lock-open fs-lg"></i>
+        </label>
+        <label for="lock" class="form-check-label">
+            <i class="fas fa-lock fs-lg"></i>
+        </label>
+    </div>
 {% endif %}

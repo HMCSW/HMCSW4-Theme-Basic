@@ -1,45 +1,32 @@
 {% include '/general/header.twig' %}
-<section>
-  <!-- Container -->
-  <div class="container d-flex align-items-center text-center text-lg-left py-5 py-lg-6 border-bottom">
-    <div class="col px-0">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="h1 mb-2">{{ 'site.legal.terms' | language }}</h2>
-          <h6 class="font-weight-light text-muted">{{ 'general.site.onlyGerman' | language }}</h6>
-        </div>
+<div class="container py-5 mt-5 mb-md-3 mb-lg-4 mb-xxl-5">
+  <nav aria-label="breadcrumb">
+    <ol class="pt-lg-3 pb-lg-4 pb-2 breadcrumb">
+      <li class="breadcrumb-item">{{ 'site.legal' | language }}</li>
+      <li class="breadcrumb-item active" aria-current="page">{{ 'site.legal.terms' | language }}</li>
+    </ol>
+  </nav>
+  <div class="row pt-sm-2 pt-lg-0">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <h2 class="h1 mb-2">{{ 'site.legal.terms' | language }}</h2>
+        <h6 class="font-weight-light text-muted">{{ 'general.site.onlyGerman' | language }}</h6>
       </div>
     </div>
   </div>
-</section>
+</div>
 <section class="slice">
   <div class="container">
     <div class="row row-grid justify-content-between">
-      {% if config['dev_mode'] %}
-        <div class="col-lg-12">
-          <div class="alert alert-group alert-warning alert-icon justify-content-center" role="alert">
-            <div class="alert-group-prepend">
-                        <span class="alert-group-icon text-">
-                            <i class="fa fa-exclamation-triangle"></i>
-                        </span>
-            </div>
-            <div class="alert-content">
-              <b>The DevMode is activated! Expect higher loading times. Caching is disabled. Do not use in productive
-                mode. Some data may not be correct.</b>
-            </div>
-          </div>
-        </div>
-      {% endif %}
       <div class="col-lg-3">
-        <div data-bs-toggle="sticky" data-sticky-offset="50">
-          <div class="card">
-            <div class="card-body">
-              <nav class="nav nav-pills flex-column" id="nav-terms">
-                {% for area in all %}
-                  <a class="nav-link text-sm" href="#{{ area['short_title']|slugify }}" data-scroll-to data-scroll-to-offset="130">{{ area['short_title'] }}</a>
-                {% endfor %}
-              </nav>
-            </div>
+        {% include 'cp/devMode.twig' %}
+        <div class="card border-0">
+          <div class="card-body">
+            <nav class="nav nav-pills flex-column" id="nav-terms">
+              {% for area in all %}
+                <a class="nav-link fs-sm" href="{{ currentUrl }}#{{ area['short_title']|slugify }}">{{ area['short_title'] }}</a>
+              {% endfor %}
+            </nav>
           </div>
         </div>
       </div>

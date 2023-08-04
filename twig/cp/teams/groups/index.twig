@@ -2,111 +2,88 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/teams/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-12">
-                        {% if action != false %}
-                            {% if action['success'] == false %}
-                                {% set alert_color = "danger" %} {% set alert_icon = "exclamation-triangle" %}
-                            {% else %}
-                                {% set alert_color = "success" %} {% set alert_icon = "check" %}
-                            {% endif %}
-                            <div class="alert alert-group alert-{{ alert_color }} alert-icon" role="alert">
-                                <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-{{ alert_icon }}"></i>
-                                        </span>
-                                </div>
-                                <div class="alert-content">
-                                    {{ action['message'] | language }}
-                                </div>
-
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <div class="row">
+                {% include 'cp/terminateUser.twig' %}
+                {% include 'general/actionMessage.twig' %}
+                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                    class="fa fa-user-group text-primary lead pe-1 me-2"></i>
+                            <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.groups' | language }}</h2>
+                            <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                <a href="{{ dashURL }}/teams/{{ team['businessId'] }}" class="btn btn-dark btn-icon">
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                </a>
+                                <button type="button" class="btn btn-secondary btn-icon" data-bs-toggle="modal"
+                                        data-bs-target="#createGroup">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
                             </div>
-                        {% endif %}
-                        <div class="row">
-                            <div class="col-lg-8 offset-lg-2">
+                        </div>
 
-                                <div class="table-responsive">
-                                    <table class="table table-cards align-items-center">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col"></th>
-                                            <th scope="col"></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for group in groups %}
-                                            <tr>
-                                                <th scope="row">
-                                                    <div class="col-auto">{{ group['name'] }}</div>
-                                                </th>
-                                                <td>
-                                                    <div class="actions ml-3 text-right">
-                                                        <a class="btn btn-primary"
-                                                           href="{{ url }}/cp/teams/{{ team['team_id'] }}/groups/{{ group['group_id'] }}">
-                                                            <i class="fas fa-pencil-alt"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
+                        <div class="table-responsive">
+                            <table class="table table-cards align-items-center align-middle">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for group in groups %}
+                                    <tr>
+                                        <th scope="row">
+                                            <div class="col-auto">{{ group['name'] }}</div>
+                                        </th>
+                                        <td>
+                                            <div class="actions ml-3">
+                                                <a href="{{ dashURL }}/teams/{{ team['businessId'] }}/groups/{{ group['businessId'] }}"
+                                                   class="btn btn-primary btn-sm btn-icon">
+                                                    <i class="fa fa-pen-to-square"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
 
+                        </div>
 
-                                    <h5 class="text-center">
-                                        <button class="btn btn-primary btn-icon-label text-center" data-bs-toggle="modal"
-                                                data-bs-target="#createGroup">
-                                            <span class="btn-inner--icon">
-                                                <i class="fa-regular fa-plus"></i>
-                                            </span>
-                                            <span class="btn-inner--text">{{ 'site.cp.teams.groups.createGroup.button' | language }}</span>
-                                        </button>
-                                    </h5>
-                                    <div class="modal fade" id="createGroup" tabindex="-1" role="dialog"
-                                         aria-labelledby="createGroup"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                            <div class="modal-content">
-                                                <form method="post">
-                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                    <input type="hidden" name="action" value="createGroup">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title"
-                                                            id="exampleModalLabel">{{ 'site.cp.teams.groups.createGroup' | language }}</h5>
-                                                        <button type="button" class="btn" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label for="name"
-                                                                       class="form-control-label">{{ 'site.cp.teams.groups.form.groupName' | language }}</label>
-                                                                <input class="form-control" type="text" id="name"
-                                                                       name="name"
-                                                                       placeholder="{{ 'site.cp.teams.groups.name.placeholder' | language }}"
-                                                                       required>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                                        <button type="submit"
-                                                                class="btn btn-primary">{{ 'site.cp.teams.member.addMember.button' | language }}</button>
-                                                    </div>
-                                                </form>
+                    </div>
+
+                    <div class="modal fade" id="createGroup" tabindex="-1" role="dialog" aria-labelledby="createGroup"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <form method="post">
+                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                    <input type="hidden" name="action" value="createGroup">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">{{ 'site.cp.teams.groups.createGroup' | language }}</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-12 form-group">
+                                                <label for="name"
+                                                       class="form-label">{{ 'site.cp.teams.groups.form.groupName' | language }}</label>
+                                                <input class="form-control" type="text" id="name" name="name"
+                                                       placeholder="{{ 'site.cp.teams.groups.name.placeholder' | language }}" required>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="modal-footer">
+                                        <button type="submit"
+                                                class="btn btn-primary w-100 w-sm-auto ms-sm-3">{{ 'site.cp.teams.groups.createGroup' | language }}</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
             </div>
         </div>
     </div>

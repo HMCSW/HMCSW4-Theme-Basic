@@ -1,66 +1,57 @@
 {% include '/general/header.twig' %}
-<section id="sct-topic" class="slice slice-lg">
-  <div class="container">
-    <div class="row">
+<section class="container pt-5 mt-5">
+    <nav aria-label="breadcrumb">
+        <ol class="pt-lg-3 pb-lg-4 pb-2 breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url }}">{{ 'header.home' | language }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url }}/faq">{{ 'site.faq' | language }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ category['title'] }}</li>
+        </ol>
+    </nav>
+    <div class="row mx-lg-n4 mb-4">
 
-      <div class="col-lg-7">
-        <div class="col-lg-12">
-          <!-- Topic header -->
-          <h2 class="h1 mb-2">{{ category['title'] }}</h2>
+        <div class="col-lg-9">
+            {% for topic in AllCategoryArticle %}
+                <div class="col-lg-12 mb-4">
+                    <div class="card ">
+                        <div class="card-body py-4">
+                            <small class="d-block text-sm mb-2">{{ topic['lastupdate_at']|date }}</small>
+                            <a href="{{ url }}/faq/{{ topic['category_slug'] }}/{{ topic['slug'] }}"
+                               class="text-decoration-none h5 stretched-link lh-150">{{ topic['title'] }}</a>
+                            <p class="mt-3 mb-0 lh-170">{{ topic['text']|raw }}...</p>
+                        </div>
+                        <div class="card-footer border-0 delimiter-top">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <span class="text-sm mb-0 avatar-content">{{ topic['user']['firstname'] }} {{ topic['user']['lastname'] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-
-
-        <hr/>
-        {% for topic in AllCategoryArticle %}
-          <div class="col-lg-12">
-            <!-- Topic header -->
-            <h6 class="mb-2"><a
-                href="{{ url }}/faq/{{ topic['category_slug'] }}/{{ topic['slug'] }}">{{ topic['title'] }}</a></h6>
-            <div class="media align-items-center mt-4">
-          <span class="avatar avatar-sm rounded-circle mr-3">
-            <img alt="{{ topic['user']['firstname'] }} {{ topic['user']['lastname'] }}"
-                 src="{{ topic['user']['icon'] }}"/>
-          </span>
-              <div class="media-body">
-                <span class="h6 mb-0">{{ topic['user']['firstname'] }} {{ topic['user']['lastname'] }}</span>
-                <span class="text-sm text-muted">{{ topic['lastupdate_at']|date("d.m.Y H:i") }}</span>
-              </div>
+        <div class="col-lg-3 ml-lg-auto">
+            <div data-toggle="sticky" data-sticky-offset="30">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="h6 mb-0">{{ 'site.faq.Categories' | language }}</span>
+                    </div>
+                    {% for item in AllCategory %}
+                        <div class="card-body m-3 p-0">
+                            <a href="{{ url }}/faq/{{ item['slug'] }}"
+                               class="list-group-item list-group-item-action d-flex justify-content-between">
+                                <div>
+                                    <span>{{ item['title'] }}</span>
+                                </div>
+                                <div>
+                                    <i class="fa-regular fa-chevron-right"></i>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-            <!-- Topic body -->
-            <article class="mt-5">
-              {{ topic['text']|raw }}
-            </article>
-          </div>
-          <hr/>
-        {% endfor %}
-
-      </div>
-
-      <div class="col-lg-4 ml-lg-auto">
-        <div data-bs-toggle="sticky" data-sticky-offset="30">
-          <div class="card">
-            <div class="card-header">
-              <span class="h6 mb-0">{{ 'site.faq.Categories' | language }}</span>
-            </div>
-            <div class="list-group list-group-flush">
-
-              {% for item in AllCategory %}
-                <a href="{{ url }}/faq/{{ item['slug'] }}" data-scroll-to data-scroll-to-offset="50"
-                   class="list-group-item list-group-item-action d-flex justify-content-between">
-                  <div>
-                    <i class="fa-regular fa-table-layout mr-2"></i>
-                    <span>{{ item['title'] }}</span>
-                  </div>
-                  <div>
-                    <i class="fa-regular fa-chevron-right"></i>
-                  </div>
-                </a>
-              {% endfor %}
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 {% include '/general/footer.twig' %}

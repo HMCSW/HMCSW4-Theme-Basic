@@ -2,337 +2,368 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-
-                    {% include '/general/actionMessage.twig' %}
-
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.developer.apiToken' | language }}</h5>
-                                <p
-                                        class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.apiToken.description' | language }}</p>
-                            </div>
-                            {% if tokens|length == 0 %}
-                                {{ 'traduora | translation platform for teams' | language }}
-                            {% else %}
-                                <div class="table-responsive">
-                                    <table class="table table-cards align-items-center">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">{{ 'site.cp.settings.developer.apiToken.table.name' | language }}</th>
-                                            <th>{{ 'site.cp.settings.developer.apiToken.table.created_at' | language }}</th>
-                                            <th>{{ 'site.cp.settings.developer.apiToken.table.lastuse_at' | language }}</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for token in tokens %}
-                                            <tr>
-                                                <th scope="row">{{ token['name'] }}</th>
-                                                <td>{{ token['created_at'] | date('d.m.Y H:i') }}</td>
-                                                <td>{{ token['lastuse_at'] | date('d.m.Y H:i') }}</td>
-                                                <td class="text-right">
-                                                    <div class="actions ml-3">
-                                                        <a href="{{ url }}/cp/settings/developer/token/{{ token['businessId'] }}"
-                                                           class="btn btn-primary"
-                                                           data-original-title="{{ 'site.cp.settings.mails.table.show' | language }}">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <button type="button" data-bs-toggle="modal"
-                                                                data-bs-target="#token-{{ token['businessId'] }}"
-                                                                class="btn btn-primary">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="table-divider"></tr>
-
-                                            <div class="modal fade" id="token-{{ token['businessId'] }}" tabindex="-1"
-                                                 role="dialog"
-                                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">{{ token['name'] }}</h5>
-                                                            <button type="button" class="btn" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <h5 class="text-center">{{ 'site.cp.settings.developer.modal.info' | language }}</h5>
-                                                            <h6 class="text-center">{{ token['access_token'] }}</h6>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                                                            <form method="post">
-                                                                <input type="hidden" name="action" value="deleteToken">
-                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                                <input type="hidden" name="businessId"
-                                                                       value="{{ token['businessId'] }}">
-
-                                                                <button type="submit"
-                                                                        class="btn btn-danger">{{ 'general.modal.deleteBtn' | language }}</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="col-lg-12">
-
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.developer.apiToken.create' | language }}</h5>
-                                <p
-                                        class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.apiToken.create.description' | language }}</p>
-                            </div>
-                            <div class="mt-4">
-                                <button type="submit" data-bs-toggle="modal" data-bs-target="#token-create"
-                                        class="btn btn-lg btn-primary">{{ 'general.modal.createBtn' | language }}</button>
-                            </div>
-
-
-                            <div class="modal fade" id="token-create" tabindex="-1" role="dialog"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <form method="post">
-                                            <input type="hidden" name="action" value="createToken">
-                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">{{ 'site.cp.settings.developer.apiToken.create' | language }}</h5>
-                                                <button type="button" class="btn" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <i class="fa-solid fa-close"></i>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <h5
-                                                        class="text-center">{{ 'site.cp.settings.developer.apiToken.create.info' | language }}</h5>
-                                                <div class="row">
-                                                    <div class="form-group col-md-12 text-center">
-                                                        <label for="input-name"
-                                                               class="form-control-label">{{ 'site.cp.settings.developer.apiToken.form.token' | language }}</label>
-                                                        <input name="name" required type="text"
-                                                               class="form-control form-control-prepend text-center"
-                                                               id="input-name"
-                                                               placeholder="ApiKey">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                                <button type="submit"
-                                                        class="btn btn-primary">{{ 'general.modal.createBtn' | language }}</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.developer.webhook' | language }}</h5>
-                                <p
-                                        class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.webhook.description' | language }}</p>
-                            </div>
-                            {% if hooks|length == 0 %}
-                                <p>{{ 'site.cp.settings.developer.webhook.table.empty' | language }}</p>
-                            {% else %}
-                                <div class="table-responsive">
-                                    <table class="table table-cards align-items-center">
-                                        <thead>
-                                        <tr>
-                                            <th scope="col">{{ 'site.cp.settings.developer.webhook.table.name' | language }}</th>
-                                            <th>{{ 'site.cp.settings.developer.webhook.table.events' | language }}</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for hook in hooks %}
-                                            <tr>
-                                                <th scope="row">{{ hook['name'] }}</th>
-                                                <td>{{ hook['events']|length }}</td>
-                                                <td class="text-right">
-                                                    <div class="actions ml-3">
-                                                        <a href="{{ url }}/cp/settings/developer/hook/{{ hook['businessId'] }}"
-                                                           class="btn btn-primary">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <button type="button" data-bs-toggle="modal"
-                                                                data-bs-target="#hook-{{ hook['businessId'] }}"
-                                                                class="btn btn-primary">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr class="table-divider"></tr>
-
-                                            <div class="modal fade" id="hook-{{ hook['businessId'] }}" tabindex="-1"
-                                                 role="dialog"
-                                                 aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">{{ hook['name'] }}</h5>
-                                                            <button type="button" class="btn" data-dismiss="modal"
-                                                                    aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <form method="post">
-                                                                <input type="hidden" name="action" value="save">
-                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                                <input type="hidden" name="hook_id"
-                                                                       value="{{ hook['businessId'] }}">
-
-                                                                <div class="form-group">
-                                                                    <label
-                                                                            for="name">{{ 'site.cp.settings.developer.webhook.form.name' | language }}</label>
-                                                                    <input id="name" type="text" name="name"
-                                                                           value="{{ hook['name'] }}" required
-                                                                           placeholder="My Webhook"
-                                                                           class="form-control form-control-prepend">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label
-                                                                            for="url">{{ 'site.cp.settings.developer.webhook.form.url' | language }}</label>
-                                                                    <input id="url" type="url" name="url"
-                                                                           value="{{ hook['url'] }}" required
-                                                                           placeholder="https://my-website.com/webhook"
-                                                                           class="form-control form-control-prepend">
-                                                                </div>
-                                                                <div class="form-group">
-                                                                    <label for="events"
-                                                                           class="form-control-label">{{ 'site.cp.settings.developer.webhook.form.events' | language }}</label>
-                                                                    <select name="events[]" id="events" multiple
-                                                                            class="form-select" required>
-                                                                        <option value="*"
-                                                                                {% if "*" in hook['events'] %}selected{% endif %}>
-                                                                            All
-                                                                        </option>
-                                                                        {% for event in events %}
-                                                                            <option value="{{ event }}"
-                                                                                    {% if event in hook['events'] %}selected{% endif %}>{{ event }}</option>
-                                                                        {% endfor %}
-                                                                    </select>
-                                                                </div>
-                                                                <h6 class="text-center py-3">
-                                                                    <button type="submit"
-                                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                                                                </h6>
-
-                                                            </form>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                    data-dismiss="modal">{{ 'general.modal.closeBtn' | language }}</button>
-                                                            <form method="post">
-                                                                <input type="hidden" name="action" value="deleteHook">
-                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                                <input type="hidden" name="hook_id"
-                                                                       value="{{ hook['businessId'] }}">
-
-                                                                <button type="submit"
-                                                                        class="btn btn-danger">{{ 'general.modal.deleteBtn' | language }}</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% endif %}
-                        </div>
-                        <div class="col-lg-12">
-
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.developer.webhook.create' | language }}</h5>
-                                <p
-                                        class="text-sm text-muted mb-0">{{ 'site.cp.settings.developer.webhook.create.description' | language }}</p>
-                            </div>
-                            <div class="mt-4">
-                                <button type="submit" data-bs-toggle="modal" data-bs-target="#hook-create"
-                                        class="btn btn-lg btn-primary">{{ 'general.modal.createBtn' | language }}</button>
-                            </div>
-
-
-                            <div class="modal fade" id="hook-create" tabindex="-1" role="dialog"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <form method="post">
-                                            <input type="hidden" name="action" value="createHook">
-                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">{{ 'site.cp.settings.developer.webhook.create' | language }}</h5>
-                                                <button type="button" class="btn" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <i class="fa-solid fa-close"></i>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-
-                                                <div class="form-group">
-                                                    <label
-                                                            for="name">{{ 'site.cp.settings.developer.webhook.form.name' | language }}</label>
-                                                    <input id="name" type="text" name="name" required
-                                                           placeholder="My Webhook"
-                                                           class="form-control form-control-prepend">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label
-                                                            for="url">{{ 'site.cp.settings.developer.webhook.form.url' | language }}</label>
-                                                    <input id="url" type="url" name="url" required
-                                                           placeholder="https://my-website.com/webhook"
-                                                           class="form-control form-control-prepend">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="events"
-                                                           class="form-control-label">{{ 'site.cp.settings.developer.webhook.form.events' | language }}</label>
-                                                    <select name="events[]" id="events" multiple class="form-select"
-                                                            required>
-                                                        <option value="*">All</option>
-                                                        {% for event in events %}
-                                                            <option value="{{ event }}">{{ event }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">{{ 'general.modal.cancelBtn' | language }}</button>
-                                                <button type="submit"
-                                                        class="btn btn-primary">{{ 'general.modal.createBtn' | language }}</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-code text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.tab.developer' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/settings" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            <a href="{{ dashURL }}" class="btn btn-secondary btn-icon">
+                                <i class="fa-solid fa-arrow-left-long-to-line"></i>
+                            </a>
                         </div>
                     </div>
-                    <br><br>
                 </div>
-            </div>
+            </section>
+            {% include 'general/actionMessage.twig' %}
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-unlock-keyhole text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.developer.apiToken' | language }}</h2>
+
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <button type="button" class="btn btn-secondary btn-icon" data-bs-toggle="modal"
+                                    data-bs-target="#token-create">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-cards align-items-center align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col">{{ 'site.cp.settings.developer.apiToken.table.name' | language }}</th>
+                                <th>{{ 'site.cp.settings.developer.apiToken.table.created_at' | language }}</th>
+                                <th>{{ 'site.cp.settings.developer.apiToken.table.lastuse_at' | language }}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% if tokens|length == 0 %}
+                                <tr>
+                                    <td>{{ 'site.cp.settings.developer.apiToken.table.empty'|language }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
+                            {% for token in tokens %}
+                                <tr>
+                                    <th scope="row">{{ token['name'] }}</th>
+                                    <td>{{ token['created_at'] | date }}</td>
+                                    <td>{{ token['lastuse_at'] | date }}</td>
+                                    <td class="text-right">
+                                        <div class="actions ml-3">
+                                            <a href="{{ dashURL }}/settings/developer/token/{{ token['businessId'] }}"
+                                               class="btn btn-secondary btn-sm btn-icon">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-secondary btn-sm btn-icon"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#token-{{ token['businessId'] }}">
+                                                <i class="fa fa-pen-to-square"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="table-divider"></tr>
+
+                                <div class="modal fade" id="token-{{ token['businessId'] }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ token['name'] }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5 class="text-center">{{ 'site.cp.settings.developer.apiToken.modal.info' | language }}</h5>
+                                                <h6 class="text-center">{{ token['access_token'] }}</h6>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form method="post">
+                                                    <input type="hidden" name="action" value="deleteToken">
+                                                    <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                    <input type="hidden" name="token_id"
+                                                           value="{{ token['businessId'] }}">
+
+                                                    <button type="submit"
+                                                            class="btn btn-danger">{{ 'general.modal.deleteBtn' | language }}</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa-solid fa-bookmark text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.developer.webhook' | language }}</h2>
+
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <button type="button" class="btn btn-secondary btn-icon" data-bs-toggle="modal"
+                                    data-bs-target="#hook-create">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-cards align-items-center align-middle">
+                            <thead>
+                            <tr>
+                                <th scope="col">{{ 'site.cp.settings.developer.webhook.table.name' | language }}</th>
+                                <th>{{ 'site.cp.settings.developer.webhook.table.events' | language }}</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if hooks|length == 0 %}
+                                <tr>
+                                    <td>{{ 'site.cp.settings.developer.webhook.table.empty' | language }}
+                                    </td>
+                                    <td>0</td>
+                                    <td></td>
+                                </tr>
+                            {% endif %}
+                            {% for hook in hooks %}
+                                <tr>
+                                    <th scope="row">{{ hook['name'] }}</th>
+                                    <td>{{ hook['events']|length }}</td>
+                                    <td class="text-right">
+
+                                        <div class="actions ml-3">
+                                            <a href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}"
+                                               class="btn btn-secondary btn-sm btn-icon">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-secondary btn-sm btn-icon"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#hook-{{ hook['businessId'] }}">
+                                                <i class="fa fa-pen-to-square"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm btn-icon"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#hookDelete-{{ hook['businessId'] }}">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="table-divider"></tr>
+
+                                <div class="modal fade" id="hookDelete-{{ hook['businessId'] }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <form method="post">
+                                                <input type="hidden" name="action" value="deleteHook">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <input type="hidden" name="hook_id"
+                                                       value="{{ hook['businessId'] }}">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ hook['name'] }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit"
+                                                            class="btn btn-danger">{{ 'general.modal.deleteBtn' | language }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="hook-{{ hook['businessId'] }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <form method="post">
+                                                <input type="hidden" name="action" value="save">
+                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                <input type="hidden" name="hook_id"
+                                                       value="{{ hook['businessId'] }}">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ hook['name'] }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+
+                                                    <div class="row g-3">
+                                                        <div class="form-group">
+                                                            <label class="form-label"
+                                                                   for="name">{{ 'site.cp.settings.developer.webhook.form.name' | language }}</label>
+                                                            <input id="name" type="text" name="name"
+                                                                   value="{{ hook['name'] }}" required
+                                                                   placeholder="My Webhook"
+                                                                   class="form-control">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="form-label"
+                                                                   for="url">{{ 'site.cp.settings.developer.webhook.form.url' | language }}</label>
+                                                            <input id="url" type="url" name="url"
+                                                                   value="{{ hook['url'] }}" required
+                                                                   placeholder="https://my-website.com/webhook"
+                                                                   class="form-control">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="events"
+                                                                   class="form-label">{{ 'site.cp.settings.developer.webhook.form.events' | language }}</label>
+                                                            <select name="events[]" id="events" multiple
+                                                                    class="form-select" required>
+                                                                <option value="*"
+                                                                        {% if "*" in hook['events'] %}selected{% endif %}>
+                                                                    All
+                                                                </option>
+                                                                {% for event in events %}
+                                                                    <option value="{{ event }}"
+                                                                            {% if event in hook['events'] %}selected{% endif %}>{{ event }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="type"
+                                                                   class="form-label">{{ 'site.cp.settings.developer.webhook.form.type' | language }}</label>
+                                                            <select name="type" id="type"
+                                                                    class="form-select" required>
+                                                                {% for type in types %}
+                                                                    <option value="{{ type }}"
+                                                                            {% if type == hook['type'] %}selected{% endif %}>{{ type }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+
+
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+
+                                                    <button type="submit"
+                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="token-create" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post">
+                <input type="hidden" name="action" value="createToken">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'site.cp.settings.developer.apiToken.create' | language }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5
+                            class="text-center">{{ 'site.cp.settings.developer.apiToken.create.info' | language }}</h5>
+                    <div class="row g-3">
+                        <div class="form-group">
+                            <label for="input-name"
+                                   class="form-label">{{ 'site.cp.settings.developer.apiToken.form.token' | language }}</label>
+                            <input name="name" required type="text"
+                                   class="form-control" id="input-name"
+                                   placeholder="ApiKey">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-primary">{{ 'general.modal.createBtn' | language }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="hook-create" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post">
+                <input type="hidden" name="action" value="createHook">
+                <input type="hidden" name="csrf" value="{{ csrf }}">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ 'site.cp.settings.developer.webhook.create' | language }}</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="name">{{ 'site.cp.settings.developer.webhook.form.name' | language }}</label>
+                            <input id="name" type="text" name="name" required
+                                   placeholder="My Webhook"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="url">{{ 'site.cp.settings.developer.webhook.form.url' | language }}</label>
+                            <input id="url" type="url" name="url" required
+                                   placeholder="https://my-website.com/webhook"
+                                   class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="events"
+                                   class="form-label">{{ 'site.cp.settings.developer.webhook.form.events' | language }}</label>
+                            <select name="events[]" id="events" multiple class="form-select"
+                                    required>
+                                <option value="*">All</option>
+                                {% for event in events %}
+                                    <option value="{{ event }}">{{ event }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="type"
+                                   class="form-label">{{ 'site.cp.settings.developer.webhook.form.type' | language }}</label>
+                            <select name="type" id="type" class="form-select"
+                                    required>
+                                {% for type in types %}
+                                    <option value="{{ type }}">{{ type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-primary">{{ 'general.modal.createBtn' | language }}</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

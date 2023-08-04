@@ -44,7 +44,45 @@ $('#tos').change(function () {
 function showPaymentLoadingModal(){
     $('#paymentLoadingModal').modal('show', {backdrop: 'static', keyboard: false});
 }
-showPaymentLoadingModal();
+
+function createOrder(sessionCode){
+    $.ajax({
+        data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id, 'roundUp': roundUp, sessionCode: sessionCode},
+        type: 'POST',
+        url: apiURL + '/user/order/startOrder',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+        },
+    }).done(function (answer) {
+
+        if(answer.success === true){
+            if(answer.response.requireIdentityCheck === true) {
+                startIdentityCheck(function () {
+                    createOrder(null);
+                }, function () {
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                });
+            } else if(answer.response.requireSessionCode === true){
+                startTwoFactorConfirmation(answer.response.sessionCode, function () {
+                    createOrder(answer.response.sessionCode);
+                }, function () {
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                });
+            } else {
+                startPayment(answer.response.order_id, paymentMethod);
+            }
+
+        } else {
+            sendNotify(getMessage("general.action.message.failed"), 'danger');
+            unhideBTN();
+        }
+    }).fail(function (err)  {
+        sendNotify(getMessage("general.action.message.failed"), 'danger');
+        unhideBTN();
+    });
+}
 
 function startOrder(){
     hideBTN();
@@ -56,30 +94,7 @@ function startOrder(){
         type: 'POST',
         url: apiURL + '/auth/captcha'
     }).done(function (answer) {
-        if(answer.success === true){
-            $.ajax({
-                data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id},
-                type: 'POST',
-                url: apiURL + '/user/order/startOrder',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-                },
-            }).done(function (answer) {
-                if(answer.success === true){
-                    startPayment(answer.response.order_id, paymentMethod);
-
-                } else {
-                    sendNotify(getMessage("general.action.message.failed"), 'danger');
-                    unhideBTN();
-                }
-            }).fail(function (err)  {
-                sendNotify(getMessage("general.action.message.failed"), 'danger');
-                unhideBTN();
-            });
-        } else {
-            sendNotify(getMessage("action.message.recaptchaFailed"), 'danger');
-            unhideBTN();
-        }
+        createOrder(null);
     }).fail(function (err)  {
         sendNotify(getMessage("action.message.recaptchaFailed"), 'danger');
         unhideBTN();
@@ -106,7 +121,7 @@ function startPayment(order_id, paymentMethod){
         },
     }).done(function (answer) {
         if(answer.success === true){
-            popUp = popupCenter(answer.response.link, 'Payment', 1000, 750);
+            let popUp = popupCenter(answer.response.link, 'Payment', 1000, 750);
             if(popUp === true) {
                 showPaymentLoadingModal();
                 interval = setInterval(function () {
@@ -127,4 +142,188 @@ function startPayment(order_id, paymentMethod){
         sendNotify(getMessage("general.action.message.failed"), 'danger');
         unhideBTN();
     });
+}
+
+
+// fast checkout
+window.addEventListener('load', async event => {
+    await import('https://js.stripe.com/v3/');
+    $.ajax({
+        type: 'GET',
+        url: apiURL + '/user/cart/testFastUser',
+        data: {
+            'teamId': team_id,
+            'discountCode': discountCode,
+            'affiliate_id': affiliate_id,
+            'roundUp': roundUp
+        },
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+        },
+    }).done(function (answer) {
+        if(answer.success === true) {
+            $.ajax({
+                type: 'GET',
+                url: apiURL + '/user/cart',
+                data: {
+                    'teamId': team_id,
+                    'discountCode': discountCode,
+                    'affiliate_id': affiliate_id,
+                    'roundUp': roundUp
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                },
+            }).done(function (answer) {
+                if (answer.success === true) {
+                    initialFast(answer.response);
+                }
+            });
+        }
+    });
+});
+
+function initialFast(render) {
+    const stripe = Stripe(stripePublicKey, {
+        apiVersion: "2020-08-27",
+    });
+
+    var displayItems = [];
+    var total = 0;
+    render.items.forEach(function (item) {
+        displayItems.push({
+            amount: item.amount.full,
+            label: item.name,
+        });
+        total += item.amount.full;
+    });
+
+    const paymentRequest = stripe.paymentRequest({
+        country: 'DE',
+        currency: render.checkoutInfo.currency.toLowerCase(),
+        total: {
+            label: 'Total',
+            amount: total,
+        },
+        displayItems: displayItems,
+        disableWallets: [
+            "link"
+        ],
+        requestPayerName: true,
+        requestPayerEmail: false,
+    });
+    const stripeElements = stripe.elements();
+    const prButton = stripeElements.create('paymentRequestButton', {
+        paymentRequest,
+    });
+
+    (async () => {
+        const result = await paymentRequest.canMakePayment();
+        if (result) {
+            prButton.mount('#payment-request-button');
+        } else {
+            document.getElementById('payment-request-button').style.display = 'none';
+        }
+    })();
+
+    paymentRequest.on('paymentmethod', async (ev) => {
+        createFastOrder(ev)
+    });
+
+    paymentRequest.on('cancel', function() {
+        unhideBTN();
+    });
+
+    async function startFastPayment(ev, external_id, clientSecret, link) {
+        const {paymentIntent, error: confirmError} = await stripe.confirmCardPayment(
+            clientSecret,
+            {payment_method: ev.paymentMethod.id},
+            {handleActions: false}
+        );
+
+        if (confirmError) {
+            sendNotify(getMessage("general.action.message.failed"), 'danger');
+            unhideBTN();
+        } else {
+            ev.complete('success');
+            if (paymentIntent.status === "requires_action") {
+                const {error} = await stripe.confirmCardPayment(clientSecret);
+                if (error) {
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                } else {
+                    endFastPayment(link)
+                }
+            } else {
+                endFastPayment(link)
+            }
+        }
+    }
+
+    function endFastPayment(link){
+        let popUp = popupCenter(link, 'Payment', 1000, 750);
+        if(popUp === true) {
+            showPaymentLoadingModal();
+            interval = setInterval(function () {
+                if (newWindow.closed === true) {
+                    $('.modal').modal('hide');
+                    unhideBTN();
+                    clearInterval(interval);
+                }
+            }, 500);
+        } else {
+            window.location.href = link;
+        }
+    }
+
+    function createFastPayment(ev, order_id){
+        $.ajax({
+            data: {'order_id': order_id, 'identifier': "stripe"},
+            type: 'POST',
+            url: apiURL + '/user/order/startFastPayment',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+            },
+        }).done(function (answer) {
+            if(answer.success === true){
+                startFastPayment(ev, answer.response.external_id, answer.response.client_secret, answer.response.link)
+            } else {
+                sendNotify(getMessage("general.action.message.failed"), 'danger');
+                unhideBTN();
+            }
+        }).fail(function (err)  {
+            sendNotify(getMessage("general.action.message.failed"), 'danger');
+            unhideBTN();
+        });
+    }
+
+    function createFastOrder(ev){
+        hideBTN();
+        $.ajax({
+            data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id, 'roundUp': roundUp, sessionCode: 'fast'},
+            type: 'POST',
+            url: apiURL + '/user/order/startOrder',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+            },
+        }).done(function (answer) {
+            if(answer.success === true){
+                if(answer.response.requireIdentityCheck === true) {
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                } else if(answer.response.requireSessionCode === true){
+                    sendNotify(getMessage("general.action.message.failed"), 'danger');
+                    unhideBTN();
+                } else {
+                    createFastPayment(ev, answer.response.order_id);
+                }
+            } else {
+                sendNotify(getMessage("general.action.message.failed"), 'danger');
+                unhideBTN();
+            }
+        }).fail(function (err)  {
+            sendNotify(getMessage("general.action.message.failed"), 'danger');
+            unhideBTN();
+        });
+    }
 }

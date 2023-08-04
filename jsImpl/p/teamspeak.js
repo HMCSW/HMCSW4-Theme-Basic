@@ -19,11 +19,13 @@ function addToCart(productId, slots) {
         $("#cartModal-loginRequired").modal('show');
         return;
     }
+    var locationId = document.getElementById('location-'+productId).value;
 
     $.ajax({
         data: {
             "product_id": productId,
             "type": "teamspeak",
+            'location_id': locationId,
             "extra": {"slots": slots}
         },
         type: "POST",
@@ -39,10 +41,11 @@ function addToCart(productId, slots) {
         }
     }).fail(function (err) {
         if(err.responseJSON.response.error_message === "requireIdentityCheck") {
-            modal = $("#cartModal-requireIdentityCheck");
-            modal.data( "productId", productId );
-            modal.data( "slots", slots );
-            modal.modal('show');
+            startIdentityCheck(function () {
+                addToCart(productId, slots);
+            }, function () {
+                sendNotify(getMessage("general.action.message.failed"), 'danger');
+            });
         } else if (err.status === 404) {
             $("#cartModal-notFound").modal('show');
         } else if (err.status === 429) {
@@ -53,21 +56,4 @@ function addToCart(productId, slots) {
             sendNotify(getMessage("general.action.message.failed"),'danger');
         }
     });
-}
-
-
-function startAddressVerification() {
-    startIdentityCheck(0,
-        async function (answer, interval) {
-            modal = $("#cartModal-requireIdentityCheck");
-            modal.modal('hide');
-            clearInterval(interval);
-            await sleep(200);
-            addToCart(modal.data("productId"), modal.data("slots"));
-        },
-        function (err) {
-            $('#cartModal-requireIdentityCheck').modal('hide');
-            sendNotify(getMessage("general.action.message.failed"),'danger');
-        }
-    );
 }

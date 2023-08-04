@@ -1,12 +1,12 @@
-var {startAuthentication, browserSupportsWebAuthnAutofill, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
+const {startAuthentication, browserSupportsWebAuthn, browserSupportsWebAuthnAutofill} = SimpleWebAuthnBrowser;
 var passwordLessLoginResp;
 
-var autoFillIsGeneralFailed = false;
-
-fetch(apiURL + "/auth/fido2/passwordLess/option", {method: 'POST'}).then(resp => init(resp.json()));
 
 if(browserSupportsWebAuthn){
     document.getElementById("webauthn").style = "display: block";
+    $.ajax(apiURL + "/auth/fido2/passwordLess/option", {
+        method: 'POST',
+    }).then(resp => initPasswordLess(resp));
 }
 
 function autoLogin(){
@@ -27,38 +27,9 @@ function autoLogin(){
 }
 autoLogin();
 
-async function init(resp) {
-    passwordLessLoginResp = await resp;
-
-    if(browserSupportsWebAuthnAutofill && !autoFillIsGeneralFailed && browserSupportsWebAuthn) {
-        let webauthnAutofillAuth;
-        try {
-            webauthnAutofillAuth = await startAuthentication(passwordLessLoginResp, true);
-            const verificationResp = await fetch(apiURL + "/auth/fido2/passwordLess", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(webauthnAutofillAuth),
-            });
-
-            // Wait for the results of verification
-            const verificationJSON = await verificationResp.json();
-
-            // Show UI appropriate for the `verified` status
-            if (verificationJSON && verificationJSON.success) {
-                generateToken(verificationJSON.response.loginInfo.auth_code);
-            } else {
-                sendNotify("Autofill: " + getMessage("general.action.message.failed") + ": " + verificationJSON.response.error_message, "danger");
-            }
-
-        } catch (error) {
-            if(error.message === "Operation failed." || error.message === "Aborted by AbortSignal." || error.message === "Browser does not support WebAuthn autofill") {
-                autoFillIsGeneralFailed = true;
-            } else if (error !== "Cancelling existing WebAuthn API call for new one") {
-                sendNotify("Autofill: " + getMessage("general.action.message.failed") + ": " + error.message, "danger");
-            }
-        }
+async function initPasswordLess(resp) {
+    if(resp.success) {
+        passwordLessLoginResp = await resp.response;
     }
 }
 
@@ -165,22 +136,20 @@ function login(username, password){
             if(answer.response.twoFactor.ready === false){
                 generateToken(answer.response.auth_code);
             } else {
-                setSession("twoFactor_type", "", false);
-                setSession("twoFactor_session-code", answer.response.auth_code, false);
-                setSession("twoFactor_types", answer.response.twoFactor.types, false);
-                setSession("twoFactor_userId", answer.response.user_id, false);
-                setSession("twoFactor_refreshToken", true, false);
-
-                setSessions(successToFactor_url);
+                startTwoFactorConfirmation(answer.response.auth_code, function () {
+                    generateToken(answer.response.auth_code);
+                }, function () {
+                    failed(getMessage("general.action.message.failed"));
+                });
             }
             cancel();
         } else {
-            failed("site.auth.action.message." + answer.response.error_code);
+            failed("site.auth.action.message." + answer.response.error_message);
             cancel();
         }
     }).fail(function (err)  {
         if(err.responseJSON.response.error_code != null) {
-            failed(getMessage("site.auth.action.message." + err.responseJSON.response.error_code));
+            failed(getMessage("site.auth.action.message." + err.responseJSON.response.error_message));
         } else {
             failed(getMessage("general.action.message.failed"));
         }
@@ -189,9 +158,7 @@ function login(username, password){
 }
 import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
     const QrScanner = module.default;
-    if(QrScanner.hasCamera()){
-        document.getElementById('createQRCode').style = 'display: block';
-    }
+    document.getElementById('createQRCode').style = 'display: block';
 
 // QR-CODE LOGIN
 
@@ -205,11 +172,11 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
     });
 
     document.getElementById("qrLogin-btn-cancelFull").addEventListener("click", function () {
-       cancelLoginFull();
+        cancelLoginFull();
     });
 
     document.getElementById("qrLogin-btn").addEventListener("click", function () {
-       cancelLogin();
+        cancelLogin();
     });
 
     function cancelLoginFull(){
@@ -223,7 +190,7 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
         document.getElementById("qrCodeFormUserInfo").style = "display: none";
 
 
-        qrCodeFormIMG = document.getElementById("qrCodeFormIMG");
+        var qrCodeFormIMG = document.getElementById("qrCodeFormIMG");
         if (typeof (qrCodeFormIMG) != "undefined" && qrCodeFormIMG != null) {
             qrCodeFormIMG.parentNode.removeChild(qrCodeFormIMG)
         }
@@ -239,7 +206,7 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
         document.getElementById("qrCodeFormUserInfo").style = "display: none";
 
 
-        qrCodeFormIMG = document.getElementById("qrCodeFormIMG");
+        var qrCodeFormIMG = document.getElementById("qrCodeFormIMG");
         if (typeof (qrCodeFormIMG) != "undefined" && qrCodeFormIMG != null) {
             qrCodeFormIMG.parentNode.removeChild(qrCodeFormIMG)
         }
@@ -304,13 +271,13 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
                 if (answer.response.status === 0) {
                     if (codeScannedByClient === false) {
                         codeScannedByClient = true;
-                        qrCodeFormIMG = document.getElementById("qrCodeFormIMG");
+                        var qrCodeFormIMG = document.getElementById("qrCodeFormIMG");
                         qrCodeFormIMG.parentNode.removeChild(qrCodeFormIMG)
 
-                        qrCodeFormUserInfo = document.getElementById("qrCodeFormUserInfo");
-                        qrCodeFormUserInfoName = document.getElementById("qrCodeFormUserInfoName");
-                        qrCodeFormUserInfoRank = document.getElementById("qrCodeFormUserInfoRank");
-                        qrCodeFormUserInfoIMG = document.getElementById("qrCodeFormUserInfoIMG");
+                        var qrCodeFormUserInfo = document.getElementById("qrCodeFormUserInfo");
+                        var qrCodeFormUserInfoName = document.getElementById("qrCodeFormUserInfoName");
+                        var qrCodeFormUserInfoRank = document.getElementById("qrCodeFormUserInfoRank");
+                        var qrCodeFormUserInfoIMG = document.getElementById("qrCodeFormUserInfoIMG");
 
                         qrCodeFormUserInfoIMG.src = answer.response.userInfo.icon;
                         qrCodeFormUserInfoIMG.alt = answer.response.userInfo.name;
@@ -344,31 +311,29 @@ function Sleep(milliseconds) {
 
 
 async function startFido2Login() {
+    const {startAuthentication} = SimpleWebAuthnBrowser;
     let webauthnAuth;
     try {
         webauthnAuth = await startAuthentication(passwordLessLoginResp);
 
-        const verificationResp = await fetch(apiURL + "/auth/fido2/passwordLess", {
+        $.ajax(apiURL + "/auth/fido2/passwordLess",{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(webauthnAuth),
+            data: JSON.stringify(webauthnAuth)
+        }).done(function (answer) {
+            if (answer.success) {
+                generateToken(answer.response.loginInfo.auth_code);
+            } else {
+                initPasswordLess(passwordLessLoginResp);
+                sendNotify(getMessage("general.action.message.failed") + ": " + answer.response.error_message, "danger");
+            }
+        }).fail(function (err) {
+            sendNotify(getMessage("general.action.message.failed"), "danger");
         });
 
-        // Wait for the results of verification
-        const verificationJSON = await verificationResp.json();
-
-        // Show UI appropriate for the `verified` status
-        if (verificationJSON && verificationJSON.success) {
-            generateToken(verificationJSON.response.loginInfo.auth_code);
-        } else {
-            init(passwordLessLoginResp);
-            sendNotify(getMessage("general.action.message.failed") + ": " + verificationJSON.response.error_message, "danger");
-        }
-
     } catch (error) {
-        init(passwordLessLoginResp);
         sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
     }
 

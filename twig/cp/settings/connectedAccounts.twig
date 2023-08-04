@@ -2,20 +2,36 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         {% include '/cp/sideNav.twig' %}
-        <div class="col py-3">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
+        <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
+            {% include 'cp/terminateUser.twig' %}
+            {% include 'general/actionMessage.twig' %}
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center"><i
+                                class="fa fa-user-plus text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.tab.accounts' | language }}</h2>
+                        <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                            <a href="{{ dashURL }}/settings" class="btn btn-dark btn-icon">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            <a href="{{ dashURL }}" class="btn btn-secondary btn-icon">
+                                <i class="fa-solid fa-arrow-left-long-to-line"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                    {% include '/general/actionMessage.twig' %}
-
-                    <div class="row">
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-eye text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.accounts.list' | language }}</h2>
+                    </div>
+                    <div class="row g-4">
                         <div class="col-lg-12">
-                            <div class="actions-toolbar py-2 mb-4">
-                                <h5 class="mb-1">{{ 'site.cp.settings.accounts' | language }}</h5>
-                                <p class="text-sm text-muted mb-0">{{ 'site.cp.settings.accounts.description' | language }}</p>
-                            </div>
                             <div class="table-responsive">
-                                <table class="table table-cards align-items-center">
+                                <table class="table table-cards align-items-center align-middle">
                                     <thead>
                                     <tr>
                                         <th scope="col"></th>
@@ -32,10 +48,14 @@
                                                     <i class="fas fa-cog mr-2 fa-2x "></i>
                                                 {% elseif account['shortName'] == "Discord" %}
                                                     <i class="fab fa-discord mr-2 fa-2x "></i>
+                                                {% elseif account['shortName'] == "Apple" %}
+                                                    <i class="fab fa-apple mr-2 fa-2x "></i>
+                                                {% elseif account['shortName'] == "Google" %}
+                                                    <i class="fab fa-google mr-2 fa-2x "></i>
                                                 {% endif %}
                                             </th>
                                             <td>{{ account['shortName'] }}</td>
-                                            <td>{{ account['since'] | date("d.m.Y H:i") }}</td>
+                                            <td>{{ account['since'] | date }}</td>
                                             <td class="text-right">
                                                 <form method="POST">
                                                     <input type="hidden" name="action" value="removeAccount">
@@ -49,8 +69,31 @@
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                    <tr class="table-divider"></tr>
-                                    <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
+                                class="fa fa-plus-circle text-primary lead pe-1 me-2"></i>
+                        <h2 class="h4 mb-0">{{ 'site.cp.settings.accounts.add' | language }}</h2>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+                                <table class="table table-cards align-items-center align-middle">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th>{{ 'site.cp.settings.accounts.table.name' | language }}</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     {% for account in avAccounts %}
                                         <tr>
                                             <th scope="row">
@@ -58,10 +101,13 @@
                                                     <i class="fas fa-cog mr-2 fa-2x "></i>
                                                 {% elseif account['shortName'] == "Discord" %}
                                                     <i class="fab fa-discord mr-2 fa-2x "></i>
+                                                {% elseif account['shortName'] == "Apple" %}
+                                                    <i class="fab fa-apple mr-2 fa-2x "></i>
+                                                {% elseif account['shortName'] == "Google" %}
+                                                    <i class="fab fa-google mr-2 fa-2x "></i>
                                                 {% endif %}
                                             </th>
                                             <td>{{ account['shortName'] }}</td>
-                                            <td></td>
                                             <td class="text-right">
                                                 <form method="POST">
                                                     <input type="hidden" name="action" value="connectAccount">
@@ -82,7 +128,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>
