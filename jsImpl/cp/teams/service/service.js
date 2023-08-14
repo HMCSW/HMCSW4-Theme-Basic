@@ -65,12 +65,10 @@ function terminateService(){
                     location.reload();
                 }).fail(function (answer) {
                     $('.modal').modal('hide');
-                    document.getElementById("lock").checked = !state;
                     sendNotify(getMessage("site.cp.service.action.message.terminateFailed"), "danger");
                 });
             }, function () {
                 $('.modal').modal('hide');
-                document.getElementById("lock").checked = !state;
                 sendNotify(getMessage("site.cp.service.action.message.terminateFailed"), "danger");
             });
         } else {
@@ -80,7 +78,6 @@ function terminateService(){
         }
     }).fail(function (answer) {
         $('.modal').modal('hide');
-        document.getElementById("lock").checked = !state;
         sendNotify(getMessage("site.cp.service.action.message.terminateFailed"), "danger");
     });
 }
@@ -108,12 +105,10 @@ function terminateServiceInstant(){
                     location.reload();
                 }).fail(function (answer) {
                     $('.modal').modal('hide');
-                    document.getElementById("lock").checked = !state;
                     sendNotify(getMessage("site.cp.service.action.message.terminateFailed"), "danger");
                 });
             }, function () {
                 $('.modal').modal('hide');
-                document.getElementById("lock").checked = !state;
                 sendNotify(getMessage("site.cp.service.action.message.terminateFailed"), "danger");
             });
         } else {
@@ -123,7 +118,6 @@ function terminateServiceInstant(){
         }
     }).fail(function (answer) {
         $('.modal').modal('hide');
-        document.getElementById("lock").checked = !state;
         sendNotify(getMessage("site.cp.service.action.message.terminateFailed"), "danger");
     });
 }

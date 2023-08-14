@@ -47,7 +47,7 @@ function showPaymentLoadingModal(){
 
 function createOrder(sessionCode){
     $.ajax({
-        data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id, 'roundUp': roundUp, sessionCode: sessionCode},
+        data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id, 'roundUp': roundUp, sessionCode: sessionCode, 'deliveryAddressId': deliveryAddressId, 'invoiceAddressId': invoiceAddressId},
         type: 'POST',
         url: apiURL + '/user/order/startOrder',
         beforeSend: function (xhr) {
@@ -169,7 +169,7 @@ window.addEventListener('load', async event => {
                     'teamId': team_id,
                     'discountCode': discountCode,
                     'affiliate_id': affiliate_id,
-                    'roundUp': roundUp
+                    'roundUp': roundUp, 'deliveryAddressId': deliveryAddressId, 'invoiceAddressId': invoiceAddressId
                 },
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
@@ -300,7 +300,7 @@ function initialFast(render) {
     function createFastOrder(ev){
         hideBTN();
         $.ajax({
-            data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id, 'roundUp': roundUp, sessionCode: 'fast'},
+            data: {'teamId': team_id, 'discountCode': discountCode, 'affiliate_id': affiliate_id, 'roundUp': roundUp, sessionCode: 'fast', 'deliveryAddressId': deliveryAddressId, 'invoiceAddressId': invoiceAddressId},
             type: 'POST',
             url: apiURL + '/user/order/startOrder',
             beforeSend: function (xhr) {

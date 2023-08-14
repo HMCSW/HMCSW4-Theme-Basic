@@ -15,7 +15,7 @@ async function initTwoFactorConfirmation() {
         startTwoFactor(e.detail.sessionCode);
 
         function done(){
-            modal.off(); 
+            modal.off();
             modal.modal('hide');
             e.detail.successCallback();
         }

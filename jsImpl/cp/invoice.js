@@ -43,7 +43,7 @@ function showInvoicePDF(invoice_id){
         if(answer.success === true){
             const fancybox = new Fancybox([
                 {
-                    src: answer.response,
+                    src: answer.response.url,
                     type: 'pdf',
                 },
             ]);
