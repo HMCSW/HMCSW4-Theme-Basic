@@ -75,7 +75,6 @@ function setSessions(url){
 
 }
 
-
 function generateToken(token){
     $.ajax({
         type: "POST",
