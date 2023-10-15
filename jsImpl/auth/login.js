@@ -62,7 +62,7 @@ function setSessions(url){
     $.ajax({
         type: "POST",
         url: apiURL + "/session",
-        data: {sessions: sessionsToSet, url: url}
+        data: JSON.stringify({sessions: sessionsToSet, url: url}),
     }).done(function (answer) {
         sessionsToSet = {};
 
