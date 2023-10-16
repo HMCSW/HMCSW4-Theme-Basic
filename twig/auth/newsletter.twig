@@ -7,10 +7,10 @@
           class="text-center">{{ 'site.unsubscribeNewsletter' | language }}</h1>
 
         {% if newsletter['success'] %}
-        <h3 class="text-center">{{ 'site.unsubscribeNewsletter.done' | language }}
-          {% else %}
-          <h3 class="text-center">{{ 'site.unsubscribeNewsletter.error' | language }}
-            {% endif %}
+          <h3 class="text-center">{{ 'site.unsubscribeNewsletter.done' | language }}</h3>
+        {% else %}
+          <h3 class="text-center">{{ 'site.unsubscribeNewsletter.error' | language }}</h3>
+        {% endif %}
 
       </div>
     </div>

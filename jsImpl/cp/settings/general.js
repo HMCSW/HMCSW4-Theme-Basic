@@ -1,7 +1,7 @@
-function updateEmail(){
+function updateEmail() {
     var email = $('#email').val();
     $.ajax({
-        url: apiURL+'/user/settings/general/email',
+        url: apiURL + '/user/settings/general/email',
         type: 'patch',
         data: {
             email: email
@@ -15,23 +15,27 @@ function updateEmail(){
                 startTwoFactorConfirmation(answer.response.sessionCode, function () {
                     $.ajax({
                         data: {sessionCode: answer.response.sessionCode, email: email},
-                        url: apiURL+'/user/settings/general/email',
+                        url: apiURL + '/user/settings/general/email',
                         type: 'patch',
                         beforeSend: function (xhr) {
                             xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
                         },
                     }).done(function (answer) {
                         document.getElementById('updateEmail').disabled = false;
-                        if(answer.success === false){
+                        if (answer.success === false) {
                             sendNotify(getMessage('site.cp.settings.action.message.updateEmailFailed'), 'danger');
                         } else {
-                            sendNotify(getMessage('site.cp.settings.action.message.updateEmail'), 'success');
-                            location.reload();
+                            startEmailConfirmation(function () {
+                                sendNotify(getMessage('site.cp.settings.action.message.updateEmail'), 'success');
+                                location.reload();
+                            }, function () {
+                                sendNotify(getMessage('site.cp.settings.action.message.updateEmailFailed'), 'danger');
+                            });
                         }
                     }).fail(function (err) {
                         sendNotify(getMessage('site.cp.settings.action.message.updateEmailFailed'), 'danger');
                     });
-                }, function (){
+                }, function () {
                     document.getElementById('updateEmail').disabled = false;
                     sendNotify(getMessage('site.cp.settings.action.message.updateEmailFailed'), 'danger');
                 });
@@ -55,11 +59,11 @@ document.getElementById('updateEmail').addEventListener('click', function () {
 });
 
 
-function updatePassword(){
+function updatePassword() {
     var password = $('#password').val();
     var oldPassword = $('#oldPassword').val();
     $.ajax({
-        url: apiURL+'/user/settings/general/password',
+        url: apiURL + '/user/settings/general/password',
         type: 'patch',
         data: {
             old_password: oldPassword,
@@ -73,7 +77,7 @@ function updatePassword(){
             if (answer.response.requireSessionCode === true) {
                 startTwoFactorConfirmation(answer.response.sessionCode, function () {
                     $.ajax({
-                        url: apiURL+'/user/settings/general/password',
+                        url: apiURL + '/user/settings/general/password',
                         type: 'patch',
                         data: {
                             old_password: oldPassword,
@@ -85,8 +89,8 @@ function updatePassword(){
                         }
                     }).done(function (answer) {
                         document.getElementById('updatePassword').disabled = false;
-                        if(answer.success === false){
-                            if(answer.response.error_message = "passwordWrong"){
+                        if (answer.success === false) {
+                            if (answer.response.error_message = "passwordWrong") {
                                 sendNotify(getMessage('site.cp.settings.action.message.updatePasswordWrong'), 'danger');
                             } else {
                                 sendNotify(getMessage('site.cp.settings.action.message.updatePasswordFailed'), 'danger');
@@ -97,13 +101,13 @@ function updatePassword(){
                         }
                     }).fail(function (err) {
                         document.getElementById('updatePassword').disabled = false;
-                        if(err.responseJSON.response.error_message = "passwordWrong"){
+                        if (err.responseJSON.response.error_message = "passwordWrong") {
                             sendNotify(getMessage('site.cp.settings.action.message.updatePasswordWrong'), 'danger');
                         } else {
                             sendNotify(getMessage('site.cp.settings.action.message.updatePasswordFailed'), 'danger');
                         }
                     });
-                }, function (){
+                }, function () {
                     document.getElementById('updatePassword').disabled = false;
                     sendNotify(getMessage('site.cp.settings.action.message.updatePasswordFailed'), 'danger');
                 });
@@ -113,7 +117,7 @@ function updatePassword(){
             }
         } else {
             document.getElementById('updatePassword').disabled = false;
-            if(answer.response.error_message = "passwordWrong"){
+            if (answer.response.error_message = "passwordWrong") {
                 sendNotify(getMessage('site.cp.settings.action.message.updatePasswordWrong'), 'danger');
             } else {
                 sendNotify(getMessage('site.cp.settings.action.message.updatePasswordFailed'), 'danger');
@@ -121,7 +125,7 @@ function updatePassword(){
         }
     }).fail(function (err) {
         document.getElementById('updatePassword').disabled = false;
-        if(err.responseJSON.response.error_message = "passwordWrong"){
+        if (err.responseJSON.response.error_message = "passwordWrong") {
             sendNotify(getMessage('site.cp.settings.action.message.updatePasswordWrong'), 'danger');
         } else {
             sendNotify(getMessage('site.cp.settings.action.message.updatePasswordFailed'), 'danger');
@@ -131,12 +135,12 @@ function updatePassword(){
 
 document.getElementById('updatePassword').addEventListener('click', function () {
     document.getElementById('updatePassword').disabled = true;
-   updatePassword();
+    updatePassword();
 });
 
-function deleteAccount(){
+function deleteAccount() {
     $.ajax({
-        url: apiURL+'/user/settings/general/deleteAccount',
+        url: apiURL + '/user/settings/general/deleteAccount',
         type: 'delete',
         beforeSend: function (xhr) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
@@ -148,14 +152,14 @@ function deleteAccount(){
                 startTwoFactorConfirmation(answer.response.sessionCode, function () {
                     $.ajax({
                         data: {sessionCode: answer.response.sessionCode},
-                        url: apiURL+'/user/settings/general/deleteAccount',
+                        url: apiURL + '/user/settings/general/deleteAccount',
                         type: 'delete',
                         beforeSend: function (xhr) {
                             xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
                         },
                     }).done(function (answer) {
                         document.getElementById('deleteAccountSubmit').disabled = false;
-                        if(answer.success === false){
+                        if (answer.success === false) {
                             sendNotify(getMessage('site.cp.settings.action.message.deleteAccountFailed'), 'danger');
                         } else {
                             location.reload();
@@ -163,7 +167,7 @@ function deleteAccount(){
                     }).fail(function (err) {
                         sendNotify(getMessage('site.cp.settings.action.message.deleteAccountFailed'), 'danger');
                     });
-                }, function (){
+                }, function () {
                     document.getElementById('deleteAccountSubmit').disabled = false;
                     sendNotify(getMessage('site.cp.settings.action.message.deleteAccountFailed'), 'danger');
                 });
@@ -180,7 +184,9 @@ function deleteAccount(){
     });
 }
 
-document.getElementById('deleteAccountSubmit').addEventListener('click', function () {
-    document.getElementById('deleteAccountSubmit').disabled = true;
-    deleteAccount();
-});
+if(document.getElementById('deleteAccountSubmit') !== null) {
+    document.getElementById('deleteAccountSubmit').addEventListener('click', function () {
+        document.getElementById('deleteAccountSubmit').disabled = true;
+        deleteAccount();
+    });
+}

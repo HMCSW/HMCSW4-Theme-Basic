@@ -213,7 +213,7 @@
                     <div class="card card-fluid ">
                         <div class="card-header">{{ 'site.cp.settings.security.phone' | language }}</div>
                         <div class="card-body">
-                            {% if userData['phoneNumber']['status'] == "true" %}
+                            {% if userData['phone']['status'] == 1 %}
                                 {% if twoFactor['phone']['status'] == "true" %}
                                     <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
                                     <form method="POST">

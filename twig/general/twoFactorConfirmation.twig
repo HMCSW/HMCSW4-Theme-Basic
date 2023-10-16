@@ -153,3 +153,36 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="emailVerification">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="mb-5 text-center">
+                    <div class="mb-5 text-center">
+                        <h6 class="h3 mb-1">{{ 'general.emailConfirmation' | language }}</h6>
+                        <p class="text-muted mb-0">{{ 'general.emailConfirmation.description' | language }}</p>
+                    </div>
+                </div>
+                <span class="clearfix"></span>
+                <div class="form-group">
+                    <label for="emailConfirmationCode"
+                           class="form-control-label">{{ 'general.emailConfirmation.form.code' | language }}</label>
+
+                    <input type="text" class="form-control" id="emailConfirmationCode" autocomplete="one-time-code"
+                           placeholder="ABC 123 DFG 456">
+
+                </div>
+                <div class="mt-4">
+                    <button class="btn btn-lg btn-primary w-100 mb-4" id="emailConfirmationSubmitBtn"
+                            type="button">{{ 'general.emailConfirmation.submitBtn' | language }}
+                    </button>
+                </div>
+                <button class="btn btn-sm btn-info w-50 mb-4" id="emailConfirmationResendBtn"
+                        type="button">{{ 'general.emailConfirmation.resendBtn' | language }}</button>
+            </div>
+
+        </div>
+    </div>
+</div>

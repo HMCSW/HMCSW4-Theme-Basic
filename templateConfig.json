@@ -1,5 +1,5 @@
 {
-  "name": "basic-rework",
+  "name": "HMCSW4-default",
   "description": "Basic HMCSW4 theme",
   "version": "1.0.0",
   "keyWords": "HMCSW4",
@@ -67,7 +67,7 @@
   "alert": {
     "cp": {
       "info": {
-        "enabled": true,
+        "enabled": false,
         "color": "red",
         "message": "Alles gut."
       }

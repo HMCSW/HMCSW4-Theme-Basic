@@ -94,13 +94,13 @@
                                                                 <div {% if invoice['state'] != 3 %}style="display:none"{% endif %}>
 
                                                                     <button type="button" class="btn btn-sm btn-outline-danger">
-                                                                        <i class="fas fa-plus me-2"></i>
+                                                                        <i class="fas fa-xmark me-2"></i>
                                                                         {{ 'general.invoices.state.3' | language }}
                                                                     </button>
                                                                 </div>
                                                                 <div {% if invoice['state'] != 4 %}style="display:none"{% endif %}>
                                                                     <button type="button" class="btn btn-sm btn-outline-danger">
-                                                                        <i class="fas fa-plus me-2"></i>
+                                                                        <i class="fas fa-arrow-turn-down-left me-2"></i>
                                                                         {{ 'general.invoices.state.4' | language }}
                                                                     </button>
                                                                 </div>
@@ -108,7 +108,7 @@
                                                                     <button type="button"
                                                                             class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
                                                                 <span class="btn-inner--icon"><i
-                                                                            class="fas fa-clock"></i></span>
+                                                                            class="fas fa-cog fa-spin"></i></span>
                                                                         <span class="btn-inner--text">{{ 'general.invoices.state.pending' | language }}</span>
                                                                     </button>
                                                                 </div>

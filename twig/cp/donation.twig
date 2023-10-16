@@ -1,11 +1,12 @@
 {% include '/general/header.twig' %}
+
 <div class="container-fluid">
-    <div class="row flex-nowrap">
+    <div class="row pt-sm-2 pt-lg-0">
         {% include '/cp/sideNav.twig' %}
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
             {% include 'general/actionMessage.twig' %}
             {% include 'cp/terminateUser.twig' %}
-            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
                                 class="fa fa-hands-holding-dollar text-primary lead pe-1 me-2"></i>
@@ -20,11 +21,11 @@
             </section>
 
             {% if not donation %}
-                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                     <div class="card-body">
                         <h5 class="h5 text-center">{{ 'site.cp.donation.create' | language }}</h5>
                         <h6
-                          class="h6 text-center">{{ 'site.cp.donation.description' | language }}</h6>
+                                class="h6 text-center">{{ 'site.cp.donation.description' | language }}</h6>
                         <form method="post" class="text-center">
                             <input type="hidden" name="csrf" value="{{ csrf }}">
                             <input type="hidden" name="action" value="createDonation">
@@ -34,8 +35,7 @@
                     </div>
                 </section>
             {% else %}
-
-                <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center"><i
                                     class="fa fa-gears text-primary lead pe-1 me-2"></i>
@@ -65,7 +65,8 @@
                                                 <input id="name" type="text" class="form-control"
                                                        placeholder="{{ 'site.cp.donation.name' | language }}"
                                                        value="{{ donation.getName() }}" name="name">
-                                                <button type="submit" class="btn btn-primary">{{ 'general.modal.saveBtn'|language }}</button>
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'general.modal.saveBtn'|language }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -82,7 +83,8 @@
                                                 <input id="slug" type="text" class="form-control"
                                                        placeholder="{{ 'site.cp.donation.slug' | language }}"
                                                        value="{{ donation.getSlug() }}" name="slug">
-                                                <button type="submit" class="btn btn-primary">{{ 'general.modal.saveBtn'|language }}</button>
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'general.modal.saveBtn'|language }}</button>
                                             </div>
                                         </div>
                                     </form>
@@ -100,11 +102,48 @@
                                                 <input id="icon" type="file" class="form-control"
                                                        placeholder="{{ 'site.cp.donation.icon' | language }}"
                                                        value="{{ donation.getSlug() }}" name="icon">
-                                                <button type="submit" class="btn btn-primary">{{ 'general.modal.uploadBtn'|language }}</button>
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'general.modal.uploadBtn'|language }}</button>
                                             </div>
                                             <div class="form-text">{{ 'site.cp.donation.icon.help' | language }}</div>
                                         </div>
                                     </form>
+                                </div>
+                                <div class="row g-3 mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <h2 class="h6 mb-0">{{ 'site.cp.donation.background' | language }}</h2>
+                                    </div>
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                                        <input type="hidden" name="action" value="setBackground">
+                                        <div class="form-group">
+                                            <div class="input-group input-group-sm">
+                                                <input id="background" type="file" class="form-control"
+                                                       placeholder="{{ 'site.cp.donation.background' | language }}"
+                                                       name="background">
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'general.modal.uploadBtn'|language }}</button>
+                                            </div>
+                                            <div class="form-text">{{ 'site.cp.donation.background.help' | language }}</div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="row g-3 mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if cofig['wallet']['apple']['enabled'] %}
+                                            <div class="col-lg-6 col-md-12">
+                                                <a href="?apple"><img alt="Apple Wallet"
+                                                                      src="{{ url }}/assets/img/wallet/apple-button.svg"
+                                                                      width="150"></a>
+                                            </div>
+                                        {% endif %}
+                                        {% if cofig['wallet']['google']['enabled'] %}
+                                            <div class="col-lg-6 col-md-12">
+                                                <a href="?google" target="_blank"><img alt="Google Wallet"
+                                                                                       src="{{ url }}/assets/img/wallet/google-button.png"></a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
 
                                 <div class="row g-3 mb-4">
@@ -117,8 +156,10 @@
                                         <div class="form-group">
                                             <div class="input-group input-group-sm">
                                                 <input id="background" type="file" class="form-control"
-                                                       placeholder="{{ 'site.cp.donation.background' | language }}" name="background">
-                                                <button type="submit" class="btn btn-primary">{{ 'general.modal.uploadBtn'|language }}</button>
+                                                       placeholder="{{ 'site.cp.donation.background' | language }}"
+                                                       name="background">
+                                                <button type="submit"
+                                                        class="btn btn-primary">{{ 'general.modal.uploadBtn'|language }}</button>
                                             </div>
                                             <div class="form-text">{{ 'site.cp.donation.background.help' | language }}</div>
                                         </div>
@@ -131,7 +172,7 @@
                 </section>
 
                 {% if donation.getDonations()|length != 0 %}
-                    <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+                    <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                         <div class="card-body">
                             <div class="row">
                                 <div class="table-responsive">

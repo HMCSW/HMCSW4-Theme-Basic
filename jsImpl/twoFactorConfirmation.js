@@ -303,3 +303,81 @@ async function initTwoFactorConfirmation() {
 
     }, false);
 }
+
+
+function startEmailConfirmation(successCallback, failedCallback) {
+    console.log("startEmailConfirmation");
+    var event = new CustomEvent('EmailConfirmationEvent', {detail: {successCallback: successCallback, failedCallback: failedCallback }});
+    document.dispatchEvent(event);
+}
+
+function initEmailConfirmation() {
+    document.addEventListener("EmailConfirmationEvent", e => {
+        let modal = $('#emailVerification');
+        modal.modal('show', {backdrop: 'static', keyboard: false, focus: true});
+        document.getElementById("emailConfirmationResendBtn").removeAttribute("disabled");
+        document.getElementById("emailConfirmationSubmitBtn").removeAttribute("disabled");
+
+
+        function done(){
+            modal.modal('hide');
+            document.getElementById("emailConfirmationSubmitBtn").removeEventListener("click", submit);
+            document.getElementById("emailConfirmationResendBtn").removeEventListener("click", resend);
+            document.getElementById("emailConfirmationResendBtn").removeAttribute("disabled");
+
+            e.detail.successCallback();
+        }
+
+        if(document.getElementById("emailConfirmationResendBtn") !== null) {
+            document.getElementById("emailConfirmationResendBtn").addEventListener("click", resend);
+        }
+
+        if(document.getElementById("emailConfirmationSubmitBtn") !== null) {
+            document.getElementById("emailConfirmationSubmitBtn").addEventListener("click", submit);
+        }
+
+        function submit() {
+            document.getElementById("emailConfirmationSubmitBtn").setAttribute("disabled", "true")
+            let value = document.getElementById("emailConfirmationCode").value;
+            $.ajax({
+                type: "POST",
+                url: apiURL + "/user/settings/general/email/verify",
+                data: {code: value},
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+                }
+            }).done(function (answer) {
+                if (answer.success) {
+                    done();
+                } else {
+                    sendNotify(getMessage("general.action.message.failed"), "danger");
+                    document.getElementById("emailConfirmationSubmitBtn").removeAttribute("disabled");
+                }
+            }).fail(function (err) {
+                sendNotify(getMessage("general.action.message.failed"), "danger");
+                document.getElementById("emailConfirmationSubmitBtn").removeAttribute("disabled");
+            });
+        }
+
+
+        function resend() {
+            document.getElementById("emailConfirmationResendBtn").setAttribute("disabled", "true");
+            $.ajax({
+                type: "POST",
+                url: apiURL + "/user/settings/general/email/resendCode",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+                }
+            }).done(function (answer) {
+                if (answer.success) {
+                    sendNotify(getMessage("general.action.message.success"), "success");
+                } else {
+                    sendNotify(getMessage("general.action.message.failed"), "danger");
+                }
+            }).fail(function (err) {
+                sendNotify(getMessage("general.action.message.failed"), "danger");
+            });
+        }
+
+    });
+}

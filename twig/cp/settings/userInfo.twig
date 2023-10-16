@@ -467,7 +467,7 @@
                                 class="fa fa-phone text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.userInfo.phone' | language }}</h2>
                     </div>
-                    {% if userData['phoneNumber']['number'] == "false" %}
+                    {% if userData['phone']['number'] == null %}
                         <form method="post">
                             <input type="hidden" name="action" value="updatePhone">
                             <input type="hidden" name="csrf" value="{{ csrf }}">
@@ -485,18 +485,16 @@
                             </div>
 
                             <div class="col-12 d-flex justify-content-end pt-3">
-                                <button class="btn btn-secondary" type="button">Cancel</button>
                                 <button class="btn btn-primary ms-3"
                                         type="submit">{{ 'site.cp.settings.userInfo.set.form.btn' | language }}</button>
                             </div>
                         </form>
 
-                    {% elseif userData['phoneNumber']['status'] != "true" %}
+                    {% elseif userData['phone']['status'] != 1 %}
                         <div class="actions-toolbar py-2 mb-4">
-                            <h6 class="text-muted mb-0">{{ userData['phoneNumber']['number'] | censor }}</h6>
+                            <h6 class="text-muted mb-0">{{ userData['phone']['number'] | censor }}</h6>
                         </div>
                         <form method="post">
-                            <input type="hidden" name="action" value="verifyPhone">
                             <input type="hidden" name="csrf" value="{{ csrf }}">
 
                             <div class="row">
@@ -510,21 +508,18 @@
                             </div>
 
                             <div class="col-12 d-flex justify-content-end pt-3">
-                                <button class="btn btn-primary ms-3"
+                                <button class="btn btn-primary ms-3" name="action" value="verifyPhone"
                                         type="submit">{{ 'site.cp.settings.userInfo.verify.form.btn' | language }}</button>
-                            </div>
-                        </form>
-                        <form method="post">
-                            <input type="hidden" name="action" value="removePhone">
-                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                            <div class="col-12 d-flex justify-content-end pt-3">
-                                <button class="btn btn-danger ms-3"
+                                <button class="btn btn-primary ms-3" name="action" value="resendPhoneCode"
+                                        type="submit">{{ 'site.cp.settings.userInfo.phone.form.resendBtn' | language }}</button>
+
+                                <button class="btn btn-danger ms-3" formnovalidate name="action" value="removePhone"
                                         type="submit">{{ 'site.cp.settings.userInfo.remove.form.btn' | language }}</button>
                             </div>
                         </form>
                     {% else %}
                         <div class="actions-toolbar py-2 mb-4">
-                            <h6 class="text-muted mb-0">{{ userData['phoneNumber']['number'] | censor }} <i
+                            <h6 class="text-muted mb-0">{{ userData['phone']['number'] | censor }} <i
                                         class="fa fa-check text-success"></i></h6>
                         </div>
 
