@@ -13,7 +13,7 @@
                                 class="fa fa-wallet text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.tab.balance' | language }}</h2>
 
-                        {% if userData['email_activation'] == "true" %}
+                        {% if userData['email']['status'] == 1 %}
                             <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                                 <button data-bs-toggle="modal" data-bs-target="#sendBalance"
                                         class="btn btn-dark">
@@ -26,7 +26,7 @@
 
                     <h4 class="align-items-center text-center">{{ userData['credits'] | creditsToEuro }}{{ "symbol"|currency }}</h4>
 
-                    {% if userData['email_activation'] == "true" %}
+                    {% if userData['email']['status'] == 1 %}
                         <div class="modal fade" tabindex="-1" id="sendBalance" role="dialog"
                              aria-labelledby="myLargeModalLabel"
                              aria-hidden="true">
@@ -80,7 +80,7 @@
                                     class="fa fa-people-arrows text-primary lead pe-1 me-2"></i>
                             <h2 class="h4 mb-0">{{ 'site.cp.balance.topUp' | language }}</h2>
                         </div>
-                        {% if userData['email_activation'] == "true" %}
+                        {% if userData['email']['status'] == 1 %}
                             <form method="post">
                                 <input type="hidden" name="action" value="topUp">
                                 <input type="hidden" name="csrf" value="{{ csrf }}">
@@ -125,7 +125,7 @@
                             <h2 class="h4 mb-0">{{ 'site.cp.balance.giftcode' | language }}</h2>
                         </div>
 
-                        {% if userData['email_activation'] == "true" %}
+                        {% if userData['email']['status'] == 1 %}
                             <form method="post">
                                 <input type="hidden" name="action" value="useGiftcode">
                                 <input type="hidden" name="csrf" value="{{ csrf }}">

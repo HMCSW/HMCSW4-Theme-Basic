@@ -23,7 +23,18 @@ async function initTwoFactorConfirmation() {
         function fail(){
             modal.off();
             modal.modal('hide');
+            removeAllListeners();
             e.detail.failedCallback();
+        }
+
+
+        function removeAllListeners(){
+            document.getElementById("submit-code").removeEventListener("click", submitCode);
+            document.getElementById("selectOtherMethod").removeEventListener("click", selectOtherMethod);
+            document.getElementById("selectBTN").removeEventListener("click", selectBTN);
+            document.getElementById("cancelFido").removeEventListener("click", cancelFido);
+            document.getElementById("fidoFailBtn").removeEventListener("click", fidoRetry);
+            document.getElementById("code").removeEventListener('change', submitCodeEmptyCheck);
         }
 
         function startTwoFactor(sessionCode) {
@@ -205,7 +216,6 @@ async function initTwoFactorConfirmation() {
             let code = document.getElementById("code");
             let value = code.value;
 
-            document.getElementById("submit-code").addEventListener("click", submitCode);
             if (value.length <= 0) {
                 document.getElementById("submit-code").setAttribute("disabled", "true");
             } else {
@@ -236,6 +246,7 @@ async function initTwoFactorConfirmation() {
 
                         document.getElementById("code").focus({preventScroll: true, focusVisible: true});
                         document.getElementById("code").addEventListener('input', submitCodeEmptyCheck);
+                        document.getElementById("submit-code").addEventListener("click", submitCode);
                     }).fail(function (err) {
                         sendNotify(getMessage("general.action.message.failed"), "danger")
                         document.getElementById("enterCode").style = "display:none"

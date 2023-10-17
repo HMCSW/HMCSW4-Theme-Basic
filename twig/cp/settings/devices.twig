@@ -192,7 +192,7 @@
                                             <span class="badge bg-faded-primary text-primary fs-xs ms-3">{{ 'site.cp.settings.devices.current'|language }}</span>
                                         {% endif %}
                                         <div class="d-flex ms-auto">
-                                            <button class="nav-link fs-xl fw-normal py-1 pe-0 ps-1 ms-2" type="button"
+                                            <button class="btn nav-link fs-xl fw-normal py-1 pe-0 ps-1 ms-2" type="button"
                                                     data-bs-toggle="modal" href="#device-{{ device['device_id'] }}"><i
                                                         class="fa fa-eye"></i>
                                             </button>
@@ -201,7 +201,7 @@
                                                 <input type="hidden" name="csrf" value="{{ csrf }}">
                                                 <input type="hidden" name="device_id" value="{{ device['device_id'] }}">
 
-                                                <button class="nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2"
+                                                <button class="btn  nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2"
                                                         type="submit"><i
                                                             class="fa fa-trash"></i></button>
                                             </form>

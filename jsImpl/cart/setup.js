@@ -36,8 +36,10 @@ function saveConfig(item){
         url: apiURL+"/user/cart/config/" + itemId,
         type: "patch",
         data: {config: JSON.stringify(config)},
+        contentType: "application/json",
         beforeSend: function (xhr) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+            xhr.setRequestHeader('Content-Type', 'application/json');
         }
     }).done(function(data) {
         sendNotify(getMessage("general.action.message.success"), "success");

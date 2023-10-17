@@ -335,47 +335,45 @@
                                                 </div>
                                             {% endif %}
 
-                                            {% if "team.service.domain.dnsHelper"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                            {% if "team.service.domain.dnsHelper"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) and anotherServices|length != 0 %}
                                                 <div class="tab-pane fade" id="dnsHelper" role="tabpanel"
                                                      aria-labelledby="dnsHelper-tab">
-                                                    <br>
-                                                    <h5 class="text-left">{{ 'site.cp.service.tab.domain.dnsHelper' | language }}</h5>
+                                                    <div class="row">
+                                                        <div class="d-flex align-items-center mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
+                                                            <i
+                                                                    class="fa fa-router text-primary lead pe-1 me-2"></i>
+                                                            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.domain.dnsHelper' | language }}</h2>
+                                                        </div>
+                                                    </div>
                                                     <h6 class="text-left">{{ 'site.cp.service.tab.domain.dnsHelper.description' | language }}</h6>
                                                     <br>
                                                     <div class="col-lg-12">
-                                                        <form method="post">
-                                                            <input type="hidden" name="action" value="dnsHelper">
-                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="another_service_id"
-                                                                               class="form-control-label">{{ 'site.cp.service.tab.domain.dnsHelper.service' | language }}</label>
-                                                                        <select required name="another_service_id"
-                                                                                id="another_service_id"
-                                                                                class="form-select"
-                                                                                required>
-                                                                            {% for another_service in team['services'] %}
-                                                                                {% if another_service['state'] == 1 and another_service['hostType'] == "plesk" %}
-                                                                                    <option value="{{ another_service['service_id'] }}">
-                                                                                        ({{ another_service['service_id'] }}
-                                                                                        ) {{ another_service['name'] }} {% if another_service['service_name'] != "" %} | {{ another_service['service_name'] }} {% endif %}
-                                                                                    </option>
-
-                                                                                {% endif %} %}
-                                                                            {% endfor %}
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="dnsHelper_name"
+                                                                       class="form-label">{{ 'site.cp.service.tab.domain.dnsHelper.form.name' | language }}</label>
+                                                                <input required id="dnsHelper_name" class="form-control" placeholder="{{ service['external']['name'] }}" value="{{ service['external']['name'] }}">
+                                                                <input required id="dnsHelper_name" class="form-control" placeholder="{{ service['external']['name'] }}" value="@">
                                                             </div>
-                                                            <div class="mt-4">
-                                                                <button type="submit"
-                                                                        class="btn btn-sm btn-primary">{{ 'general.modal.saveBtn' | language }}
-                                                                </button>
+                                                            <div class="col-md-6">
+                                                                <label for="dnsHelper_service_id"
+                                                                       class="form-label">{{ 'site.cp.service.tab.domain.dnsHelper.form.service' | language }}</label>
+                                                                <select required
+                                                                        id="dnsHelper_service_id" class="form-select"
+                                                                        required>
+                                                                    {% for another_service in anotherServices %}
+                                                                        <option value="{{ another_service['id'] }}">
+                                                                            {{ "("~another_service['id']~") " ~ another_service['name'] }} {% if another_service['service_name'] != "" %} | {{ another_service['service_name'] }} {% endif %}
+                                                                        </option>
+                                                                    {% endfor %}
+                                                                </select>
                                                             </div>
-                                                        </form>
+                                                        </div>
+                                                        <div class="d-flex justify-content-end pt-3">
+                                                            <button class="btn btn-primary" onclick="dnsHelper(this);"
+                                                                    type="button">{{ 'site.cp.service.tab.domain.dnsHelper.form.btn' | language }}</button>
+                                                        </div>
                                                     </div>
-
                                                 </div>
                                             {% endif %}
 

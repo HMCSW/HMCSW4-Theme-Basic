@@ -11,7 +11,7 @@
         </div>
     {% endif %}
 
-    {% if userData['email_activation'] != "true" %}
+    {% if userData['email']['status'] != 1 %}
         <div class="col-lg-12">
             <div class="alert alert-warning" role="alert"><i class="fa-regular fa-triangle-exclamation"></i>
                 {{ 'site.cp.settings.emailNotVerified' | language }}

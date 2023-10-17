@@ -60,7 +60,7 @@ document.getElementById('updateEmail').addEventListener('click', function () {
 
 
 function updatePassword() {
-    var password = $('#password').val();
+    var password = $('#newPassword').val();
     var oldPassword = $('#oldPassword').val();
     $.ajax({
         url: apiURL + '/user/settings/general/password',
