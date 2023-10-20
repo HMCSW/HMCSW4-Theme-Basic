@@ -1,159 +1,161 @@
 {% include '/general/header.twig' %}
 <section class="container py-5 mt-5 mb-lg-3 mb-xl-4 mb-xxl-5">
-  <div class="row g-3 justify-content-lg-center flex-sm-nowrap flex-md-wrap pb-4 overflow-auto ">
-    <div class="col-12">
-      <section class="card border-0 p-md-2 p-xl-3 p-xxl-4">
-        <div class="card-body">
-          {% if type['category']|length > 1 %}
-            <div class="d-flex align-items-center justify-content-center mb-4">
-              <h2 class="h3 mb-0 text-center"><strong>{{ type['name'] }}</strong></h2>
-            </div>
-            <ul class="nav nav-tabs justify-content-center" role="tablist">
-              {% for category in type['category'] %}
-                <li class="nav-item">
-                  <a href="#{{ category['name']|lower|slugify }}"
-                     class="nav-link {% if category['default'] == "true" %} active {% endif %} text-center"
-                     data-bs-toggle="tab" role="tab">
-                    {{ category['name'] }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-
-            <div class="d-flex align-items-center justify-content-center">
-              <h2 class="h3 mb-0 text-center"><strong>{{ type['name'] }}</strong></h2>
-            </div>
-          {% endif %}
-        </div>
-      </section>
-    </div>
-  </div>
-
-  {% include 'general/themeAlert.twig' %}
-  <div class="tab-content">
-    {% for category in type['category'] %}
-      <div class="tab-pane fade {% if category['default'] == "true" %} show active {% endif %}"
-           id="{{ category['name']|lower|slugify }}" role="tabpanel"
-           aria-labelledby="{{ category['name']|lower|slugify }}-tab">
-
-        {% if category['products']|length == 0 %}
-          <div class="row g-3 justify-content-lg-center flex-sm-nowrap flex-md-wrap pb-4 overflow-auto ">
-            <div class="col-lg-6">
-              <div class="card card-pricing bg-primary border-0 text-center px-3">
+    <div class="row g-3 justify-content-lg-center flex-sm-nowrap flex-md-wrap pb-4 overflow-auto ">
+        <div class="col-12">
+            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4">
                 <div class="card-body">
-                  <div class="h4 text-white text-center mb-0">
-                    {{ 'site.products.nothingFound' | language }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% else %}
-          {% if category['location'] != "" %}
-            <section class="card border-0 mb-4">
-              <div class="card-body">
-                <div class="d-flex align-items-center text-center justify-content-center">
-                  <h2
-                          class="h4 text-center mb-0">{{ 'site.products.location'|language|replace({'@location': category['location'] }) }}</h2>
-                </div>
-              </div>
-            </section>
-          {% endif %}
-
-          {% set count = category['products']|length %}
-          {% if count == 4 or count == 8 %}
-            {% set col = 3 %}
-            {% set col_md = 4 %}
-          {% elseif count == 3 or count == 7 or count == 6 %}
-            {% set col = 3 %}
-            {% set col_md = 4 %}
-          {% elseif count == 2 %}
-            {% set col = 3 %}
-            {% set col_md = 4 %}
-          {% elseif count == 1 %}
-            {% set col = 3 %}
-            {% set col_md = 4 %}
-          {% else %}
-            {% set col = 3 %}
-            {% set col_md = 4 %}
-          {% endif %}
-          <div class="row g-3 justify-content-lg-center flex-nowrap flex-lg-wrap pb-4 overflow-auto ">
-            {% for products in category['products'] %}
-              <div class="col-lg-{{ col }} col-md-{{ col_md }}" style="min-width: 19rem;">
-                <div
-                        class="{% if products['promote'] == "true" %}card border-primary bg-primary h-100{% else %}card h-100{% endif %}">
-                  <div class="d-flex flex-column card-body text-center justify-content-center"
-                       style="max-width: 23rem;">
-                    {% if products['banner'] != "" %}<img src="{{ products['banner'] }}" class="card-img-top mb-4"
-                                                          alt="{{ products['name'] }}">{% endif %}
-                    <h4 class="{% if products['promote'] == "true" %}text-white{% endif %}">{{ products['name'] }}</h4>
-                    <div class="{% if products['promote'] == "true" %}text-light{% else %}text-primary{% endif %}">
-                      {% if products['discount'] == 0 %}
-                        <span class="display-5">{{ products['amount']|creditsToEuro }}{{ "symbol"|currency }}</span>
-                      {% else %}
-                        <span class="display-5">{{ products['discount']|creditsToEuro }}{{ "symbol"|currency }}</span>
-                        <s class="fs-sm">{{ products['amount']|creditsToEuro }}{{ "symbol"|currency }}</s>
-                      {% endif %}
-                    </div>
-                    <div class="mb-4 {% if products['promote'] == "true" %}text-white{% endif %}">
-                      {% if products['period'] == "monthly" %}
-                        {{ 'general.time.monthly' | language }}
-                      {% elseif products['period'] == "yearly" %}
-                        {{ 'general.time.yearly' | language }}
-                      {% elseif products['period'] == "oneTime" %}
-                        {{ 'general.time.oneTime' | language }}
-                      {% endif %}
-                      {% if products['setupFee'] != 0 %}
-                        <p>{{ "+"~ products['setupFee']|creditsToEuro ~ "symbol"|currency ~ " " ~ 'site.products.setupFee' | language }}</p>
-                      {% endif %}
-                    </div>
-                    <ul
-                            class="list-unstyled {% if products['promote'] == "true" %}text-white{% endif %} text-sm opacity-8 mb-4">
-                      {% include '/p/productInfo.twig' %}
-                    </ul>
-
-                    <div class="mt-auto align-self-end w-100">
-                      {% if products['locations']|length > 1 %}
-                        <div
-                                class="mb-4 {% if products['promote'] == "true" %}text-white{% endif %}">
-                          <label for="location-{{ products['product_id'] }}"
-                                 class="form-label {% if products['promote'] == "true" %}text-white{% endif %}">{{ 'site.products.locations' | language }}</label>
-                          <select class="form-select {% if products['promote'] == "true" %}text-white{% endif %}"
-                                  id="location-{{ products['product_id'] }}">
-                            {% for location in products['locations'] %}
-                              <option value="{{ location['id'] }}">
-                                {{ location['name'] }} ({{ location['country'] }})
-                              </option>
+                    {% if type['category']|length > 1 %}
+                        <div class="d-flex align-items-center justify-content-center mb-4">
+                            <h2 class="h3 mb-0 text-center"><strong>{{ type['name'] }}</strong></h2>
+                        </div>
+                        <ul class="nav nav-tabs justify-content-center" role="tablist">
+                            {% for category in type['category'] %}
+                                <li class="nav-item">
+                                    <a href="#{{ category['name']|lower|slugify }}"
+                                       class="nav-link {% if category['default'] %} active {% endif %} text-center"
+                                       data-bs-toggle="tab" role="tab">
+                                        {{ category['name'] }}
+                                    </a>
+                                </li>
                             {% endfor %}
-                          </select>
-                        </div>
-                      {% elseif products['locations']|length == 1 %}
-                        <input type="hidden" id="location-{{ products['product_id'] }}"
-                               value="{{ products['locations'][0]['id'] }}">
-                        <div class="mb-4 {% if products['promote'] == "true" %}text-white{% endif %}">
-                          {{ 'site.products.location'|language|replace({'@location': products['locations'][0]['name'] ~ " (" ~ products['locations'][0]['country'] ~ ")" }) }}
-                        </div>
-                      {% else %}
-                        <input type="hidden" id="location-{{ products['product_id'] }}" value="0">
-                      {% endif %}
+                        </ul>
+                    {% else %}
 
-
-                      <button
-                              class="btn {% if products['promote'] == "true" %}btn-light{% else %}btn-primary{% endif %} w-100"
-                              onclick="addToCart(this);"
-                              id="{{ products['product_id'] }}"
-                              type="button">{{ 'site.products.buyNow' | language }}</button>
-                    </div>
-                  </div>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <h2 class="h3 mb-0 text-center"><strong>{{ type['name'] }}</strong></h2>
+                        </div>
+                    {% endif %}
                 </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
+            </section>
+        </div>
+    </div>
+
+    {% include 'general/themeAlert.twig' %}
+    <div class="tab-content">
+        {% for category in type['category'] %}
+            <div class="tab-pane fade {% if category['default'] %} show active {% endif %}"
+                 id="{{ category['name']|lower|slugify }}" role="tabpanel"
+                 aria-labelledby="{{ category['name']|lower|slugify }}-tab">
+
+                {% if category['products']|length == 0 %}
+                    <div class="row g-3 justify-content-lg-center flex-sm-nowrap flex-md-wrap pb-4 overflow-auto ">
+                        <div class="col-lg-6">
+                            <div class="card card-pricing bg-primary border-0 text-center px-3">
+                                <div class="card-body">
+                                    <div class="h4 text-white text-center mb-0">
+                                        {{ 'site.products.nothingFound' | language }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if category['location'] != "" %}
+                        <section class="card border-0 mb-4">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center text-center justify-content-center">
+                                    <h2
+                                            class="h4 text-center mb-0">{{ 'site.products.location'|language|replace({'@location': category['location'] }) }}</h2>
+                                </div>
+                            </div>
+                        </section>
+                    {% endif %}
+
+                    {% set count = category['products']|length %}
+                    {% if count == 4 or count == 8 %}
+                        {% set col = 3 %}
+                        {% set col_md = 4 %}
+                    {% elseif count == 3 or count == 7 or count == 6 %}
+                        {% set col = 3 %}
+                        {% set col_md = 4 %}
+                    {% elseif count == 2 %}
+                        {% set col = 3 %}
+                        {% set col_md = 4 %}
+                    {% elseif count == 1 %}
+                        {% set col = 3 %}
+                        {% set col_md = 4 %}
+                    {% else %}
+                        {% set col = 3 %}
+                        {% set col_md = 4 %}
+                    {% endif %}
+                    <div class="row g-3 justify-content-lg-center flex-nowrap flex-lg-wrap pb-4 overflow-auto ">
+                        {% for products in category['products'] %}
+                            <div class="col-lg-{{ col }} col-md-{{ col_md }}" style="min-width: 19rem;">
+                                <div
+                                        class="{% if products['promote'] %}card border-primary bg-primary h-100{% else %}card h-100{% endif %}">
+                                    <div class="d-flex flex-column card-body text-center justify-content-center"
+                                         style="max-width: 23rem;">
+                                        {% if products['banner'] != "" %}<img src="{{ products['banner'] }}"
+                                                                              class="card-img-top mb-4"
+                                                                              alt="{{ products['name'] }}">{% endif %}
+                                        <h4 class="{% if products['promote'] %}text-white{% endif %}">{{ products['name'] }}</h4>
+                                        <div class="{% if products['promote'] %}text-light{% else %}text-primary{% endif %}">
+                                            {% if products['discount'] == 0 %}
+                                                <span class="display-5">{{ products['amount']|creditsToEuro }}{{ "symbol"|currency }}</span>
+                                            {% else %}
+                                                <span class="display-5">{{ products['discount']|creditsToEuro }}{{ "symbol"|currency }}</span>
+                                                <s class="fs-sm">{{ products['amount']|creditsToEuro }}{{ "symbol"|currency }}</s>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-4 {% if products['promote'] %}text-white{% endif %}">
+                                            {% if products['period'] == "monthly" %}
+                                                {{ 'general.time.monthly' | language }}
+                                            {% elseif products['period'] == "yearly" %}
+                                                {{ 'general.time.yearly' | language }}
+                                            {% elseif products['period'] == "oneTime" %}
+                                                {{ 'general.time.oneTime' | language }}
+                                            {% endif %}
+                                            {% if products['setupFee'] != 0 %}
+                                                <p>{{ "+"~ products['setupFee']|creditsToEuro ~ "symbol"|currency ~ " " ~ 'site.products.setupFee' | language }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <ul
+                                                class="list-unstyled {% if products['promote'] %}text-white{% endif %} text-sm opacity-8 mb-4">
+                                            {% include '/p/productInfo.twig' %}
+                                        </ul>
+
+                                        <div class="mt-auto align-self-end w-100">
+                                            {% if products['locations']|length > 1 %}
+                                                <div
+                                                        class="mb-4 {% if products['promote'] %}text-white{% endif %}">
+                                                    <label for="location-{{ products['product_id'] }}"
+                                                           class="form-label {% if products['promote'] %}text-white{% endif %}">{{ 'site.products.locations' | language }}</label>
+                                                    <select class="form-select {% if products['promote'] %}text-white{% endif %}"
+                                                            id="location-{{ products['product_id'] }}">
+                                                        {% for location in products['locations'] %}
+                                                            <option value="{{ location['id'] }}">
+                                                                {{ location['name'] }} ({{ location['country'] }})
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            {% elseif products['locations']|length == 1 %}
+                                                <input type="hidden" id="location-{{ products['product_id'] }}"
+                                                       value="{{ products['locations'][0]['id'] }}">
+                                                <div class="mb-4 {% if products['promote'] %}text-white{% endif %}">
+                                                    {{ 'site.products.location'|language|replace({'@location': products['locations'][0]['name'] ~ " (" ~ products['locations'][0]['country'] ~ ")" }) }}
+                                                </div>
+                                            {% else %}
+                                                <input type="hidden" id="location-{{ products['product_id'] }}"
+                                                       value="0">
+                                            {% endif %}
+
+
+                                            <button
+                                                    class="btn {% if products['promote'] %}btn-light{% else %}btn-primary{% endif %} w-100"
+                                                    onclick="addToCart(this);"
+                                                    id="{{ products['product_id'] }}"
+                                                    type="button">{{ 'site.products.buyNow' | language }}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 
 </section>
 

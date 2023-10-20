@@ -1,19 +1,20 @@
 {% include '/general/header.twig' %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        {% include '/cp/sideNav.twig' %}
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/settings/nav.twig' %}
+        <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
             {% include 'cp/terminateUser.twig' %}
             {% include 'cp/emailActivation.twig' %}
             {% include 'general/actionMessage.twig' %}
-            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
-                                class="fa fa-gear text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-gear text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.tab.settings' | language }}</h2>
                         <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                             <a href="{{ dashURL }}" class="btn btn-dark btn-icon">
-                                <i class="fa-solid fa-arrow-left"></i>
+                                <i class="fa-duotone fa-arrow-left"></i>
                             </a>
                         </div>
                     </div>
@@ -21,10 +22,10 @@
             </section>
 
             <!-- Basic info-->
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-sun-dust text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-sun-dust text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.nightMode' | language }}</h2>
                     </div>
                     <form method="post">
@@ -37,14 +38,14 @@
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" id="nightMode-on" name="nightMode"
                                                value="on"
-                                               {% if userData['night_mode']['state'] == "true" %}checked{% endif %}>
+                                               {% if userData['night_mode']['state'] == "on" %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="nightMode-on">{{ 'site.cp.settings.nightMode.form.on' | language }}</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" id="nightMode-off" name="nightMode"
                                                value="off"
-                                               {% if userData['night_mode']['state'] == "false" %}checked{% endif %}>
+                                               {% if userData['night_mode']['state'] == "off" %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="nightMode-off">{{ 'site.cp.settings.nightMode.form.off' | language }}</label>
                                     </div>
@@ -57,8 +58,8 @@
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" id="nightMode-device"
-                                               name="nightMode" value="device"
-                                               {% if userData['night_mode']['state'] == "device" %}checked{% endif %}>
+                                               name="nightMode" value="system"
+                                               {% if userData['night_mode']['state'] == "system" %}checked{% endif %}>
                                         <label class="form-check-label"
                                                for="nightMode-device">{{ 'site.cp.settings.nightMode.form.device' | language }}</label>
                                     </div>
@@ -73,10 +74,10 @@
                 </div>
             </section>
 
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-file-invoice-dollar text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-file-invoice-dollar text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.autoPay' | language }}</h2>
                     </div>
                     <form method="post">
@@ -86,19 +87,11 @@
                         <div class="row align-items-center g-3 g-sm-4 pb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="autoPay-on" name="autoPay"
-                                               value="true"
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" class="form-check-input" name="autoPay" id="autoPay"
                                                {% if userData['autoPay'] %}checked{% endif %}>
                                         <label class="form-check-label"
-                                               for="nightMode-on">{{ 'site.cp.settings.autoPay.form.on' | language }}</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="autoPay-off" name="autoPay"
-                                               value="false"
-                                               {% if userData['autoPay'] == false %}checked{% endif %}>
-                                        <label class="form-check-label"
-                                               for="nightMode-off">{{ 'site.cp.settings.autoPay.form.off' | language }}</label>
+                                               for="autoPay">{{ 'site.cp.settings.autoPay.form' | language }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -112,10 +105,10 @@
             </section>
 
 
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-envelope text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-envelope text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.email' | language }}</h2>
                     </div>
                     <div class="row align-items-center g-3 g-sm-4 pb-3">
@@ -136,27 +129,39 @@
 
 
             <!-- Password-->
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-lock-keyhole text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-lock-keyhole text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.password' | language }}</h2>
                     </div>
                     <div class="row align-items-center g-3 g-sm-4 pb-3">
                         <div class="col-sm-6">
                             <label class="form-label"
-                                   for="current-pass">{{ 'site.cp.settings.email.form.oldPassword' | language }}</label>
+                                   for="oldPassword">{{ 'site.cp.settings.email.form.oldPassword' | language }}</label>
+                            <div class="password-toggle">
                                 <input class="form-control" type="password"
                                        placeholder="{{ 'site.cp.settings.email.form.oldPassword.placeholder' | language }}"
                                        name="oldPassword" required
-                                       id="current-pass">
+                                       id="oldPassword">
+                                <label class="password-toggle-btn" aria-label="Show/hide password">
+                                    <input class="password-toggle-check" type="checkbox"><span
+                                            class="password-toggle-indicator"></span>
+                                </label>
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label"
-                                   for="new-pass">{{ 'site.cp.settings.email.form.newPassword' | language }}</label>
-                            <input class="form-control" type="password" id="new-pass"
+                                   for="newPassword">{{ 'site.cp.settings.email.form.newPassword' | language }}</label>
+                            <div class="password-toggle">
+                                <input class="form-control" type="password" id="newPassword"
                                        placeholder="{{ 'site.cp.settings.email.form.newPassword.placeholder' | language }}"
                                        name="newPassword" required>
+                                <label class="password-toggle-btn" aria-label="Show/hide password">
+                                    <input class="password-toggle-check" type="checkbox"><span
+                                            class="password-toggle-indicator"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end pt-3">
@@ -166,10 +171,10 @@
                 </div>
             </section>
 
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-image text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-image text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.icon' | language }}</h2>
                     </div>
                     <form method="post" enctype="multipart/form-data">
@@ -197,10 +202,10 @@
                 </div>
             </section>
 
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-snowflake text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-snowflake text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.effects' | language }}</h2>
                     </div>
                     <form method="post">
@@ -210,19 +215,11 @@
                         <div class="row align-items-center g-3 g-sm-4 pb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="effects-on" name="effects"
-                                               value="on"
+                                    <div class="form-check form-switch">
+                                        <input type="checkbox" class="form-check-input" name="effects" id="effects"
                                                {% if userData['effects'] %}checked{% endif %}>
                                         <label class="form-check-label"
-                                               for="effects-on">{{ 'site.cp.settings.effects.form.on' | language }}</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" id="effects-off" name="effects"
-                                               value="off"
-                                               {% if userData['effects'] == false %}checked{% endif %}>
-                                        <label class="form-check-label"
-                                               for="effects-off">{{ 'site.cp.settings.effects.form.off' | language }}</label>
+                                               for="effects">{{ 'site.cp.settings.effects.form' | language }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -236,12 +233,12 @@
             </section>
 
 
-            {% if userData['dataRequest'] != "true" %}
+            {% if userData['dataRequest'] != true %}
 
-                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                     <div class="card-body">
                         <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                    class="fa fa-compact-disc text-primary lead pe-1 me-2"></i>
+                                    class="fa-duotone fa-compact-disc text-primary lead pe-1 me-2"></i>
                             <h2 class="h4 mb-0">{{ 'site.cp.settings.data' | language }}</h2>
                             <p class="text-sm text-muted mb-0">
                                 &nbsp;&nbsp;{{ 'site.cp.settings.data.description' | language }}</p>
@@ -260,19 +257,20 @@
             {% endif %}
 
             <!-- Delete account-->
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fas fa-trash text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-trash text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.delete' | language }}</h2>
                     </div>
-                    <div class="alert alert-warning d-flex mb-4"><i class="fa fa-exclamation-triangle fs-xl me-2"></i>
+                    <div class="alert alert-warning d-flex mb-4"><i
+                                class="fa-duotone fa-exclamation-triangle fs-xl me-2"></i>
                         <p class="mb-0">{{ 'site.cp.settings.delete.modal.description' | language }}</p>
                     </div>
                     <div class="d-flex flex-column flex-sm-row justify-content-end pt-4 mt-sm-2 mt-md-3">
                         <button class="btn btn-danger" type="button" data-bs-toggle="modal"
                                 data-bs-target="#deleteAccount"><i
-                                    class="fa fa-trash ms-n1 me-2"></i>{{ 'site.cp.settings.delete.form.btn' | language }}
+                                    class="fa-duotone fa-trash ms-n1 me-2"></i>{{ 'site.cp.settings.delete.form.btn' | language }}
                         </button>
                     </div>
                 </div>
@@ -291,7 +289,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="py-3 text-center">
-                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                    <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
                                     <h5 class="heading h4 mt-4">{{ 'site.cp.settings.delete.modal.stop' | language }}</h5>
                                     <p>{{ 'site.cp.settings.delete.modal.description' | language }}</p>
                                 </div>
@@ -312,7 +310,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="py-3 text-center">
-                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                    <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
                                     <h5
                                             class="heading h4 mt-4">{{ 'site.cp.settings.delete.modal.deleteTeams' | language }}</h5>
                                     <p>{{ 'site.cp.settings.delete.modal.deleteTeams.description' | language }}</p>
@@ -325,4 +323,7 @@
         </div>
     </div>
 </div>
+
+{% include '/cp/sidebarButton.twig' %}
+
 {% include '/general/footer.twig' %}

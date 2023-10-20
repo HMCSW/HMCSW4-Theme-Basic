@@ -1,108 +1,29 @@
 {% include '/general/header.twig' %}
 <div class="container-fluid">
-    <div class="row flex-nowrap">
-        {% include '/cp/sideNav.twig' %}
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/settings/nav.twig' %}
+        <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
 
-            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
-                                class="fa fa-bookmark text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-bookmark text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.developer.webhook' | language }}</h2>
                         <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                             <a href="{{ dashURL }}/settings/developer" class="btn btn-dark btn-icon">
-                                <i class="fa-solid fa-arrow-left"></i>
+                                <i class="fa-duotone fa-arrow-left"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </section>
-            {% if history['history']|length != 0 %}
-                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
-                    <div class="card-body">
-                        <nav>
-                            <ul class="pagination justify-content-center">
 
-                                <li
-                                        class="page-item {% if history['pagination']['previous_page'] == 0 %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page=1"
-                                       tabindex="-1" {% if history['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>First</a>
-                                </li>
-                                <li
-                                        class="page-item {% if history['pagination']['previous_page'] == 0 %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['previous_page'] }}"
-                                       tabindex="-1" {% if history['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>Previous</a>
-                                </li>
-
-                                {% if history['pagination']['previous_page']-3 > 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['previous_page']-3 }}">{{ history['pagination']['previous_page']-3 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if history['pagination']['previous_page']-2 > 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['previous_page']-2 }}">{{ history['pagination']['previous_page']-2 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if history['pagination']['previous_page']-1 > 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['previous_page']-1 }}">{{ history['pagination']['previous_page']-1 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if history['pagination']['previous_page'] != 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['previous_page'] }}">{{ history['pagination']['previous_page'] }}</a>
-                                    </li>
-                                {% endif %}
-
-                                <li class="page-item active" aria-current="page">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['current_page'] }}">{{ history['pagination']['current_page'] }}
-                                        <span class="sr-only">(current)</span></a>
-                                </li>
-
-                                {% if history['pagination']['current_page'] != history['pagination']['total_no_of_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['next_page'] }}">{{ history['pagination']['next_page'] }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if history['pagination']['next_page']+1 <= history['pagination']['total_no_of_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['next_page']+1 }}">{{ history['pagination']['next_page']+1 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if history['pagination']['next_page']+2 <= history['pagination']['total_no_of_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['next_page']+2 }}">{{ history['pagination']['next_page']+2 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if history['pagination']['next_page']+3 <= history['pagination']['total_no_of_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['next_page']+3 }}">{{ history['pagination']['next_page']+3 }}</a>
-                                    </li>
-                                {% endif %}
-
-                                <li
-                                        class="page-item {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['next_page'] }}" {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Next</a>
-                                </li>
-                                <li
-                                        class="page-item {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/hook/{{ hook['businessId'] }}?page={{ history['pagination']['total_no_of_pages'] }}" {% if history['pagination']['current_page'] == history['pagination']['total_no_of_pages'] %} aria-disabled="true" {% endif %}>Last</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </section>
-            {% endif %}
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
+                    {% include '/general/pagination.twig' %}
                     <div class="table-responsive">
-                        <table class="table table-cards">
+                        <table class="table table-cards align-middle">
                             <thead>
                             <tr>
                                 <th scope="col">{{ 'site.cp.settings.developer.webhook.table.time' | language }}</th>
@@ -110,14 +31,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for log in history['history'] %}
+                            {% for log in pagination['items'] %}
                                 <tr>
                                     <td>{{ log['createdAt']|date }}</td>
                                     <td>
                                         <button
                                                 class="btn btn-secondary btn-sm btn-icon" data-bs-toggle="modal"
                                                 data-bs-target="#seeLog-{{ log['log_id'] }}">
-                                            <i class="fa fa-eye"></i>
+                                            <i class="fa-duotone fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -125,7 +46,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {% for log in history['history'] %}
+                    {% for log in pagination['items'] %}
                         <div class="modal fade" tabindex="-1" role="dialog" id="seeLog-{{ log['log_id'] }}">
                             <div class="modal-dialog modal-fullscreen modal-dialog-centered">
                                 <div class="modal-content">
@@ -136,12 +57,14 @@
                                     </div>
                                     <div class="modal-body">
                                         <h5 class="text-left">Request</h5>
-                                        <pre class="line-numbers"><code class="lang-json" id="request_{{ log['log_id'] }}">{{ log['request']|json_encode|raw }}</code></pre>
+                                        <pre class="line-numbers"><code class="lang-json"
+                                                                        id="request_{{ log['log_id'] }}">{{ log['request']|json_encode|raw }}</code></pre>
                                         <script>document.getElementById("request_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['request']|json_encode|raw }}, undefined, 2);</script>
                                         <br>
 
                                         <h5 class="text-left">Response</h5>
-                                        <pre class="line-numbers"><code class="lang-json" id="response_{{ log['log_id'] }}">{{ log['response']|json_encode|raw }}</code></pre>
+                                        <pre class="line-numbers"><code class="lang-json"
+                                                                        id="response_{{ log['log_id'] }}">{{ log['response']|json_encode|raw }}</code></pre>
                                         <script>document.getElementById("response_{{ log['log_id'] }}").innerHTML = JSON.stringify({{ log['response']|json_encode|raw }}, undefined, 2);</script>
                                     </div>
                                 </div>
@@ -153,4 +76,5 @@
         </div>
     </div>
 </div>
+{% include '/cp/sidebarButton.twig' %}
 {% include '/general/footer.twig' %}

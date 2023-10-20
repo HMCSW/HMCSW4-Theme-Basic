@@ -1,69 +1,69 @@
 {% include '/general/header.twig' %}
 <section class="container py-5 mt-5 mb-lg-3 mb-xl-4 mb-xxl-5">
-  <div class="row pt-sm-2 pt-lg-0">
-    <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
-      <div class="card-body d-flex flex-column ">
-        <div class="align-items-center justify-content-center mb-4">
-          <h2 class="h3 mb-0 text-center"><strong>{{ type['name'] }}</strong></h2>
-        </div>
-        <div class="row align-items-center justify-content-center">
-          <div class="row align-items-center justify-content-center">
-            <div class=" col-lg-8">
-              <div class="mb-3 ">
-                <label for="slots" class="form-control-range">Slots</label>
-                <input oninput="calculateCredits();" name="slots" min="{{ info['min'] }}"
-                       max="{{ info['max'] }}"
-                       value="{{ info['min']+10 }}" type="range" class="form-range text-center"
-                       id="slots">
-
-              </div>
-              <div class="mb-3 ">
-                <h4 class="text-center mb-2" id="prizeDiv">{{ info['defaultCredits'] }}
-                  {{ "symbol"|currency }} {{ 'general.time.monthly' | language }}</h4>
-                <h4 class="text-center mb-2" id="slotsDiv">{{ info['min']+10 }} Slots</h4>
-              </div>
-
-
-              {% if product['locations']|length > 1 %}
+    <div class="row pt-sm-2 pt-lg-0">
+        <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <div class="card-body d-flex flex-column ">
+                <div class="align-items-center justify-content-center mb-4">
+                    <h2 class="h3 mb-0 text-center"><strong>{{ type['name'] }}</strong></h2>
+                </div>
                 <div class="row align-items-center justify-content-center">
-                  <div
-                          class="col-6 mb-4 {% if product['promote'] == "true" %}text-white{% endif %}">
-                    <label for="location-{{ product['product_id'] }}"
-                           class="form-label {% if product['promote'] == "true" %}text-white{% endif %}">{{ 'site.products.locations' | language }}</label>
-                    <select class="form-select {% if product['promote'] == "true" %}text-white{% endif %}"
-                            id="location-{{ product['product_id'] }}">
-                      {% for location in product['locations'] %}
-                        <option value="{{ location['id'] }}">
-                          {{ location['name'] }} ({{ location['country'] }})
-                        </option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-              {% elseif product['locations']|length == 1 %}
-                <input type="hidden" id="location-{{ product['product_id'] }}"
-                       value="{{ product['locations'][0]['id'] }}">
-                <div class="mb-4 {% if product['promote'] == "true" %}text-white{% endif %} text-center">
-                  {{ 'site.products.location'|language|replace({'@location': product['locations'][0]['name'] ~ " (" ~ product['locations'][0]['country'] ~ ")" }) }}
-                </div>
-              {% else %}
-                <input type="hidden" id="location-{{ product['product_id'] }}" value="0">
-              {% endif %}
+                    <div class="row align-items-center justify-content-center">
+                        <div class=" col-lg-8">
+                            <div class="mb-3 ">
+                                <label for="slots" class="form-control-range">Slots</label>
+                                <input oninput="calculateCredits();" name="slots" min="{{ info['min'] }}"
+                                       max="{{ info['max'] }}"
+                                       value="{{ info['min']+10 }}" type="range" class="form-range text-center"
+                                       id="slots">
 
-              <div class="row align-items-center justify-content-center">
-                <div class="col text-center">
-                  <button class="btn align-self-end btn-primary w-50"
-                          onclick="addToCart(this.id, document.getElementById('slots').value)"
-                          id="{{ info['product_id'] }}"
-                          type="button">{{ 'site.products.buyNow' | language }}</button>
+                            </div>
+                            <div class="mb-3 ">
+                                <h4 class="text-center mb-2" id="prizeDiv">{{ info['defaultCredits'] }}
+                                    {{ "symbol"|currency }} {{ 'general.time.monthly' | language }}</h4>
+                                <h4 class="text-center mb-2" id="slotsDiv">{{ info['min']+10 }} Slots</h4>
+                            </div>
+
+
+                            {% if product['locations']|length > 1 %}
+                                <div class="row align-items-center justify-content-center">
+                                    <div
+                                            class="col-6 mb-4 {% if product['promote'] %}text-white{% endif %}">
+                                        <label for="location-{{ product['product_id'] }}"
+                                               class="form-label {% if product['promote'] %}text-white{% endif %}">{{ 'site.products.locations' | language }}</label>
+                                        <select class="form-select {% if product['promote'] %}text-white{% endif %}"
+                                                id="location-{{ product['product_id'] }}">
+                                            {% for location in product['locations'] %}
+                                                <option value="{{ location['id'] }}">
+                                                    {{ location['name'] }} ({{ location['country'] }})
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            {% elseif product['locations']|length == 1 %}
+                                <input type="hidden" id="location-{{ product['product_id'] }}"
+                                       value="{{ product['locations'][0]['id'] }}">
+                                <div class="mb-4 {% if product['promote'] %}text-white{% endif %} text-center">
+                                    {{ 'site.products.location'|language|replace({'@location': product['locations'][0]['name'] ~ " (" ~ product['locations'][0]['country'] ~ ")" }) }}
+                                </div>
+                            {% else %}
+                                <input type="hidden" id="location-{{ product['product_id'] }}" value="0">
+                            {% endif %}
+
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col text-center">
+                                    <button class="btn align-self-end btn-primary w-50"
+                                            onclick="addToCart(this.id, document.getElementById('slots').value)"
+                                            id="{{ info['product_id'] }}"
+                                            type="button">{{ 'site.products.buyNow' | language }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
+        </section>
+    </div>
 </section>
 
 

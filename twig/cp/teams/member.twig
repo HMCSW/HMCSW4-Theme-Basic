@@ -1,25 +1,26 @@
 {% include '/general/header.twig' %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        {% include '/cp/teams/sideNav.twig' %}
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/teams/nav.twig' %}
+        <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
             <div class="row">
                 {% include 'cp/terminateUser.twig' %}
                 {% include 'general/actionMessage.twig' %}
                 {% include 'cp/teams/noTwoFactor.twig' %}
-                <section class="card  py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                     <div class="card-body">
                         {% if 'team.addMember'|checkTeamPermission == true %}
                             <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                                        class="fa fa-people-group text-primary lead pe-1 me-2"></i>
+                                        class="fa-duotone fa-people-group text-primary lead pe-1 me-2"></i>
                                 <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.member' | language }}</h2>
                                 <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                                     <a href="{{ dashURL }}/teams/{{ team['businessId'] }}" class="btn btn-dark btn-icon">
-                                        <i class="fa-solid fa-arrow-left"></i>
+                                        <i class="fa-duotone fa-arrow-left"></i>
                                     </a>
                                     <button type="button" class="btn btn-secondary btn-icon" data-bs-toggle="modal"
                                             data-bs-target="#addMember">
-                                        <i class="fa-solid fa-plus"></i>
+                                        <i class="fa-duotone fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
@@ -87,7 +88,7 @@
                                                  class="avatar rounded-circle">
                                         </th>
                                         <td>{{ user['firstname'] }} {{ user['lastname'] }}
-                                            {% if user['accept'] != "true" %}| {{ 'site.cp.teams.member.noAccept' | language }}{% endif %}
+                                            {% if user['accept'] != true %}| {{ 'site.cp.teams.member.noAccept' | language }}{% endif %}
                                             <small class="d-block font-weight-bold"
                                                    id="editMember-{{ user['businessId'] }}-name">
                                                 {% if user['group']['group_id'] == 0 %}
@@ -126,14 +127,14 @@
                                                            data-bs-target="#member_{{ user['businessId'] }}_remove"
                                                            class="action-item mr-2"
                                                            title="{{ 'site.cp.teams.member.removeMember' | language }}">
-                                                            <i class="fa fa-trash"></i>
+                                                            <i class="fa-duotone fa-trash"></i>
                                                         </a>
                                                     {% endif %}
                                                 {% elseif user['group']['group_id'] != 0 and user['user_id'] == userData['user_id'] %}
                                                     <a href="#" class="action-item mr-2" data-bs-toggle="modal"
                                                        data-bs-target="#leaveTeam"
                                                        title="{{ 'site.cp.teams.member.leaveTeam' | language }}">
-                                                        <i class="fa fa-door-closed"></i>
+                                                        <i class="fa-duotone fa-door-closed"></i>
                                                     </a>
                                                 {% endif %}
                                             </div>
@@ -152,13 +153,12 @@
                                     <div class="modal-header">
                                         <h5 class="modal-title h6"
                                             id="modal_title_6">{{ 'site.cp.teams.member.leaveTeam' | language }}</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="py-3 text-center">
-                                            <i class="fas fa-exclamation-circle fa-4x"></i>
+                                            <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
                                             <h5 class="heading h4 mt-4">{{ 'site.cp.teams.member.leaveTeam.modal.leave' | language }}</h5>
                                             <p>{{ 'site.cp.teams.member.leaveTeam.modal.leave.1' | language }}</p>
                                         </div>
@@ -168,10 +168,8 @@
                                             <input type="hidden" name="csrf" value="{{ csrf }}">
                                             <input type="hidden" name="action" value="leaveTeam">
                                             <button type="submit"
-                                                    class="btn btn-sm">{{ 'site.cp.teams.member.leaveTeam.modal.leave.leaveBtn' | language }}</button>
+                                                    class="btn btn-danger">{{ 'site.cp.teams.member.leaveTeam.modal.leave.leaveBtn' | language }}</button>
                                         </form>
-                                        <button type="button" class="btn btn-sm btn-white"
-                                                data-dismiss="modal">{{ 'site.cp.teams.member.leaveTeam.modal.leave.cancelBtn' | language }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +193,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div class="py-3 text-center">
-                                                    <i class="fas fa-exclamation-circle fa-4x"></i>
+                                                    <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
                                                     <h5
                                                             class="heading h4 mt-4">{{ 'site.cp.teams.member.removeMember.modal.remove' | language }}</h5>
                                                 </div>
@@ -217,4 +215,5 @@
         </div>
     </div>
 </div>
+{% include '/cp/sidebarButton.twig' %}
 {% include '/general/footer.twig' %}

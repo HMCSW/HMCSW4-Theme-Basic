@@ -1,146 +1,26 @@
 {{ '<link rel="stylesheet" media="screen" href="https://cdn.hosmatic.com/website/theme/assets/vendor/@fancyapps/fancybox/dist/jquery.fancybox.css">'|addCSS }}
 {{ '<script async src="https://cdn.hosmatic.com/website/theme/assets/vendor/@fancyapps/fancybox/dist/jquery.fancybox.js"></script>'|addJS }}
 
-
 {% include '/general/header.twig' %}
 <div class="container-fluid">
-    <div class="row flex-nowrap">
-        {% include '/cp/sideNav.twig' %}
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/nav.twig' %}
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
             {% include 'general/actionMessage.twig' %}
             {% include 'cp/terminateUser.twig' %}
-            <section class="card  py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-balance-scale text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-balance-scale text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.invoices' | language }}</h2>
 
                         <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                             <a href="{{ dashURL }}" class="btn btn-dark btn-icon">
-                                <i class="fa-solid fa-arrow-left"></i>
+                                <i class="fa-duotone fa-arrow-left"></i>
                             </a>
-                            <button type="button" class="btn btn-secondary btn-icon" data-bs-toggle="modal"
-                                    data-bs-target="#invoices">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="modal fade" id="invoices" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-                                        <h5 class="modal-title h6">{{ 'site.cp.invoices.all' | language }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-cards align-middle">
-                                                <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th scope="col">{{ 'site.cp.invoices.table.id' | language }}</th>
-                                                    <th scope="col"
-                                                        class="sort">{{ 'site.cp.invoices.table.service' | language }}</th>
-                                                    <th scope="col"
-                                                        class="sort">{{ 'site.cp.invoices.table.credits' | language }}</th>
-                                                    <th scope="col"
-                                                        class="sort">{{ 'site.cp.invoices.table.pay_to' | language }}</th>
-                                                    <th></th>
-                                                    <th></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody class="list">
-                                                {% set count = 0 %}
-                                                {% for invoice in invoices %}
-                                                    {% set count = count + 1 %}
-                                                    <tr>
-                                                        <td class="text-right">
-                                                            <div class="actions ml-3">
-                                                                <button type="button" id="{{ invoice['invoice_id'] }}"
-                                                                        onclick="showInvoicePDF(this.id);"
-                                                                        class="btn btn-primary btn-sm btn-icon">
-                                                                    <i class="fa fa-file-alt"></i>
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                        <td class="order">
-                                                            <span class="h6 text-sm font-weight-bold mb-0">C{{ invoice['invoice_id'] }}</span>
-                                                            <span class="d-block text-sm text-muted">{{ invoice['created_at']|date }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <span class="h6 text-sm font-weight-bold mb-0">{{ invoice['service']['service_id'] }}</span>
-                                                            <span class="d-block text-sm text-muted">{{ invoice['service']['name'] }}</span>
-                                                        </td>
-                                                        <td class="text-sm">{{ invoice['credits']|creditsToEuro }}{{ "symbol"|currency }}
-                                                        </td>
-                                                        <td class="text-sm">{{ invoice['pay_to']|date }}
-                                                        </td>
-
-                                                        <td>
-                                                            <div class="d-flex align-items-center justify-content-end">
-                                                                <div {% if invoice['state'] != 1 %}style="display:none"{% endif %}>
-                                                                    <button type="button" class="btn btn-sm btn-outline-success">
-                                                                        <i class="fas fa-check me-2"></i>
-                                                                        {{ 'general.invoices.state.1' | language }}
-                                                                    </button>
-                                                                </div>
-                                                                <div {% if invoice['state'] != 2 %}style="display:none"{% endif %}>
-                                                                    <button type="button" class="btn btn-sm btn-outline-warning">
-                                                                        <i class="fas fa-plus me-2"></i>
-                                                                        {{ 'general.invoices.state.2' | language }}
-                                                                    </button>
-                                                                </div>
-                                                                <div {% if invoice['state'] != 3 %}style="display:none"{% endif %}>
-
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger">
-                                                                        <i class="fas fa-xmark me-2"></i>
-                                                                        {{ 'general.invoices.state.3' | language }}
-                                                                    </button>
-                                                                </div>
-                                                                <div {% if invoice['state'] != 4 %}style="display:none"{% endif %}>
-                                                                    <button type="button" class="btn btn-sm btn-outline-danger">
-                                                                        <i class="fas fa-arrow-turn-down-left me-2"></i>
-                                                                        {{ 'general.invoices.state.4' | language }}
-                                                                    </button>
-                                                                </div>
-                                                                <div {% if invoice['state'] != 5 %}style="display:none"{% endif %}>
-                                                                    <button type="button"
-                                                                            class="btn btn-sm btn-soft-warning btn-icon rounded-pill">
-                                                                <span class="btn-inner--icon"><i
-                                                                            class="fas fa-cog fa-spin"></i></span>
-                                                                        <span class="btn-inner--text">{{ 'general.invoices.state.pending' | language }}</span>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-right">
-                                                            <div class="actions ml-3">
-                                                                <a href="{{ dashURL }}/teams/{{ invoice['service']['businessId_team'] }}/service/{{ invoice['service']['businessId_service'] }}"
-                                                                   class="btn btn-primary btn-sm btn-icon">
-                                                                    <i class="fa fa-external-link-alt"></i>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                                {% if count == 0 %}
-                                                    <tr>
-                                                        <th scope="row"><span class="text-sm">-</span></th>
-                                                        <td>-</td>
-                                                        <td>{{ 'site.cp.invoices.nothing' | language }}</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                    </tr>
-                                                {% endif %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                    {% include '/general/pagination.twig' %}
                     <div class="table-responsive">
                         <table class="table table-cards align-middle">
                             <thead>
@@ -158,106 +38,105 @@
                             </tr>
                             </thead>
                             <tbody class="list">
-                            {% set count = 0 %}
-                            {% for invoice in invoices %}
-                                {% if invoice['state'] == 1 or invoice['state'] == 2 or invoice['state'] == 5 %}
-                                    {% set count = count + 1 %}
-                                    <tr>
-                                        <td class="text-right">
-                                            <div class="actions ml-3">
-                                                <button type="button" id="{{ invoice['invoice_id'] }}"
-                                                        onclick="showInvoicePDF(this.id);"
-                                                        class="btn btn-primary btn-sm btn-icon">
-                                                    <i class="fa fa-file-alt"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td class="order">
-                                            <span class="h6 text-sm font-weight-bold mb-0">R{{ invoice['invoice_id'] }}</span>
-                                            <span class="d-block text-sm text-muted">{{ invoice['created_at']|date }}</span>
-                                        </td>
-                                        <td>
-                                            <span class="h6 text-sm font-weight-bold mb-0">{{ invoice['service']['service_id'] }}</span>
-                                            <span class="d-block text-sm text-muted">{{ invoice['service']['name'] }}</span>
-                                        </td>
-                                        <td class="text-sm">{{ invoice['credits']|creditsToEuro }}{{ "symbol"|currency }}
-                                        </td>
-                                        <td class="text-sm">{{ invoice['pay_to']|date }}
-                                        </td>
 
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-end">
-                                                <div {% if invoice['state'] != 1 %}style="display:none"{% endif %}
-                                                     id="invoiceBTN_{{ invoice['invoice_id'] }}_1">
-                                                    <button type="button" class="btn btn-sm btn-outline-success">
-                                                        <i class="fas fa-check me-2"></i>
-                                                        {{ 'general.invoices.state.1' | language }}
-                                                    </button>
-                                                </div>
-                                                <div {% if invoice['state'] != 2 %}style="display:none"{% endif %}
-                                                     id="invoiceBTN_{{ invoice['invoice_id'] }}_2">
-                                                    {% if userData['credits'] >= invoice['credits'] %}
-                                                        <button type="button" class="btn btn-sm btn-outline-warning" onclick="payInvoice(this.id)" id="{{ invoice['invoice_id'] }}">
-                                                            <i class="fas fa-plus me-2"></i>
-                                                            {{ 'general.invoices.state.2' | language }}
-                                                        </button>
-                                                    {% else %}
-                                                        <button type="button" class="btn btn-sm btn-outline-warning" disabled>
-                                                            <i class="fas fa-plus me-2"></i>
-                                                            {{ 'site.cp.invoices.noCredits' | language }}
-                                                        </button>
-                                                    {% endif %}
-                                                </div>
-                                                <div {% if invoice['state'] != 3 %}style="display:none"{% endif %}
-                                                     id="invoiceBTN_{{ invoice['invoice_id'] }}_3">
-
-                                                    <button type="button" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-plus me-2"></i>
-                                                        {{ 'general.invoices.state.3' | language }}
-                                                    </button>
-                                                </div>
-                                                <div {% if invoice['state'] != 4 %}style="display:none"{% endif %}
-                                                     id="invoiceBTN_{{ invoice['invoice_id'] }}_4">
-                                                    <button type="button" class="btn btn-sm btn-outline-danger">
-                                                        <i class="fas fa-plus me-2"></i>
-                                                        {{ 'general.invoices.state.4' | language }}
-                                                    </button>
-                                                </div>
-                                                <div {% if invoice['state'] != 5 %}style="display:none"{% endif %}
-                                                     id="invoiceBTN_{{ invoice['invoice_id'] }}_5">
-                                                    <button type="button" class="btn btn-sm btn-outline-warning">
-                                                        <i class="fas fa-clock me-2"></i>
-                                                        {{ 'general.invoices.state.pending' | language }}
-                                                    </button>
-                                                </div>
-                                                <div style="display:none"
-                                                     id="invoiceBTN_{{ invoice['invoice_id'] }}_loader">
-                                                    <div class="spinner-border" role="status">
-                                                        <span class="visually-hidden">Loading...</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-right">
-                                            <div class="actions ml-3">
-                                                <a href="{{ dashURL }}/teams/{{ invoice['service']['businessId_team'] }}/service/{{ invoice['service']['businessId_service'] }}"
-                                                   class="btn btn-primary btn-sm btn-icon">
-                                                    <i class="fa fa-external-link-alt"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                            {% if count == 0 %}
+                            {% if pagination['items']|length == 0 %}
                                 <tr>
-                                    <th scope="row"><span class="text-sm">-</span></th>
-                                    <td>-</td>
-                                    <td>{{ 'site.cp.invoices.nothing' | language }}</td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="7">{{ 'site.cp.invoices.nothing' | language }}</td>
                                 </tr>
                             {% endif %}
+
+
+                            {% for invoice in pagination['items'] %}
+                                <tr>
+                                    <td class="text-right">
+                                        <div class="actions ml-3">
+                                            <button type="button" id="{{ invoice['invoice_id'] }}"
+                                                    onclick="showInvoicePDF(this.id);"
+                                                    class="btn btn-primary btn-sm btn-icon">
+                                                <i class="fa-duotone fa-file-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="order">
+                                        <span class="h6 text-sm font-weight-bold mb-0">R{{ invoice['invoice_id'] }}</span>
+                                        <span class="d-block text-sm text-muted">{{ invoice['created_at']|date }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="h6 text-sm font-weight-bold mb-0">{{ invoice['service']['service_id'] }}</span>
+                                        <span class="d-block text-sm text-muted">{{ invoice['service']['name'] }}</span>
+                                    </td>
+                                    <td class="text-sm">{{ invoice['credits']|creditsToEuro }}{{ "symbol"|currency }}
+                                    </td>
+                                    <td class="text-sm">{{ invoice['pay_to']|date }}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center justify-content-end">
+                                            <div {% if invoice['state'] != 1 %}style="display:none"{% endif %}
+                                                 id="invoiceBTN_{{ invoice['invoice_id'] }}_1">
+                                                <button type="button" class="btn btn-sm btn-outline-success">
+                                                    <i class="fa-duotone fa-check me-2"></i>
+                                                    {{ 'general.invoices.state.1' | language }}
+                                                </button>
+                                            </div>
+                                            <div {% if invoice['state'] != 2 %}style="display:none"{% endif %}
+                                                 id="invoiceBTN_{{ invoice['invoice_id'] }}_2">
+                                                {% if userData['credits'] >= invoice['credits'] %}
+                                                    <button type="button" class="btn btn-sm btn-outline-warning"
+                                                            onclick="payInvoice(this.id)"
+                                                            id="{{ invoice['invoice_id'] }}">
+                                                        <i class="fa-duotone fa-plus me-2"></i>
+                                                        {{ 'site.cp.invoices.pay' | language }}
+                                                    </button>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-sm btn-outline-warning"
+                                                            disabled>
+                                                        <i class="fa-duotone fa-plus me-2"></i>
+                                                        {{ 'site.cp.invoices.noCredits' | language }}
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                            <div {% if invoice['state'] != 3 %}style="display:none"{% endif %}
+                                                 id="invoiceBTN_{{ invoice['invoice_id'] }}_3">
+
+
+                                                <button type="button" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fa-duotone fa-plus me-2"></i>
+                                                    {{ 'general.invoices.state.3' | language }}
+                                                </button>
+                                            </div>
+                                            <div {% if invoice['state'] != 4 %}style="display:none"{% endif %}
+                                                 id="invoiceBTN_{{ invoice['invoice_id'] }}_4">
+                                                <button type="button" class="btn btn-sm btn-outline-danger">
+                                                    <i class="fa-duotone fa-plus me-2"></i>
+                                                    {{ 'general.invoices.state.4' | language }}
+                                                </button>
+                                            </div>
+                                            <div {% if invoice['state'] != 5 %}style="display:none"{% endif %}
+                                                 id="invoiceBTN_{{ invoice['invoice_id'] }}_5">
+                                                <button type="button" class="btn btn-sm btn-outline-warning">
+                                                    <i class="fa-duotone fa-clock me-2"></i>
+                                                    {{ 'general.invoices.state.5' | language }}
+                                                </button>
+                                            </div>
+                                            <div style="display:none"
+                                                 id="invoiceBTN_{{ invoice['invoice_id'] }}_loader">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="actions ml-3">
+                                            <a
+                                                    href="{{ dashURL }}/teams/{{ invoice['service']['businessId_team'] }}/service/{{ invoice['service']['businessId_service'] }}"
+                                                    class="btn btn-primary btn-sm btn-icon">
+                                                <i class="fa-duotone fa-external-link-alt"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>

@@ -1,112 +1,28 @@
 {% include '/general/header.twig' %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        {% include '/cp/sideNav.twig' %}
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/settings/nav.twig' %}
+        <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
-            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
-                                class="fa fa-code text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-code text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.developer.apiToken' | language }}</h2>
                         <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                             <a href="{{ dashURL }}/settings/developer" class="btn btn-dark btn-icon">
-                                <i class="fa-solid fa-arrow-left"></i>
+                                <i class="fa-duotone fa-arrow-left"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {% if apiLog['items']|length != 0 %}
-
-                <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
-                    <div class="card-body">
-
-                        <nav>
-                            <ul class="pagination justify-content-center">
-
-                                <li
-                                        class="page-item {% if apiLog['pagination']['previous_page'] == 0 %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page=1"
-                                       tabindex="-1" {% if apiLog['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>First</a>
-                                </li>
-                                <li
-                                        class="page-item {% if apiLog['pagination']['previous_page'] == 0 %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/token/{{ token['businessId'] }}?page={{ apiLog['pagination']['previous_page'] }}"
-                                       tabindex="-1" {% if apiLog['pagination']['previous_page'] == 0 %} aria-disabled="true" {% endif %}>Previous</a>
-                                </li>
-
-                                {% if apiLog['pagination']['previous_page']-3 > 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page']-3 }}">{{ apiLog['pagination']['previous_page']-3 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if apiLog['pagination']['previous_page']-2 > 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page']-2 }}">{{ apiLog['pagination']['previous_page']-2 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if apiLog['pagination']['previous_page']-1 > 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page']-1 }}">{{ apiLog['pagination']['previous_page']-1 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if apiLog['pagination']['previous_page'] != 0 %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['previous_page'] }}">{{ apiLog['pagination']['previous_page'] }}</a>
-                                    </li>
-                                {% endif %}
-
-                                <li class="page-item active" aria-current="page">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['current_page'] }}">{{ apiLog['pagination']['current_page'] }}
-                                        <span class="sr-only">(current)</span></a>
-                                </li>
-
-                                {% if apiLog['pagination']['current_page'] != apiLog['pagination']['total_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page'] }}">{{ apiLog['pagination']['next_page'] }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if apiLog['pagination']['next_page']+1 <= apiLog['pagination']['total_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page']+1 }}">{{ apiLog['pagination']['next_page']+1 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if apiLog['pagination']['next_page']+2 <= apiLog['pagination']['total_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page']+2 }}">{{ apiLog['pagination']['next_page']+2 }}</a>
-                                    </li>
-                                {% endif %}
-                                {% if apiLog['pagination']['next_page']+3 <= apiLog['pagination']['total_pages'] %}
-                                    <li class="page-item"><a class="page-link"
-                                                             href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page']+3 }}">{{ apiLog['pagination']['next_page']+3 }}</a>
-                                    </li>
-                                {% endif %}
-
-                                <li
-                                        class="page-item {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_pages'] %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['next_page'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_pages'] %} aria-disabled="true" {% endif %}>Next</a>
-                                </li>
-                                <li
-                                        class="page-item {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_pages'] %} disabled {% endif %}">
-                                    <a class="page-link"
-                                       href="{{ dashURL }}/settings/developer/token/{{ token['token_id'] }}?page={{ apiLog['pagination']['total_pages'] }}" {% if apiLog['pagination']['current_page'] == apiLog['pagination']['total_pages'] %} aria-disabled="true" {% endif %}>Last</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </section>
-
-            {% endif %}
-
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
+                    {% include '/general/pagination.twig' %}
                     <div class="table-responsive">
-                        <table class="table table-cards">
+                        <table class="table table-cards align-middle">
                             <thead>
                             <tr>
                                 <th scope="col">Status</th>
@@ -117,7 +33,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for id, log in apiLog['items'] %}
+                            {% for id, log in pagination['items'] %}
                                 <tr>
                                     <td>{{ log['status'] }}</td>
                                     <td>{{ log['method'] }}</td>
@@ -127,7 +43,7 @@
                                         <button
                                                 class="btn btn-secondary btn-sm btn-icon" data-bs-toggle="modal"
                                                 data-bs-target="#seeLog-{{ id }}">
-                                            <i class="fa fa-eye"></i>
+                                            <i class="fa-duotone fa-eye"></i>
                                         </button>
                                     </td>
                                 </tr>

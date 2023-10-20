@@ -39,6 +39,11 @@
                             <h6 class="text-center">
                                 {{ setup['address']['street'] }} {{ setup['address']['street_nr'] }}
                             </h6>
+                            {% if setup['address']['suffix'] != "" %}
+                                <h6 class="text-center">
+                                    {{ setup['address']['suffix'] }}
+                                </h6>
+                            {% endif %}
                             <h6 class="text-center">
                                 {{ setup['address']['postcode'] }} {{ setup['address']['city'] }}
                             </h6>

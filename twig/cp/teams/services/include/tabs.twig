@@ -1,13 +1,13 @@
 <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
     <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                class="fa fa-info text-primary lead pe-1 me-2"></i>
+                class="fa-duotone fa-info text-primary lead pe-1 me-2"></i>
         <h2 class="h4 mb-0">{{ 'site.cp.service.tab.info' | language }}</h2>
     </div>
     <h6>{{ 'site.cp.service.tab.info.service_name' | language }}</h6>
     <h6><b>{{ service['service_name'] }}
             {% if "team.service.setName"|checkTeamPermission %}
                 <button type="button" class="btn btn-icon btn-sm btn-outline-primary" data-bs-toggle="modal"
-                        data-bs-target="#setAccessName"><i class="fa fa-pen"></i></button>
+                        data-bs-target="#setAccessName"><i class="fa-duotone fa-pen"></i></button>
             {% endif %}</b>
     </h6>
     {% if "team.service.setName"|checkTeamPermission %}
@@ -48,41 +48,41 @@
     <br>
 
     {% if service['type']['hostType'] == "mailCow" %}
-    <h6>{{ 'site.cp.service.tab.info.domain' | language }}</h6>
-    <h6>
-        <b>
-            {% if service['package']['specs']['domains'] == "-1" %}
-                {{ 'site.products.specs.unlimited' | language }}
-            {% else %}
-                {{ service['package']['specs']['domains'] }}
-            {% endif %}
-        </b>
-    </h6>
-    <br>
+        <h6>{{ 'site.cp.service.tab.info.domain' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['domains'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['domains'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
 
-    <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
-    <h6>
-        <b>
-            {% if service['package']['specs']['disk'] == "-1" %}
-                {{ 'site.products.specs.unlimited' | language }}
-            {% else %}
-                {{ service['package']['specs']['disk'] }}GB
-            {% endif %}
-        </b>
-    </h6>
-    <br>
+        <h6>{{ 'site.cp.service.tab.info.disk' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['disk'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['disk'] }}GB
+                {% endif %}
+            </b>
+        </h6>
+        <br>
 
-    <h6>{{ 'site.cp.service.tab.info.email' | language }}</h6>
-    <h6>
-        <b>
-            {% if service['package']['specs']['emails'] == "-1" %}
-                {{ 'site.products.specs.unlimited' | language }}
-            {% else %}
-                {{ service['package']['specs']['emails'] }}
-            {% endif %}
-        </b>
-    </h6>
-    <br>
+        <h6>{{ 'site.cp.service.tab.info.email' | language }}</h6>
+        <h6>
+            <b>
+                {% if service['package']['specs']['emails'] == "-1" %}
+                    {{ 'site.products.specs.unlimited' | language }}
+                {% else %}
+                    {{ service['package']['specs']['emails'] }}
+                {% endif %}
+            </b>
+        </h6>
+        <br>
     {% elseif service['type']['hostType'] == "external" %}
         {% if data['address']['ipv4'] is not empty or data['address']['ipv6'] is not empty %}
             <br>
@@ -92,15 +92,17 @@
                     <div class="mb-1 col-lg-6">
                         <div class="card h-100 rounded-3 p-3 ">
                             <div class="d-flex align-items-center">
-                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv4'] }}
-                                    <div class="d-flex align-items-center">
-                                        <div class="fs-sm">
-                                            <div class="text-dark">{{ 'site.cp.service.tab.info.basicService.address.gateway' | language ~ ": " ~ address['ipv4_gateway'] }}</div>
-                                        </div>
-                                    </div>
-                                </h3>
+                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ip'] }}</h3>
+                                <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title="{{ 'site.cp.service.tab.info.basicService.address.netSize' | language }}">{{ address['netSize'] }}</span>
                             </div>
-
+                            <div class="d-flex align-items-center">
+                                <div class="fs-sm">
+                                    <div
+                                            class="text-dark">{{ 'site.cp.service.tab.info.basicService.address.gateway' | language ~ ": " ~ address['gateway'] }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -108,15 +110,17 @@
                     <div class="mb-1 col-lg-6">
                         <div class="card h-100 rounded-3 p-3 ">
                             <div class="d-flex align-items-center">
-                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv6'] }}
-                                    <div class="d-flex align-items-center">
-                                        <div class="fs-sm">
-                                            <div class="text-dark">{{ 'site.cp.service.tab.info.basicService.address.gateway' | language ~ ": " ~ address['ipv6_gateway'] }}</div>
-                                        </div>
-                                    </div>
-                                </h3>
+                                <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ip'] }}</h3>
+                                <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title="{{ 'site.cp.service.tab.info.basicService.address.netSize' | language }}">{{ address['netSize'] }}</span>
                             </div>
-
+                            <div class="d-flex align-items-center">
+                                <div class="fs-sm">
+                                    <div
+                                            class="text-dark">{{ 'site.cp.service.tab.info.basicService.address.gateway' | language ~ ": " ~ address['gateway'] }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
@@ -353,15 +357,16 @@
                 <div class="mb-1 col-lg-6">
                     <div class="card h-100 rounded-3 p-3 ">
                         <div class="d-flex align-items-center">
-                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv4'] }}
-                                <div class="d-flex align-items-center">
-                                    <div class="fs-sm">
-                                        <div class="text-dark">{{ 'site.cp.service.tab.info.proxmox.address.gateway' | language ~ ": " ~ address['ipv4_gateway'] }}</div>
-                                    </div>
-                                </div>
-                            </h3>
+                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ip'] }}</h3>
+                            <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip" data-bs-placement="top"
+                                  title="{{ 'site.cp.service.tab.info.proxmox.address.netSize' | language }}">{{ address['netSize'] }}</span>
                         </div>
-
+                        <div class="d-flex align-items-center">
+                            <div class="fs-sm">
+                                <div
+                                        class="text-dark">{{ 'site.cp.service.tab.info.proxmox.address.gateway' | language ~ ": " ~ address['gateway'] }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
@@ -369,20 +374,21 @@
                 <div class="mb-1 col-lg-6">
                     <div class="card h-100 rounded-3 p-3 ">
                         <div class="d-flex align-items-center">
-                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ipv6'] }}
-                                <div class="d-flex align-items-center">
-                                    <div class="fs-sm">
-                                        <div class="text-dark">{{ 'site.cp.service.tab.info.proxmox.address.gateway' | language ~ ": " ~ address['ipv6_gateway'] }}</div>
-                                    </div>
-                                </div>
-                            </h3>
+                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ip'] }}</h3>
+                            <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip" data-bs-placement="top"
+                                  title="{{ 'site.cp.service.tab.info.proxmox.address.netSize' | language }}">{{ address['netSize'] }}</span>
                         </div>
-
+                        <div class="d-flex align-items-center">
+                            <div class="fs-sm">
+                                <div
+                                        class="text-dark">{{ 'site.cp.service.tab.info.proxmox.address.gateway' | language ~ ": " ~ address['gateway'] }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        {% if service['reinstalling'] == "false" and (service['state'] == 1 or service['state'] == 6) %}
+        {% if service['reinstalling'] == false and (service['state'] == 1 or service['state'] == 6) %}
             <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
             <h6><b>{{ proxmox['response']['external']['backups'] | length }}
                     / {{ service['package']['specs']['backups'] }}</b></h6>
@@ -429,7 +435,7 @@
 {% if "owner"|checkTeamPermission %}
     <div class="tab-pane fade" id="team" role="tabpanel" aria-labelledby="team-tab">
         <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                    class="fa fa-people-arrows text-primary lead pe-1 me-2"></i>
+                    class="fa-duotone fa-people-arrows text-primary lead pe-1 me-2"></i>
             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.team' | language }}</h2>
         </div>
 
@@ -442,7 +448,7 @@
                 <div class="col-lg-12">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
                         <i
-                                class="fa fa-repeat text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-repeat text-primary lead pe-1 me-2"></i>
                         <h2 class="h5 mb-0">{{ 'site.cp.service.tab.team.changeTeam' | language }}</h2>
                     </div>
                     <form method="post">
@@ -476,11 +482,11 @@
 {% if "team.service.invoice"|checkTeamPermission %}
     <div class="tab-pane fade" id="invoice" role="tabpanel" aria-labelledby="invoice-tab">
         <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                    class="fa fa-balance-scale text-primary lead pe-1 me-2"></i>
+                    class="fa-duotone fa-balance-scale text-primary lead pe-1 me-2"></i>
             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.invoice' | language }}</h2>
             <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                 <a href="{{ dashURL }}/invoice" target="_blank" class="btn btn-dark btn-icon">
-                    <i class="fa-solid fa-eye"></i>
+                    <i class="fa-duotone fa-eye"></i>
                 </a>
             </div>
         </div>
@@ -502,11 +508,11 @@
                                 {% elseif invoice['state'] == 3 %}
                                     <span style="color:#FF0000">{{ 'general.invoices.state.3' | language }}</span>
                                 {% elseif invoice['state'] == 4 %}
-                                    <span style="color:#ff0000">{{ 'general.invoices.state.4' | language }}</span>
+                                    <span style="color:#FF0000">{{ 'general.invoices.state.4' | language }}</span>
                                 {% elseif invoice['state'] == 5 %}
-                                    <span style="color:#FFBF00">{{ 'general.invoices.state.pending' | language }}</span>
-                                {% else %}
-                                    <span style="color:#FF0000">{{ 'general.invoices.state.error' | language }}</span>
+                                    <span style="color:#FFBF00">{{ 'general.invoices.state.5' | language }}</span>
+                                {% elseif invoice['state'] == 6 %}
+                                    <span style="color:#FF0000">{{ 'general.invoices.state.6' | language }}</span>
                                 {% endif %}
                                 &nbsp;
                             </dt>

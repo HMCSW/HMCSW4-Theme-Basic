@@ -59,7 +59,8 @@
                                                     class="fa fa-mobile-signal text-primary lead pe-1 me-2"></i>
                                             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.basicService.rDNS' | language }}</h2>
                                             <div class="btn-group me-2 mb-2 ms-auto" role="group">
-                                                <button type="button" data-bs-toggle="modal" data-bs-target="#createRDns"
+                                                <button type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#createRDns"
                                                         class="btn btn-dark btn-icon">
                                                     <i class="fa-solid fa-plus"></i>
                                                 </button>
@@ -98,12 +99,12 @@
                                                                     <option disabled
                                                                             selected>{{ 'site.cp.service.tab.basicService.rDNS.net.select' | language }}</option>
                                                                     {% for address in data['rDnsAv']['ipv4'] %}
-                                                                        <option value="{{ address['ipv4_id'] }}"
-                                                                                content="{{ address['ipv4'] }}">{{ address['ipv4'] }}</option>
+                                                                        <option value="{{ address['id'] }}"
+                                                                                content="{{ address['ip']~""~address['netSize'] }}">{{ address['ip']~""~address['netSize'] }}</option>
                                                                     {% endfor %}
                                                                     {% for address in data['rDnsAv']['ipv6'] %}
-                                                                        <option value="{{ address['ipv6_id'] }}"
-                                                                                content="{{ address['ipv6'] }}">{{ address['ipv6'] }}</option>
+                                                                        <option value="{{ address['id'] }}"
+                                                                                content="{{ address['ip']~""~address['netSize'] }}">{{ address['ip']~""~address['netSize'] }}</option>
                                                                     {% endfor %}
                                                                 </select>
                                                             </div>
@@ -117,7 +118,8 @@
                                                             <div class="form-group">
                                                                 <label class="form-label"
                                                                        for="rDns_content">{{ 'site.cp.service.tab.basicService.rDNS.content' | language }}</label>
-                                                                <input id="rDns_content" class="form-control" name="content"
+                                                                <input id="rDns_content" class="form-control"
+                                                                       name="content"
                                                                        placeholder="mail.example.com" required>
                                                             </div>
                                                         </div>

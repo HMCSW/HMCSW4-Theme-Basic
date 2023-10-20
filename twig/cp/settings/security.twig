@@ -29,8 +29,8 @@
                     <div class="card card-fluid ">
                         <div class="card-header">{{ 'site.cp.settings.security.email' | language }}</div>
                         <div class="card-body">
-                            {% if twoFactor['email']['status'] == "true" %}
-                                {% if twoFactor['email']['ready'] == "false" %}
+                            {% if twoFactor['email']['status'] == true %}
+                                {% if twoFactor['email']['ready'] == false %}
                                     <div class="text-center">
                                         <p class="text-center">{{ 'site.cp.settings.security.email.tutorial' | language }}</p>
                                     </div>
@@ -88,8 +88,8 @@
                     <div class="card card-fluid ">
                         <div class="card-header">{{ 'site.cp.settings.security.totp' | language }}</div>
                         <div class="card-body">
-                            {% if twoFactor['totp']['status'] == "true" %}
-                                {% if twoFactor['totp']['ready'] == "false" %}
+                            {% if twoFactor['totp']['status']== true %}
+                                {% if twoFactor['totp']['ready']== false %}
                                     <div class="text-center">
                                         <img src="{{ twoFactor['totp']['qr_code'] }}" alt="">
                                         <p class="text-center">{{ twoFactor ['totp']['secret'] }}</p>
@@ -151,8 +151,8 @@
                     <div class="card card-fluid ">
                         <div class="card-header">{{ 'site.cp.settings.security.backup' | language }}</div>
                         <div class="card-body">
-                            {% if twoFactor['backup']['status'] == "true" %}
-                                {% if twoFactor['backup']['ready'] == "false" %}
+                            {% if twoFactor['backup']['status']== true %}
+                                {% if twoFactor['backup']['ready']== false %}
                                     <div class="text-center">
                                         <p class="text-center"><b>{{ twoFactor['backup']['secret'] }}</b></p>
                                         <p class="text-center">{{ 'site.cp.settings.security.backup.tutorial' | language }}</p>
@@ -214,7 +214,7 @@
                         <div class="card-header">{{ 'site.cp.settings.security.phone' | language }}</div>
                         <div class="card-body">
                             {% if userData['phone']['status'] == 1 %}
-                                {% if twoFactor['phone']['status'] == "true" %}
+                                {% if twoFactor['phone']['status']== true %}
                                     <h5 class="text-success">{{ 'site.cp.settings.security.active' | language }}</h5>
                                     <form method="POST">
                                         <input type="hidden" name="action" value="removeTwoFactor">

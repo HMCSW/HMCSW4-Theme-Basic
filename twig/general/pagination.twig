@@ -1,0 +1,53 @@
+{% if pagination is defined %}
+    {% if pagination['items']|length != 0 %}
+        <nav>
+            <ul class="pagination justify-content-center">
+
+                <li
+                        class="page-item {% if pagination['pagination']['previousPage'] == false %} disabled {% endif %}">
+                    <a class="page-link"
+                       href="{{ currentUrl }}?page=1"
+                       tabindex="-1"><i class="fa-duotone fa-arrow-left-to-line"></i></a>
+                </li>
+                <li
+                        class="page-item {% if pagination['pagination']['previousPage'] == false %} disabled {% endif %}">
+                    <a class="page-link"
+                       href="{{ currentUrl }}?page={{ pagination['pagination']['previousPage'] }}"
+                       tabindex="-1"><i class="fa-duotone fa-arrow-left"></i></a>
+                </li>
+
+
+                {% for key, page in pagination['pagination']['previousPages'] %}
+                    <li class="page-item {% if key < 1 %}d-none d-md-block {% endif %}"><a class="page-link"
+                                                                                           href="{{ currentUrl }}?page={{ page }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link"
+                       href="{{ currentUrl }}?page={{ pagination['pagination']['currentPage'] }}">{{ pagination['pagination']['currentPage'] }}
+                        <span class="sr-only">(current)</span></a>
+                </li>
+                {% for key, page in pagination['pagination']['nextPages'] %}
+                    <li class="page-item {% if key > 0 %}d-none d-md-block {% endif %}"><a class="page-link"
+                                                                                           href="{{ currentUrl }}?page={{ page }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                <li
+                        class="page-item {% if pagination['pagination']['nextPage'] == false %} disabled {% endif %}">
+                    <a class="page-link"
+                       href="{{ currentUrl }}?page={{ pagination['pagination']['nextPage'] }}"><i
+                                class="fa-duotone fa-arrow-right"></i></a>
+                </li>
+                <li
+                        class="page-item {% if pagination['pagination']['nextPage'] == false %} disabled {% endif %}">
+                    <a class="page-link"
+                       href="{{ currentUrl }}?page={{ pagination['pagination']['totalPages'] }}"><i
+                                class="fa-duotone fa-arrow-right-to-line"></i></a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <p class="text-center">No pagination found</p>
+{% endif %}

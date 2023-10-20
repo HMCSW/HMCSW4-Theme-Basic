@@ -1,0 +1,191 @@
+{% include '/general/header.twig' %}
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/teams/nav.twig' %}
+        <!-- Page content-->
+        <div class="col-lg-9">
+            <div class="row">
+                {% include 'cp/terminateUser.twig' %}
+                {% include 'general/actionMessage.twig' %}
+                {% include 'cp/teams/noTwoFactor.twig' %}
+                {% include 'cp/themeAlert.twig' %}
+                <div class="col-lg-12 pb-2 pb-sm-4">
+                    <section class="card border-0">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center"><i
+                                        class="fa-duotone fa-house text-primary lead pe-1 me-2"></i>
+                                <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.services' | language }}</h2>
+                                <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                    <a href="{{ dashURL }}/teams/{{ team['businessId'] }}"
+                                       class="btn btn-dark btn-icon">
+                                        <i class="fa-duotone fa-arrow-left"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-12 pb-2 pb-sm-4">
+                    <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 h-100">
+
+                        <div class="card-body m-0 p-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="text-center">
+                                        {{ service['service_id'] }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body m-0 p-3">
+                            <h6 class="text-center">{{ service['name'] }}</h6>
+                            <h6 class="text-center">{{ service['service_name'] }}</h6>
+
+                            <div class="alert alert-group alert-danger alert-icon" role="alert">
+                                <div class="alert-group-prepend">
+                                <span class="alert-group-icon text-">
+                                    <i class="fa-duotone fa-exclamation"></i>
+                                </span>
+                                </div>
+                                <div class="alert-content">
+                                    {{ 'site.cp.tab.teams.service.status.externalDown' | language }}
+                                    <br>
+                                    {{ message }}
+                                </div>
+                            </div>
+                            {% if statusContext['maintenance']|length != 0 %}
+                                {% for m in statusContext['maintenance'] %}
+                                    {% if m['state'] == 2 %}
+                                        <div class="col-lg-12">
+                                            <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid mb-4">
+                                                <div class="card-body py-5 text-center h-100">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h5 class="h3">{{ 'site.status.maintenance' | language }}</h5>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <h5 class="h3">{{ m['title'] }}</h5>
+                                                            {% if m['state'] == 1 %}
+                                                                <span
+                                                                        class="badge bg-warning">{{ 'site.status.maintenance.state.1' | language }}</span>
+                                                            {% elseif m['state'] == 2 %}
+                                                                <span
+                                                                        class="badge bg-danger">{{ 'site.status.maintenance.state.2' | language }}</span>
+                                                            {% elseif m['state'] == 3 %}
+                                                                <span
+                                                                        class="badge bg-primary">{{ 'site.status.maintenance.state.3' | language }}</span>
+                                                            {% elseif m['state'] == 4 or m['state'] == 0 %}
+                                                                <span
+                                                                        class="badge bg-info">{{ 'site.status.maintenance.state.4' | language }}</span>
+                                                            {% endif %}
+
+                                                            <p><br>{{ m['message']|nl2br }}</p>
+                                                            <h4 class="h6">
+                                                                {% autoescape %}
+                                                                    {% set text = 'site.status.maintenance.created_at'|language|replace({'@date': m['created_at']|date }) %}
+                                                                    {{ text|raw }}
+                                                                {% endautoescape %}
+                                                            </h4>
+                                                            <h4 class="h6">
+                                                                {% autoescape %}
+                                                                    {% set text = 'site.status.maintenance.start_at'|language|replace({'@date': m['start_at']|date }) %}
+                                                                    {{ text|raw }}
+                                                                {% endautoescape %}
+                                                            </h4>
+                                                            <h4 class="h6">
+                                                                {% autoescape %}
+                                                                    {% set text = 'site.status.maintenance.finish_at'|language|replace({'@date': m['finish_at']|date }) %}
+                                                                    {{ text|raw }}
+                                                                {% endautoescape %}
+                                                            </h4>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <h5 class="h5">{{ 'site.status.maintenance.component' | language }}</h5>
+                                                            {% for component in m['component_id'] %}
+                                                                <p>{{ status[component]['name'] }}</p>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if statusContext['incidents']|length != 0 %}
+                                {% for incident in statusContext['incidents'] %}
+                                    {% if m['state'] != 3 %}
+                                        <div class="col-lg-12">
+                                            <div class="card hover-shadow-lg hover-translate-y-n3 card-fluid mb-4">
+                                                <div class="card-body py-5 h-100">
+                                                    <h5 class="h3 text-center">{{ incident['title'] }}</h5>
+                                                    <div class="text-center">
+                                                        {% if incident['state'] == 1 %}
+                                                            <span
+                                                                    class="badge bg-danger text-center">{{ 'site.status.incident.state.1' | language }}</span>
+                                                        {% elseif incident['state'] == 2 %}
+                                                            <span
+                                                                    class="badge bg-warning text-center">{{ 'site.status.incident.state.2' | language }}</span>
+                                                        {% elseif incident['state'] == 3 %}
+                                                            <span
+                                                                    class="badge bg-success text-center">{{ 'site.status.incident.state.3' | language }}</span>
+                                                        {% elseif incident['state'] == 4 %}
+                                                            <span
+                                                                    class="badge bg-danger text-center">{{ 'site.status.incident.state.4' | language }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h5 class="h5 text-center">{{ 'site.status.incidents.history' | language }}</h5>
+
+                                                            <div class="list-group list-group-flush">
+                                                                {% for update in incident['updates'] %}
+                                                                    <div class="list-group-item list-group-item-action">
+                                                                        <div class="d-flex">
+                                                                            <div class="flex-fill ml-3">
+                                                                                <div class="h6 text-sm mb-0">
+                                                                                    {% if update['state'] == 1 %}
+                                                                                        {{ 'site.status.incident.state.1' | language }}
+                                                                                    {% elseif update['state'] == 2 %}
+                                                                                        {{ 'site.status.incident.state.2' | language }}
+                                                                                    {% elseif update['state'] == 3 %}
+                                                                                        {{ 'site.status.incident.state.3' | language }}
+                                                                                    {% elseif update['state'] == 4 %}
+                                                                                        {{ 'site.status.incident.state.4' | language }}
+                                                                                    {% endif %}
+                                                                                    <small
+                                                                                            class="float-right text-muted">{{ update['created_at']|date }}</small>
+                                                                                </div>
+                                                                                <p class="lh-140 mb-0">
+                                                                                    {{ update['text']|nl2br }}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6 text-center">
+                                                            <h5 class="h5">{{ 'site.status.incidents.component' | language }}</h5>
+                                                            {% for component in incident['component'] %}
+                                                                <p>{{ status[component]['name'] }}</p>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% include '/cp/sidebarButton.twig' %}
+{% include '/general/footer.twig' %}

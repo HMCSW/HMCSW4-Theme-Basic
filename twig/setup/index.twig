@@ -89,7 +89,7 @@
                             </div>
 
                             <div class="row g-4 pb-sm-3">
-                                <div class="form-group col-lg-9">
+                                <div class="form-group col-lg-5">
                                     <label for="input-street"
                                            class="form-label">{{ 'general.address.street' | language }}
                                         *</label>
@@ -98,6 +98,16 @@
                                             id="input-street"
                                             required
                                             placeholder="{{ 'general.address.street.placeholder' | language }}">
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <label for="input-suffix"
+                                           class="form-label">{{ 'general.address.suffix' | language }}
+                                        *</label>
+                                    <input {% if setup != false %} value="{{ setup['address']['suffix'] }}" {% endif %}
+                                            name="suffix" type="text" class="form-control form-control-prepend"
+                                            id="input-suffix"
+                                            required
+                                            placeholder="{{ 'general.address.suffix.placeholder' | language }}">
                                 </div>
                                 <div class="form-group col-lg-3">
                                     <label for="input-street_nr"
@@ -176,7 +186,7 @@
                                 <div class="form-group col-lg-6 offset-lg-3">
                                     <label for="input-birthday"
                                            class="form-label">{{ 'general.address.birthday' | language }}*</label>
-                                    <input name="birthday" required  type="text"
+                                    <input name="birthday" required type="text"
                                            class="form-control date-picker"
                                            data-datepicker-options='{"altInput": true, "altFormat": "d.m.Y", "dateFormat": "d.m.Y"}'
                                            id="input-birthday" data-toggle="date"
@@ -217,7 +227,7 @@
                                 <div class="form-group offset-lg-1">
                                     <div class="form-check form-check-inline">
                                         <input
-                                                type="checkbox" {% if setup != false %} {% if setup['newsletter'] == "true" %} checked {% endif %} {% endif %}
+                                                type="checkbox" {% if setup != false %} {% if setup['newsletter'] %} checked {% endif %} {% endif %}
                                                 class="form-check-input" name="newsletter" id="check-newsletter">
                                         <label class="form-check-label"
                                                for="check-newsletter">{{ 'site.cp.setup.legal.newsletter' | language }}</label>
@@ -233,8 +243,8 @@
                         </div>
                         <div class="card-body">
                             <div class="row justify-content-center align-items-end">
-                                    <button type="submit"
-                                            class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.setup.end.btn' | language }}</button>
+                                <button type="submit"
+                                        class="btn btn-primary btn-lg hover-scale-110">{{ 'site.cp.setup.end.btn' | language }}</button>
                             </div>
                         </div>
                     </section>

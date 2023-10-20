@@ -143,7 +143,7 @@ function startSelectProcessTwoFactor(fido = false){
 function submitCodeTwoFactor(){
     let value = document.getElementById("code-twofactor").value;
     if(value.length > 0){
-         $.ajax({
+        $.ajax({
             type: "PATCH",
             url: apiURL + "/auth/login/twoFactor/twoFactor",
             data: {sessionCode: sessionCode, method: currentMethod, code: value }
@@ -156,9 +156,9 @@ function submitCodeTwoFactor(){
             } else {
                 sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
             }
-         }).fail(function (err) {
-             sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
-         });
+        }).fail(function (err) {
+            sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
+        });
     }
 }
 
@@ -300,7 +300,7 @@ function setSessions(url){
     $.ajax({
         type: "POST",
         url: apiURL + "/session",
-        data: {sessions: sessionsToSet, url: url}
+        data: JSON.stringify({sessions: sessionsToSet, url: url})
     }).done(function (answer) {
         sessionsToSet = {};
 

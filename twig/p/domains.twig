@@ -70,7 +70,7 @@
                           </thead>
                           <tbody id="domains_body">
                           {% for products in type['category']['Domains']['products'] %}
-                            {% if products['promote'] == "true" %}
+                              {% if products['promote'] %}
                               <tr>
                                 <th scope="row">{{ products['name'] }}</th>
                                 <td>{{ products['amount']|creditsToEuro }}{{ "symbol"|currency }}</td>

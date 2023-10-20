@@ -1,0 +1,255 @@
+{% include '/general/header.twig' %}
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/teams/nav.twig' %}
+        <!-- Page content-->
+        <div class="col-lg-9">
+            <div class="row">
+                {% include 'cp/teams/services/include/info_nav.twig' %}
+                <div class="col-lg-6 pb-2 pb-sm-4">
+                    <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 h-100">
+
+                        <div class="card-body m-0 p-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    {% include 'cp/teams/services/include/lock.twig' %}
+                                </div>
+                                <div class="col-4">
+                                    <h6 class="text-center">
+                                        {{ service['service_id'] }}
+                                    </h6>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-end">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body m-0 p-3">
+                            <h4 class="text-center"><i class="fa-duotone fa-2x fa-mailbox"></i></h4>
+                            <h6 class="text-center">{{ service['name'] }}</h6>
+                            <h6 class="text-center">{{ service['service_name'] }}</h6>
+
+                            <h5 class="text-center">{{ service['external']['name'] }}</h5>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-lg-6 pb-2 pb-sm-4">
+                    <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 h-100">
+                        <div class="card-body align-items-center justify-content-center" style="display: block"
+                             id="statusDiv">
+                            {% if service['state'] == 1 or service['state'] == 6 %}
+                                {% if service['host']['autoLogin'] %}
+                                    {% if "team.service.loginInService"|checkServicePermission %}
+                                        <form method="POST" target="_blank">
+                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                            <input type="hidden" name="action" value="login">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-primary mb-2 w-100">{{ 'site.cp.service.loginBtn' | language }}</button>
+                                        </form>
+                                    {% else %}
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary mb-2 w-100 disabled">{{ 'site.cp.service.loginBtn' | language }}</button>
+                                    {% endif %}
+                                {% else %}
+                                    <h6 class="text-center fs-sm">{{ 'site.cp.service.info.login.notAvailable' | language }}</h6>
+                                    <button type="button"
+                                            class="btn btn-sm btn-primary mb-2 w-100 disabled">{{ 'site.cp.service.loginBtn' | language }}</button>
+                                {% endif %}
+                            {% else %}
+                                <button type="button"
+                                        class="btn btn-sm btn-primary mb-2 w-100 disabled">{{ 'site.cp.service.loginBtn' | language }}</button>
+                            {% endif %}
+                            {% if service['state'] == 1 or service['state'] == 6 %}
+                                {% if service['locked'] == false and service['reinstalling'] == false and service['state'] == "1" and "team.service.reinstall"|checkTeamPermission %}
+                                    <a class="btn btn-sm btn-warning mb-2 w-100" data-bs-toggle="modal"
+                                       data-bs-target="#reinstall">{{ 'site.cp.service.info.reinstall' | language }}</a>
+                                    <div class="modal modal-danger fade" id="reinstall" tabindex="-1" role="dialog"
+                                         aria-labelledby="reinstall" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title h6">{{ 'site.cp.service.info.reinstall.modal' | language }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="py-3 text-center">
+                                                        <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
+                                                        <h5
+                                                                class="heading h4 mt-4">{{ 'site.cp.service.info.reinstall.modal.warn.title' | language }}</h5>
+                                                        <p>{{ 'site.cp.service.info.reinstall.modal.warn.description' | language }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <form method="POST">
+                                                        <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                        <input type="hidden" name="action" value="reinstall">
+                                                        <button type="submit"
+                                                                class="btn btn-danger">{{ 'site.cp.service.info.reinstall.modal.submit' | language }}</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <button type="button"
+                                            class="btn btn-sm btn-warning mb-2 w-100 disabled">{{ 'site.cp.service.info.reinstall' | language }}</button>
+                                {% endif %}
+                            {% else %}
+                                <button type="button"
+                                        class="btn btn-sm btn-warning mb-2 w-100 disabled">{{ 'site.cp.service.info.reinstall' | language }}</button>
+                            {% endif %}
+                        </div>
+                        <div class="card-body align-items-center justify-content-center m-auto" id="statusLoading"
+                             style="display: none">
+                            <div style="width: 5rem; height: 5rem" class="spinner-border text-success"
+                                 role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-lg-12 pb-2 pb-sm-4">
+                    <section class="card border-0">
+                        <div class="card-body">
+
+                            <ul class="nav nav-tabs  justify-content-center" id="myTab" role="tablist">
+
+                                {% include 'cp/teams/services/include/tabs_nav.twig' %}
+
+                                <li class="nav-item">
+                                    <a href="#domains" class="nav-link" data-bs-toggle="tab" role="tab">
+                                        {{ 'site.cp.service.tab.mailcow.domain' | language }}
+                                    </a>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+
+                                {% include 'cp/teams/services/include/tabs.twig' %}
+
+                                <div class="tab-pane fade" id="domains" role="tabpanel" aria-labelledby="domains-tab">
+                                    <div class="row">
+                                        <div class="d-flex align-items-center mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
+                                            <i
+                                                    class="fa-duotone fa-globe text-primary lead pe-1 me-2"></i>
+                                            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.mailcow.domain' | language }}</h2>
+                                            <div class="btn-group me-2 mb-2 ms-auto" role="group"
+                                                 aria-label="Settings group">
+                                                <button type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#addDomain"
+                                                        class="btn btn-dark btn-icon">
+                                                    <i class="fa-duotone fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="addDomain" tabindex="-1" role="dialog"
+                                         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title h6">{{ 'site.cp.service.tab.mailcow.domain.create' | language }}</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <h4 class="card-title text-center"><i
+                                                                        class="fa-duotone fa-2x fa-laptop-medical"></i>
+                                                            </h4>
+                                                            <p class="card-text text-center">{{ 'site.cp.service.tab.mailcow.domain.create.dnsInfo' | language }}</p>
+
+                                                            <div class="row g-3">
+                                                                <div class="col-sm-12 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <label for="addDomain_record_name"
+                                                                               class="form-label">{{ 'site.cp.service.tab.mailcow.domain.create.name' | language }}</label>
+                                                                        <input name="name" type="text"
+                                                                               id="addDomain_record_name"
+                                                                               class="form-control" value="@" disabled>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <label for="addDomain_type"
+                                                                               class="form-label">{{ 'site.cp.service.tab.mailcow.domain.create.type' | language }}</label>
+                                                                        <input name="name" type="text"
+                                                                               id="addDomain_type"
+                                                                               class="form-control" value="TXT"
+                                                                               disabled>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-12 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <label for="addDomain_value"
+                                                                               class="form-label">{{ 'site.cp.service.tab.mailcow.domain.create.content' | language }}</label>
+                                                                        <input name="name" type="text"
+                                                                               id="addDomain_value"
+                                                                               class="form-control"
+                                                                               value="{{ data['record'] }}" disabled>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row g-3 mt-4">
+                                                        <div class="form-group">
+                                                            <label for="addDomain_name"
+                                                                   class="form-label">{{ 'site.cp.service.tab.mailcow.domain.create.domain' | language }}</label>
+                                                            <input name="name" type="text" id="addDomain_name"
+                                                                   class="form-control"
+                                                                   placeholder="{{ 'site.cp.service.tab.domain.dns.form.name' | language }}">
+                                                        </div>
+                                                    </div>
+
+                                                    <script>
+                                                        document.getElementById("addDomain_name").addEventListener("input", function () {
+                                                            document.getElementById("addDomain_record_name").value = this.value;
+                                                        });
+                                                    </script>
+
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" onclick="addDomain(this);"
+                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+
+                                    <div class="table-responsive">
+                                        <table class="table align-middle" id="domains">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">{{ 'site.cp.service.tab.mailcow.domain.table.domain' | language }}</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="domains_body">
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include '/cp/sidebarButton.twig' %}
+{% include '/general/footer.twig' %}
