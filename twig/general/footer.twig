@@ -1,81 +1,205 @@
-<div class="container">
-    <footer class="py-5">
-        <div class="row justify-content-center">
-            <hr />
-            <div class="col-6 col-md-2 mb-3">
-                <h5>{{ 'footer.aboutUs' | language }}</h5>
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/news">{{ 'footer.aboutUs.news' | language }}</a></li>
-                    {% if config['service']['statuspage']['enabled'] != false %}
-                        <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/status">{{ 'footer.aboutUs.status' | language }}</a></li>
-                    {% endif %}
-
-                    {% if config['service']['faq']['enabled'] != false %}
-                        <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/faq">{{ 'footer.aboutUs.faq' | language }}</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-
-            <div class="col-6 col-md-2 mb-3">
-                <h5>{{ 'footer.products' | language }}</h5>
-                <ul class="nav flex-column">
-                    {% for type in products %}
-                        <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a></li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="col-6 col-md-2 mb-3">
-                <h5>{{ 'footer.legal' | language }}</h5>
-                <ul class="nav flex-column">
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/imprint">{{ 'footer.legal.imprint' | language }}</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/privacy">{{ 'footer.legal.privacy' | language }}</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/terms">{{ 'footer.legal.terms' | language }}</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ url }}/legal/withdrawal">{{ 'footer.legal.withdrawal' | language }}</a></li>
-                </ul>
-            </div>
-
-        </div>
-
-        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <div class=col-md-4>
-                <div class="copyright text-sm font-weight-bold text-center text-md-left">&copy; {{ copyrightYear }} <a
-                            href="{{ url }}" class=font-weight-bold target=_blank>{{ name }}</a>. All rights reserved
+</main>
+<hr class="">
+<footer id="footer-top" class="footer position-relative pb-4 pt-md-3 py-lg-4 py-xl-5">
+    <div class="d-none d-dark-mode-block position-absolute top-0 start-0 w-100 h-100"
+         style="background-color: rgba(255,255,255, .02);"></div>
+    <div id="footer-bottom" class="container position-relative zindex-2 pt-5 pb-2">
+        <!-- Columns with links-->
+        <div class="row" id="links">
+            <div class="col-md-3 col-xl-2 pb-2 pb-md-0">
+                <h3 class="h6 text-uppercase d-none d-md-block">{{ 'footer.aboutUs' | language }}</h3>
+                <a class="btn-more h6 mb-1 text-uppercase text-decoration-none d-flex align-items-center collapsed d-md-none"
+                   href="#aboutUs" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="aboutUs"
+                   data-show-label="{{ 'footer.aboutUs' | language }}"
+                   data-hide-label="{{ 'footer.aboutUs' | language }}"></a>
+                <div class="collapse d-md-block" id="aboutUs" data-bs-parent="#links">
+                    <ul class="nav flex-column pb-2 pb-md-0">
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/news">{{ 'footer.aboutUs.news' | language }}</a></li>
+                        {% if config['service']['statuspage']['enabled'] != false %}
+                            <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                    href="{{ url }}/status">{{ 'footer.aboutUs.status' | language }}</a>
+                            </li>
+                        {% endif %}
+                        {% if config['service']['faq']['enabled'] != false %}
+                            <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                    href="{{ url }}/faq">{{ 'footer.aboutUs.faq' | language }}</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/about/payment">{{ 'footer.aboutUs.payment' | language }}</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/reselling">{{ 'footer.aboutUs.reselling' | language }}</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/contact">{{ 'footer.contact' | language }}</a></li>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/legal/parents">{{ 'footer.aboutUs.parents' | language }}</a>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/career">{{ 'footer.aboutUs.career' | language }}</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class=col-md-4>
-                <div class="copyright text-sm font-weight-bold text-center">
-                    <div class="dropdown">
-                        <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-offset="0,10">
-                            <span class="d-none d-lg-inline-block">{{ selectLang['current']['value'] }}</span>
-                            <span class="d-lg-none">{{ selectLang['current']['value'] }}</span>
-                        </a>
-                        <ul class="dropdown-menu text-black">
-                            {% for key, value in selectLang['all'] %}
-                                <li>
-                                    <a class="dropdown-item text-black" title="{{ key }}"
-                                       href="{{ currentUrl }}?G_action=setLanguage&language={{ key }}">
-                                        <span>{{ value['value'] }} ({{ key }})</span>
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+            <div class="col-md-3 col-xl-2 pb-2 pb-md-0">
+                <h3 class="h6 text-uppercase d-none d-md-block">{{ 'footer.products' | language }}</h3><a
+                        class="btn-more h6 mb-1 text-uppercase text-decoration-none d-flex align-items-center collapsed d-md-none"
+                        href="#products" data-bs-toggle="collapse" role="button" aria-expanded="false"
+                        aria-controls="products" data-show-label="{{ 'footer.products' | language }}"
+                        data-hide-label="{{ 'footer.products' | language }}"></a>
+                <div class="collapse d-md-block" id="products" data-bs-parent="#links">
+                    <ul class="nav flex-column pb-2 pb-md-0">
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/p/giftcode">{{ 'header.products.giftcodes'|language }}</a>
+                        </li>
+                        {% for type in products %}
+                            <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                    href="{{ url }}/p/{{ type['type'] }}">{{ type['name'] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3 col-xl-2 pb-2 pb-md-0">
+                <h3 class="h6 text-uppercase d-none d-md-block">{{ 'footer.legal' | language }}</h3><a
+                        class="btn-more h6 mb-1 text-uppercase text-decoration-none d-flex align-items-center collapsed d-md-none"
+                        href="#legal" data-bs-toggle="collapse" role="button" aria-expanded="false"
+                        aria-controls="legal" data-show-label="{{ 'footer.legal' | language }}"
+                        data-hide-label="{{ 'footer.legal' | language }}"></a>
+                <div class="collapse d-md-block" id="legal" data-bs-parent="#links">
+                    <ul class="nav flex-column pb-2 pb-md-0">
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/legal/imprint">{{ 'footer.legal.imprint' | language }}</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/legal/privacy">{{ 'footer.legal.privacy' | language }}</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/legal/terms">{{ 'footer.legal.terms' | language }}</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link fw-normal px-0 py-1"
+                                                href="{{ url }}/legal/withdrawal">{{ 'footer.legal.withdrawal' | language }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3 pb-2 pb-md-0">
+
+            </div>
+            <div class="col-12 col-xl-3 mt-md-2 mt-xl-0 pt-2 pt-md-4 pt-xl-0">
+                <h3 class="h6 text-uppercase mb-1 pb-1">{{ name }}</h3>
+                <p class="mt-4 text-sm opacity-8 pr-lg-4">{{ specialLang['website.description'] }}</p>
+                {% if config['legal']['show_tax'] != true %}
+                    <p class="mt-4 text-sm opacity-8 pr-lg-4">{{ 'footer.noTax' | language }}</p>
+                {% endif %}
+                {#                <div class="d-flex d-xl-block d-xxl-flex"><a class="btn btn-secondary px-3 py-2 mt-3 me-3" href="#"><img #}
+                {#                                class="mx-1" src="assets/img/market/appstore-light.svg" width="120" alt="App Store"></a><a #}
+                {#                            class="btn btn-secondary px-3 py-2 mt-3" href="#"><img class="mx-1" #}
+                {#                                                                                   src="assets/img/market/googleplay-light.svg" #}
+                {#                                                                                   width="119" alt="Google Play"></a> #}
+                {#                </div> #}
+            </div>
+        </div>
+        <!-- Nav + Switcher-->
+        <div class="d-sm-flex align-items-end justify-content-between border-bottom mt-2 mt-sm-1 pt-4 pt-sm-5">
+            <!-- Nav-->
+            <nav class="d-flex mb-3 mb-sm-4">
+
+                <span class="text-muted fs-sm fw-normal ps-0 pe-2 py-2 me-4" href="{{ url }}/hmcsw">&copy; 2020
+                    - {{ copyrightYear }} {{ name }}. All rights reserved</span>
+
+
+            </nav>
+            <!-- Language / currency switcher-->
+            <div class="dropdown mb-4">
+                <button class="btn btn-outline-secondary dropdown-toggle px-4" type="button" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" aria-expanded="false">
+                    <img class="me-2"
+                         src="{{ url }}/assets/img/icons/flags/{{ theme['language']['icons'][selectLang['current']['key']] }}.svg"
+                         height="15"
+                         width="18" alt="{{ selectLang['current']['value'] }}">{{ selectLang['current']['value'] }}
+                </button>
+
+                <div class="dropdown-menu dropdown-menu-end my-1">
+                    <div class="d-lg-flex">
+                        <div class="mega-dropdown-column pt-1 pt-lg-3 pb-lg-4">
+                            <ul class="list-unstyled mb-0">
+                                {% for key, value in selectLang['all'] %}
+                                <a class="dropdown-item pb-1"
+                                   href="{{ currentUrl }}?G_action=setLanguage&language={{ key }}"><img class="me-2"
+                                                                                                        src="{{ url }}/assets/img/icons/flags/{{ theme['language']['icons'][key] }}.svg"
+                                                                                                        width="18"
+                                                                                                        height="15"
+                                                                                                        alt="{{ key }}">{{ value['value'] }}
+                                    ({{ key }})</a>
+                                {% if loop.index % 11 == 0 %}
+                            </ul>
+                        </div>
+                        <div class="mega-dropdown-column pb-2 pt-lg-3 pb-lg-4">
+                            <ul class="list-unstyled mb-0">
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
-
                 </div>
-
-            </div>
-
-            <div class=col-md-4>
-                <div class="copyright text-sm font-weight-bold text-center text-md-right">Powered by <a
-                            href="{{ url }}/hmcsw" class=font-weight-bold target=_blank>HMCSW</a> {{ version }}</div>
             </div>
         </div>
-    </footer>
-</div>
+        <!-- Logo + Socials + Cards-->
+        <div class="d-sm-flex align-items-center justify-content-between pt-4">
+            <div class="d-sm-flex align-items-center pe-sm-2">
+                <a class="navbar-brand d-inline-flex align-items-center me-sm-5 mb-4 mb-sm-0" href="{{ url }}">
+                    <span class="text-primary flex-shrink-0 me-2">
+                        <img alt="{{ name }}" title="{{ name }}"
+                             src="https://cdn.hosmatic.com/branding/The_Hosmatic_H_q-100.webp" width="50" height="40"
+                             loading="eager">
+                    </span>
+                    <span class="text-nav">{{ name }}</span>
+                </a>
+                <div class="text-nowrap mb-4 mb-sm-0">
+                    {% if theme['social']['discord']['invite'] != null %}
+                        <a class="btn btn-icon btn-sm btn-secondary btn-icon rounded-circle mx-2 ms-sm-0 me-sm-3"
+                           target="_blank"
+                           href="{{ theme['social']['discord']['invite'] }}"><i class="fab fa-discord"></i></a>
+                    {% endif %}
+                    {% if theme['social']['twitter'] != null %}
+                        <a class="btn btn-icon btn-sm btn-secondary btn-icon rounded-circle mx-2 ms-sm-0 me-sm-3"
+                           target="_blank"
+                           href="{{ theme['social']['twitter'] }}"><i class="fab fa-twitter"></i></a>
+                    {% endif %}
+                    {% if theme['social']['instagram'] != null %}
+                        <a class="btn btn-icon btn-sm btn-secondary btn-icon rounded-circle mx-2 ms-sm-0 me-sm-3"
+                           target="_blank"
+                           href="{{ theme['social']['instagram'] }}"><i class="fab fa-instagram"></i></a>
+                    {% endif %}
+                    {% if theme['social']['facebook'] != null %}
+                        <a class="btn btn-icon btn-sm btn-secondary btn-icon rounded-circle mx-2 ms-sm-0 me-sm-3"
+                           target="_blank"
+                           href="{{ theme['social']['facebook'] }}"><i class="fab fa-facebook"></i></a>
+                    {% endif %}
+                    {% if theme['social']['tiktok'] != null %}
+                        <a class="btn btn-icon btn-sm btn-secondary btn-icon rounded-circle mx-2 ms-sm-0 me-sm-3"
+                           target="_blank"
+                           href="{{ theme['social']['tiktok'] }}"><i class="fab fa-tiktok"></i></a>
+                    {% endif %}
+                    {% if theme['social']['github'] != null %}
+                        <a class="btn btn-icon btn-sm btn-secondary btn-icon rounded-circle mx-2 ms-sm-0 me-sm-3"
+                           target="_blank"
+                           href="{{ theme['social']['github'] }}"><i class="fab fa-github"></i></a>
+                    {% endif %}
 
-
-{% include 'general/footerJs.twig' %}
+                </div>
+            </div>
+            <div class="d-sm-flex align-items-center pe-sm-2">
+                <div class="fs-sm text-muted text-right justify-content-end">Powered by <a
+                            href="{{ url }}/hmcsw" class="text-dark text-decoration-none opacity-90"
+                            target=_blank>HMCSW</a> {{ version }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pt-5 pt-lg-0">
+    </div>
+</footer>
+{% include 'general/footerJS.twig' %}
 </body>
 </html>

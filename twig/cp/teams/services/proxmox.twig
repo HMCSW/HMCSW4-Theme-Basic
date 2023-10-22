@@ -42,14 +42,16 @@
                 </div>
                 <div class="col-lg-6 pb-2 pb-sm-4">
                     <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 h-100">
-                        <div class="card-body align-items-center justify-content-center" style="display: block" id="statusDiv">
+                        <div class="card-body align-items-center justify-content-center" style="display: block"
+                             id="statusDiv">
                             {% if "team.service.proxmox.start"|checkServicePermission %}
                                 <button type="button" id="startVM_BTN"
                                         class="btn btn-sm btn-success mb-2 w-100 actionButtons d-none">{{ 'site.cp.service.proxmox.start' | language }}</button>
                             {% endif %}
                             {% if "team.service.proxmox.stop"|checkServicePermission %}
                                 <button type="button" id="stopVM_BTN"
-                                        class="btn btn-sm btn-danger mb-2 w-100 actionButtons qemu d-none" data-bs-toggle="tooltip"
+                                        class="btn btn-sm btn-danger mb-2 w-100 actionButtons qemu d-none"
+                                        data-bs-toggle="tooltip"
                                         data-bs-placement="top"
                                         title="{{ 'site.cp.service.proxmox.actions.qemu'|language }}">{{ 'site.cp.service.proxmox.stop' | language }}</button>
                             {% endif %}
@@ -59,7 +61,8 @@
                             {% endif %}
                             {% if "team.service.proxmox.restart"|checkServicePermission %}
                                 <button type="button" id="restartVM_BTN"
-                                        class="btn btn-sm btn-warning mb-2 w-100 actionButtons qemu d-none" data-bs-toggle="tooltip"
+                                        class="btn btn-sm btn-warning mb-2 w-100 actionButtons qemu d-none"
+                                        data-bs-toggle="tooltip"
                                         data-bs-placement="top"
                                         title="{{ 'site.cp.service.proxmox.actions.qemu'|language }}">{{ 'site.cp.service.proxmox.reboot' | language }}</button>
                             {% endif %}
@@ -116,10 +119,15 @@
                                             <a href="#backup" class="dropdown-item" data-bs-toggle="tab"
                                                role="tab">{{ 'site.cp.service.tab.proxmox.backup' | language }}</a>
                                         {% endif %}
-                                        {#                    {% if "team.service.proxmox.firewall"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %} #}
-                                        <a href="#firewall" class="dropdown-item" data-bs-toggle="tab"
-                                           role="tab">{{ 'site.cp.service.tab.proxmox.firewall' | language }}</a>
-                                        {#                    {% endif %} #}
+                                        {% if "team.service.proxmox.firewall"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                            <a href="#firewall" class="dropdown-item" data-bs-toggle="tab"
+                                               id="firewall-tab"
+                                               role="tab">{{ 'site.cp.service.tab.proxmox.firewall' | language }}</a>
+                                        {% endif %}
+                                        {% if "team.service.proxmox.vnet"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                            <a href="#vnet" class="dropdown-item" data-bs-toggle="tab" id="firewall-tab"
+                                               role="tab">{{ 'site.cp.service.tab.proxmox.vnet' | language }}</a>
+                                        {% endif %}
                                     </div>
                                 </li>
                             </ul>
@@ -127,394 +135,592 @@
 
                                 {% include 'cp/teams/services/include/tabs.twig' %}
 
-                                <div class="tab-pane fade" id="firewall" role="tabpanel" aria-labelledby="firewall-tab">
-                                    <ul class="nav nav-tabs  justify-content-center" id="firewallTab" role="tablist">
-                                        <li class="nav-item">
-                                            <a href="#firewallRules" class="nav-link active" data-bs-toggle="tab" role="tab">
-                                                {{ 'site.cp.service.tab.proxmox.firewall.rules' | language }}
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#firewallAlias" class="nav-link" data-bs-toggle="tab" role="tab">
-                                                {{ 'site.cp.service.tab.proxmox.firewall.alias' | language }}
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="#firewallIPSet" class="nav-link" data-bs-toggle="tab" role="tab">
-                                                {{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <div class="tab-pane fade" id="firewallIPSet" role="tabpanel">
-                                            <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                                                        class="fa-duotone fa-floppy-disks text-primary lead pe-1 me-2"></i>
-                                                <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h2>
-                                                <div class="me-2 mb-2 ms-auto" role="group">
-                                                    <button type="button" class="btn btn-secondary btn-icon" id="firewallIpSetBtn">
-                                                        <i class="fa-duotone fa-plus"></i></button>
-                                                </div>
+                                {% if "team.service.proxmox.vnet"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                    <div class="tab-pane fade" id="vnet" role="tabpanel">
+
+                                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                                    class="fa-duotone fa-chart-network text-primary lead pe-1 me-2"></i>
+                                            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.vnet' | language }}</h2>
+                                            <span class="badge bg-warning ms-2 text-end d-none "
+                                                  id="vnet_pending">{{ 'site.cp.service.tab.proxmox.vnet.pending' | language }}</span>
+                                            <div class="me-2 mb-2 ms-auto d-none d-md-block" role="group"
+                                                 aria-label="Settings group">
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_sub_create">{{ 'site.cp.service.tab.proxmox.vnet.createSubnet' | language }}</button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_create">{{ 'site.cp.service.tab.proxmox.vnet.createVNet' | language }}</button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_add_vnet_to_vm">{{ 'site.cp.service.tab.proxmox.vnet.addNet' | language }}</button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_remove_vnet_to_vm">{{ 'site.cp.service.tab.proxmox.vnet.removeNet' | language }}</button>
                                             </div>
-
-                                            <div class="modal modal-lg fade" id="firewallIpSetIpModal" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                     role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5
-                                                                    class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="hidden" id="firewallIpSetIpModalId">
-                                                            <button type="button" class="btn btn-secondary btn-icon" id="firewallIpSetIpBtn"><i
-                                                                        class="fa-duotone fa-plus"></i></button>
-
-                                                            <div class="table-responsive">
-                                                                <table class="table align-middle" id="firewallIpSetIpTable">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <td>{{ 'site.cp.service.tab.proxmox.firewall.ipSet.cidr' | language }}</td>
-                                                                        <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal fade" id="firewallIpSetModal" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                     role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5
-                                                                    class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="hidden" id="firewallIpSetModalId">
-
-                                                            <div class="row g-3">
-                                                                <div class="col-lg-12">
-                                                                    <div class="form-group">
-                                                                        <label for="firewallIpSetModalName"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.ipSet.name' | language }}</label>
-                                                                        <input type="text" id="firewallIpSetModalName"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-12">
-                                                                    <div class="form-group">
-                                                                        <label for="firewallIpSetModalComment"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
-                                                                        <input type="text" id="firewallIpSetModalComment"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" id="firewallIpSetModalBtn"
-                                                                    class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal fade" id="firewallIpSetIpAddModal" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                     role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5
-                                                                    class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="hidden" id="firewallIpSetIpAddModalId">
-
-                                                            <div class="row g-3">
-                                                                <div class="col-lg-12">
-                                                                    <div class="form-group">
-                                                                        <label for="firewallIpSetIpAddModalCidr"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.ipSet.cidr' | language }}</label>
-                                                                        <input type="text" id="firewallIpSetIpAddModalCidr"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-12">
-                                                                    <div class="form-group">
-                                                                        <label for="firewallIpSetIpAddModalComment"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
-                                                                        <input type="text" id="firewallIpSetIpAddModalComment"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" id="firewallIpSetIpAddModalBtn"
-                                                                    class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="table-responsive">
-                                                    <table class="table align-middle" id="firewallIpSetTable">
-                                                        <thead>
-                                                        <tr>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.ipSet.name' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-
-
-                                        </div>
-                                        <div class="tab-pane fade" id="firewallAlias" role="tabpanel">
-                                            <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                                                        class="fa-duotone fa-floppy-disks text-primary lead pe-1 me-2"></i>
-                                                <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.firewall.alias' | language }}</h2>
-                                                <div class="me-2 mb-2 ms-auto" role="group">
-                                                    <button type="button" class="btn btn-secondary btn-icon" id="createFirewallAlias">
-                                                        <i class="fa-duotone fa-plus"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="modal modal-lg fade" id="firewallAliasModal" tabindex="-1" role="dialog">
-                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                     role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5
-                                                                    class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.alias' | language }}</h5>
-                                                            <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <input type="hidden" id="firewall_alias_id">
-
-                                                            <div class="row g-3">
-                                                                <div class="col-lg-6">
-                                                                    <div class="form-group">
-                                                                        <label for="firewall_alias_name"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.alias.name' | language }}</label>
-                                                                        <input type="text" name="firewall_alias_name" id="firewall_alias_name"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-6">
-                                                                    <div class="form-group">
-                                                                        <label for="firewall_alias_cidr"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.alias.cidr' | language }}</label>
-                                                                        <input type="text" name="firewall_alias_cidr" id="firewall_alias_cidr"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-12">
-                                                                    <div class="form-group">
-                                                                        <label for="firewall_alias_comment"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
-                                                                        <input type="text" name="firewall_alias_comment" id="firewall_alias_comment"
-                                                                               class="form-control" required>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" id="firewall_alias_btn"
-                                                                    class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row g-3">
-                                                <div class="table-responsive">
-                                                    <table class="table align-middle" id="firewallAliasTable">
-                                                        <thead>
-                                                        <tr>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.alias.name' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.alias.cidr' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody id="firewall_alias_body">
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                            <div class="me-2 mb-2 ms-auto d-block d-md-none" role="group"
+                                                 aria-label="Settings group">
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_sub_create"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="{{ 'site.cp.service.tab.proxmox.vnet.createSubnet' | language }}">
+                                                    <i
+                                                            class="fa-duotone fa-plus"></i></button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_create">{{ 'site.cp.service.tab.proxmox.vnet.createVNet' | language }}</button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_add_vnet_to_vm"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="{{ 'site.cp.service.tab.proxmox.vnet.addNew' | language }}">
+                                                    <i
+                                                            class="fa-duotone fa-network-wired"></i></button>
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm vnet_remove_vnet_to_vm"
+                                                        data-bs-toggle="tooltip"
+                                                        data-bs-placement="top"
+                                                        title="{{ 'site.cp.service.tab.proxmox.vnet.removeNet' | language }}">
+                                                    <i
+                                                            class="fa-duotone fa-eraser"></i></button>
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane fade show active" id="firewallRules" role="tabpanel">
-                                            <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                                                        class="fa-duotone fa-floppy-disks text-primary lead pe-1 me-2"></i>
-                                                <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.firewall.rules' | language }}</h2>
-                                                <div class="me-2 mb-2 ms-auto" role="group">
-                                                    <button type="button" class="btn btn-secondary btn-icon" id="createFirewallRule">
-                                                        <i class="fa-duotone fa-plus"></i></button>
+                                        <div class="col d-none" id="vnet_subnet_demo">
+                                            <div class="card h-100 rounded-3 p-3 ">
+                                                <div class="d-flex align-items-center">
+                                                    <h3 class="h6 text-nowrap text-truncate mb-0 vnet_ip"></h3>
+                                                    <span class="badge bg-info ms-2 text-end vnet_mask"
+                                                          data-bs-toggle="tooltip"
+                                                          data-bs-placement="top"
+                                                          title="{{ 'site.cp.service.tab.info.proxmox.address.netSize' | language }}"></span>
+                                                    <span
+                                                            class="badge bg-warning ms-2 text-end vnet_sub_pending d-none">{{ 'site.cp.service.tab.proxmox.vnet.pending' | language }}</span>
+                                                    <span
+                                                            class="badge bg-info ms-2 text-end vnet_sub_current d-none">{{ 'site.cp.service.tab.proxmox.vnet.current' | language }}</span>
+
+                                                    <div class="d-flex ms-auto">
+                                                        <button type="button" class="dropdown-item vnet_sub_delete">
+                                                            <i
+                                                                    class="nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-trash-alt"></i>
+                                                        </button>
+                                                        <button type="button" class="dropdown-item vnet_sub_set">
+                                                            <i
+                                                                    class="nav-link text-info fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-plus"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="modal modal-lg fade" id="firewallRuleModal" tabindex="-1" role="dialog">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="fs-sm">
+                                                        <div class="text-dark"><span class='vnet_gateway'></span></div>
+                                                        <div class="text-dark vnet_current_ip"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row row-cols-1 row-cols-md-2 g-4 d-none" id="vnet_info">
+                                        </div>
+
+                                        <div class="row d-none" id="vnet_create_page">
+                                            <div class="col-sm-12 col-md-12">
+                                                <div class="alert alert-group alert-warning alert-icon"
+                                                     role="alert">
+                                                    <div class="alert-group-prepend"><span
+                                                                class="alert-group-icon text-"><i
+                                                                    class="fa-duotone fa-exclamation"></i></span>
+                                                    </div>
+                                                    <div class="alert-content">{{ 'site.cp.service.tab.proxmox.vnet.create' | language }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade" id="configureNetToVmModal" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                             role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5
+                                                            class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.config' | language }}</h5>
+                                                    <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="hidden" class="configureNetToVmModalId">
+
+                                                    <div class="row g-3">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label for="configureNetToVmModalIp"
+                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.vnet.config.ip' | language }}</label>
+                                                                <input type="text" id="configureNetToVmModalIp"
+                                                                       class="form-control configureNetToVmModalIp"
+                                                                       required
+                                                                       placeholder="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                            class="btn btn-primary configureNetToVmModalBtn">{{ 'general.modal.saveBtn' | language }}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if "team.service.proxmox.firewall"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                    <div class="tab-pane fade" id="firewall" role="tabpanel"
+                                         aria-labelledby="firewall-tab">
+                                        <ul class="nav nav-tabs  justify-content-center" id="firewallTab"
+                                            role="tablist">
+                                            <li class="nav-item">
+                                                <a href="#firewallRules" class="nav-link active" data-bs-toggle="tab"
+                                                   role="tab">
+                                                    {{ 'site.cp.service.tab.proxmox.firewall.rules' | language }}
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#firewallAlias" class="nav-link" data-bs-toggle="tab"
+                                                   role="tab">
+                                                    {{ 'site.cp.service.tab.proxmox.firewall.alias' | language }}
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="#firewallIPSet" class="nav-link" data-bs-toggle="tab"
+                                                   role="tab">
+                                                    {{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade" id="firewallIPSet" role="tabpanel">
+                                                <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
+                                                    <i
+                                                            class="fa-duotone fa-layer-group text-primary lead pe-1 me-2"></i>
+                                                    <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h2>
+                                                    <div class="me-2 mb-2 ms-auto" role="group">
+                                                        <button type="button" class="btn btn-secondary btn-icon"
+                                                                id="firewallIpSetBtn">
+                                                            <i class="fa-duotone fa-plus"></i></button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal modal-lg fade" id="firewallIpSetIpModal" tabindex="-1"
+                                                     role="dialog">
                                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                                                          role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5
-                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.rules' | language }}</h5>
+                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}
+                                                                    <button type="button"
+                                                                            class="btn btn-info btn-sm btn-icon"
+                                                                            id="firewallIpSetIpBtn"><i
+                                                                                class="fa-duotone fa-plus"></i>
+                                                                    </button>
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="firewallIpSetIpModalId">
+                                                                <div class="table-responsive">
+                                                                    <table class="table align-middle"
+                                                                           id="firewallIpSetIpTable">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.ipSet.cidr' | language }}</td>
+                                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
+                                                                            <td>
+                                                                            </td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="firewallIpSetModal" tabindex="-1"
+                                                     role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5
+                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h5>
                                                                 <button type="button" class="btn-close"
                                                                         data-bs-dismiss="modal"
                                                                         aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <input type="hidden" id="firewall_rule_id">
+                                                                <input type="hidden" id="firewallIpSetModalId">
 
                                                                 <div class="row g-3">
-                                                                    <div class="col-lg-6">
+                                                                    <div class="col-lg-12">
                                                                         <div class="form-group">
-                                                                            <label for="firewall_rule_type"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.type' | language }}</label>
-                                                                            <select name="firewall_rule_type" id="firewall_rule_type" class="form-select"
-                                                                                    required>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_action"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.action' | language }}</label>
-                                                                            <select name="firewall_rule_action" id="firewall_rule_action" class="form-select"
-                                                                                    required>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="col-lg-8">
-
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_source"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.source' | language }}</label>
-                                                                            <input name="firewall_rule_source" id="firewall_rule_source" class="form-control"
-                                                                                   type="search" list="firewall_rule_source_list"
-                                                                                   required>
-                                                                            <datalist id="firewall_rule_source_list">
-                                                                            </datalist>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-4">
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_sourcePort"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.sourcePort' | language }}</label>
-                                                                            <input name="firewall_rule_sourcePort" id="firewall_rule_sourcePort"
-                                                                                   class="form-control" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-8">
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_destination"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.destination' | language }}</label>
-                                                                            <input name="firewall_rule_destination" id="firewall_rule_destination"
-                                                                                   type="search"
-                                                                                   class="form-control" required list="firewall_rule_destination_list">
-                                                                            <datalist id="firewall_rule_destination_list">
-                                                                            </datalist>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-4">
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_destinationPort"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.destinationPort' | language }}</label>
-                                                                            <input name="firewall_rule_destinationPort" id="firewall_rule_destinationPort"
-                                                                                   class="form-control" required>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_protocol"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.protocol' | language }}</label>
-                                                                            <select name="firewall_rule_protocol" id="firewall_rule_protocol"
-                                                                                    class="form-select"
-                                                                                    required>
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-lg-6">
-
-                                                                        <div class="form-group">
-                                                                            <label for="firewall_rule_macro"
-                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.macro' | language }}</label>
-                                                                            <select name="firewall_rule_macro" id="firewall_rule_macro" class="form-select"
-                                                                                    required>
-                                                                            </select>
+                                                                            <label for="firewallIpSetModalName"
+                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.ipSet.name' | language }}</label>
+                                                                            <input type="text"
+                                                                                   id="firewallIpSetModalName"
+                                                                                   class="form-control" required
+                                                                                   placeholder="{{ 'site.cp.service.tab.proxmox.firewall.ipSet.name' | language }}">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-12">
                                                                         <div class="form-group">
-                                                                            <label for="firewall_rule_comment"
+                                                                            <label for="firewallIpSetModalComment"
                                                                                    class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
-                                                                            <input name="firewall_rule_comment" id="firewall_rule_comment"
-                                                                                   class="form-control"
-                                                                                   required>
+                                                                            <input type="text"
+                                                                                   id="firewallIpSetModalComment"
+                                                                                   class="form-control" required
+                                                                                   placeholder="{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}">
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" id="firewall_rule_btn"
+                                                                <button type="button" id="firewallIpSetModalBtn"
                                                                         class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="modal fade" id="firewallIpSetIpAddModal" tabindex="-1"
+                                                     role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5
+                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.ipSet' | language }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="firewallIpSetIpAddModalId">
+
+                                                                <div class="row g-3">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="firewallIpSetIpAddModalCidr"
+                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.ipSet.cidr' | language }}</label>
+                                                                            <input type="search"
+                                                                                   id="firewallIpSetIpAddModalCidr"
+                                                                                   placeholder="127.0.0.3"
+                                                                                   class="form-control" required
+                                                                                   list="firewallIpSetIpAddModalCidrList">
+                                                                            <datalist
+                                                                                    id="firewallIpSetIpAddModalCidrList">
+
+                                                                            </datalist>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="firewallIpSetIpAddModalComment"
+                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
+                                                                            <input type="text"
+                                                                                   id="firewallIpSetIpAddModalComment"
+                                                                                   placeholder="{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}"
+                                                                                   class="form-control" required>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" id="firewallIpSetIpAddModalBtn"
+                                                                        class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="table-responsive">
+                                                        <table class="table align-middle" id="firewallIpSetTable">
+                                                            <thead>
+                                                            <tr>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.ipSet.name' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
 
                                             </div>
-                                            <div class="row g-3">
-
-                                                <div class="table-responsive">
-                                                    <table class="table align-middle" id="firewall_rules">
-                                                        <thead>
-                                                        <tr>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.type' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.action' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.source' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.destination' | language }}</td>
-                                                            <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody id="firewall_rules_body">
-                                                        </tbody>
-                                                    </table>
+                                            <div class="tab-pane fade" id="firewallAlias" role="tabpanel">
+                                                <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
+                                                    <i
+                                                            class="fa-duotone fa-input-text text-primary lead pe-1 me-2"></i>
+                                                    <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.firewall.alias' | language }}</h2>
+                                                    <div class="me-2 mb-2 ms-auto" role="group">
+                                                        <button type="button" class="btn btn-secondary btn-icon"
+                                                                id="createFirewallAlias">
+                                                            <i class="fa-duotone fa-plus"></i></button>
+                                                    </div>
                                                 </div>
+                                                <div class="modal modal-lg fade" id="firewallAliasModal" tabindex="-1"
+                                                     role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5
+                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.alias' | language }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <input type="hidden" id="firewall_alias_id">
+
+                                                                <div class="row g-3">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label for="firewall_alias_name"
+                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.alias.name' | language }}</label>
+                                                                            <input type="text"
+                                                                                   name="firewall_alias_name"
+                                                                                   id="firewall_alias_name"
+                                                                                   class="form-control" required
+                                                                                   placeholder="{{ 'site.cp.service.tab.proxmox.firewall.alias.name' | language }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label for="firewall_alias_cidr"
+                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.alias.cidr' | language }}</label>
+                                                                            <input type="text"
+                                                                                   name="firewall_alias_cidr"
+                                                                                   id="firewall_alias_cidr"
+                                                                                   class="form-control" required
+                                                                                   placeholder="{{ 'site.cp.service.tab.proxmox.firewall.alias.cidr' | language }}">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                            <label for="firewall_alias_comment"
+                                                                                   class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
+                                                                            <input type="text"
+                                                                                   name="firewall_alias_comment"
+                                                                                   id="firewall_alias_comment"
+                                                                                   class="form-control" required
+                                                                                   placeholder="{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" id="firewall_alias_btn"
+                                                                        class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row g-3">
+                                                    <div class="table-responsive">
+                                                        <table class="table align-middle" id="firewallAliasTable">
+                                                            <thead>
+                                                            <tr>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.alias.name' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.alias.cidr' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="firewall_alias_body">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade show active" id="firewallRules" role="tabpanel">
+                                                <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
+                                                    <i
+                                                            class="fa-duotone fa-viruses text-primary lead pe-1 me-2"></i>
+                                                    <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.firewall.rules' | language }}</h2>
+                                                    <div class="me-2 mb-2 ms-auto" role="group">
+                                                        <button type="button" class="btn btn-secondary btn-icon"
+                                                                id="createFirewallRule">
+                                                            <i class="fa-duotone fa-plus"></i></button>
+                                                    </div>
+                                                    <div class="modal modal-lg fade" id="firewallRuleModal"
+                                                         tabindex="-1" role="dialog">
+                                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5
+                                                                            class="modal-title h6">{{ 'site.cp.service.tab.proxmox.firewall.rules' | language }}</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" id="firewall_rule_id">
+
+                                                                    <div class="row g-3">
+                                                                        <div class="col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_type"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.type' | language }}</label>
+                                                                                <select name="firewall_rule_type"
+                                                                                        id="firewall_rule_type"
+                                                                                        class="form-select"
+                                                                                        required>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_action"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.action' | language }}</label>
+                                                                                <select name="firewall_rule_action"
+                                                                                        id="firewall_rule_action"
+                                                                                        class="form-select"
+                                                                                        required>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-lg-8">
+
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_source"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.source' | language }}</label>
+                                                                                <input name="firewall_rule_source"
+                                                                                       id="firewall_rule_source"
+                                                                                       class="form-control"
+                                                                                       type="search"
+                                                                                       list="firewall_rule_source_list"
+                                                                                       placeholder="127.0.0.1"
+                                                                                       required>
+                                                                                <datalist
+                                                                                        id="firewall_rule_source_list">
+                                                                                </datalist>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_sourcePort"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.sourcePort' | language }}</label>
+                                                                                <input name="firewall_rule_sourcePort"
+                                                                                       id="firewall_rule_sourcePort"
+                                                                                       class="form-control" required
+                                                                                       placeholder="0000">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-8">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_destination"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.destination' | language }}</label>
+                                                                                <input name="firewall_rule_destination"
+                                                                                       id="firewall_rule_destination"
+                                                                                       type="search"
+                                                                                       class="form-control" required
+                                                                                       list="firewall_rule_destination_list"
+                                                                                       placeholder="127.0.0.2">
+                                                                                <datalist
+                                                                                        id="firewall_rule_destination_list">
+                                                                                </datalist>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-4">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_destinationPort"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.destinationPort' | language }}</label>
+                                                                                <input name="firewall_rule_destinationPort"
+                                                                                       id="firewall_rule_destinationPort"
+                                                                                       placeholder="0000"
+                                                                                       class="form-control" required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_protocol"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.protocol' | language }}</label>
+                                                                                <select name="firewall_rule_protocol"
+                                                                                        id="firewall_rule_protocol"
+                                                                                        class="form-select"
+                                                                                        required>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_macro"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.rules.macro' | language }}</label>
+                                                                                <select name="firewall_rule_macro"
+                                                                                        id="firewall_rule_macro"
+                                                                                        class="form-select"
+                                                                                        required>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-12">
+                                                                            <div class="form-group">
+                                                                                <label for="firewall_rule_comment"
+                                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</label>
+                                                                                <input name="firewall_rule_comment"
+                                                                                       id="firewall_rule_comment"
+                                                                                       placeholder="{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}"
+                                                                                       class="form-control"
+                                                                                       required>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" id="firewall_rule_btn"
+                                                                            class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row g-3">
+
+                                                    <div class="table-responsive">
+                                                        <table class="table align-middle" id="firewall_rules">
+                                                            <thead>
+                                                            <tr>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.type' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.action' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.source' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.rules.destination' | language }}</td>
+                                                                <td>{{ 'site.cp.service.tab.proxmox.firewall.comment' | language }}</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="firewall_rules_body">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
                                             </div>
 
                                         </div>
 
                                     </div>
-
-                                </div>
+                                {% endif %}
 
                                 {% if "team.service.proxmox.backup"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
                                     <div class="tab-pane fade" id="backup" role="tabpanel"
@@ -533,8 +739,8 @@
                                                                        value="{{ csrf }}">
                                                                 <input type="hidden" name="action"
                                                                        value="createBackup">
-                                                                <button type="submit" class="btn btn-secondary btn-icon"
-                                                                        aria-haspopup="true" aria-expanded="false">
+                                                                <button type="submit"
+                                                                        class="btn btn-secondary btn-icon">
                                                                     <i class="fa-duotone fa-plus"></i></button>
                                                             </form>
                                                         {% endif %}
@@ -554,8 +760,7 @@
                                                                             class="alert-group-icon text-"><i
                                                                                 class="fa-duotone fa-exclamation"></i></span>
                                                                 </div>
-                                                                <div
-                                                                        class="alert-content">{{ 'site.cp.service.proxmox.taskRunning' | language }}</div>
+                                                                <div class="alert-content">{{ 'site.cp.service.proxmox.taskRunning' | language }}</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -571,7 +776,8 @@
                                                                             <h3 class="h6 text-nowrap text-truncate mb-0">{{ backup['ctime']|date }}</h3>
                                                                             <div class="d-flex ms-auto">
                                                                                 {% if "team.service.proxmox.backup.delete"|checkServicePermission %}
-                                                                                    <button type="button" data-bs-target="#deleteBackupModal-{{ backupId }}"
+                                                                                    <button type="button"
+                                                                                            data-bs-target="#deleteBackupModal-{{ backupId }}"
                                                                                             data-bs-toggle="modal"
                                                                                             class="dropdown-item">
                                                                                         <i
@@ -579,24 +785,33 @@
                                                                                     </button>
 
 
-                                                                                    <div class="modal fade" id="deleteBackupModal-{{ backupId }}"
+                                                                                    <div class="modal fade"
+                                                                                         id="deleteBackupModal-{{ backupId }}"
                                                                                          tabindex="-1"
                                                                                          role="dialog">
-                                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                        <div class="modal-dialog modal-dialog-centered"
+                                                                                             role="document">
                                                                                             <div class="modal-content text-left">
-                                                                                                <input type="hidden" name="action" value="renewService">
-                                                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                                                                <input type="hidden"
+                                                                                                       name="action"
+                                                                                                       value="renewService">
+                                                                                                <input type="hidden"
+                                                                                                       name="csrf"
+                                                                                                       value="{{ csrf }}">
                                                                                                 <div class="modal-header">
                                                                                                     <h5
                                                                                                             class="modal-title">{{ 'site.cp.service.tab.proxmox.backup.delete' | language }}</h5>
-                                                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                                                    <button type="button"
+                                                                                                            class="btn-close"
+                                                                                                            data-bs-dismiss="modal"
                                                                                                             aria-label="Close"></button>
                                                                                                 </div>
                                                                                                 <div class="modal-body">
                                                                                                     {{ 'site.cp.service.tab.proxmox.backup.delete.info' | language }}
                                                                                                 </div>
                                                                                                 <div class="modal-footer">
-                                                                                                    <button type="button" onclick="deleteBackup('{{ id }}')"
+                                                                                                    <button type="button"
+                                                                                                            onclick="deleteBackup('{{ id }}')"
                                                                                                             class="btn btn-primary">{{ 'site.cp.service.tab.proxmox.backup.delete.btn' | language }}</button>
                                                                                                 </div>
                                                                                             </div>
@@ -604,7 +819,8 @@
                                                                                     </div>
                                                                                 {% endif %}
                                                                                 {% if "team.service.proxmox.backup.restore"|checkServicePermission %}
-                                                                                    <button type="button" data-bs-target="#restoreBackupModal-{{ backupId }}"
+                                                                                    <button type="button"
+                                                                                            data-bs-target="#restoreBackupModal-{{ backupId }}"
                                                                                             data-bs-toggle="modal"
                                                                                             class="dropdown-item">
                                                                                         <i
@@ -612,24 +828,33 @@
                                                                                     </button>
 
 
-                                                                                    <div class="modal fade" id="restoreBackupModal-{{ backupId }}"
+                                                                                    <div class="modal fade"
+                                                                                         id="restoreBackupModal-{{ backupId }}"
                                                                                          tabindex="-1"
                                                                                          role="dialog">
-                                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                        <div class="modal-dialog modal-dialog-centered"
+                                                                                             role="document">
                                                                                             <div class="modal-content text-left">
-                                                                                                <input type="hidden" name="action" value="renewService">
-                                                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                                                                <input type="hidden"
+                                                                                                       name="action"
+                                                                                                       value="renewService">
+                                                                                                <input type="hidden"
+                                                                                                       name="csrf"
+                                                                                                       value="{{ csrf }}">
                                                                                                 <div class="modal-header">
                                                                                                     <h5
                                                                                                             class="modal-title">{{ 'site.cp.service.tab.proxmox.backup.restore' | language }}</h5>
-                                                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                                                    <button type="button"
+                                                                                                            class="btn-close"
+                                                                                                            data-bs-dismiss="modal"
                                                                                                             aria-label="Close"></button>
                                                                                                 </div>
                                                                                                 <div class="modal-body">
                                                                                                     {{ 'site.cp.service.tab.proxmox.backup.restore.info' | language }}
                                                                                                 </div>
                                                                                                 <div class="modal-footer">
-                                                                                                    <button type="button" onclick="restoreBackup('{{ id }}')"
+                                                                                                    <button type="button"
+                                                                                                            onclick="restoreBackup('{{ id }}')"
                                                                                                             class="btn btn-primary">{{ 'site.cp.service.tab.proxmox.backup.restore.btn' | language }}</button>
                                                                                                 </div>
                                                                                             </div>
@@ -665,7 +890,8 @@
                                                     class="fa-duotone fa-mobile-signal text-primary lead pe-1 me-2"></i>
                                             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.rDNS' | language }}</h2>
                                             <div class="btn-group me-2 mb-2 ms-auto" role="group">
-                                                <button type="button" data-bs-toggle="modal" data-bs-target="#createRDns"
+                                                <button type="button" data-bs-toggle="modal"
+                                                        data-bs-target="#createRDns"
                                                         class="btn btn-dark btn-icon">
                                                     <i class="fa-duotone fa-plus"></i>
                                                 </button>
@@ -723,7 +949,8 @@
                                                             <div class="form-group">
                                                                 <label class="form-label"
                                                                        for="rDns_content">{{ 'site.cp.service.tab.proxmox.rDNS.content' | language }}</label>
-                                                                <input id="rDns_content" class="form-control" name="content"
+                                                                <input id="rDns_content" class="form-control"
+                                                                       name="content"
                                                                        placeholder="mail.example.com" required>
                                                             </div>
                                                         </div>
@@ -764,8 +991,7 @@
                                             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.stats' | language }}</h2>
                                             <div class="me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                                                 <button type="button" class="btn btn-secondary btn-icon"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
+                                                        data-bs-toggle="dropdown" aria-haspopup="true">
                                                     <i class="fa-duotone fa-gear"></i>
                                                 </button>
                                                 <div class="dropdown-menu my-1">
@@ -997,9 +1223,11 @@
                                                                                 <div class="card-body">
                                                                                     <div class="form-check">
                                                                                         <input {% if proxmox['internal']['os']['name'] == os['os'] %} checked {% endif %}
-                                                                                                required type="radio" class="form-check-input"
+                                                                                                required type="radio"
+                                                                                                class="form-check-input"
                                                                                                 name="os"
-                                                                                                value="{{ os['os'] }}" id="radio-os-{{ os['os'] }}">
+                                                                                                value="{{ os['os'] }}"
+                                                                                                id="radio-os-{{ os['os'] }}">
                                                                                         <label class="form-check-label h6 mb-0"
                                                                                                for="radio-os-{{ os['os'] }}">{{ os['name'] }}</label>
                                                                                     </div>
@@ -1039,7 +1267,8 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div class="modal-footer">
-                                                                                <button type="button" onclick="reinstallVM()"
+                                                                                <button type="button"
+                                                                                        onclick="reinstallVM()"
                                                                                         class="btn btn-sm btn-danger">{{ 'site.cp.service.info.reinstall.modal.submit' | language }}</button>
                                                                             </div>
                                                                         </div>
@@ -1065,9 +1294,11 @@
                                                                                 <div class="card overflow-hidden ">
                                                                                     <div class="card-body">
                                                                                         <div class="form-check">
-                                                                                            <input required type="radio" class="form-check-input"
+                                                                                            <input required type="radio"
+                                                                                                   class="form-check-input"
                                                                                                    name="name"
-                                                                                                   value="{{ iso['key'] }}" id="radio-iso-{{ iso['key'] }}">
+                                                                                                   value="{{ iso['key'] }}"
+                                                                                                   id="radio-iso-{{ iso['key'] }}">
                                                                                             <label class="form-check-label h6 mb-0"
                                                                                                    for="radio-iso-{{ iso['key'] }}">{{ iso['name'] }}</label>
                                                                                         </div>
@@ -1095,7 +1326,8 @@
                                                                                 <div class="modal-header">
                                                                                     <h5
                                                                                             class="modal-title h6">{{ 'site.cp.service.info.reinstall.modal' | language }}</h5>
-                                                                                    <button type="button" class="btn-close"
+                                                                                    <button type="button"
+                                                                                            class="btn-close"
                                                                                             data-bs-dismiss="modal"
                                                                                             aria-label="Close"></button>
                                                                                 </div>

@@ -31,6 +31,7 @@
     </div>
 
     {% include 'general/themeAlert.twig' %}
+
     <div class="tab-content">
         {% for category in type['category'] %}
             <div class="tab-pane fade {% if category['default'] %} show active {% endif %}"
@@ -108,6 +109,23 @@
                                             {% if products['setupFee'] != 0 %}
                                                 <p>{{ "+"~ products['setupFee']|creditsToEuro ~ "symbol"|currency ~ " " ~ 'site.products.setupFee' | language }}</p>
                                             {% endif %}
+
+                                            {% if products['stock'] != -1 %}
+                                                {% if  products['stock'] <= 0 %}
+                                                    <p>
+                                                        <span class="badge bg-danger badge-pill">{{ 'site.products.stock.out' | language }}</span>
+                                                    </p>
+                                                {% elseif products['stock'] <= 3 %}
+                                                    <p>
+                                                        <span class="badge bg-danger badge-pill">{{ 'site.products.stock' | language|replace({"@stock": products['stock']}) }}</span>
+                                                    </p>
+                                                {% elseif products['stock'] <= 10 %}
+                                                    <p>
+                                                        <span class="badge bg-warning badge-pill">{{ 'site.products.stock' | language|replace({"@stock": products['stock']}) }}</span>
+                                                    </p>
+                                                {% endif %}
+                                            {% endif %}
+
                                         </div>
                                         <ul
                                                 class="list-unstyled {% if products['promote'] %}text-white{% endif %} text-sm opacity-8 mb-4">
@@ -144,6 +162,7 @@
                                             <button
                                                     class="btn {% if products['promote'] %}btn-light{% else %}btn-primary{% endif %} w-100"
                                                     onclick="addToCart(this);"
+                                                    {% if products['stock'] <= 0 and products['stock'] != -1 %}disabled{% endif %}
                                                     id="{{ products['product_id'] }}"
                                                     type="button">{{ 'site.products.buyNow' | language }}</button>
                                         </div>
@@ -157,8 +176,11 @@
         {% endfor %}
     </div>
 
+    {% include '/p/circle.twig' %}
+
 </section>
 
+{% include "/p/supportNav.twig" %}
 
 {% include "/p/modals.twig" %}
 

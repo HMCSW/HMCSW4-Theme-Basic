@@ -1,49 +1,81 @@
-const {startAuthentication, browserSupportsWebAuthn, browserSupportsWebAuthnAutofill} = SimpleWebAuthnBrowser;
+var {browserSupportsWebAuthn} = SimpleWebAuthnBrowser;
 var passwordLessLoginResp;
 
+var autoFillIsGeneralFailed = false;
 
-if(browserSupportsWebAuthn){
+
+if (browserSupportsWebAuthn) {
     document.getElementById("webauthn").style = "display: block";
     $.ajax(apiURL + "/auth/fido2/passwordLess/option", {
         method: 'POST',
     }).then(resp => initPasswordLess(resp));
 }
 
-function autoLogin(){
+function autoLogin() {
     navigator.credentials.get({
         password: true,
         federated: {
             providers: [url]
         }
-    }).then(function(cred) {
-        if(cred === null) {
+    }).then(function (cred) {
+        if (cred === null) {
             // do nothing
-        } else if(cred.type === "password"){
+        } else if (cred.type === "password") {
             if (cred) {
                 login(cred.id, cred.password);
             }
         }
     });
 }
+
 autoLogin();
 
 async function initPasswordLess(resp) {
-    if(resp.success) {
+    if (resp.success) {
+        const {startAuthentication, browserSupportsWebAuthn} = SimpleWebAuthnBrowser;
+
         passwordLessLoginResp = await resp.response;
+
+        if (browserSupportsWebAuthnAutofill && !autoFillIsGeneralFailed && browserSupportsWebAuthn) {
+            let webauthnAutofillAuth;
+            // try {
+            webauthnAutofillAuth = await startAuthentication(passwordLessLoginResp, true);
+
+            $.ajax(apiURL + "/auth/fido2/passwordLess", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                data: JSON.stringify(webauthnAutofillAuth)
+            }).done(function (answer) {
+                if (answer.success) {
+                    generateToken(answer.response.loginInfo.auth_code);
+                } else {
+                    sendNotify("Autofill: " + getMessage("general.action.message.failed") + ": " + answer.response.error_message, "danger");
+                }
+            }).fail(function (err) {
+                if (err.responseJSON.response.error_code != null) {
+                    sendNotify(getMessage("general.action.message.failed") + ": " + err.responseJSON.response.error_message, "danger");
+                } else {
+                    sendNotify(getMessage("general.action.message.failed"), "danger");
+                }
+            });
+        }
     }
 }
 
-function send(){
+function send() {
     form.style = "display: none";
     loader.style = "display: block";
 }
-function cancel(){
+
+function cancel() {
     loader.style = "display: none";
     form.style = "display: block";
     grecaptcha.reset();
 }
 
-function failed(message){
+function failed(message) {
     resetSession();
     sendNotify(message, "danger")
     cancel();
@@ -51,31 +83,37 @@ function failed(message){
 
 var sessionsToSet = [];
 
-function resetSession(){
+function resetSession() {
     sessionsToSet = [];
 }
-function setSession(name, value, cookie){
+
+function setSession(name, value, cookie) {
     sessionsToSet.push({name: name, value: value, cookie: cookie});
 }
 
-function setSessions(url){
+function setSessions(url) {
     $.ajax({
         type: "POST",
         url: apiURL + "/session",
-        data: JSON.stringify({sessions: sessionsToSet, url: url}),
+        data: JSON.stringify({sessions: sessionsToSet, url: url})
     }).done(function (answer) {
         sessionsToSet = {};
 
-        if(answer.success) {
+        if (answer.success) {
             document.location.href = answer.response.url
         }
-    }).fail(function (err)  {
-        failed("unknownError");
+    }).fail(function (err) {
+        if (err.responseJSON.response.error_code != null) {
+            failed(getMessage("general.action.message.failed") + ": " + err.responseJSON.response.error_message);
+        } else {
+            failed(getMessage("general.action.message.failed"));
+        }
     });
 
 }
 
-function generateToken(token){
+
+function generateToken(token) {
     $.ajax({
         type: "POST",
         url: apiURL + "/auth/login/generateAccessToken",
@@ -83,23 +121,28 @@ function generateToken(token){
             xhr.setRequestHeader("Authorization", "Bearer " + token);
         }
     }).done(function (answer) {
-        if(answer.success === true){
+        if (answer.success === true) {
             setSession("access_token", answer.response.access_token, false);
             setSession("refresh_token", answer.response.refresh_token, true);
             setSessions(success_url)
         } else {
             failed(answer.response.error_code);
         }
-    }).fail(function (err)  {
-        failed(getMessage("general.action.message.failed"));
+    }).fail(function (err) {
+        if (err.responseJSON.response.error_code != null) {
+            failed(getMessage("general.action.message.failed") + ": " + err.responseJSON.response.error_message);
+        } else {
+            failed(getMessage("general.action.message.failed"));
+        }
     });
 }
 
 function isCaptchaChecked() {
     return grecaptcha && grecaptcha.getResponse().length !== 0;
 }
-function onSiteLogin(){
-    if(!isCaptchaChecked){
+
+function onSiteLogin() {
+    if (!isCaptchaChecked) {
         return false;
     }
 
@@ -112,13 +155,13 @@ function onSiteLogin(){
         url: apiURL + '/auth/captcha'
     }).done(function (answer) {
         login(username, password);
-    }).fail(function (err)  {
+    }).fail(function (err) {
         grecaptcha.reset();
     });
 
 }
 
-function login(username, password){
+function login(username, password) {
     send();
     $.ajax({
         type: "POST",
@@ -128,11 +171,11 @@ function login(username, password){
         }
     }).done(function (answer) {
 
-        if(answer.success === true){
-            if(document.getElementById('remember_login').checked){
+        if (answer.success === true) {
+            if (document.getElementById('remember_login').checked) {
                 setSession("refresh_token", answer.response.refresh_token, true);
             }
-            if(answer.response.twoFactor.ready === false){
+            if (answer.response.twoFactor.ready === false) {
                 generateToken(answer.response.auth_code);
             } else {
                 startTwoFactorConfirmation(answer.response.auth_code, function () {
@@ -146,8 +189,8 @@ function login(username, password){
             failed("site.auth.action.message." + answer.response.error_message);
             cancel();
         }
-    }).fail(function (err)  {
-        if(err.responseJSON.response.error_code != null) {
+    }).fail(function (err) {
+        if (err.responseJSON.response.error_code != null) {
             failed(getMessage("site.auth.action.message." + err.responseJSON.response.error_message));
         } else {
             failed(getMessage("general.action.message.failed"));
@@ -155,6 +198,7 @@ function login(username, password){
         cancel();
     });
 }
+
 import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
     const QrScanner = module.default;
     document.getElementById('createQRCode').style = 'display: block';
@@ -178,7 +222,7 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
         cancelLogin();
     });
 
-    function cancelLoginFull(){
+    function cancelLoginFull() {
         loginForm.style = "display: block";
         qrCodeForm.style = "display: none";
 
@@ -315,7 +359,7 @@ async function startFido2Login() {
     try {
         webauthnAuth = await startAuthentication(passwordLessLoginResp);
 
-        $.ajax(apiURL + "/auth/fido2/passwordLess",{
+        $.ajax(apiURL + "/auth/fido2/passwordLess", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -329,7 +373,11 @@ async function startFido2Login() {
                 sendNotify(getMessage("general.action.message.failed") + ": " + answer.response.error_message, "danger");
             }
         }).fail(function (err) {
-            sendNotify(getMessage("general.action.message.failed"), "danger");
+            if (err.responseJSON.response.error_code != null) {
+                sendNotify(getMessage("general.action.message.failed") + ": " + err.responseJSON.response.error_message, "danger");
+            } else {
+                sendNotify(getMessage("general.action.message.failed"), "danger");
+            }
         });
 
     } catch (error) {
