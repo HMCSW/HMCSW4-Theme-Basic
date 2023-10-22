@@ -199,8 +199,7 @@ function login(username, password) {
     });
 }
 
-import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
-    const QrScanner = module.default;
+window.addEventListener('load', async event => {
     document.getElementById('createQRCode').style = 'display: block';
 
 // QR-CODE LOGIN
