@@ -33,7 +33,7 @@
                                                 class="badge bg-info badge-pill">{{ 'site.status.maintenance.state.4' | language }}</span>
                                     {% endif %}
 
-                                    <p><br>{{ m['message']|nl2br }}</p>
+                                    <p><br>{{ m['message']|raw|nl2br }}</p>
                                     <h4 class="h6">
                                         {% autoescape %}
                                             {% set text = 'site.status.maintenance.created_at'|language|replace({'@date': m['created_at']|date }) %}
@@ -172,7 +172,7 @@
                                                                             class="float-right text-muted">{{ update['created_at']|date }}</small>
                                                                 </div>
                                                                 <p class="lh-140 mb-0">
-                                                                    {{ update['text']|nl2br }}
+                                                                    {{ update['text']|raw|nl2br }}
                                                                 </p>
                                                             </div>
                                                         </div>

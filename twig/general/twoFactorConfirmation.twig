@@ -10,7 +10,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title text-center"><i class="fa-solid fa-id-card"></i></h4>
+                            <h4 class="card-title text-center"><i class="fa-duotone fa-id-card"></i></h4>
                             <p class="card-text text-center">{{ 'general.identityCheckRequired.info' | language }}</p>
                             <button type="button" id="startIdentityCheck" class="btn btn-primary w-100 btn-sm">
                                 {{ 'general.identityCheckRequired.start' | language }}
@@ -20,130 +20,6 @@
                             </button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal" tabindex="-1" role="dialog" id="twoFactorConfirmation">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-
-                <div style="display: none" id="enterCode">
-                    <div class="mb-5 text-center">
-                        <div class="mb-5 text-center">
-                            <h6 class="h3 mb-1">{{ 'general.twoFactorConfirmation' | language }}</h6>
-                            <p class="text-muted mb-0">{{ 'general.twoFactorConfirmation.description' | language }}</p>
-                        </div>
-                    </div>
-                    <span class="clearfix"></span>
-
-                    <div class="justify-content-center align-middle text-center" id="code-loader"
-                         style="display: none">
-                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-
-                    <div id="code-form" style="display: none">
-
-                        <div class="form-group">
-                            <label for="code"
-                                   class="form-control-label">{{ 'general.twoFactorConfirmation.form.code' | language }}</label>
-
-                            <input type="text" class="form-control" id="code" autocomplete="one-time-code"
-                                   placeholder="ABC 123 DFG 456">
-
-                        </div>
-                        <div class="mt-4">
-                            <button class="btn btn-lg btn-primary w-100 mb-4" id="submit-code"
-                                    type="button">{{ 'general.twoFactorConfirmation.submitBtn' | language }}
-                            </button>
-                        </div>
-                        <button class="btn btn-sm btn-info w-50 mb-4" id="selectOtherMethod"
-                                type="button">{{ 'general.twoFactorConfirmation.cancelBtn' | language }}</button>
-
-                    </div>
-                </div>
-                <div style="display: none" id="selectMethod">
-                    <div class="mb-5 text-center">
-                        <div class="mb-5 text-center">
-                            <h6 class="h3 mb-1">{{ 'general.twoFactorConfirmation' | language }}</h6>
-                            <p class="text-muted mb-0">{{ 'general.twoFactorConfirmation.description' | language }}</p>
-                        </div>
-                    </div>
-
-                    <span class="clearfix"></span>
-
-                    <div class="col-lg-12" id="fidoFailMessage" style="display: none">
-                        <div class="alert alert-group alert-danger alert-icon" role="alert">
-                            <div class="alert-group-prepend">
-                                    <span class="alert-group-icon text-">
-                                        <i class="fa fa-exclamation-triangle"></i>
-                                    </span>
-                            </div>
-                            <div class="alert-content">
-                                {{ 'general.twoFactorConfirmation.fido2Failed' | language }}
-                            </div>
-                            <div class="alert-action">
-                                <button type="button" class="btn btn-danger"
-                                        id="fidoFailBtn">{{ 'general.twoFactorConfirmation.fido2Failed.retry' | language }}</button>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="justify-content-center align-middle text-center" id="allMethodsLoader"
-                         style="display: none">
-                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-
-                    <div class="form-check" id="exampleMethodCheck" style="display: none">
-                        <input class="form-check-input" type="radio">
-                        <label class="form-check-label"></label>
-                    </div>
-
-                    <div id="fidoInfo" style="display: none">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title text-center"><i class="fa-solid fa-key"></i></h4>
-                                <p class="card-text text-center">{{ 'general.twoFactorConfirmation.fido2' | language }}</p>
-                                <button type="button" id="cancelFido" class="btn btn-primary w-100 btn-sm"
-                                        style="display: none">
-                                    {{ 'general.twoFactorConfirmation.fido2.other' | language }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group" id="allMethods" style="display: none">
-
-
-                    </div>
-
-                    <div class="col-lg-12" id="noMethod" style="display: none">
-                        <div class="alert alert-group alert-danger alert-icon" role="alert">
-                            <div class="alert-group-prepend">
-                                        <span class="alert-group-icon text-">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </span>
-                            </div>
-                            <div class="alert-content">
-                                {{ 'general.twoFactorConfirmation.noTwoFactorMethodAvailable' | language }}
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <button class="btn btn-lg btn-primary w-100 mb-4 mt-4 text-center" style="display: none;"
-                            id="selectBTN"
-                            type="button">
-                        {{ 'general.twoFactorConfirmation.selectBtn' | language }}
-                    </button>
-
                 </div>
             </div>
         </div>
@@ -179,6 +55,136 @@
                         type="button">{{ 'general.emailConfirmation.resendBtn' | language }}</button>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal" tabindex="-1" role="dialog" id="twoFactorConfirmation">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="justify-content-center align-middle text-center start-loader">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <div style="display: none" class="enterCodeMask">
+                    <div class="mb-5 text-center">
+                        <div class="mb-5 text-center">
+                            <h6 class="h3 mb-1">{{ 'general.twoFactorConfirmation' | language }}</h6>
+                            <p class="text-muted mb-0">{{ 'general.twoFactorConfirmation.description' | language }}</p>
+                        </div>
+                    </div>
+                    <span class="clearfix"></span>
+
+                    <div class="justify-content-center align-middle text-center code-loader" style="display: none">
+                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="code-form-mask" style="display: none">
+
+                        <div class="form-group">
+                            <label for="code"
+                                   class="form-control-label">{{ 'general.twoFactorConfirmation.form.code' | language }}</label>
+
+                            <input type="text" class="form-control code-input" id="code"  autocomplete="one-time-code"
+                                   placeholder="ABC 123 DFG 456">
+
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn btn-lg btn-primary w-100 mb-4 codeSubmitBtn"
+                                    type="button">{{ 'general.twoFactorConfirmation.submitBtn' | language }}
+                            </button>
+                        </div>
+                        <button class="btn btn-sm btn-info w-50 mb-4 selectOtherMethodBtn"
+                                type="button">{{ 'general.twoFactorConfirmation.cancelBtn' | language }}</button>
+
+                    </div>
+                </div>
+                <div class="fidoMask" style="display: none">
+                    <div class="mb-5 text-center">
+                        <div class="mb-5 text-center">
+                            <h6 class="h3 mb-1">{{ 'general.twoFactorConfirmation' | language }}</h6>
+                            <p class="text-muted mb-0">{{ 'general.twoFactorConfirmation.description' | language }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 fidoFailMessage" style="display: none">
+                        <div class="alert alert-group alert-danger alert-icon" role="alert">
+                            <div class="alert-group-prepend">
+                                    <span class="alert-group-icon text-">
+                                        <i class="fa-duotone fa-exclamation-triangle"></i>
+                                    </span>
+                            </div>
+                            <div class="alert-content failed" style="display: none">
+                                {{ 'general.twoFactorConfirmation.fido2Failed' | language }}
+                            </div>
+                            <div class="alert-content notSupported" style="display: none">
+                                {{ 'general.twoFactorConfirmation.fido2NotSupported' | language }}
+                            </div>
+                            <div class="alert-action">
+                                <button type="button" class="btn btn-danger fidoRetry">{{ 'general.twoFactorConfirmation.fido2Failed.retry' | language }}</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title text-center"><i class="fa-duotone fa-key"></i></h4>
+                            <p class="card-text text-center">{{ 'general.twoFactorConfirmation.fido2' | language }}</p>
+                            <button type="button" class="btn btn-primary w-100 btn-sm selectOtherMethodBtn fidoOtherMethodBtn"
+                                    style="display: none">
+                                {{ 'general.twoFactorConfirmation.fido2.other' | language }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: none" class="selectMethodMask">
+                    <div class="mb-5 text-center">
+                        <div class="mb-5 text-center">
+                            <h6 class="h3 mb-1">{{ 'general.twoFactorConfirmation' | language }}</h6>
+                            <p class="text-muted mb-0">{{ 'general.twoFactorConfirmation.description' | language }}</p>
+                        </div>
+                    </div>
+
+                    <span class="clearfix"></span>
+
+                    <div class="form-check exampleMethodCheck" style="display: none">
+                        <input class="form-check-input methodInput" type="radio">
+                        <label class="form-check-label methodLabel"></label>
+                    </div>
+
+                    <div class="form-group allMethods" style="display: none">
+
+
+                    </div>
+
+                    <div class="col-lg-12 noMethodMask" style="display: none">
+                        <div class="alert alert-group alert-danger alert-icon" role="alert">
+                            <div class="alert-group-prepend">
+                                        <span class="alert-group-icon text-">
+                                            <i class="fa-duotone fa-exclamation-triangle"></i>
+                                        </span>
+                            </div>
+                            <div class="alert-content">
+                                {{ 'general.twoFactorConfirmation.noTwoFactorMethodAvailable' | language }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <button class="btn btn-lg btn-primary w-100 mb-4 mt-4 text-center selectMethodBtn" style="display: none;"
+                            type="button">
+                        {{ 'general.twoFactorConfirmation.selectBtn' | language }}
+                    </button>
+
+                </div>
+            </div>
         </div>
     </div>
 </div>

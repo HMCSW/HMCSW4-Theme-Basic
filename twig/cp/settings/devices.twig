@@ -1,34 +1,34 @@
-{{ '<script type="application/javascript" src="{{ url }}/assets/js/simpleWebauthn/index.umd.min.js"></script>'|addJS(true) }}
 {% include '/general/header.twig' %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        {% include '/cp/sideNav.twig' %}
+<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
+    <div class="row pt-sm-2 pt-lg-0">
+        {% include '/cp/settings/nav.twig' %}
+        <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
             {% include 'cp/terminateUser.twig' %}
             {% include 'general/actionMessage.twig' %}
-            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
-                                class="fa fa-user-cog text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-user-cog text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.tab.devices' | language }}</h2>
                         <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
                             <a href="{{ dashURL }}/settings" class="btn btn-dark btn-icon">
-                                <i class="fa-solid fa-arrow-left"></i>
+                                <i class="fa-duotone fa-arrow-left"></i>
                             </a>
                             <a href="{{ dashURL }}" class="btn btn-secondary btn-icon">
-                                <i class="fa-solid fa-arrow-left-long-to-line"></i>
+                                <i class="fa-duotone fa-arrow-left-long-to-line"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </section>
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4" style="display: none" id="deviceQRCodeLogin">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4" style="display: none" id="deviceQRCodeLogin">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-qrcode text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-qrcode text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.devices.qrCode' | language }}</h2>
                     </div>
-                    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog">
+                    <div class="modal" id="qrCodeScanModal" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -37,7 +37,7 @@
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <div id="submitVideo">
+                                    <div id="qrCodeScanVideoMask">
                                         <video width="100%" height="auto" id="video">Gimme Permissions!</video>
                                         <div class="row g-3">
                                             <div class="col-md-12 form-group">
@@ -57,17 +57,18 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="submitCode" style="display:none">
+                                    <div id="qrCodeScanSubmitCodeMask" style="display:none">
                                         <h4>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.1' | language }}</h4>
                                         <h6 class="text-danger">{{ 'site.cp.settings.devices.qrCode.modal.submit.text.2' | language }}</h6>
                                         <h6>{{ 'site.cp.settings.devices.qrCode.modal.submit.text.3' | language }}</h6>
 
-                                        <button type="button" class="btn btn-danger" id="submitCodeBtn">{{ 'site.cp.settings.devices.qrCode.modal.submit.btn' | language }}</button>
+                                        <button type="button" class="btn btn-danger"
+                                                id="submitCodeBtn">{{ 'site.cp.settings.devices.qrCode.modal.submit.btn' | language }}</button>
                                     </div>
-                                    <div id="submitSuccess" style="display:none">
+                                    <div id="qrCodeScanSubmitCodeSuccessMask" style="display:none">
                                         <h4>{{ 'site.cp.settings.devices.qrCode.modal.success' | language }}</h4>
                                     </div>
-                                    <div id="submitFailed" style="display:none">
+                                    <div id="qrCodeScanSubmitCodeFailedMask" style="display:none">
                                         <h5>{{ 'site.cp.settings.devices.qrCode.modal.failed' | language }}</h5>
                                     </div>
                                 </div>
@@ -80,10 +81,10 @@
                     </div>
                 </div>
             </section>
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-computer-speaker text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-computer-speaker text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.devices' | language }}</h2>
                     </div>
                     <div class="row g-4">
@@ -91,63 +92,68 @@
 
                         {% for device in devices %}
 
-                            <div class="modal fade" id="device-{{ device['device_id'] }}" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">
-                                                {% if device['device_info']['type'] == "smartphone" %}
-                                                    {% if device['device_info']['device']['model'] is empty and device['device_info']['device']['name'] is empty %}
-                                                        {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                                                    {% else %}
-                                                        {{ device ['device_info']['device']['name'] }} {{ device['device_info']['device']['model'] }}
+                            {% if device['ip_address']|length > 0 %}
+                                <div class="modal fade" id="device-{{ device['id'] }}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">
+                                                    {% if device['device_info']['type'] == "smartphone" %}
+                                                        {% if device['device_info']['device']['model'] is empty and device['device_info']['device']['name'] is empty %}
+                                                            {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                        {% else %}
+                                                            {{ device ['device_info']['device']['name'] }} {{ device['device_info']['device']['model'] }}
+                                                            <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                        {% endif %}
+                                                    {% elseif device['device_info']['type'] == "tablet" %}
+                                                        {{ device['device_info']['device']['brand'] }} {{ device['device_info']['device']['model'] }}
                                                         <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
+                                                    {% elseif device['device_info']['access']['type'] == "library" %}
+                                                        API
+                                                    {% else %}
+                                                        {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }} ( {{ device['device_info']['system']['platform'] }} )
                                                     {% endif %}
-                                                {% elseif device['device_info']['type'] == "tablet" %}
-                                                    {{ device['device_info']['device']['brand'] }} {{ device['device_info']['device']['model'] }}
-                                                    <br> {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }}
-                                                {% elseif device['device_info']['access']['type'] == "library" %}
-                                                    API
-                                                {% else %}
-                                                    {{ device['device_info']['system']['name'] }} {{ device['device_info']['system']['version'] }} ( {{ device['device_info']['system']['platform'] }} )
+                                                </h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {% if device['latest_ip'] != false and device['latest_ip'] != null %}
+                                                    {% if device['latest_ip']['ip_info'] != null %}
+                                                        <h5 class="mb-1">{{ 'site.cp.settings.devices.lastIP' | language }}</h5>
+
+                                                        <br>
+                                                        <iframe height="300" id="iframe-{{ device['id'] }}"
+                                                                src="about:blank"
+                                                                style='display:none '>
+                                                        </iframe>
+
+                                                        <button type="button" data-frames="true" id="button-{{ device['id'] }}"
+                                                                data-frameId="{{ device['id'] }}" class="btn btn-primary" style="display:block"
+                                                                data-frameUrl="https://maps.google.de/maps?hl=de&q=%20{{ device['latest_ip']['ip_info']['loc'] | url_encode }}&t=&z=10&ie=utf8&iwloc=b&output=embed">
+                                                            <i class="fa-duotone fa-eye"></i>
+                                                        </button>
+                                                        <br>
+                                                        <h6 class="mb-1">
+                                                            {{ device['latest_ip']['ip_info']['org'] }} ({{ device['latest_ip']['ip_info']['city'] }}
+                                                            , {{ device['latest_ip']['ip_info']['region'] }})</h6>
+                                                        <br>
+                                                        <hr/><br>
+
+                                                    {% endif %}
                                                 {% endif %}
-                                            </h4>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {% if device['latest_ip'] != false and device['latest_ip'] != null %}
-                                                <h5 class="mb-1">{{ 'site.cp.settings.devices.lastIP' | language }}</h5>
-
-                                                <br>
-                                                <iframe height="300" id="iframe-{{ device['device_id'] }}"
-                                                        src="about:blank"
-                                                        style='display:none '>
-                                                </iframe>
-
-                                                <button type="button" data-frames="true" id="button-{{ device['device_id'] }}" data-frameId="{{ device['device_id'] }}"  class="btn btn-primary" style="display:block"
-                                                        data-frameUrl="https://maps.google.de/maps?hl=de&q=%20{{ device['latest_ip']['loc'] | url_encode }}&t=&z=10&ie=utf8&iwloc=b&output=embed">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                                <br>
-                                                <h6 class="mb-1">
-                                                    {{ device['latest_ip']['org'] }} ({{ device['latest_ip']['city'] }}
-                                                    , {{ device['latest_ip']['region'] }})</h6>
-                                                <br>
-                                                <hr/><br>
-
-                                            {% endif %}
-                                            <ul>
-                                                {% for ip in device['ip_address'] %}
-                                                    <li>{{ ip['ip_address'] }}
-                                                        ({{ ip['firstuse_at']|date }})
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
+                                                <ul>
+                                                    {% for ip in device['ip_address'] %}
+                                                        <li>{{ ip['ip_address'] }}
+                                                            ({{ ip['firstuse_at']|date }})
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            {% endif %}
 
                             <div class="col-lg-6">
                                 <div class="card h-100 rounded-3 p-3 p-sm-4">
@@ -186,24 +192,27 @@
                                             {% else %}
                                                 {% set device_icon = "fa-question" %}
                                             {% endif %}
-                                            <i class="fas {{ device_icon }} mr-2 fa-2x "></i>
+                                            <i class="fa-duotone {{ device_icon }} mr-2 fa-2x "></i>
                                         </h3>
-                                        {% if device_id == device['device_id'] %}
-                                            <span class="badge bg-faded-primary text-primary fs-xs ms-3">{{ 'site.cp.settings.devices.current'|language }}</span>
+                                        {% if device_id == device['id'] %}
+                                            <span
+                                                    class="badge bg-faded-primary text-primary fs-xs ms-3">{{ 'site.cp.settings.devices.current'|language }}</span>
                                         {% endif %}
                                         <div class="d-flex ms-auto">
-                                            <button class="btn nav-link fs-xl fw-normal py-1 pe-0 ps-1 ms-2" type="button"
-                                                    data-bs-toggle="modal" href="#device-{{ device['device_id'] }}"><i
-                                                        class="fa fa-eye"></i>
-                                            </button>
+                                            {% if device['ip_address']|length > 0 %}
+                                                <button class="nav-link fs-xl fw-normal py-1 pe-0 ps-1 ms-2" type="button"
+                                                        data-bs-toggle="modal" href="#device-{{ device['id'] }}"><i
+                                                            class="fa-duotone fa-eye"></i>
+                                                </button>
+                                            {% endif %}
                                             <form method="POST">
                                                 <input type="hidden" name="action" value="removeDevice">
                                                 <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                <input type="hidden" name="device_id" value="{{ device['device_id'] }}">
+                                                <input type="hidden" name="device_id" value="{{ device['id'] }}">
 
-                                                <button class="btn  nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2"
+                                                <button class="nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2"
                                                         type="submit"><i
-                                                            class="fa fa-trash"></i></button>
+                                                            class="fa-duotone fa-trash"></i></button>
                                             </form>
 
                                         </div>
@@ -239,10 +248,10 @@
                     </div>
                 </div>
             </section>
-            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
-                                class="fa fa-trash text-primary lead pe-1 me-2"></i>
+                                class="fa-duotone fa-trash text-primary lead pe-1 me-2"></i>
                         <h2 class="h4 mb-0">{{ 'site.cp.settings.devices.removeAll' | language }}</h2>
                     </div>
                     <button type="button" id="removeAllDevices"
@@ -254,4 +263,5 @@
         </div>
     </div>
 </div>
+{% include '/cp/sidebarButton.twig' %}
 {% include '/general/footer.twig' %}

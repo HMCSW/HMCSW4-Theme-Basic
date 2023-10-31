@@ -150,7 +150,7 @@
                 <a class="navbar-brand d-inline-flex align-items-center me-sm-5 mb-4 mb-sm-0" href="{{ url }}">
                     <span class="text-primary flex-shrink-0 me-2">
                         <img alt="{{ name }}" title="{{ name }}"
-                             src="https://cdn.hosmatic.com/branding/The_Hosmatic_H_q-100.webp" width="50" height="40"
+                             src="{{ theme['icons']['icon']['500x500'] }}" width="50" height="40"
                              loading="eager">
                     </span>
                     <span class="text-nav">{{ name }}</span>
@@ -200,6 +200,6 @@
     <div class="pt-5 pt-lg-0">
     </div>
 </footer>
-{% include 'general/footerJS.twig' %}
+{% include '/general/footerJS.twig' %}
 </body>
 </html>

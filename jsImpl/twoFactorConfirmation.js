@@ -1,310 +1,94 @@
+
+var {startAuthentication, browserSupportsWebAuthn, browserSupportsWebAuthnAutofill, platformAuthenticatorIsAvailable, startRegistration} = SimpleWebAuthnBrowser
 window.addEventListener('load', async event => {
-    await import(url + '/assets/js/simpleWebauthn/index.umd.min.js');
     initTwoFactorConfirmation();
+    initEmailConfirmation();
 });
-function startTwoFactorConfirmation(sessionCode, successCallback, failedCallback) {
-    var event = new CustomEvent('TwoFactorConfirmationEvent', {detail: {sessionCode: sessionCode, successCallback: successCallback, failedCallback: failedCallback }});
+
+function startTwoFactorConfirmation(sessionCode, successCallback, failedCallback, autoSelectFido = true) {
+    var event = new CustomEvent('TwoFactorConfirmationEvent', {detail: {sessionCode: sessionCode, successCallback: successCallback, failedCallback: failedCallback, autoSelectFido: autoSelectFido }});
     document.dispatchEvent(event);
 }
 async function initTwoFactorConfirmation() {
-    var sessionCodeSave;
-    let modal = $('#twoFactorConfirmation');
-
     document.addEventListener("TwoFactorConfirmationEvent", e => {
-        const {startAuthentication, browserSupportsWebAuthn} = SimpleWebAuthnBrowser;
+        let done = false;
+        let sessionCodeSave;
+        let twoFactorConfirmationModalExample = $('#twoFactorConfirmation');
+
+        let twoFactorConfirmationModal = twoFactorConfirmationModalExample.clone();
+        let codeLoader = twoFactorConfirmationModal.find('.code-loader');
+        let codeFormMask = twoFactorConfirmationModal.find('.code-form-mask');
+        let codeInput = codeFormMask.find('.code-input');
+        let codeSubmitBtn = codeFormMask.find('.codeSubmitBtn');
+        let selectOtherMethodBtn = codeFormMask.find('.selectOtherMethodBtn');
+
+        let enterCodeMask = twoFactorConfirmationModal.find('.enterCodeMask');
+        let selectMethodMask = twoFactorConfirmationModal.find('.selectMethodMask');
+        let noMethodMask = selectMethodMask.find('.noMethodMask');
+        let fidoMask = twoFactorConfirmationModal.find('.fidoMask');
+        let fidoFailMessage = fidoMask.find('.fidoFailMessage');
+        let fidoFailMessageFailed = fidoFailMessage.find('.failed');
+        let fidoFailMessageNotSupported = fidoFailMessage.find('.notSupported');
+        let fidoRetryBtn = fidoFailMessage.find('.fidoRetry');
+        let fidoOtherMethodBtn = fidoMask.find('.fidoOtherMethodBtn');
+
+        let startLoader = twoFactorConfirmationModal.find('.start-loader');
+        let methods = [];
+        let exampleMethodCheck = twoFactorConfirmationModal.find('.exampleMethodCheck');
+        let allMethods = twoFactorConfirmationModal.find('.allMethods');
+        let selectMethodBtn = twoFactorConfirmationModal.find('.selectMethodBtn');
+        let autoSelectFido = e.detail.autoSelectFido;
+
+        twoFactorConfirmationModal.on('hidden.bs.modal', function (e) {
+            if(!done){
+                fail();
+            }
+        })
+        selectMethodBtn.on('click', function (e) {
+            selectMethod(getSelectedMethod());
+        });
+        codeSubmitBtn.on('click', function (e) {
+            submitCode(codeInput.val());
+        });
+        selectOtherMethodBtn.on('click', function (e) {
+            startSelectMethod();
+        });
+        fidoRetryBtn.on('click', function (e) {
+            startFido2Login();
+        });
+        fidoOtherMethodBtn.on('click', function (e) {
+            startSelectMethod();
+        });
+
         startTwoFactor(e.detail.sessionCode);
 
-        function done(){
-            modal.off();
-            modal.modal('hide');
-            e.detail.successCallback();
-        }
-
-        function fail(){
-            modal.off();
-            modal.modal('hide');
-            removeAllListeners();
-            e.detail.failedCallback();
-        }
-
-
-        function removeAllListeners(){
-            document.getElementById("submit-code").removeEventListener("click", submitCode);
-            document.getElementById("selectOtherMethod").removeEventListener("click", selectOtherMethod);
-            document.getElementById("selectBTN").removeEventListener("click", selectBTN);
-            document.getElementById("cancelFido").removeEventListener("click", cancelFido);
-            document.getElementById("fidoFailBtn").removeEventListener("click", fidoRetry);
-            document.getElementById("code").removeEventListener('change', submitCodeEmptyCheck);
-        }
-
-        function startTwoFactor(sessionCode) {
-            sessionCodeSave = sessionCode;
+        function submitCode(code){
+            codeFormMask.hide();
+            codeLoader.show();
             $.ajax({
-                data: {'sessionCode': sessionCode},
-                type: 'POST',
-                url: apiURL + '/auth/login/twoFactor/methods'
+                type: "PATCH",
+                url: apiURL + "/auth/login/twoFactor/twoFactor",
+                data: {sessionCode: sessionCodeSave, method: currentMethod, code: code}
             }).done(function (answer) {
-                if (answer.success === false) {
-                    done();
-                    return;
-                }
-                if (answer.response.ready === false) {
-                    done();
-                    return;
-                }
-                $('.modal').modal('hide');
-                modal.modal('show', {backdrop: 'static', keyboard: false, focus: true});
-
-                modal.on('hidden.bs.modal', function (e) {
-                    fail();
-                })
-                init(answer.response.types);
-            }).fail(function (err) {
-                fail();
-            });
-        }
-
-        async function startFido2Login() {
-            document.getElementById('fidoFailMessage').style = "display:none";
-
-            const resp = await fetch(apiURL + "/auth/fido2/login/option", {
-                method: 'POST', headers: {
-                    'Authorization': 'Bearer ' + sessionCodeSave,
-                }
-            });
-
-            let asseResp;
-            try {
-                asseResp = await startAuthentication(await resp.json());
-
-                const verificationResp = await fetch(apiURL + "/auth/fido2/login", {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + sessionCodeSave,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(asseResp),
-                });
-
-                const verificationJSON = await verificationResp.json();
-
-                if (verificationJSON && verificationJSON.success) {
-                    done();
+                codeFormMask.show();
+                codeLoader.hide();
+                if (answer.success) {
+                    success();
                 } else {
-                    fidoFail();
-                    sendNotify(getMessage("general.action.message.failed") + ": " + verificationJSON.response.error_message, "danger");
-                }
-            } catch (error) {
-                fidoFail();
-                sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
-            }
-
-        }
-
-        var fidoAvailable = false;
-        var methods = {};
-        var currentMethod;
-
-        function init(methods) {
-            resetMethods();
-
-            document.getElementById('selectMethod').style = "display:block";
-            document.getElementById('allMethodsLoader').style = "display:block";
-
-            for (let i = 0; i < methods.length; i++) {
-                addMethod(methods[i]);
-            }
-            let methodsCount = methods.length;
-
-            if (methodsCount === 0) {
-                document.getElementById('noMethod').style = "display:block";
-                document.getElementById('allMethodsLoader').style = "display:none";
-            } else {
-                document.getElementById('allMethodsLoader').style = "display:none";
-                if (fidoAvailable) {
-                    fido2Site(methodsCount > 1);
-                } else {
-                    startSelectProcess();
-                }
-            }
-
-        }
-
-        function fidoFail() {
-            document.getElementById("cancelFido").removeAttribute("disabled");
-            document.getElementById('fidoFailMessage').style = "display:block";
-
-            document.getElementById('fidoFailBtn').addEventListener('click', fidoRetry);
-        }
-
-        function fidoRetry() {
-            document.getElementById('fidoFailBtn').removeEventListener('click', fidoRetry);
-            document.getElementById('fidoFailMessage').style = "display:none";
-            document.getElementById("cancelFido").setAttribute("disabled", "true");
-            startFido2Login();
-        }
-
-        function fido2Site(otherMethodsAvailable = false) {
-            document.getElementById("code-loader").style = "display:none";
-            document.getElementById("code-form").style = "display:none";
-            document.getElementById("enterCode").style = "display:none";
-            document.getElementById("allMethods").style = "display:none";
-            document.getElementById("selectBTN").style = "display:none";
-            document.getElementById("cancelFido").style = "display:none";
-
-            document.getElementById("selectMethod").style = "display:block";
-            document.getElementById("fidoInfo").style = "display:block";
-            document.getElementById("cancelFido").setAttribute("disabled", "true");
-            if (otherMethodsAvailable) {
-                document.getElementById("cancelFido").style = "display:block";
-                document.getElementById("cancelFido").addEventListener("click", cancelFido);
-            }
-
-            startFido2Login();
-        }
-
-        function cancelFido() {
-            document.getElementById("cancelFido").removeEventListener("click", cancelFido);
-            document.getElementById("fidoFailMessage").style = "display:none";
-            document.getElementById("fidoInfo").style = "display:none";
-
-            startSelectProcess();
-        }
-
-        function startSelectProcess(fido = false) {
-            document.getElementById("allMethods").style = "display:block";
-            document.getElementById("selectBTN").style = "display:block";
-
-            document.getElementById("enterCode").style = "display:none"
-            document.getElementById("selectMethod").style = "display:block";
-
-            let option = document.getElementById("fidoOption");
-            if (typeof (option) != 'undefined' && option != null) {
-                if (fido) {
-                    option.style = "display:block";
-                } else {
-                    option.style = "display:none";
-                }
-            }
-
-            document.getElementById("selectBTN").addEventListener("click", selectBTN);
-        }
-
-        function submitCode() {
-            let value = document.getElementById("code").value;
-            if (value.length > 0) {
-                $.ajax({
-                    type: "PATCH",
-                    url: apiURL + "/auth/login/twoFactor/twoFactor",
-                    data: {sessionCode: sessionCodeSave, method: currentMethod, code: value}
-                }).done(function (answer) {
-                    if (answer.success) {
-                        document.getElementById("code-loader").style = "display:block";
-                        document.getElementById("code-form").style = "display:none";
-
-                        done();
-                    } else {
-                        sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
-                    }
-                }).fail(function (err) {
                     sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
-                });
-            }
-        }
-
-        function submitCodeEmptyCheck() {
-            let code = document.getElementById("code");
-            let value = code.value;
-
-            if (value.length <= 0) {
-                document.getElementById("submit-code").setAttribute("disabled", "true");
-            } else {
-                document.getElementById("submit-code").removeAttribute("disabled");
-            }
-        }
-
-        function selectBTN() {
-            document.getElementById("selectBTN").removeEventListener("click", selectBTN);
-            let selectedMethod = getSelectedMethod();
-            if (selectedMethod !== undefined) {
-                document.getElementById("enterCode").style = "display:block"
-                document.getElementById("selectMethod").style = "display:none";
-
-                document.getElementById("selectOtherMethod").addEventListener("click", selectOtherMethod);
-                document.getElementById("submit-code").setAttribute("disabled", "true");
-
-                document.getElementById("code-loader").style = "display:block";
-                document.getElementById("code-form").style = "display:none";
-
-                if (selectedMethod === "fido2") {
-                    fido2Site(true);
-                } else {
-                    setMethod(selectedMethod).done(function (answer) {
-                        document.getElementById("code-loader").style = "display:none";
-                        document.getElementById("code-form").style = "display:block";
-                        currentMethod = selectedMethod;
-
-                        document.getElementById("code").focus({preventScroll: true, focusVisible: true});
-                        document.getElementById("code").addEventListener('input', submitCodeEmptyCheck);
-                        document.getElementById("submit-code").addEventListener("click", submitCode);
-                    }).fail(function (err) {
-                        sendNotify(getMessage("general.action.message.failed"), "danger")
-                        document.getElementById("enterCode").style = "display:none"
-                        document.getElementById("code-loader").style = "display:none";
-                        document.getElementById("selectMethod").style = "display:block";
-                        startSelectProcess(true);
-                    });
                 }
-            }
-        }
-
-        function selectOtherMethod() {
-            document.getElementById("selectOtherMethod").removeEventListener("click", selectBTN);
-            document.getElementById("code").removeEventListener('change', submitCodeEmptyCheck);
-            document.getElementById("submit-code").removeEventListener("click", submitCode);
-            startSelectProcess(true);
+            }).fail(function (err) {
+                codeFormMask.show();
+                codeLoader.hide();
+                sendNotify(getMessage("site.auth.action.message.factorCodeWrong"), "danger");
+            });
         }
 
         function getSelectedMethod() {
-            const radioButtons = document.querySelectorAll('input[name="method"]');
-            let selected;
-            for (const radioButton of radioButtons) {
-                if (radioButton.checked) {
-                    selected = radioButton.value;
-                    break;
-                }
-            }
-            return selected;
+            return allMethods.find('input[name="method"]:checked').val();
         }
 
-        function resetMethods(){
-            document.getElementById('allMethods').innerHTML = "";
-        }
-
-        function addMethod(method) {
-            if (method === "fido2") {
-                if (browserSupportsWebAuthn) {
-                    fidoAvailable = true;
-                }
-            }
-            var example = document.getElementById('exampleMethodCheck').cloneNode(true);
-            example.removeAttribute("style");
-            example.removeAttribute("id")
-
-            example.children[0].id = method;
-            example.children[0].value = method;
-            example.children[0].name = "method";
-            example.children[1].innerHTML = getMessage('site.auth.twoFactor.type.' + method);
-            example.children[1].setAttribute("for", method);
-            if (method === "fido2") {
-                example.style = "display:none";
-                example.id = "fidoOption";
-            }
-
-            document.getElementById('allMethods').appendChild(example);
-        }
-
-        function setMethod(method) {
+        function sendTwoFactor(method) {
             return $.ajax({
                 type: "POST",
                 url: apiURL + "/auth/login/twoFactor/twoFactor",
@@ -312,12 +96,202 @@ async function initTwoFactorConfirmation() {
             });
         }
 
-    }, false);
+
+
+        function selectMethod(method) {
+            if(method === "fido2") {
+                fido2Site(methods.length > 1);
+            } else {
+                enterCodeMask.show();
+                selectMethodMask.hide();
+                codeLoader.show();
+
+                sendTwoFactor(method).done(function (answer) {
+                    codeLoader.hide();
+                    if (answer.success === true) {
+                        currentMethod = method;
+                        codeFormMask.show();
+                    } else {
+                        startSelectMethod();
+                        sendNotify(getMessage("general.action.message.failed"), "danger")
+                    }
+                }).fail(function (err) {
+                    sendNotify(getMessage("general.action.message.failed"), "danger")
+                    startSelectMethod();
+                });
+            }
+        }
+
+
+        function fido2Site(otherMethodsAvailable = false) {
+            selectMethodMask.hide();
+
+            fidoMask.show();
+            fidoFailMessage.hide();
+            fidoOtherMethodBtn.hide();
+            if(otherMethodsAvailable){
+                fidoOtherMethodBtn.show();
+            }
+
+            if (!browserSupportsWebAuthn()) {
+                fidoFailMessage.show();
+                fidoFailMessageNotSupported.show();
+                return;
+            }
+
+
+            startFido2Login();
+        }
+
+        function startFido2Login() {
+            fidoFailMessage.hide();
+            fidoFailMessageNotSupported.hide();
+            fidoOtherMethodBtn.attr('disabled', true)
+
+            $.ajax({
+                type: 'POST',
+                url: apiURL + '/auth/fido2/login/option',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + sessionCodeSave);
+                }
+            }).done(function (answer) {
+                if(answer.success) {
+                    startAuthentication(answer.response).then(function (assertion) {
+                        $.ajax({
+                            type: 'POST',
+                            url: apiURL + '/auth/fido2/login',
+                            data: JSON.stringify(assertion),
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Bearer " + sessionCodeSave);
+                            }
+                        }).done(async function (answer) {
+                            if (answer.success) {
+                                success();
+                            } else {
+                                fidoOtherMethodBtn.attr('disabled', false)
+                                sendNotify(getMessage("general.action.message.failed") + ": " + answer.response.error_message, "danger");
+                                fidoFailMessage.show();
+                                fidoFailMessageFailed.show();
+                            }
+                        }).fail(function (error) {
+                            fidoOtherMethodBtn.attr('disabled', false)
+                            fidoFailMessage.show();
+                            fidoFailMessageFailed.show();
+                            sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
+                        });
+                    }).catch(function (error) {
+                        fidoOtherMethodBtn.attr('disabled', false)
+                        fidoFailMessage.show();
+                        fidoFailMessageFailed.show();
+                        sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
+                    });
+                } else {
+                    fidoOtherMethodBtn.attr('disabled', false)
+                    fidoFailMessage.show();
+                    fidoFailMessageFailed.show();
+                    sendNotify(getMessage("general.action.message.failed") + ": " + answer.response.error_message, "danger");
+                }
+            }).fail(function (error) {
+                fidoOtherMethodBtn.attr('disabled', false)
+                fidoFailMessage.show();
+                fidoFailMessageFailed.show();
+                sendNotify(getMessage("general.action.message.failed") + ": " + error.message, "danger");
+            });
+        }
+
+        function success(){
+            done = true;
+            e.detail.successCallback();
+            twoFactorConfirmationModal.modal('hide');
+            twoFactorConfirmationModal.remove();
+        }
+
+        function fail(){
+            done = true;
+            e.detail.failedCallback();
+            twoFactorConfirmationModal.modal('hide');
+            twoFactorConfirmationModal.remove();
+        }
+
+        function startSelectMethod(){
+            enterCodeMask.hide();
+            fidoMask.hide();
+            fidoFailMessage.hide();
+            fidoOtherMethodBtn.hide();
+
+            selectMethodMask.show();
+            allMethods.show();
+            selectMethodBtn.show();
+        }
+
+        function init(methods) {
+            startLoader.hide();
+
+            if(methods.length === 0){
+                noMethodMask.show();
+                selectMethodBtn.hide();
+                selectMethodMask.show();
+                return;
+            }
+
+            for (let i = 0; i < methods.length; i++) {
+                addMethod(methods[i]);
+            }
+
+
+            if(autoSelectFido){
+                let fido = methods.indexOf('fido2');
+                if(fido !== -1){
+                    selectMethod('fido2');
+                    return;
+                }
+            }
+            startSelectMethod();
+        }
+
+        function addMethod(method) {
+            methods = methods.concat(method);
+
+            let copy = exampleMethodCheck.clone();
+            copy.show();
+            copy.find(".methodInput").val(method);
+            copy.find(".methodInput").attr('name', "method");
+            copy.find(".methodLabel").text(getMessage('site.auth.twoFactor.type.' + method));
+
+            allMethods.append(copy);
+        }
+
+        function startTwoFactor(sessionCode) {
+            twoFactorConfirmationModal.modal('show', {backdrop: 'static', keyboard: false, focus: true});
+            startLoader.show();
+
+            sessionCodeSave = sessionCode;
+            $.ajax({
+                data: {sessionCode: sessionCode},
+                type: 'POST',
+                url: apiURL + '/auth/login/twoFactor/methods'
+            }).done(function (answer) {
+                if (answer.success === false) {
+                    fail();
+                    return;
+                }
+                if (answer.response.ready === false) {
+                    fail();
+                    return;
+                }
+
+                init(answer.response.types);
+            }).fail(function (err) {
+                fail();
+            });
+        }
+    });
+
 }
 
 
+
 function startEmailConfirmation(successCallback, failedCallback) {
-    console.log("startEmailConfirmation");
     var event = new CustomEvent('EmailConfirmationEvent', {detail: {successCallback: successCallback, failedCallback: failedCallback }});
     document.dispatchEvent(event);
 }
@@ -391,4 +365,5 @@ function initEmailConfirmation() {
         }
 
     });
+
 }

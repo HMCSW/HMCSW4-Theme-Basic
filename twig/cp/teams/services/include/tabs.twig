@@ -93,8 +93,7 @@
                         <div class="card h-100 rounded-3 p-3 ">
                             <div class="d-flex align-items-center">
                                 <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ip'] }}</h3>
-                                <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip"
-                                      data-bs-placement="top"
+                                <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip" data-bs-placement="top"
                                       title="{{ 'site.cp.service.tab.info.basicService.address.netSize' | language }}">{{ address['netSize'] }}</span>
                             </div>
                             <div class="d-flex align-items-center">
@@ -111,8 +110,7 @@
                         <div class="card h-100 rounded-3 p-3 ">
                             <div class="d-flex align-items-center">
                                 <h3 class="h6 text-nowrap text-truncate mb-0">{{ address['ip'] }}</h3>
-                                <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip"
-                                      data-bs-placement="top"
+                                <span class="badge bg-info ms-2 text-end" data-bs-toggle="tooltip" data-bs-placement="top"
                                       title="{{ 'site.cp.service.tab.info.basicService.address.netSize' | language }}">{{ address['netSize'] }}</span>
                             </div>
                             <div class="d-flex align-items-center">
@@ -351,6 +349,9 @@
         <h6>{{ 'site.cp.service.tab.info.traffic' | language }}</h6>
         <h6><b>{{ service['package']['specs']['traffic'] }}GB</b></h6>
         <br>
+        <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
+        <h6><b>{{ service['package']['specs']['backups'] }}</b></h6>
+        <br>
         <h6>{{ 'site.cp.service.tab.info.proxmox.address' | language }}</h6>
         <div class="row g-1">
             {% for address in proxmox['internal']['address']['ipv4'] %}
@@ -388,12 +389,6 @@
                 </div>
             {% endfor %}
         </div>
-        {% if service['reinstalling'] == false and (service['state'] == 1 or service['state'] == 6) %}
-            <h6>{{ 'site.cp.service.tab.info.backups' | language }}</h6>
-            <h6><b>{{ proxmox['response']['external']['backups'] | length }}
-                    / {{ service['package']['specs']['backups'] }}</b></h6>
-            <br>
-        {% endif %}
 
     {% elseif service['type']['hostType'] == "domain" %}
     {% elseif service['type']['hostType'] == "ts3audiobot" %}

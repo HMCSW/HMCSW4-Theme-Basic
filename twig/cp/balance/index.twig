@@ -24,7 +24,7 @@
                     </div>
                     <h5 class="d-block h5 mb-0 text-center">{{ 'site.cp.balance.current' | language }}</h5>
 
-                    <h4 class="align-items-center text-center">{{ userData['credits'] | creditsToEuro }}{{ "symbol"|currency }}</h4>
+                    <h4 class="align-items-center text-center">{{ userData['balance'] | creditsToEuro }}{{ "symbol"|currency }}</h4>
 
                     {% if userData['email']['status'] == 1 %}
                         <div class="modal fade" tabindex="-1" id="sendBalance" role="dialog"

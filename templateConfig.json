@@ -1,12 +1,10 @@
 {
-  "name": "hosmatic",
-  "description": "Hosmatic HMCSW4 theme",
+  "name": "HMCSW4-default",
+  "description": "Basic HMCSW4 theme",
   "version": "1.0.0",
-
-  "keyWords" : "HMCSW4",
+  "keyWords": "HMCSW4",
   "theme-color": "#0174DF",
   "fontAwesome": "https://cdn.hosmatic.com/fontAwesome/6.1",
-
   "defaultNightModeColor": "blue",
   "nightModeColors": {
     "blue": {
@@ -14,20 +12,9 @@
       "device": "device.css",
       "enabled_file": "dark.css",
       "disabled_file": "light.css"
-    },
-    "black": {
-      "message": "site.cp.settings.nightMode.form.color.black",
-      "device": "device_dark.css",
-      "enabled_file": "dark_black.css",
-      "disabled_file": "light.css"
     }
   },
-  "events": {
-    "gamescom": true
-  },
-
   "icons": {
-    "discordEmbed": "https://cdn.hosmatic.com/branding/The_Hosmatic_H_q.png",
     "default": {
       "user": "https://cdn.hosmatic.com/placeholder/user.png",
       "team": "https://cdn.hosmatic.com/placeholder/team.png",
@@ -38,7 +25,6 @@
       "500x500": "https://cdn.hosmatic.com/branding/The_Hosmatic_H_q.webp"
     },
     "banner": {
-      "pdf": "https://cdn.hosmatic.com/branding/logo_black_h_blue_lightblue.png",
       "dark": {
         "svg": "https://cdn.hosmatic.com/branding/logo_white_h_blue_lightblue.svg",
         "png": "https://cdn.hosmatic.com/branding/logo_white_h_blue_lightblue.png"
@@ -62,97 +48,40 @@
     }
   },
   "language": {
-    "default": "en_US",
+    "default": "de_DE",
     "supported": {
-      "de_DE": "Deutsch",
-      "en_US": "English",
-      "es_ES": "Español",
-      "fr_FR": "Français",
-      "hu_HU": "Magyar",
-      "it_IT": "Italiano",
-      "nl_NL": "Nederlands",
-      "pl_PL": "Polska",
-      "tr_TR": "Türkçe",
-      "ru_RU": "Русский",
-      "uk_UA": "Українська",
-      "pt_PT": "Português",
-      "sv_SE": "Svenska",
-      "fi_FI": "Suomalainen",
-      "da_DK": "Dansk",
-      "no_NO": "Norsk",
-      "cs_CZ": "Česky",
-      "id_ID": "Indonesia",
-      "ja_JP": "日本",
-      "ko_KR": "한국어",
-      "zh_Hans_CN": "简体中文）"
-    },
-    "icons":{
-      "de_DE": "de",
-      "en_US": "en",
-      "es_ES": "es",
-      "fr_FR": "fr",
-      "hu_HU": "hu",
-      "it_IT": "it",
-      "nl_NL": "nl",
-      "pl_PL": "pl",
-      "tr_TR": "tr",
-      "ru_RU": "ru",
-      "uk_UA": "ua",
-      "pt_PT": "pt",
-      "sv_SE": "se",
-      "fi_FI": "fi",
-      "da_DK": "dk",
-      "no_NO": "no",
-      "cs_CZ": "cz",
-      "id_ID": "id",
-      "ja_JP": "jp",
-      "ko_KR": "kr",
-      "zh_Hans_CN": "zh"
+      "de_DE": "Deutsch"
     }
   },
-  "social":{
-    "discord":{
-      "invite":"https://discord.gg/w8Syn43",
-      "guild_id":"683279660406013969"
+  "social": {
+    "discord": {
+      "invite": "https://discord.gg/w8Syn43",
+      "guild_id": "683279660406013969"
     },
-    "twitter":"https://twitter.com/hosmatic",
-    "github":"https://github.com/hosmatic/",
-    "facebook":"https://www.facebook.com/hosmatic",
-    "tiktok":"https://www.tiktok.com/@hosmatic.com",
-    "instagram":"https://www.instagram.com/hosmaticcom/"
+    "twitter": "https://twitter.com/hosmatic",
+    "github": "https://github.com/hosmatic/",
+    "facebook": "https://www.facebook.com/hosmatic",
+    "tiktok": "https://www.tiktok.com/@hosmatic.com",
+    "instagram": "https://www.instagram.com/hosmaticcom/"
   },
-  "alert":{
-    "cp":{
-      "info":{
+  "alert": {
+    "cp": {
+      "info": {
         "enabled": true,
-        "color":"red",
-        "message":"Anstehender Rechenzentrum Umzug | Upcoming datacenter move <br> <a href='https://www.hosmatic.com/news/rechenzentrum-umzug-datacenter-move'>More/Mehr</a>"
+        "color": "red",
+        "message": "Alles gut."
       }
     },
-    "home":{
-      "info":{
+    "home": {
+      "info": {
         "enabled": true,
-        "color":"red",
-        "message":"Anstehender Rechenzentrum Umzug | Upcoming datacenter move <br> <a href='https://www.hosmatic.com/news/rechenzentrum-umzug-datacenter-move'>More/Mehr</a>"
+        "color": "green",
+        "message": "Rabatte auf viele Produkte",
+        "pill": "NUR AM 29.11"
       }
     }
   },
-  "productGroups": [
-    {
-      "name": "header.product.server",
-      "types": ["rootserver", "vps", "dedicated-server", "storagevps", "gameserver", "mailserver", "teamspeak-server", "teamspeak-instance"]
-    },
-    {
-      "name": "header.product.webhosting",
-      "types": ["webspace", "domain"]
-    },
-    {
-      "name": "header.product.license",
-      "types": ["hmcsw", "plesk-license"]
-    },
-    {
-      "name": "header.product.softwareasaservice",
-      "types": ["database", "discordbot"]
-    }
+  "flags": [
+
   ]
 }

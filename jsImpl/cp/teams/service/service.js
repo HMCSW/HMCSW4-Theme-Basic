@@ -130,7 +130,6 @@ var amount = 0;
 
 if(renewSelect){
     renewSelect.addEventListener("change", function () {
-        console.log(renewSelect.value);
         renewSelect.disabled = true;
         amount = renewSelect.options[renewSelect.selectedIndex].getAttribute('data-amount');
 

@@ -22,7 +22,7 @@
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
                         <h2 class="h4 mb-0">{{ mail['title'] }}</h2>
                     </div>
-                    <p>{{ mail['text']|nl2br }}</p>
+                    <p>{{ mail['text']|raw|nl2br }}</p>
 
                     {% if mail['files']|length != 0 %}
                         <div class="row row-cols-1 row-cols-md-2 g-4">

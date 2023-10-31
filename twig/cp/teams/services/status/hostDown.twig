@@ -16,8 +16,7 @@
                                         class="fa-duotone fa-house text-primary lead pe-1 me-2"></i>
                                 <h2 class="h4 mb-0">{{ 'site.cp.tab.teams.services' | language }}</h2>
                                 <div class="btn-group me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
-                                    <a href="{{ dashURL }}/teams/{{ team['businessId'] }}"
-                                       class="btn btn-dark btn-icon">
+                                    <a href="{{ dashURL }}/teams/{{ team['businessId'] }}" class="btn btn-dark btn-icon">
                                         <i class="fa-duotone fa-arrow-left"></i>
                                     </a>
                                 </div>
@@ -47,11 +46,15 @@
                                     <i class="fa-duotone fa-exclamation"></i>
                                 </span>
                                 </div>
-                                <div class="alert-content">
-                                    {{ 'site.cp.tab.teams.service.status.externalDown' | language }}
-                                    <br>
-                                    {{ message }}
-                                </div>
+                                {% if status == "3" %}
+                                    <div class="alert-content">
+                                        {{ 'site.cp.tab.teams.service.status.hostMaintenance' | language }}
+                                    </div>
+                                {% else %}
+                                    <div class="alert-content">
+                                        {{ 'site.cp.tab.teams.service.status.hostDown' | language }}
+                                    </div>
+                                {% endif %}
                             </div>
                             {% if statusContext['maintenance']|length != 0 %}
                                 {% for m in statusContext['maintenance'] %}
@@ -158,7 +161,7 @@
                                                                                             class="float-right text-muted">{{ update['created_at']|date }}</small>
                                                                                 </div>
                                                                                 <p class="lh-140 mb-0">
-                                                                                    {{ update['text']|nl2br }}
+                                                                                    {{ update['text']|raw|nl2br }}
                                                                                 </p>
                                                                             </div>
                                                                         </div>

@@ -44,34 +44,36 @@
                     <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 h-100">
                         <div class="card-body align-items-center justify-content-center" style="display: block"
                              id="statusDiv">
-                            {% if "team.service.proxmox.start"|checkServicePermission %}
-                                <button type="button" id="startVM_BTN"
-                                        class="btn btn-sm btn-success mb-2 w-100 actionButtons d-none">{{ 'site.cp.service.proxmox.start' | language }}</button>
-                            {% endif %}
-                            {% if "team.service.proxmox.stop"|checkServicePermission %}
-                                <button type="button" id="stopVM_BTN"
-                                        class="btn btn-sm btn-danger mb-2 w-100 actionButtons qemu d-none"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="{{ 'site.cp.service.proxmox.actions.qemu'|language }}">{{ 'site.cp.service.proxmox.stop' | language }}</button>
-                            {% endif %}
-                            {% if "team.service.proxmox.kill"|checkServicePermission %}
-                                <button type="button" id="resetVM_BTN"
-                                        class="btn btn-sm btn-danger mb-2 w-100 actionButtons d-none">{{ 'site.cp.service.proxmox.kill' | language }}</button>
-                            {% endif %}
-                            {% if "team.service.proxmox.restart"|checkServicePermission %}
-                                <button type="button" id="restartVM_BTN"
-                                        class="btn btn-sm btn-warning mb-2 w-100 actionButtons qemu d-none"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="{{ 'site.cp.service.proxmox.actions.qemu'|language }}">{{ 'site.cp.service.proxmox.reboot' | language }}</button>
-                            {% endif %}
+                            <div class="row">
+                                {% if "team.service.proxmox.start"|checkServicePermission %}
+                                    <button type="button" id="startVM_BTN"
+                                            class="btn btn-sm btn-success mb-2 w-100 actionButtons d-none">{{ 'site.cp.service.proxmox.start' | language }}</button>
+                                {% endif %}
+                                {% if "team.service.proxmox.stop"|checkServicePermission %}
+                                    <button type="button" id="stopVM_BTN"
+                                            class="btn btn-sm btn-danger mb-2 w-100 actionButtons qemu d-none"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="{{ 'site.cp.service.proxmox.actions.qemu'|language }}">{{ 'site.cp.service.proxmox.stop' | language }}</button>
+                                {% endif %}
+                                {% if "team.service.proxmox.kill"|checkServicePermission %}
+                                    <button type="button" id="resetVM_BTN"
+                                            class="btn btn-sm btn-danger mb-2 w-100 actionButtons d-none">{{ 'site.cp.service.proxmox.kill' | language }}</button>
+                                {% endif %}
+                                {% if "team.service.proxmox.restart"|checkServicePermission %}
+                                    <button type="button" id="restartVM_BTN"
+                                            class="btn btn-sm btn-warning mb-2 w-100 actionButtons qemu d-none"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="{{ 'site.cp.service.proxmox.actions.qemu'|language }}">{{ 'site.cp.service.proxmox.reboot' | language }}</button>
+                                {% endif %}
 
-                            {% if "team.service.loginInService"|checkServicePermission %}
-                                <button type="button"
-                                        onclick="popupCenter('{{ dashURL }}/teams/{{ team['businessId'] }}/service/{{ service['businessId'] }}?vnc', '{{ config['name'] }}', '1000','600');"
-                                        class="btn btn-sm btn-primary mb-2 w-100">{{ 'site.cp.service.proxmox.VNC' | language }}</button>
-                            {% endif %}
+                                {% if "team.service.loginInService"|checkServicePermission %}
+                                    <button type="button"
+                                            onclick="popupCenter('{{ dashURL }}/teams/{{ team['businessId'] }}/service/{{ service['businessId'] }}?vnc', '{{ config['name'] }}', '1000','600');"
+                                            class="btn btn-sm btn-primary mb-2 w-100">{{ 'site.cp.service.proxmox.VNC' | language }}</button>
+                                {% endif %}
+                            </div>
                         </div>
                         <div class="card-body align-items-center justify-content-center m-auto" id="statusLoading"
                              style="display: none">
@@ -83,9 +85,26 @@
                     </section>
                 </div>
                 <div class="col-lg-12 pb-2 pb-sm-4">
+                    <div class="alert alert-group alert-warning alert-icon d-none" id="taskRunningMessage"
+                         role="alert">
+                        <div class="alert-group-prepend"><span
+                                    class="alert-group-icon text-"><i
+                                        class="fa-duotone fa-exclamation"></i></span>
+                        </div>
+                        <div
+                                class="alert-content">{{ 'site.cp.service.proxmox.taskRunning' | language }}</div>
+                    </div>
+                    <div class="alert alert-group alert-warning alert-icon d-none" id="jobRunningMessage"
+                         role="alert">
+                        <div class="alert-group-prepend"><span
+                                    class="alert-group-icon text-"><i
+                                        class="fa-duotone fa-exclamation"></i></span>
+                        </div>
+                        <div
+                                class="alert-content">{{ 'site.cp.service.proxmox.jobRunning' | language }}</div>
+                    </div>
                     <section class="card border-0">
                         <div class="card-body">
-
                             <ul class="nav nav-tabs  justify-content-center" id="myTab" role="tablist">
 
                                 {% include 'cp/teams/services/include/tabs_nav.twig' %}
@@ -99,7 +118,7 @@
                                 {% endif %}
 
 
-                                <li class="nav-item dropdown">
+                                <li class="nav-item dropdown serviceTabs">
                                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                                        role="button">{{ 'site.cp.service.tab.more' | language }}</a>
                                     <div class="dropdown-menu">
@@ -108,36 +127,300 @@
                                                role="tab">{{ 'site.cp.service.tab.proxmox.rDNS' | language }}</a>
                                         {% endif %}
                                         {% if "team.service.proxmox.settings"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                                            <a href="#settings" class="dropdown-item" data-bs-toggle="tab"
+                                            <a href="#settings" class="dropdown-item blockOnTask" data-bs-toggle="tab"
                                                role="tab">{{ 'site.cp.service.tab.proxmox.settings' | language }}</a>
                                         {% endif %}
                                         {% if "team.service.reinstall"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                                            <a href="#reinstall" class="dropdown-item" data-bs-toggle="tab"
+                                            <a href="#reinstall" class="dropdown-item blockOnTask" data-bs-toggle="tab"
                                                role="tab">{{ 'site.cp.service.tab.proxmox.reinstall' | language }}</a>
                                         {% endif %}
                                         {% if "team.service.proxmox.backup"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                                            <a href="#backup" class="dropdown-item" data-bs-toggle="tab"
+                                            <a href="#backup" class="dropdown-item blockOnTask" data-bs-toggle="tab"
                                                role="tab">{{ 'site.cp.service.tab.proxmox.backup' | language }}</a>
                                         {% endif %}
                                         {% if "team.service.proxmox.firewall"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                                            <a href="#firewall" class="dropdown-item" data-bs-toggle="tab"
+                                            <a href="#firewall" class="dropdown-item blockOnTask" data-bs-toggle="tab"
                                                id="firewall-tab"
                                                role="tab">{{ 'site.cp.service.tab.proxmox.firewall' | language }}</a>
                                         {% endif %}
                                         {% if "team.service.proxmox.vnet"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
-                                            <a href="#vnet" class="dropdown-item" data-bs-toggle="tab" id="firewall-tab"
+                                            <a href="#vnet" class="dropdown-item blockOnTask" data-bs-toggle="tab"
+                                               id="firewall-tab"
                                                role="tab">{{ 'site.cp.service.tab.proxmox.vnet' | language }}</a>
+                                        {% endif %}
+                                        {% if "team.service.proxmox.tasks"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                            <a href="#task" class="dropdown-item blockOnTask" data-bs-toggle="tab"
+                                               id="task-tab"
+                                               role="tab">{{ 'site.cp.service.tab.proxmox.task' | language }}</a>
                                         {% endif %}
                                     </div>
                                 </li>
                             </ul>
-                            <div class="tab-content" id="myTabContent">
+                            <div class="tab-content">
 
                                 {% include 'cp/teams/services/include/tabs.twig' %}
 
+                                {% if "team.service.proxmox.tasks"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
+                                    <div class="tab-pane fade" id="task" role="tabpanel">
+
+                                        <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
+                                                    class="fa-duotone fa-calendar-days text-primary lead pe-1 me-2"></i>
+                                            <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.task' | language }}</h2>
+                                            <div class="me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
+                                                <button type="button"
+                                                        class="btn btn-secondary btn-sm task_add">{{ 'site.cp.service.tab.proxmox.task.create' | language }}</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal modal-lg fade" id="editTaskModal" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                 role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5
+                                                                class="modal-title h6">{{ 'site.cp.service.tab.proxmox.task' | language }}</h5>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" id="task_id">
+
+                                                        <div class="row g-3">
+
+
+                                                            <div class="col-lg-4">
+                                                                <div class="form-group">
+                                                                    <label for="task_expression_minute"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.expression.minute' | language }}</label>
+                                                                    <select name="task_expression_minute"
+                                                                            id="task_expression_minute"
+                                                                            class="form-select">
+                                                                        <option
+                                                                                value="*">{{ 'site.cp.service.tab.proxmox.task.expression.minute.perMinute' | language }}</option>
+                                                                        <option
+                                                                                value="*/15">{{ 'site.cp.service.tab.proxmox.task.expression.minute.per15Minute' | language }}</option>
+                                                                        <option
+                                                                                value="*/30">{{ 'site.cp.service.tab.proxmox.task.expression.minute.per30Minute' | language }}</option>
+                                                                        <option
+                                                                                value="*/45">{{ 'site.cp.service.tab.proxmox.task.expression.minute.per45Minute' | language }}</option>
+                                                                        {% for i in range(0, 59) %}
+                                                                            <option value="{{ i }}">{{ i }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-4">
+                                                                <div class="form-group">
+                                                                    <label for="task_expression_hour"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.expression.hour' | language }}</label>
+                                                                    <select name="task_expression_hour"
+                                                                            id="task_expression_hour"
+                                                                            class="form-select">
+                                                                        <option
+                                                                                value="*">{{ 'site.cp.service.tab.proxmox.task.expression.hour.perHour' | language }}</option>
+                                                                        <option
+                                                                                value="*/2">{{ 'site.cp.service.tab.proxmox.task.expression.hour.per2Hour' | language }}</option>
+                                                                        <option
+                                                                                value="*/4">{{ 'site.cp.service.tab.proxmox.task.expression.hour.per4Hour' | language }}</option>
+                                                                        <option
+                                                                                value="*/6">{{ 'site.cp.service.tab.proxmox.task.expression.hour.per6Hour' | language }}</option>
+                                                                        <option
+                                                                                value="*/8">{{ 'site.cp.service.tab.proxmox.task.expression.hour.per8Hour' | language }}</option>
+                                                                        <option
+                                                                                value="*/12">{{ 'site.cp.service.tab.proxmox.task.expression.hour.per12Hour' | language }}</option>
+                                                                        {% for i in range(0, 23) %}
+                                                                            <option value="{{ i }}">{{ i }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-4">
+                                                                <div class="form-group">
+                                                                    <label for="task_expression_dayOfWeek"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfWeek' | language }}</label>
+                                                                    <select name="task_expression_dayOfWeek"
+                                                                            id="task_expression_dayOfWeek"
+                                                                            class="form-select">
+                                                                        <option
+                                                                                value="*">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfWeek.everyDay' | language }}</option>
+                                                                        {% for i in range(1, 7) %}
+                                                                            <option value="{{ i }}">{{ i }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="task_expression_dayOfMonth"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth' | language }}</label>
+                                                                    <select name="task_expression_dayOfMonth"
+                                                                            id="task_expression_dayOfMonth"
+                                                                            class="form-select">
+                                                                        <option
+                                                                                value="*">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.perDay' | language }}</option>
+                                                                        <option
+                                                                                value="*/2">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per2Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/4">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per4Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/6">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per6Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/8">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per8Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/12">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per12Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/15">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per15Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/20">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per20Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/25">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per25Day' | language }}</option>
+                                                                        <option
+                                                                                value="*/30">{{ 'site.cp.service.tab.proxmox.task.expression.dayOfMonth.per30Day' | language }}</option>
+                                                                        {% for i in range(1, 31) %}
+                                                                            <option value="{{ i }}">{{ i }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="task_expression_month"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.expression.month' | language }}</label>
+                                                                    <select name="task_expression_month"
+                                                                            id="task_expression_month"
+                                                                            class="form-select">
+                                                                        <option
+                                                                                value="*">{{ 'site.cp.service.tab.proxmox.task.expression.month.perMonth' | language }}</option>
+                                                                        <option
+                                                                                value="*/2">{{ 'site.cp.service.tab.proxmox.task.expression.month.per2Month' | language }}</option>
+                                                                        <option
+                                                                                value="*/4">{{ 'site.cp.service.tab.proxmox.task.expression.month.per4Month' | language }}</option>
+                                                                        <option
+                                                                                value="*/6">{{ 'site.cp.service.tab.proxmox.task.expression.month.per6Month' | language }}</option>
+                                                                        <option
+                                                                                value="*/8">{{ 'site.cp.service.tab.proxmox.task.expression.month.per8Month' | language }}</option>
+                                                                        <option
+                                                                                value="*/12">{{ 'site.cp.service.tab.proxmox.task.expression.month.per12Month' | language }}</option>
+                                                                        {% for i in range(1, 12) %}
+                                                                            <option value="{{ i }}">{{ i }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="task_expression"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.expression' | language }}</label>
+                                                                    <input name="task_expression" id="task_expression"
+                                                                           class="form-control" required
+                                                                           placeholder="* * * * *">
+                                                                </div>
+                                                            </div>
+
+                                                            <hr/>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="task_task"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.taskName' | language }}</label>
+                                                                    <select name="task_task" id="task_task"
+                                                                            class="form-select"
+                                                                            required>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label for="task_name"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.task.name' | language }}</label>
+                                                                    <input name="task_name" id="task_name"
+                                                                           class="form-control" required
+                                                                           placeholder="Task">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <input name="task_notification"
+                                                                           id="task_notification" type="checkbox"
+                                                                           class="form-check-input" required>
+                                                                    <label for="task_notification"
+                                                                           class="form-check-label">{{ 'site.cp.service.tab.proxmox.task.notification' | language }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" id="task_edit_btn"
+                                                                class="btn btn-primary">{{ 'general.modal.saveBtn' | language }}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="table-responsive">
+                                                <table class="table align-middle" id="tasksTable">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>{{ 'site.cp.service.tab.proxmox.task.name' | language }}</td>
+                                                        <td>{{ 'site.cp.service.tab.proxmox.task.taskName' | language }}</td>
+                                                        <td>{{ 'site.cp.service.tab.proxmox.task.expression' | language }}</td>
+                                                        <td>{{ 'site.cp.service.tab.proxmox.task.nextRun' | language }}</td>
+                                                        <td>{{ 'site.cp.service.tab.proxmox.task.lastRun' | language }}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
                                 {% if "team.service.proxmox.vnet"|checkServicePermission and (service['state'] == 1 or service['state'] == 6) %}
                                     <div class="tab-pane fade" id="vnet" role="tabpanel">
+                                        <div class="modal fade" id="configureNetToVmModal" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                 role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5
+                                                                class="modal-title h6">{{ 'site.cp.service.tab.proxmox.vnet.config' | language }}</h5>
+                                                        <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <input type="hidden" class="configureNetToVmModalId">
 
+                                                        <div class="row g-3">
+                                                            <div class="col-lg-12">
+                                                                <div class="form-group">
+                                                                    <label for="configureNetToVmModalIp"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.vnet.config.ip' | language }}</label>
+                                                                    <input type="text" id="configureNetToVmModalIp"
+                                                                           class="form-control configureNetToVmModalIp"
+                                                                           required
+                                                                           placeholder="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button"
+                                                                class="btn btn-primary configureNetToVmModalBtn">{{ 'general.modal.saveBtn' | language }}</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
                                                     class="fa-duotone fa-chart-network text-primary lead pe-1 me-2"></i>
                                             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.vnet' | language }}</h2>
@@ -226,41 +509,6 @@
                                                                     class="fa-duotone fa-exclamation"></i></span>
                                                     </div>
                                                     <div class="alert-content">{{ 'site.cp.service.tab.proxmox.vnet.create' | language }}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal fade" id="configureNetToVmModal" tabindex="-1" role="dialog">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                             role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5
-                                                            class="modal-title h6">{{ 'site.cp.service.tab.proxmox.vnet.config' | language }}</h5>
-                                                    <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <input type="hidden" class="configureNetToVmModalId">
-
-                                                    <div class="row g-3">
-                                                        <div class="col-lg-12">
-                                                            <div class="form-group">
-                                                                <label for="configureNetToVmModalIp"
-                                                                       class="form-label">{{ 'site.cp.service.tab.proxmox.vnet.config.ip' | language }}</label>
-                                                                <input type="text" id="configureNetToVmModalIp"
-                                                                       class="form-control configureNetToVmModalIp"
-                                                                       required
-                                                                       placeholder="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button"
-                                                            class="btn btn-primary configureNetToVmModalBtn">{{ 'general.modal.saveBtn' | language }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -732,18 +980,11 @@
                                             <div class="me-2 mb-2 ms-auto" role="group" aria-label="Settings group">
 
                                                 {% if service['reinstalling'] == false %}
-                                                    {% if proxmox['external']['backups'] | length <= service['package']['specs']['backups'] %}
-                                                        {% if "team.service.proxmox.backup.create"|checkServicePermission %}
-                                                            <form method="post">
-                                                                <input type="hidden" name="csrf"
-                                                                       value="{{ csrf }}">
-                                                                <input type="hidden" name="action"
-                                                                       value="createBackup">
-                                                                <button type="submit"
-                                                                        class="btn btn-secondary btn-icon">
-                                                                    <i class="fa-duotone fa-plus"></i></button>
-                                                            </form>
-                                                        {% endif %}
+                                                    {% if "team.service.proxmox.backup.create"|checkServicePermission %}
+                                                        <button type="button"
+                                                                class="btn btn-secondary btn-icon createBackupBtn"
+                                                                style="display:none">
+                                                            <i class="fa-duotone fa-plus"></i></button>
                                                     {% endif %}
                                                 {% endif %}
                                             </div>
@@ -751,133 +992,102 @@
 
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                {% if proxmox['external']['vm']['locked'] or service['reinstalling'] %}
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-12">
-                                                            <div class="alert alert-group alert-warning alert-icon"
-                                                                 role="alert">
-                                                                <div class="alert-group-prepend"><span
-                                                                            class="alert-group-icon text-"><i
-                                                                                class="fa-duotone fa-exclamation"></i></span>
-                                                                </div>
-                                                                <div class="alert-content">{{ 'site.cp.service.proxmox.taskRunning' | language }}</div>
+                                                <div class="modal fade" id="deleteBackupModal"
+                                                     tabindex="-1"
+                                                     role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content text-left">
+                                                            <input type="hidden" class="backup_id">
+                                                            <div class="modal-header">
+                                                                <h5
+                                                                        class="modal-title">{{ 'site.cp.service.tab.proxmox.backup.delete' | language }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{ 'site.cp.service.tab.proxmox.backup.delete.info' | language }}
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button"
+                                                                        class="btn btn-primary deleteBtn">{{ 'site.cp.service.tab.proxmox.backup.delete.btn' | language }}</button>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                {% else %}
-                                                    {% if proxmox['external']['backups']|length != 0 %}
-                                                        <div class="row row-cols-1 row-cols-md-2 g-4">
-                                                            {% set backupId = 0 %}
-                                                            {% for id, backup in proxmox['external']['backups'] %}
-                                                                {% set backupId = backupId + 1 %}
-                                                                <div class="col">
-                                                                    <div class="card h-100 rounded-3 p-3 p-sm-4">
-                                                                        <div class="d-flex align-items-center pb-2 mb-1">
-                                                                            <h3 class="h6 text-nowrap text-truncate mb-0">{{ backup['ctime']|date }}</h3>
-                                                                            <div class="d-flex ms-auto">
-                                                                                {% if "team.service.proxmox.backup.delete"|checkServicePermission %}
-                                                                                    <button type="button"
-                                                                                            data-bs-target="#deleteBackupModal-{{ backupId }}"
-                                                                                            data-bs-toggle="modal"
-                                                                                            class="dropdown-item">
-                                                                                        <i
-                                                                                                class="nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-trash-alt"></i>
-                                                                                    </button>
+                                                </div>
 
-
-                                                                                    <div class="modal fade"
-                                                                                         id="deleteBackupModal-{{ backupId }}"
-                                                                                         tabindex="-1"
-                                                                                         role="dialog">
-                                                                                        <div class="modal-dialog modal-dialog-centered"
-                                                                                             role="document">
-                                                                                            <div class="modal-content text-left">
-                                                                                                <input type="hidden"
-                                                                                                       name="action"
-                                                                                                       value="renewService">
-                                                                                                <input type="hidden"
-                                                                                                       name="csrf"
-                                                                                                       value="{{ csrf }}">
-                                                                                                <div class="modal-header">
-                                                                                                    <h5
-                                                                                                            class="modal-title">{{ 'site.cp.service.tab.proxmox.backup.delete' | language }}</h5>
-                                                                                                    <button type="button"
-                                                                                                            class="btn-close"
-                                                                                                            data-bs-dismiss="modal"
-                                                                                                            aria-label="Close"></button>
-                                                                                                </div>
-                                                                                                <div class="modal-body">
-                                                                                                    {{ 'site.cp.service.tab.proxmox.backup.delete.info' | language }}
-                                                                                                </div>
-                                                                                                <div class="modal-footer">
-                                                                                                    <button type="button"
-                                                                                                            onclick="deleteBackup('{{ id }}')"
-                                                                                                            class="btn btn-primary">{{ 'site.cp.service.tab.proxmox.backup.delete.btn' | language }}</button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                {% endif %}
-                                                                                {% if "team.service.proxmox.backup.restore"|checkServicePermission %}
-                                                                                    <button type="button"
-                                                                                            data-bs-target="#restoreBackupModal-{{ backupId }}"
-                                                                                            data-bs-toggle="modal"
-                                                                                            class="dropdown-item">
-                                                                                        <i
-                                                                                                class="nav-link text-warning fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-trash-restore"></i>
-                                                                                    </button>
-
-
-                                                                                    <div class="modal fade"
-                                                                                         id="restoreBackupModal-{{ backupId }}"
-                                                                                         tabindex="-1"
-                                                                                         role="dialog">
-                                                                                        <div class="modal-dialog modal-dialog-centered"
-                                                                                             role="document">
-                                                                                            <div class="modal-content text-left">
-                                                                                                <input type="hidden"
-                                                                                                       name="action"
-                                                                                                       value="renewService">
-                                                                                                <input type="hidden"
-                                                                                                       name="csrf"
-                                                                                                       value="{{ csrf }}">
-                                                                                                <div class="modal-header">
-                                                                                                    <h5
-                                                                                                            class="modal-title">{{ 'site.cp.service.tab.proxmox.backup.restore' | language }}</h5>
-                                                                                                    <button type="button"
-                                                                                                            class="btn-close"
-                                                                                                            data-bs-dismiss="modal"
-                                                                                                            aria-label="Close"></button>
-                                                                                                </div>
-                                                                                                <div class="modal-body">
-                                                                                                    {{ 'site.cp.service.tab.proxmox.backup.restore.info' | language }}
-                                                                                                </div>
-                                                                                                <div class="modal-footer">
-                                                                                                    <button type="button"
-                                                                                                            onclick="restoreBackup('{{ id }}')"
-                                                                                                            class="btn btn-primary">{{ 'site.cp.service.tab.proxmox.backup.restore.btn' | language }}</button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                {% endif %}
-                                                                            </div>
-                                                                        </div>
-                                                                        <p class="mb-0">
-                                                                            {{ backup['size']|formatSizeUnits }}GB
-                                                                        </p>
-                                                                        <br>
-
-                                                                    </div>
-                                                                </div>
-
-                                                            {% endfor %}
+                                                <div class="modal fade" id="restoreBackupModal"
+                                                     tabindex="-1"
+                                                     role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content text-left">
+                                                            <input type="hidden" class="backup_id">
+                                                            <div class="modal-header">
+                                                                <h5
+                                                                        class="modal-title">{{ 'site.cp.service.tab.proxmox.backup.restore' | language }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{ 'site.cp.service.tab.proxmox.backup.restore.info' | language }}
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button"
+                                                                        class="btn btn-primary restoreBtn">{{ 'site.cp.service.tab.proxmox.backup.restore.btn' | language }}</button>
+                                                            </div>
                                                         </div>
+                                                    </div>
+                                                </div>
 
+                                                <div class="col demo_backup" style="display:none">
+                                                    <div class="card h-100 rounded-3 p-3 p-sm-4">
+                                                        <div class="d-flex align-items-center pb-2 mb-1">
+                                                            <h3 class="h6 text-nowrap text-truncate mb-0 backup_date"></h3>
+                                                            <i class="fa-duotone fa-badge-check fs-base text-success ms-2 backup_verified"
+                                                               style="display:none"></i>
+                                                            <i class="fa-duotone fa-seal-question fs-base text-warning ms-2 backup_failed"
+                                                               style="display:none"></i>
+                                                            <i class="fa-duotone fa-seal-exclamation fs-base text-danger ms-2 backup_unverified"
+                                                               style="display:none"></i>
+                                                            <div class="d-flex ms-auto">
+                                                                {% if "team.service.proxmox.backup.delete"|checkServicePermission %}
+                                                                    <button type="button"
+                                                                            class="dropdown-item backupDeleteBtn">
+                                                                        <i
+                                                                                class="nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-trash-alt"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                                {% if "team.service.proxmox.backup.restore"|checkServicePermission %}
+                                                                    <button type="button"
+                                                                            class="dropdown-item backupRestoreBtn">
+                                                                        <i
+                                                                                class="nav-link text-warning fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-trash-restore"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                                {% if "team.service.proxmox.backup.protect"|checkServicePermission %}
+                                                                    <button type="button"
+                                                                            class="dropdown-item backupProtectBtn"
+                                                                            style="display:none">
+                                                                        <i
+                                                                                class="nav-link text-danger fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-lock-open"></i>
+                                                                    </button>
+                                                                    <button type="button"
+                                                                            class="dropdown-item backupProtectRemoveBtn"
+                                                                            style="display:none">
+                                                                        <i
+                                                                                class="nav-link text-success fs-xl fw-normal py-1 pe-0 ps-1 ms-2 fa-duotone fa-lock"></i>
+                                                                    </button>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <p class="mb-0 backup_size"></p>
+                                                        <br>
 
-                                                    {% endif %}
-                                                {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="row row-cols-1 row-cols-md-2 g-4 backupsList">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1043,32 +1253,57 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                {% if proxmox['external']['vm']['locked'] or service['reinstalling'] %}
-                                                    <div class="row">
-                                                        <div class="col-sm-12 col-md-12">
-                                                            <div class="alert alert-group alert-warning alert-icon"
-                                                                 role="alert">
-                                                                <div class="alert-group-prepend"><span
-                                                                            class="alert-group-icon text-"><i
-                                                                                class="fa-duotone fa-exclamation"></i></span>
+                                                <div class="row g-3 mb-4">
+                                                    <div class="col-sm-12 col-md-12">
+                                                        <form method="post">
+                                                            <input type="hidden" name="action"
+                                                                   value="changeRootPassword">
+                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                            <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
+                                                                <i
+                                                                        class="fa-duotone fa-lock-keyhole text-primary lead pe-1 me-2"></i>
+                                                                <h2
+                                                                        class="h5 mb-0">{{ 'site.cp.service.tab.proxmox.settings.changeRootPassword' | language }}</h2>
+                                                                <div class="btn-group me-2 mb-2 ms-auto"
+                                                                     role="group"
+                                                                     aria-label="Settings group">
+                                                                    <button type="submit"
+                                                                            class="btn btn-dark btn-icon">
+                                                                        <i class="fa-duotone fa-floppy-disk"></i>
+                                                                    </button>
                                                                 </div>
-                                                                <div
-                                                                        class="alert-content">{{ 'site.cp.service.proxmox.taskRunning' | language }}</div>
                                                             </div>
-                                                        </div>
+
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="settings-password"
+                                                                           class="form-label">{{ 'site.cp.service.tab.proxmox.settings.password' | language }}</label>
+                                                                    <input class="form-control" type="password"
+                                                                           id="settings-password"
+                                                                           name="password"
+                                                                           placeholder="********">
+                                                                </div>
+                                                            </div>
+
+
+                                                        </form>
                                                     </div>
-                                                {% else %}
+                                                </div>
+                                                {% if sshKeys|length != 0 %}
                                                     <div class="row g-3 mb-4">
+                                                        <hr/>
                                                         <div class="col-sm-12 col-md-12">
+
                                                             <form method="post">
+                                                                <input type="hidden" name="csrf"
+                                                                       value="{{ csrf }}">
                                                                 <input type="hidden" name="action"
-                                                                       value="changeRootPassword">
-                                                                <input type="hidden" name="csrf" value="{{ csrf }}">
+                                                                       value="changeSSHKeys">
                                                                 <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
                                                                     <i
-                                                                            class="fa-duotone fa-lock-keyhole text-primary lead pe-1 me-2"></i>
+                                                                            class="fa-duotone fa-key text-primary lead pe-1 me-2"></i>
                                                                     <h2
-                                                                            class="h5 mb-0">{{ 'site.cp.service.tab.proxmox.settings.changeRootPassword' | language }}</h2>
+                                                                            class="h5 mb-0">{{ 'site.cp.service.tab.proxmox.settings.changeSSHKeys' | language }}</h2>
                                                                     <div class="btn-group me-2 mb-2 ms-auto"
                                                                          role="group"
                                                                          aria-label="Settings group">
@@ -1079,82 +1314,41 @@
                                                                     </div>
                                                                 </div>
 
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="settings-password"
-                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.settings.password' | language }}</label>
-                                                                        <input class="form-control" type="password"
-                                                                               id="settings-password"
-                                                                               name="password"
-                                                                               placeholder="********">
-                                                                    </div>
+                                                                <div class="row row-cols-1 row-cols-md-2 g-4">
+                                                                    {% for key, value in sshKeys %}
+
+                                                                        <div class="col">
+                                                                            <div class="card h-100 rounded-3 p-3 p-sm-4">
+                                                                                <div class="d-flex align-items-center pb-2 mb-1">
+                                                                                    <h3 class="h6 text-nowrap text-truncate mb-0">{{ value['name'] }}</h3>
+                                                                                    <div class="d-flex ms-auto">
+                                                                                        <div class="form-check fs-xl fw-normal py-1 pe-0 ps-1 ms-2">
+                                                                                            <input
+                                                                                                    type="checkbox"
+                                                                                                    class="form-check-input"
+                                                                                                    name="key_id[]"
+                                                                                                    id="radio-key-{{ key }}"
+                                                                                                    value="{{ key }}"
+                                                                                                    {% if key in proxmox['internal']['sshKeysId'] %}checked{% endif %} >
+                                                                                            <label class="form-check-label"
+                                                                                                   for="radio-key-{{ key }}"></label>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                <p class="mb-0">{{ value['user']['name'] }}
+                                                                                    <br>{{ value['fingerPrint'] }}
+                                                                                </p>
+                                                                                <br>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    {% endfor %}
                                                                 </div>
-
-
                                                             </form>
                                                         </div>
                                                     </div>
-                                                    {% if sshKeys|length != 0 %}
-                                                        <div class="row g-3 mb-4">
-                                                            <hr/>
-                                                            <div class="col-sm-12 col-md-12">
-
-                                                                <form method="post">
-                                                                    <input type="hidden" name="csrf"
-                                                                           value="{{ csrf }}">
-                                                                    <input type="hidden" name="action"
-                                                                           value="changeSSHKeys">
-                                                                    <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
-                                                                        <i
-                                                                                class="fa-duotone fa-key text-primary lead pe-1 me-2"></i>
-                                                                        <h2
-                                                                                class="h5 mb-0">{{ 'site.cp.service.tab.proxmox.settings.changeSSHKeys' | language }}</h2>
-                                                                        <div class="btn-group me-2 mb-2 ms-auto"
-                                                                             role="group"
-                                                                             aria-label="Settings group">
-                                                                            <button type="submit"
-                                                                                    class="btn btn-dark btn-icon">
-                                                                                <i class="fa-duotone fa-floppy-disk"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="row row-cols-1 row-cols-md-2 g-4">
-                                                                        {% for key, value in sshKeys %}
-
-                                                                            <div class="col">
-                                                                                <div class="card h-100 rounded-3 p-3 p-sm-4">
-                                                                                    <div class="d-flex align-items-center pb-2 mb-1">
-                                                                                        <h3 class="h6 text-nowrap text-truncate mb-0">{{ value['name'] }}</h3>
-                                                                                        <div class="d-flex ms-auto">
-                                                                                            <div class="form-check fs-xl fw-normal py-1 pe-0 ps-1 ms-2">
-                                                                                                <input
-                                                                                                        type="checkbox"
-                                                                                                        class="form-check-input"
-                                                                                                        name="key_id[]"
-                                                                                                        id="radio-key-{{ key }}"
-                                                                                                        value="{{ key }}"
-                                                                                                        {% if key in proxmox['internal']['sshKeysId'] %}checked{% endif %} >
-                                                                                                <label class="form-check-label"
-                                                                                                       for="radio-key-{{ key }}"></label>
-                                                                                            </div>
-
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <p class="mb-0">{{ value['user']['name'] }}
-                                                                                        <br>{{ value['fingerPrint'] }}
-                                                                                    </p>
-                                                                                    <br>
-
-                                                                                </div>
-                                                                            </div>
-
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -1166,7 +1360,7 @@
                                     <div class="tab-pane fade" id="reinstall" role="tabpanel"
                                          aria-labelledby="reinstall-tab">
                                         <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3"><i
-                                                    class="fa-duotone fa-compact-disc text-primary lead pe-1 me-2"></i>
+                                                    class="fa-duotone fa-arrows-rotate text-primary lead pe-1 me-2"></i>
                                             <h2 class="h4 mb-0">{{ 'site.cp.service.tab.proxmox.reinstall' | language }}</h2>
                                         </div>
                                         <div class="row">
@@ -1181,187 +1375,139 @@
                                                         <div class="alert-content">{{ 'site.cp.service.tab.serviceLocked' | language }}</div>
                                                     </div>
                                                 </div>
-                                            {% elseif proxmox['external']['vm']['locked'] or service['reinstalling'] %}
-                                                <div class="col-sm-12 col-md-12">
-                                                    <div class="alert alert-group alert-warning alert-icon"
-                                                         role="alert">
-                                                        <div class="alert-group-prepend"><span
-                                                                    class="alert-group-icon text-"><i
-                                                                        class="fa-duotone fa-exclamation"></i></span>
-                                                        </div>
-                                                        <div
-                                                                class="alert-content">{{ 'site.cp.service.proxmox.taskRunning' | language }}</div>
-                                                    </div>
-                                                </div>
                                             {% else %}
-                                                <div class="col-sm-12 col-md-12">
-                                                    {% if proxmox['external']['vmConfig']['disk'] != "none" %}
-                                                        <h6
-                                                                class="text-left">{{ 'site.cp.service.tab.proxmox.reinstall.iso.remove' | language }}</h6>
-                                                        <br>
 
-                                                        <form method="post">
-                                                            <input type="hidden" name="csrf" value="{{ csrf }}">
-                                                            <input type="hidden" name="action" value="removeISO">
+                                                <div class="col-lg-12 pb-2 pb-sm-4">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="fa-duotone fa-wand-magic-sparkles text-primary lead pe-1 me-2"></i>
 
-                                                            <h6 class="text-left">
-                                                                <button class="btn btn-warning btn-sm"
-                                                                        type="submit">{{ 'general.modal.deleteBtn' | language }}</button>
-                                                            </h6>
-                                                        </form>
-
-                                                    {% else %}
-                                                        <div class="row">
-                                                            <div class="col-sm-12 col-md-5">
-                                                                <h6
-                                                                        class="text-left">{{ 'site.cp.service.tab.proxmox.reinstall.os' | language }}</h6>
-                                                                <br>
-                                                                <div class="row g-3 mb-2">
-                                                                    {% for os in proxmox['internal']['allOS'] %}
-                                                                        <div class="col-md-12">
-                                                                            <div class="card overflow-hidden ">
-                                                                                <div class="card-body">
-                                                                                    <div class="form-check">
-                                                                                        <input {% if proxmox['internal']['os']['name'] == os['os'] %} checked {% endif %}
-                                                                                                required type="radio"
-                                                                                                class="form-check-input"
-                                                                                                name="os"
-                                                                                                value="{{ os['os'] }}"
-                                                                                                id="radio-os-{{ os['os'] }}">
-                                                                                        <label class="form-check-label h6 mb-0"
-                                                                                               for="radio-os-{{ os['os'] }}">{{ os['name'] }}</label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    {% endfor %}
+                                                                <h5 class="h5 mb-0">{{ 'site.cp.service.tab.proxmox.reinstall.os' | language }}</h5>
+                                                                <div class="btn-group me-2 mb-2 ms-auto">
+                                                                    <button class="btn btn-dark btn-icon"
+                                                                            id="reinstallBtn"><i class="fa fa-pen"></i>
+                                                                    </button>
                                                                 </div>
-
-                                                                <h6 class="text-center">
-                                                                    <a class="btn btn-warning btn-sm"
-                                                                       data-bs-toggle="modal"
-                                                                       data-bs-target="#reinstall-modal">{{ 'site.cp.service.tab.proxmox.reinstall' | language }}
-                                                                    </a>
-                                                                </h6>
-                                                                <div class="modal modal-danger fade"
-                                                                     id="reinstall-modal" tabindex="-1"
-                                                                     role="dialog"
-                                                                     aria-labelledby="reinstall-modal"
-                                                                     aria-hidden="true">
+                                                                <div class="modal modal-danger fade" id="reinstallModal"
+                                                                     tabindex="-1" role="dialog"
+                                                                     aria-labelledby="reinstall" aria-hidden="true">
                                                                     <div class="modal-dialog modal-dialog-centered"
                                                                          role="document">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
                                                                                 <h5
-                                                                                        class="modal-title h6">{{ 'site.cp.service.info.reinstall.modal' | language }}</h5>
+                                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.reinstall.os' | language }}</h5>
                                                                                 <button type="button" class="btn-close"
-                                                                                        data-bs-dismiss="modal"
-                                                                                        aria-label="Close"></button>
+                                                                                        data-bs-dismiss="modal"></button>
                                                                             </div>
                                                                             <div class="modal-body">
-                                                                                <div class="py-3 text-center">
-                                                                                    <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
-                                                                                    <h5
-                                                                                            class="heading h4 mt-4">{{ 'site.cp.service.info.reinstall.modal.warn.title' | language }}</h5>
-                                                                                    <p>{{ 'site.cp.service.info.reinstall.modal.warn.description' | language }}</p>
+                                                                                <div class="row g-1">
+                                                                                    <div class="py-3 text-center">
+                                                                                        <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
+                                                                                        <h5
+                                                                                                class="heading h4 mt-4">{{ 'site.cp.service.tab.proxmox.reinstall.os.modal.warn.title' | language }}</h5>
+                                                                                        <p>{{ 'site.cp.service.tab.proxmox.reinstall.os.modal.warn.description' | language }}</p>
+                                                                                    </div>
+
+                                                                                    <div class="form-group">
+                                                                                        <label for="reinstallModalOs"
+                                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.reinstall.os.modal.os' | language }}</label>
+                                                                                        <select id="reinstallModalOs"
+                                                                                                class="form-select">
+                                                                                            {% for os in proxmox['internal']['allOS'] %}
+                                                                                                <option
+                                                                                                        value="{{ os['os'] }}" {% if proxmox['internal']['os']['name'] == os['os'] %} selected {% endif %}>{{ os['name'] }}</option>
+                                                                                            {% endfor %}
+                                                                                        </select>
+                                                                                    </div>
+
                                                                                 </div>
                                                                             </div>
                                                                             <div class="modal-footer">
                                                                                 <button type="button"
-                                                                                        onclick="reinstallVM()"
-                                                                                        class="btn btn-sm btn-danger">{{ 'site.cp.service.info.reinstall.modal.submit' | language }}</button>
+                                                                                        id="reinstallModalBtn"
+                                                                                        class="btn btn-danger">{{ 'site.cp.service.tab.proxmox.reinstall.os.modal.btn' | language }}</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 pb-2 pb-sm-4">
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="fa-duotone fa-compact-disc text-primary lead pe-1 me-2"></i>
 
-                                                            <div class="col-sm-12 col-md-2 d-none d-xl-block"></div>
-                                                            <div class="col-sm-12 col-md-5">
-                                                                <h6
-                                                                        class="text-left">{{ 'site.cp.service.tab.proxmox.reinstall.iso' | language }}</h6>
-                                                                <br>
+                                                                <h5 class="h5 mb-0">{{ 'site.cp.service.tab.proxmox.reinstall.iso' | language }}</h5>
+                                                                <div class="btn-group me-2 mb-2 ms-auto"
+                                                                     style="display:none">
+                                                                    <button class="btn btn-dark btn-icon"
+                                                                            id="addIsoBtn"><i class="fa fa-pen"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="btn-group me-2 mb-2 ms-auto"
+                                                                     style="display:none">
+                                                                    <button class="btn btn-danger btn-icon"
+                                                                            id="removeIsoBtn"><i
+                                                                                class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </div>
 
-                                                                <form method="post">
-                                                                    <input type="hidden" name="csrf"
-                                                                           value="{{ csrf }}">
-                                                                    <input type="hidden" name="action"
-                                                                           value="addISO">
-
-                                                                    <div class="row g-3 mb-2">
-                                                                        {% for iso in proxmox['internal']['allISO'] %}
-                                                                            <div class="col-md-12">
-                                                                                <div class="card overflow-hidden ">
-                                                                                    <div class="card-body">
-                                                                                        <div class="form-check">
-                                                                                            <input required type="radio"
-                                                                                                   class="form-check-input"
-                                                                                                   name="name"
-                                                                                                   value="{{ iso['key'] }}"
-                                                                                                   id="radio-iso-{{ iso['key'] }}">
-                                                                                            <label class="form-check-label h6 mb-0"
-                                                                                                   for="radio-iso-{{ iso['key'] }}">{{ iso['name'] }}</label>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                <div class="modal modal-danger fade" id="addIsoModal"
+                                                                     tabindex="-1" role="dialog"
+                                                                     aria-labelledby="reinstall" aria-hidden="true">
+                                                                    <div class="modal-dialog modal-dialog-centered"
+                                                                         role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5
+                                                                                        class="modal-title h6">{{ 'site.cp.service.tab.proxmox.reinstall.iso' | language }}</h5>
+                                                                                <button type="button" class="btn-close"
+                                                                                        data-bs-dismiss="modal"></button>
                                                                             </div>
-                                                                        {% endfor %}
-                                                                    </div>
-                                                                    <h6 class="text-center">
-                                                                        <a class="btn btn-warning btn-sm"
-                                                                           data-bs-toggle="modal"
-                                                                           data-bs-target="#reinstall-iso-modal">{{ 'site.cp.service.tab.proxmox.reinstall' | language }}
-                                                                        </a>
-                                                                    </h6>
-
-
-                                                                    <div class="modal modal-danger fade modal-no-move"
-                                                                         id="reinstall-iso-modal" tabindex="-1"
-                                                                         role="dialog"
-                                                                         aria-labelledby="reinstall-iso-modal"
-                                                                         aria-hidden="true">
-                                                                        <div class="modal-dialog modal-dialog-centered"
-                                                                             role="document">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <h5
-                                                                                            class="modal-title h6">{{ 'site.cp.service.info.reinstall.modal' | language }}</h5>
-                                                                                    <button type="button"
-                                                                                            class="btn-close"
-                                                                                            data-bs-dismiss="modal"
-                                                                                            aria-label="Close"></button>
-                                                                                </div>
-                                                                                <div class="modal-body">
+                                                                            <div class="modal-body">
+                                                                                <div class="row g-1">
                                                                                     <div class="py-3 text-center">
                                                                                         <i class="fa-duotone fa-exclamation-circle fa-4x"></i>
                                                                                         <h5
-                                                                                                class="heading h4 mt-4">{{ 'site.cp.service.info.reinstall.modal.warn.title' | language }}</h5>
-                                                                                        <p>{{ 'site.cp.service.info.reinstall.modal.warn.description' | language }}</p>
+                                                                                                class="heading h4 mt-4">{{ 'site.cp.service.tab.proxmox.reinstall.iso.modal.warn.title' | language }}</h5>
+                                                                                        <p>{{ 'site.cp.service.tab.proxmox.reinstall.iso.modal.warn.description' | language }}</p>
                                                                                     </div>
+                                                                                    <div class="form-group">
+                                                                                        <label for="addIsoModalIso"
+                                                                                               class="form-label">{{ 'site.cp.service.tab.proxmox.reinstall.iso.modal.iso' | language }}</label>
+                                                                                        <select id="addIsoModalIso"
+                                                                                                class="form-select">
+                                                                                            {% for iso in proxmox['internal']['allISO'] %}
+                                                                                                <option
+                                                                                                        value="{{ iso['key'] }}">{{ iso['name'] }}</option>
+                                                                                            {% endfor %}
+                                                                                        </select>
+                                                                                    </div>
+
                                                                                 </div>
-                                                                                <div class="modal-footer">
-                                                                                    <button type="submit"
-                                                                                            class="btn btn-sm btn-danger">{{ 'site.cp.service.info.reinstall.modal.submit' | language }}</button>
-                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                        id="addIsoModalBtn"
+                                                                                        class="btn btn-danger">{{ 'site.cp.service.info.reinstall.iso.modal.add' | language }}</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
-                                                                </form>
+                                                                </div>
                                                             </div>
-
                                                         </div>
-                                                    {% endif %}
+                                                    </div>
                                                 </div>
                                             {% endif %}
-
-
                                         </div>
 
                                     </div>
-
                                 {% endif %}
-
                             </div>
                         </div>
                     </section>

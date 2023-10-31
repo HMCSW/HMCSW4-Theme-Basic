@@ -80,7 +80,7 @@
                                             </div>
                                             <div {% if invoice['state'] != 2 %}style="display:none"{% endif %}
                                                  id="invoiceBTN_{{ invoice['invoice_id'] }}_2">
-                                                {% if userData['credits'] >= invoice['credits'] %}
+                                                {% if userData['balance'] >= invoice['credits'] %}
                                                     <button type="button" class="btn btn-sm btn-outline-warning"
                                                             onclick="payInvoice(this.id)"
                                                             id="{{ invoice['invoice_id'] }}">

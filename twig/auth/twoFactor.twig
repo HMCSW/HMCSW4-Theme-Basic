@@ -4,7 +4,7 @@
     <div class="container d-flex flex-column">
         <div class="row align-items-center justify-content-center min-vh-100">
             <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
-                <div style="display: none" id="enterCode">
+                <div style="display: none" id="enterCode-twofactor">
                     <div class="mb-5 text-center">
                         <div class="mb-5 text-center">
                             <h6 class="h3 mb-1">{{ 'site.auth.twoFactor' | language }}</h6>
@@ -15,34 +15,34 @@
 
                     {% include '/general/actionMessage.twig' %}
 
-                    <div class="justify-content-center align-middle text-center" id="code-loader"
+                    <div class="justify-content-center align-middle text-center" id="code-loader-twofactor"
                          style="display: none">
                         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
 
-                    <div id="code-form" style="display: none">
+                    <div id="code-form-twofactor" style="display: none">
 
                         <div class="form-group">
-                            <label for="code"
+                            <label for="code-twofactor"
                                    class="form-control-label">{{ 'site.auth.twoFactor.form.code' | language }}</label>
 
-                            <input type="text" class="form-control" id="code"
+                            <input type="text" class="form-control" id="code-twofactor"
                                    placeholder="ABC 123 DFG 456">
 
                         </div>
                         <div class="mt-4">
-                            <button class="btn btn-lg btn-primary w-100 mb-4" id="submit-code"
+                            <button class="btn btn-lg btn-primary w-100 mb-4" id="submit-code-twofactor"
                                     type="button">{{ 'site.auth.twoFactor.submitBtn' | language }}
                             </button>
                         </div>
-                        <button class="btn btn-sm btn-info w-50 mb-4" id="selectOtherMethod"
+                        <button class="btn btn-sm btn-info w-50 mb-4" id="selectOtherMethod-twofactor"
                                 type="button">{{ 'site.auth.twoFactor.cancelBtn' | language }}</button>
 
                     </div>
                 </div>
-                <div style="display: none" id="selectMethod">
+                <div style="display: none" id="selectMethod-twofactor">
                     <div class="mb-5 text-center">
                         <div class="mb-5 text-center">
                             <h6 class="h3 mb-1">{{ 'site.auth.twoFactor' | language }}</h6>
@@ -54,11 +54,11 @@
 
                     {% include '/general/actionMessage.twig' %}
 
-                    <div class="col-lg-12" id="fidoFailMessage" style="display: none">
+                    <div class="col-lg-12" id="fidoFailMessage-twofactor" style="display: none">
                         <div class="alert alert-group alert-danger alert-icon" role="alert">
                             <div class="alert-group-prepend">
                                     <span class="alert-group-icon text-">
-                                        <i class="fa fa-exclamation-triangle"></i>
+                                        <i class="fa-duotone fa-exclamation-triangle"></i>
                                     </span>
                             </div>
                             <div class="alert-content">
@@ -66,47 +66,44 @@
                             </div>
                             <div class="alert-action">
                                 <button type="button" class="btn btn-danger"
-                                        id="fidoFailBtn">{{ 'site.auth.twoFactor.fido2Failed.retry'|language }}</button>
+                                        id="fidoFailBtn-twofactor">{{ 'site.auth.twoFactor.fido2Failed.retry'|language }}</button>
                             </div>
                         </div>
                     </div>
 
 
-                    <div class="justify-content-center align-middle text-center" id="allMethodsLoader"
+                    <div class="justify-content-center align-middle text-center" id="allMethodsLoader-twofactor"
                          style="display: none">
                         <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
 
-                    <div class="form-check" id="exampleMethodCheck" style="display: none">
+                    <div class="form-check" id="exampleMethodCheck-twofactor" style="display: none">
                         <input class="form-check-input" type="radio">
                         <label class="form-check-label"></label>
                     </div>
 
-                    <div id="fidoInfo" style="display: none">
+                    <div id="fidoInfo-twofactor" style="display: none">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title text-center"><i class="fa-solid fa-key"></i></h4>
-                                <p class="card-text text-center">Melde Sie sich mit einer Ihrer hinterlegten
-                                    Sicherheitsschlüssel an, um fortzufahren.</p>
-                                <button type="button" id="cancelFido" class="btn btn-primary w-100 btn-sm" style="display: none">
-                                    Andere Methode wählen
-                                </button>
+                                <h4 class="card-title text-center"><i class="fa-duotone fa-key"></i></h4>
+                                <p class="card-text text-center">{{ 'site.auth.twoFactor.fido2'|language }}</p>
+                                <button type="button" id="cancelFido-twofactor" class="btn btn-primary w-100 btn-sm" style="display: none">{{ 'site.auth.twoFactor.fido2.other'|language }}</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group" id="allMethods" style="display: none">
+                    <div class="form-group" id="allMethods-twofactor" style="display: none">
 
 
                     </div>
 
-                    <div class="col-lg-12" id="noMethod" style="display: none">
+                    <div class="col-lg-12" id="noMethod-twofactor" style="display: none">
                         <div class="alert alert-group alert-danger alert-icon" role="alert">
                             <div class="alert-group-prepend">
                                         <span class="alert-group-icon text-">
-                                            <i class="fas fa-exclamation-triangle"></i>
+                                            <i class="fa-duotone fa-exclamation-triangle"></i>
                                         </span>
                             </div>
                             <div class="alert-content">
@@ -116,7 +113,7 @@
                     </div>
 
 
-                    <button class="btn btn-lg btn-primary w-100 mb-4 mt-4 text-center" style="display: none;" id="selectBTN"
+                    <button class="btn btn-lg btn-primary w-100 mb-4 mt-4 text-center" style="display: none;" id="selectBTN-twofactor"
                             type="button">{{ 'site.auth.twoFactor.selectBtn' | language }}
                     </button>
 

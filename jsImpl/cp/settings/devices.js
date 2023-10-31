@@ -1,5 +1,5 @@
 document.querySelectorAll('[data-frames]').forEach((frame) => {
-    frame.onclick = function(){
+    frame.onclick = function () {
         var button = document.getElementById('button-' + this.dataset.frameid);
         var iframe = document.getElementById('iframe-' + this.dataset.frameid);
         var frameURl = button.getAttribute('data-frameUrl');
@@ -17,7 +17,7 @@ document.getElementById('removeAllDevices').addEventListener("click", (event) =>
 });
 
 
-function removeAllDevices(){
+function removeAllDevices() {
     $.ajax({
         type: 'DELETE',
         url: apiURL + '/user/settings/devices',
@@ -40,7 +40,7 @@ function removeAllDevices(){
                     }).fail(function (err) {
                         sendNotify(getMessage("site.cp.settings.action.message.deviceRemovedFailed"), 'danger');
                     });
-                }, function (){
+                }, function () {
                     sendNotify(getMessage("site.cp.settings.action.message.deviceRemovedFailed"), 'danger');
                 });
             } else {
@@ -57,88 +57,137 @@ function removeAllDevices(){
 import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
     const QrScanner = module.default;
 
-    const video = document.getElementById('video');
-    const flashToggle = document.getElementById('flashBox');
-    const camList = document.getElementById('camList');
-    const scanner = new QrScanner(video, result => setResult(result), {
+    let deviceQRCodeLogin = $('#deviceQRCodeLogin');
+    let openCameraBtn = deviceQRCodeLogin.find('#openCamera');
+    let videoModal = $('#qrCodeScanModal');
+
+    let videoMask = videoModal.find('#qrCodeScanVideoMask');
+    let submitCodeMask = videoModal.find('#qrCodeScanSubmitCodeMask');
+    let submitCodeSuccessMask = videoModal.find('#qrCodeScanSubmitCodeSuccessMask');
+    let submitCodeFailedMask = videoModal.find('#qrCodeScanSubmitCodeFailedMask');
+    let submitCodeBtn = videoModal.find('#submitCodeBtn');
+
+    let video = videoMask.find('#video');
+    let flashToggle = videoMask.find('#flashBox');
+    let camList = videoMask.find('#camList');
+
+    let resultRequest = false;
+    let scannedCode = false;
+
+
+    let currentURLParams = new URLSearchParams(window.location.search);
+    if(currentURLParams.has('qrCodeLoginCode')){
+        initialModal();
+        setResult(currentURLParams.get('qrCodeLoginCode'));
+    }
+
+    const scanner = new QrScanner(video[0], result => {
+        scanner.stop();
+        setResult(getLoginCodeFromUrl(result.data));
+    }, {
         highlightScanRegion: true,
         highlightCodeOutline: true,
-        maxScansPerSecond: 10
+        maxScansPerSecond: 5
     });
 
-    function initialCam() {
-        $('#videoModal').on('hidden.bs.modal', function (e) {
-            stopScan();
-        })
+    videoModal.on('hidden.bs.modal', function (e) {
+        stopScan();
+    })
 
-        const updateFlashAvailability = () => {
-            scanner.hasFlash().then(hasFlash => {
-                document.getElementById('flashToggleDIV').style = hasFlash ? 'display: block' : 'display: none';
-            });
-        };
+    const updateFlashAvailability = () => {
+        scanner.hasFlash().then(hasFlash => {
+            if (hasFlash) {
+                flashToggle.parent().show();
+            } else {
+                flashToggle.parent().hide();
+            }
+        });
+    };
 
+    function startCam() {
         scanner.start().then((r) => {
             updateFlashAvailability();
-
-            QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
-                const option = document.createElement('option');
-                option.value = camera.id;
-                option.text = camera.label;
-                camList.add(option);
-            }));
+            camList.empty();
+            QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => camList.append($('<option>').val(camera.id).text(camera.label))));
         }).catch((err) => {
-            $('.modal').modal('hide');
-            document.getElementById('deviceQRCodeLogin').style = 'display:none';
+            videoModal.modal('hide');
+            deviceQRCodeLogin.hide();
             stopScan();
-        });
-
-        flashToggle.addEventListener('click', () => {
-            scanner.toggleFlash()
-                .then(() => flashToggle.checked = !!scanner.isFlashOn())
-                .catch(e => flashToggle.checked = false);
-        });
-
-        camList.addEventListener('change', event => {
-            scanner.setCamera(event.target.value).then(updateFlashAvailability);
-        });
-        $('#closeCamera').click(function () {
-            stopScan();
-        });
-        $('#submitCodeBtn').click(function () {
-            submitCode();
         });
     }
 
-    var scannedCode = null;
+    flashToggle.on('click', () => {
+        scanner.toggleFlash()
+            .then(() => flashToggle.checked = !!scanner.isFlashOn())
+            .catch(e => flashToggle.checked = false);
+    });
+    camList.on('change', event => {
+        scanner.setCamera(event.target.value).then(updateFlashAvailability);
+    });
 
-    function setResult(result) {
-        if (scannedCode === null) {
-            stopScan();
-            scannedCode = result.data
+    $('#closeCamera').click(function () {
+        stopScan();
+    });
+    submitCodeBtn.click(function () {
+        submitCode();
+    });
 
-            document.getElementById('submitVideo').style = 'display: none';
-            $.ajax({
-                type: 'POST',
-                url: apiURL + '/user/settings/devices/scanLoginToken',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-                },
-                data: {
-                    'code': scannedCode
-                }
-            }).done(function (answer) {
-                if (answer.success === true) {
-                    document.getElementById('submitCode').style = 'display: block';
-                    document.getElementById('submitFailed').style = 'display: none';
-                } else {
-                    document.getElementById('submitCode').style = 'display: none';
-                    document.getElementById('submitFailed').style = 'display: block';
-                }
-            }).fail(function (err) {
-                document.getElementById('submitCode').style = 'display: none';
-                document.getElementById('submitFailed').style = 'display: block';
-            });
+    function initialModal(){
+        resultRequest = false;
+        videoModal.modal("show");
+        videoMask.show();
+        submitCodeMask.hide();
+        submitCodeSuccessMask.hide();
+        submitCodeFailedMask.hide();
+    }
+
+    openCameraBtn.click(function () {
+        initialModal();
+        startCam();
+    });
+
+
+    function getLoginCodeFromUrl(code) {
+        let url = new URL(code);
+
+        const urlParams = new URLSearchParams(url.searchParams);
+        if (urlParams.has('qrCodeLoginCode')) {
+            return urlParams.get('qrCodeLoginCode');
         }
+        return false;
+    }
+
+    function setResult(code) {
+        scannedCode = code;
+        if (scannedCode === false) {
+            return;
+        }
+
+        if (resultRequest === true) {
+            return;
+        }
+
+        resultRequest = true;
+
+        videoMask.hide();
+        $.ajax({
+            type: 'POST',
+            url: apiURL + '/user/settings/devices/scanLoginToken',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+            },
+            data: {
+                'code': scannedCode
+            }
+        }).done(function (answer) {
+            if (answer.success === true) {
+                submitCodeMask.show();
+            } else {
+                submitCodeFailedMask.show();
+            }
+        }).fail(function (err) {
+            submitCodeFailedMask.show();
+        });
 
     }
 
@@ -153,36 +202,33 @@ import(url + '/assets/js/qrCode/qr-scanner.min.js').then((module) => {
                 'code': scannedCode
             }
         }).done(function (answer) {
-            document.getElementById('submitCode').style = 'display: none';
+            submitCodeMask.hide();
             if (answer.success === true) {
-                document.getElementById('submitSuccess').style = 'display: block';
+                submitCodeSuccessMask.show();
+
+                setTimeout(function () {
+                    // remove url params
+                    var url = new URL(window.location.href);
+                    url.searchParams.delete('qrCodeLoginCode');
+                    window.history.replaceState({}, '', url);
+                }, 1000);
             } else {
-                document.getElementById('submitFailed').style = 'display: block';
+                submitCodeFailedMask.show();
             }
         }).fail(function (err) {
-            document.getElementById('submitCode').style = 'display: none';
-            document.getElementById('submitFailed').style = 'display:block';
+            submitCodeMask.hide();
+            submitCodeFailedMask.show();
         });
     }
 
     function stopScan() {
         scanner.stop();
-        video.style = 'display: hidden';
+        videoMask.hide();
     }
 
-    $('#openCamera').click(function () {
-        $('#videoModal').modal("show");
-
-        initialCam();
-        document.getElementById('submitVideo').style = 'display: block';
-        document.getElementById('submitCode').style = 'display: none';
-        document.getElementById('submitSuccess').style = 'display: none';
-        document.getElementById('submitFailed').style = 'display: none';
-    });
-
     QrScanner.hasCamera().then((r) => {
-        if(r) {
-            document.getElementById('deviceQRCodeLogin').style = 'display: block';
+        if (r) {
+            deviceQRCodeLogin.show();
         }
     });
 

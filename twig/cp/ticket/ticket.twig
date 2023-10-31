@@ -131,7 +131,7 @@
                                                                                           width="48"
                                                                                           alt="{{ message['user']['name'] }}">
                                                 </div>
-                                                <div class="message-box-start text-dark">{{ message['message']|nl2br }}
+                                                <div class="message-box-start text-dark">{{ message['message']|raw|nl2br }}
                                                 </div>
                                             </div>
 
@@ -180,7 +180,7 @@
                                     {% else %}
                                         <div class="ms-auto mb-3" style="max-width: 392px;">
                                             <div class="d-flex align-items-end mb-2">
-                                                <div class="message-box-end bg-primary text-white">{{ message['message']|nl2br }}</div>
+                                                <div class="message-box-end bg-primary text-white">{{ message['message']|raw|nl2br }}</div>
                                                 <div class="flex-shrink-0 ps-2 ms-1"><img class="rounded-circle"
                                                                                           src="{{ message['user']['icon'] }}"
                                                                                           width="48"

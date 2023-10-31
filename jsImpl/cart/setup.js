@@ -1,5 +1,3 @@
-console.log("setup.js loaded");
-
 function saveConfig(item){
     itemId = item.id;
     item.disabled = true;
@@ -15,7 +13,7 @@ function saveConfig(item){
         if(input.type === "checkbox") {
             value = input.checked;
         } else if(input.tagName === "SELECT" && input.multiple === true) {
-            console.log(input.name);
+
             value = getSelectValues(input);
         } else {
             value = input.value;
@@ -25,7 +23,8 @@ function saveConfig(item){
             value = null;
         }
         if(value === null && input.required === true) {
-            alert("Please fill in all required fields");
+            sendNotify(getMessage("general.action.message.failed"), "danger");
+            item.disabled = false;
             return;
         }
 
