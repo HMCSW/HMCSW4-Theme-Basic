@@ -1,142 +1,130 @@
 {% include '/general/header_noNav.twig' %}
 <section>
-    <div class="container d-flex flex-column">
-        <div class="row align-items-center justify-content-center min-vh-100">
-            <div class="col-md-6 col-lg-5 col-xl-5 py-6 py-md-0">
-                <div class="card">
-                    <div class="card-body justify-content-center">
-                        <div class="row mb-0 justify-content-center">
-                            <div class="steps steps-horizontal steps-center mb-0"
-                                 style="--ar-steps-number-size: 6rem; --ar-steps-number-inner-size: 5.5rem">
-                                <div class="step">
-                                    <div class="step-number">
-                                        <div class="step-number-inner fs-4"><img alt="{{ userData['name'] }}"
-                                                                                 src="{{ userData['icon'] }}"
-                                                                                 class="avatar avatar-xl rounded-circle">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="step">
-                                    <div class="step-number">
-                                        <div class="step-number-inner"><img alt="{{ client_name }}" src="{{ icon }}"
-                                                                            class="avatar avatar-xl rounded-circle">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="text-center">
-                                <p class="mb-0 mt-2">{{ 'site.auth.oauth.title' | language }}</p>
-                                <h3 class="mt-2 mb-2">{{ client_name }}
-                                    {% if verified_app %}
-                                        <i class="fa-duotone fa-badge-check text-success" style="font-size: 1.2rem"></i>
-                                    {% endif %}
-                                </h3>
-                                <p class="mb-1">{{ 'site.auth.oauth.description'|language|replace({"@name": config['name']})|raw }}</p>
-                                <p class="text-sm text-muted"
-                                   style="font-size: 0.75rem">{{ 'site.auth.oauth.loggedAs'|language|replace({"@name": userData['name']})|raw }}
-                                    <a class="text-decoration-none"
-                                       href="/auth/logout?return_to={{ return_to }}">{{ 'site.auth.oauth.logout' | language }}</a>
-                                </p>
-                            </div>
-                            <hr class="mb-4"/>
-                        </div>
-                        <div class="row">
-                            <p class="text-muted mt-0">{{ 'site.auth.oauth.scopes'|language|replace({"@name": client_name})|raw }}</p>
-                            {% for scope in scopes %}
-                                {% if scope == "profile" %}
-                                    <div class="col-lg-12 pt-2 mb-1">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fa-duotone fa-id-card-clip fa-2x  me-2"></i>
-                                            <div class="ps-2">
-                                                <div class="text-dark">{{ 'site.auth.oauth.scopes.profile' | language }}</div>
-                                                <div class="text-muted">{{ 'site.auth.oauth.scopes.profile.description' | language }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                {% if scope == "email" %}
-                                    <div class="col-lg-12 pt-2 mb-1">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fa-duotone fa-mailbox fa-2x  me-2"></i>
-                                            <div class="ps-2">
-                                                <div class="text-dark">{{ 'site.auth.oauth.scopes.email' | language }}</div>
-                                                <div class="text-muted">{{ 'site.auth.oauth.scopes.email.description' | language }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                {% if scope == "full" %}
-                                    <div class="col-lg-12 pt-2 mb-1">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fa-duotone fa-unlock-keyhole fa-2x  me-2"></i>
-                                            <div class="ps-2">
-                                                <div class="text-dark">{{ 'site.auth.oauth.scopes.full' | language }}</div>
-                                                <div class="text-muted">{{ 'site.auth.oauth.scopes.full.description' | language }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-
-                        <div class="row mt-3 mb-3">
-                            <hr class="mb-3"/>
-                            <div class="col-lg-12 pt-2 mb-1">
-                                <div class="d-flex align-items-center">
-                                    <i class="fa-duotone fa-arrow-right-from-bracket  me-2"></i>
-                                    <p class="text-muted text-sm mt-0 mb-0" style="font-size: 0.80rem">
-                                        {{ 'site.auth.oauth.info.redirect'|language|replace({"@url": '<a
-                                        class="text-decoration-none" target="_blank" href="'~ redirect_uri ~'">'~url_short~'</a>'})|raw }}</p>
-                                </div>
-                                {% if external_app %}
-                                    <div class="d-flex align-items-center">
-                                        <i class="fa-duotone fa-arrow-up-right-from-square  me-2"></i>
-                                        <p class="text-muted text-sm mt-0 mb-0" style="font-size: 0.80rem">
-                                            {{ 'site.auth.oauth.info.externalApp'|language|replace({"@name": config['name']})|raw }}</p>
-                                    </div>
-                                {% endif %}
-                                {% if verified_app %}
-                                    <div class="d-flex align-items-center">
-                                        <i class="fa-duotone fa-shield-check  me-2"></i>
-                                        <p class="text-muted text-sm mt-0 mb-0"
-                                           style="font-size: 0.80rem">{{ 'site.auth.oauth.info.verifiedApp' | language }}</p>
-                                    </div>
-                                {% else %}
-                                    <div class="d-flex align-items-center">
-                                        <i class="fa-duotone fa-shield-xmark  me-2"></i>
-                                        <p class="text-muted text-sm mt-0 mb-0"
-                                           style="font-size: 0.80rem">{{ 'site.auth.oauth.info.notVerifiedApp' | language }}</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <hr class="mb-4"/>
-                            <div class="col-6">
-                                <form method="post" class="mb-0">
-                                    <input type="hidden" name="action" value="cancel">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                    <button type="submit"
-                                            class="btn btn-outline-danger w-100">{{ 'site.auth.oauth.btn.cancel' | language }}</button>
-                                </form>
-                            </div>
-                            <div class="col-6">
-                                <form method="post" class="mb-0">
-                                    <input type="hidden" name="action" value="authorize">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-
-                                    <button type="submit"
-                                            class="btn btn-primary w-100">{{ 'site.auth.oauth.btn.authorize' | language }}</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center min-vh-100">
+      <div class="col-md-6 col-lg-5 col-xl-5 py-6 py-md-0">
+        <div class="card">
+          <div class="card-body justify-content-center">
+            <div class="row mb-0 justify-content-center">
+              <div class="steps steps-horizontal steps-center mb-0" style="--ar-steps-number-size: 6rem; --ar-steps-number-inner-size: 5.5rem">
+                <div class="step">
+                  <div class="step-number">
+                    <div class="step-number-inner fs-4"><img alt="{{ userData['name'] }}" src="{{ userData['icon'] }}" class="avatar avatar-xl rounded-circle"></div>
+                  </div>
                 </div>
+                <div class="step">
+                  <div class="step-number">
+                    <div class="step-number-inner"><img alt="{{ client_name }}" src="{{ icon }}" class="avatar avatar-xl rounded-circle"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <p class="mb-0 mt-2">{{ 'site.auth.oauth.title' | language }}</p>
+                <h3 class="mt-2 mb-2">{{ client_name }}
+                  {% if verified_app %}
+                    <i class="fa-duotone fa-badge-check text-success" style="font-size: 1.2rem"></i>
+                  {% endif %}
+                </h3>
+                <p class="mb-1">{{ 'site.auth.oauth.description'|language|replace({"@name": config['name']})|raw }}</p>
+                <p class="text-sm text-muted" style="font-size: 0.75rem">{{ 'site.auth.oauth.loggedAs'|language|replace({"@name": userData['name']})|raw }}
+                  <a class="text-decoration-none" href="/auth/logout?return_to={{ return_to }}">{{ 'site.auth.oauth.logout' | language }}</a>
+                </p>
+              </div>
+              <hr class="mb-4"/>
             </div>
+            <div class="row">
+              <p class="text-muted mt-0">{{ 'site.auth.oauth.scopes'|language|replace({"@name": client_name})|raw }}</p>
+              {% for scope in scopes %}
+                {% if scope == "profile" %}
+                  <div class="col-lg-12 pt-2 mb-1">
+                    <div class="d-flex align-items-center">
+                      <i class="fa-duotone fa-id-card-clip fa-2x  me-2"></i>
+                      <div class="ps-2">
+                        <div class="text-dark">{{ 'site.auth.oauth.scopes.profile' | language }}</div>
+                        <div class="text-muted">{{ 'site.auth.oauth.scopes.profile.description' | language }}</div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                {% if scope == "email" %}
+                  <div class="col-lg-12 pt-2 mb-1">
+                    <div class="d-flex align-items-center">
+                      <i class="fa-duotone fa-mailbox fa-2x  me-2"></i>
+                      <div class="ps-2">
+                        <div class="text-dark">{{ 'site.auth.oauth.scopes.email' | language }}</div>
+                        <div class="text-muted">{{ 'site.auth.oauth.scopes.email.description' | language }}</div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                {% if scope == "full" %}
+                  <div class="col-lg-12 pt-2 mb-1">
+                    <div class="d-flex align-items-center">
+                      <i class="fa-duotone fa-unlock-keyhole fa-2x  me-2"></i>
+                      <div class="ps-2">
+                        <div class="text-dark">{{ 'site.auth.oauth.scopes.full' | language }}</div>
+                        <div class="text-muted">{{ 'site.auth.oauth.scopes.full.description' | language }}</div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+
+            <div class="row mt-3 mb-3">
+              <hr class="mb-3"/>
+              <div class="col-lg-12 pt-2 mb-1">
+                <div class="d-flex align-items-center">
+                  <i class="fa-duotone fa-arrow-right-from-bracket  me-2"></i>
+                  <p class="text-muted text-sm mt-0 mb-0" style="font-size: 0.80rem">
+                    {{ 'site.auth.oauth.info.redirect'|language|replace({"@url": '<a
+                      class="text-decoration-none" target="_blank" href="'~ redirect_uri ~'">'~url_short~'</a>'})|raw }}</p>
+                </div>
+                {% if external_app %}
+                <div class="d-flex align-items-center">
+                  <i class="fa-duotone fa-arrow-up-right-from-square  me-2"></i>
+                  <p class="text-muted text-sm mt-0 mb-0" style="font-size: 0.80rem">
+                    {{ 'site.auth.oauth.info.externalApp'|language|replace({"@name": config['name']})|raw }}</p>
+                </div>
+                {% endif %}
+                {% if verified_app %}
+                  <div class="d-flex align-items-center">
+                    <i class="fa-duotone fa-shield-check  me-2"></i>
+                    <p class="text-muted text-sm mt-0 mb-0" style="font-size: 0.80rem">{{ 'site.auth.oauth.info.verifiedApp' | language }}</p>
+                  </div>
+                {% else %}
+                  <div class="d-flex align-items-center">
+                    <i class="fa-duotone fa-shield-xmark  me-2"></i>
+                    <p class="text-muted text-sm mt-0 mb-0" style="font-size: 0.80rem">{{ 'site.auth.oauth.info.notVerifiedApp' | language }}</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row">
+              <hr class="mb-4"/>
+              <div class="col-6">
+                <form method="post" class="mb-0">
+                  <input type="hidden" name="action" value="cancel">
+                  <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                  <button type="submit" class="btn btn-outline-danger w-100">{{ 'site.auth.oauth.btn.cancel' | language }}</button>
+                </form>
+              </div>
+              <div class="col-6">
+                <form method="post" class="mb-0">
+                  <input type="hidden" name="action" value="authorize">
+                  <input type="hidden" name="csrf" value="{{ csrf }}">
+
+                  <button type="submit" class="btn btn-primary w-100">{{ 'site.auth.oauth.btn.authorize' | language }}</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% include '/general/footer_empty.twig' %}

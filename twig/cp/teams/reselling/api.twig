@@ -4,7 +4,7 @@
         {% include '/cp/teams/reselling/nav.twig' %}
         <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
-            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
                                 class="fa-duotone fa-unlock-keyhole text-primary lead pe-1 me-2"></i>
@@ -18,7 +18,7 @@
                 </div>
             </section>
             {% include 'general/actionMessage.twig' %}
-            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <form method="post">
                         <input name="action" type="hidden" value="resetAPIToken">
@@ -46,7 +46,7 @@
                 </div>
 
             </section>
-            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     {% include '/general/pagination.twig' %}
                     <div class="table-responsive">
@@ -123,5 +123,5 @@
         </div>
     </div>
 </div>
-{% include '/cp/sidebarButton.twig' %}
+
 {% include '/general/footer.twig' %}

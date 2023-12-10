@@ -1,118 +1,196 @@
-{{ '<script type="application/javascript" async src="{{ url }}/assets/js/simpleWebauthn/index.umd.min.js"></script>'|addJS(true) }}
-
 {% include '/general/header_noNav.twig' %}
-<div class=" justify-content-center">
-  <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5">
-    <div class="w-100 mt-auto" style="max-width: 526px;">
-      {% include '/general/actionMessage.twig' %}
-      <h1>{{ 'site.auth.login' | language }}</h1>
-      <p class="pb-3 mb-3 mb-lg-4">{{ 'site.login.not_registered' | language }}&nbsp;&nbsp;<a
-                href='{{ url }}/auth/register{{ return_to }}'>{{ 'site.login.create_account' | language }}</a>
-      </p>
 
-      <div id="qrCodeForm" style="display:none">
-        <div class="row justify-content-center" id="qrCodeFormLoader">
-          <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-        </div>
-        <div id="qrCode">
-          <p class="text-muted mb-5">{{ 'site.auth.login.scanQRCode' | language }}
-            <button type="button" id="qrLogin-btn-cancelFull" class="btn btn-sm btn-outline-danger">{{ 'site.auth.login.scanQRCode.cancelFull' | language }}</button></p>
+<section>
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center min-vh-100" id="loginMask">
+      <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 col-xs-12">
+        <div class="card">
+          <div class="continuous-progress loginLoader"></div>
+          <div class="card-body emailInputMask">
+            <!-- Inhalt deiner Karte -->
+            <h5 class="card-title">{{ 'site.auth.login' | language }}</h5>
+            <p class="pb-3 mb-3 mb-lg-4">{{ 'site.auth.login.not_registered' | language }} <a
+                class="text-decoration-none"
+                href='{{ url }}/auth/register{{ return_to }}'>{{ 'site.auth.login.create_account' | language }}</a>
+            </p>
+            <div class="mb-3">
+              <label for="emailInput" class="form-label">{{ 'general.form.email' | language }}</label>
+              <input class="form-control" type="email" id="emailInput"
+                     placeholder="{{ 'general.form.email.placeholder' | language }}" autocomplete="username webauthn">
+              <div
+                class="invalid-feedback emailInputInvalid emailInputFeedback">{{ 'site.auth.action.message.emailNotValid'|language }}</div>
+              <div
+                class="invalid-feedback emailInputBlacklist emailInputFeedback">{{ 'site.auth.action.message.emailOnBlacklist'|language }}</div>
+              <div
+                class="invalid-feedback emailInputUnknownError emailInputFeedback">{{ 'site.auth.action.message.unknownError'|language }}</div>
+              <div
+                class="invalid-feedback emailInputQrCodeLoginFailed emailInputFeedback">{{ 'site.auth.action.message.qrCodeLoginFailed'|language }}</div>
+              <div
+                class="invalid-feedback emailInputExternalError emailInputFeedback">{{ 'site.auth.action.message.externalError'|language }}</div>
+              <div
+                class="invalid-feedback loginTwoFactorFailed emailInputFeedback">{{ 'site.auth.action.message.twoFactorFailed'|language }}</div>
+              <div
+                class="invalid-feedback emailInputFidoKeyNotRegistered emailInputFeedback">{{ 'site.auth.action.message.fidoKeyNotRegistered'|language }}</div>
+            </div>
 
-          <div class="row justify-content-center" style="display: none" id="qrCodeFormUserInfo">
-            <div class="d-flex align-items-center justify-content-center">
-              <img id="qrCodeFormUserInfoIMG" width="72" height="62"  alt="" src="" class="avatar avatar-xl rounded-circle">
-              <div class="ps-2">
-                <div class="text-dark" id="qrCodeFormUserInfoName">Name</div>
-                <div class="text-muted" id="qrCodeFormUserInfoRank">Rank</div>
+            <div class="mb-1">
+              <input class="form-check-input rememberLogin" type="checkbox" id="rememberLogin">
+              <label class="form-check-label ms-1"
+                     for="rememberLogin">{{ 'general.form.remember' | language }}</label>
+            </div>
+
+
+            <div class="btn-group w-100 mt-4" role="group">
+              <button type="button" class="btn btn-secondary w-auto createQRCodeBtn loginActionBtn"><i
+                  class="fa-duotone fa-qrcode"></i></button>
+              <button type="button" class="btn btn-secondary w-auto startFidoBtn loginActionBtn" style="display:none"><i
+                  class="fa-duotone fa-key-skeleton"></i></button>
+              <button class="btn btn-primary emailInputBtn w-75"
+                      type="button">{{ 'site.auth.login.form.next' | language }}</button>
+            </div>
+
+            {% if avAccounts|length != 0 %}
+              <div class="btn-group btn-group-sm w-100 mt-4 mb-2" role="group">
+                {% for account in avAccounts %}
+                  <button
+                    class="btn btn-outline-secondary btn-icon remoteAccountBtn"
+                    data-name="{{ account['identifier'] }}"
+                    data-url="{{ url }}/auth/r/{{ account['identifier'] }}{{ return_to }}">
+                    {% if account['shortName'] == "TheSystems" %}
+                      <img src="https://cdn.the-systems.eu/icon-transparent.png" alt="TheSystems"
+                           height="10" width="30">
+                    {% elseif account['shortName'] == "Discord" %}
+                      <i class="fab fa-discord"></i>
+                    {% elseif account['shortName'] == "Apple" %}
+                      <i class="fab fa-apple"></i>
+                    {% elseif account['shortName'] == "Google" %}
+                      <i class="fab fa-google"></i>
+                    {% endif %}
+                  </button>
+                {% endfor %}
               </div>
-            </div>
-
-            <div class="col-12 mt-4 text-center">
-              <small>{{ 'site.auth.login.scanQRCode.notYou' | language }}</small>
-              <a id="qrLogin-btn"
-                 class="small font-weight-bold">{{ 'site.auth.login.scanQRCode.cancel' | language }}</a>
-            </div>
+            {% endif %}
           </div>
-        </div>
-      </div>
-      <div id="loginForm">
-        <div class="pb-3 mb-3">
-          <div class="position-relative"><i class="fa fa-at fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-            <input class="form-control form-control-lg ps-5" type="email" id="username" placeholder="{{ 'general.form.email.placeholder' | language }}" required="" autocomplete="username webauthn">
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="position-relative"><i class="fa fa-lock fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-            <div class="password-toggle">
-              <input class="form-control form-control-lg ps-5" type="password" id="password" placeholder="{{ 'general.form.password.placeholder' | language }}" required="" autocomplete="password webauthn">
-            </div>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center justify-content-between pb-4">
-          <div id="recaptcha"></div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center justify-content-between pb-4">
-          <form-check class="my-1">
-            <input class="form-check-input" type="checkbox" id="remember_login">
-            <label class="form-check-label ms-1"
-                   for="remember_login">{{ 'general.form.remember' | language }}</label>
-          </form-check>
-          <a class="fs-sm fw-semibold text-decoration-none my-1"
-             href="{{ url }}/auth/forgotPW{{ return_to }}">{{ 'site.login.forgot_password' | language }}</a>
-        </div>
-        <div id="form">
-          <button class="btn btn-lg btn-primary w-100 mb-4" type="button" onclick="onSiteLogin()">{{ 'site.login.form.sign_in' | language }}
-          </button>
-        </div>
-        <div id="loader" style="display: none">
-          <button type="button" class="btn btn-lg btn-primary w-100 mb-4 pe-none">
-            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            {{ 'site.login.form.sign_in' | language }}...
-          </button>
-        </div>
-        <h2 class="h6 text-center pt-3 pt-lg-4 mb-4">{{ 'site.login.form.or' | language }}</h2>
-        <div class="row justify-content-center">
-          {% if avAccounts|length != 0 %}
-            {% for account in avAccounts %}
-              <div class="col-3">
+          <div class="card-body passwordInputMask" style="display:none">
+            <!-- Inhalt deiner Karte -->
+            <h5 class="card-title">{{ 'site.auth.login' | language }} <span
+                class="badge bg-secondary fs-sm passwordInputMaskBadge"></span></h5>
+            <p class="pb-3 mb-3 mb-lg-4">{{ 'site.auth.login.forgot_password' | language }} <a
+                class="text-decoration-none"
+                href='{{ url }}/auth/forgotPW{{ return_to }}'>{{ 'site.auth.login.forgot_password.btn' | language }}</a>
+            </p>
 
-                <a href="{{ url }}/auth/r/{{ account['identifier'] }}{{ return_to }}"
-                   class="btn btn-outline-secondary btn-icon mb-2 w-100">
-                  {% if account['shortName'] == "TheSystems" %}
-                    <img src="https://cdn.the-systems.eu/icon-transparent.png" alt="TheSystems"
-                         height="10" width="30">
-                  {% elseif account['shortName'] == "Discord" %}
-                    <i class="fab fa-discord"></i>
-                  {% elseif account['shortName'] == "Apple" %}
-                    <i class="fab fa-apple"></i>
-                  {% elseif account['shortName'] == "Google" %}
-                    <i class="fab fa-google"></i>
-                  {% endif %}
-                </a>
-
+            <div class="mb-3">
+              <label class="form-label" for="passwordInput">{{ 'general.form.password' | language }}</label>
+              <div class="password-toggle">
+                <input class="form-control" type="password" id="passwordInput"
+                       placeholder="{{ 'general.form.password.placeholder' | language }}"
+                       autocomplete="password current-password webauthn">
+                <label class="password-toggle-btn">
+                  <input class="password-toggle-check" type="checkbox"
+                         aria-label="{{ 'general.form.password.show' | language }}">
+                  <span class="password-toggle-indicator"></span>
+                </label>
               </div>
-            {% endfor %}
-          {% endif %}
-        </div>
-        <div class="row row-cols-1 row-cols-sm-2 gy-3">
+              <div
+                class="invalid-feedback passwordInputFeedback passwordInputInvalid">{{ 'site.auth.action.message.passwordWrong'|language }}</div>
+              <div
+                class="invalid-feedback passwordInputFeedback passwordInputInvalidPasswordFails">{{ 'site.auth.action.message.tooManyPasswordFails'|language }}</div>
+              <div
+                class="invalid-feedback passwordInputFeedback passwordInputAccountDisabled">{{ 'site.auth.action.message.accountDisabled'|language }}</div>
+              <div
+                class="invalid-feedback passwordInputFeedback passwordInputRateLimitReached">{{ 'site.auth.action.message.rateLimitReached'|language }}</div>
+              <div
+                class="invalid-feedback passwordInputFeedback loginTwoFactorFailed">{{ 'site.auth.action.message.twoFactorFailed'|language }}</div>
+              <div
+                class="invalid-feedback passwordInputFeedback passwordInputCaptchaRequired">{{ 'site.auth.action.message.captchaRequired'|language }}</div>
 
-          <div class="col" id="webauthn" style="display: none">
-            <button type="button" onclick="startFido2Login();"
-                    class="btn btn-icon btn-outline-secondary btn-lg w-100"><i
-                      class="fa-solid fa-key-skeleton me-2"></i>{{ 'site.auth.login.fido2' | language }}
-            </button>
-          </div>
-          <div class="col">
-            <button type="button" id="createQRCode" style="display: none"
-                    class="btn btn-icon btn-outline-secondary btn-lg w-100">
-              <i class="fas fa-qrcode me-2"></i>
-              {{ 'site.auth.login.scanQRCodeMethod' | language }}</button>
+              <div class="mt-4 captcha" style="display:none!important;">
+                <div id="recaptcha"></div>
+              </div>
+
+            </div>
+            <div class="btn-group w-100 mt-4" role="group">
+              <button type="button" class="btn btn-secondary w-25 passwordInputCancelBtn"><i
+                  class="fa fa-arrow-left"></i>
+              </button>
+              <button class="btn btn-primary passwordInputBtn w-75"
+                      type="button">{{ 'site.auth.login.form.sign_in' | language }}</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="qrCodeLoginModal">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="mb-5 text-center">
+              <div class="mb-5 text-center">
+                <h6 class="h3 mb-1">{{ 'site.auth.login.scanQRCode' | language }}</h6>
+                <p class="text-muted mb-0">{{ 'site.auth.login.scanQRCode.description' | language }}</p>
+              </div>
+
+
+              <div class="card" id="qrCodeLoginCodeArea">
+                <div class="card-body">
+                  <img id="qrCodeLoginImage" style="background-color: #ffffff">
+                </div>
+              </div>
+
+              <div class="row justify-content-center" style="display: none" id="qrCodeFormUserInfo">
+                <div class="d-flex align-items-center justify-content-center">
+                  <img id="qrCodeFormUserInfoIMG" width="72" height="62" alt="" src=""
+                       class="avatar avatar-xl rounded-circle">
+                  <div class="ps-2">
+                    <div class="text-dark" id="qrCodeFormUserInfoName">Name</div>
+                    <div class="text-muted" id="qrCodeFormUserInfoRank">Rank</div>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-4 text-center">
+                  <small>{{ 'site.auth.login.scanQRCode.notYou' | language }}</small>
+                  <a id="qrCodeFormNotMeBtn"
+                     class="small font-weight-bold">{{ 'site.auth.login.scanQRCode.cancel' | language }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
-</div>
+</section>
+<style>
+    .card {
+        overflow: hidden; /* Verhindert das Verschwinden des Fortschrittsbalkens außerhalb der Karte */
+    }
+
+    .continuous-progress {
+        width: 100%;
+        background-color: #007BFF;
+        height: 4px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: move 2s ease-in-out infinite;
+        z-index: 1; /* Über dem Karteninhalt */
+    }
+
+    .card {
+        position: relative;
+    }
+
+    @keyframes move {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+</style>
 {% include '/general/footer_empty.twig' %}

@@ -1,12 +1,12 @@
 {% include '/general/header.twig' %}
-<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
-    <div class="row pt-sm-2 pt-lg-0">
-        {% include '/cp/settings/nav.twig' %}
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    {% include '/cp/sideNav.twig' %}
         <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
             {% include 'cp/terminateUser.twig' %}
             {% include 'general/actionMessage.twig' %}
-            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
                                 class="fa-duotone fa-user-cog text-primary lead pe-1 me-2"></i>
@@ -22,7 +22,7 @@
                     </div>
                 </div>
             </section>
-            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4" style="display: none" id="deviceQRCodeLogin">
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4" style="display: none" id="deviceQRCodeLogin">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
                                 class="fa-duotone fa-qrcode text-primary lead pe-1 me-2"></i>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </section>
-            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
                                 class="fa-duotone fa-computer-speaker text-primary lead pe-1 me-2"></i>
@@ -248,7 +248,7 @@
                     </div>
                 </div>
             </section>
-            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3"><i
                                 class="fa-duotone fa-trash text-primary lead pe-1 me-2"></i>
@@ -263,5 +263,5 @@
         </div>
     </div>
 </div>
-{% include '/cp/sidebarButton.twig' %}
+
 {% include '/general/footer.twig' %}

@@ -1,44 +1,41 @@
 {% include '/general/header_noNav.twig' %}
 <section>
-    <div class="container d-flex flex-column">
-        <div class="row align-items-center justify-content-center min-vh-100">
-            <div class="col-md-6 col-lg-5 col-xl-5 py-6 py-md-0">
-                <div class="card">
-                    <div class="card-body justify-content-center">
-                        <div class="row mb-0">
-                            <div class="text-center">
-                                <i class="fa-duotone fa-road-lock text-danger mb-2 fa-4x"></i>
-                                <h3 class="mt-2 mb-2">{{ 'site.auth.oauth.error.title'|language }}</h3>
-                                <p class="mb-1">{{ 'site.auth.oauth.error.unauthorized.description'|language }}</p>
-                                <p class="mb-1">{{ 'site.auth.oauth.error.later'|language }}</p>
-                                <p class="text-sm text-muted"
-                                   style="font-size: 0.75rem">{{ 'site.auth.oauth.loggedAs'|language|replace({"@name": userData['name']})|raw }}
-                                    <a class="text-decoration-none"
-                                       href="/auth/logout?return_to={{ return_to }}">{{ 'site.auth.oauth.logout' | language }}</a>
-                                </p>
-                            </div>
-                            <hr class="mb-4"/>
-                        </div>
-                        <div class="row">
-                            <h3 class="mt-0 mb-1">{{ 'site.auth.oauth.error.code'|language }}</h3>
-                            <p class="mb-2">{{ 'site.auth.oauth.error.unauthorized.errorHelp'|language }}</p>
-                            <p class="mt-0">{{ error_code }}: {{ error_description }}</p>
-                        </div>
-                        <div class="row mt-2">
-                            <hr class="mb-4"/>
-                            <div class="col-12">
-                                <form method="post" class="mb-0">
-                                    <input type="hidden" name="action" value="cancel">
-                                    <input type="hidden" name="csrf" value="{{ csrf }}">
-                                    <button type="submit"
-                                            class="btn btn-outline-danger w-100">{{ 'site.auth.oauth.error.backBtn'|language }}</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center min-vh-100">
+      <div class="col-md-6 col-lg-5 col-xl-5 py-6 py-md-0">
+        <div class="card">
+          <div class="card-body justify-content-center">
+            <div class="row mb-0">
+              <div class="text-center">
+                <i class="fa-duotone fa-road-lock text-danger mb-2 fa-4x"></i>
+                <h3 class="mt-2 mb-2">{{ 'site.auth.oauth.error.title'|language }}</h3>
+                <p class="mb-1">{{ 'site.auth.oauth.error.unauthorized.description'|language }}</p>
+                <p class="mb-1">{{ 'site.auth.oauth.error.later'|language }}</p>
+                <p class="text-sm text-muted" style="font-size: 0.75rem">{{ 'site.auth.oauth.loggedAs'|language|replace({"@name": userData['name']})|raw }}
+                  <a class="text-decoration-none" href="/auth/logout?return_to={{ return_to }}">{{ 'site.auth.oauth.logout' | language }}</a>
+                </p>
+              </div>
+              <hr class="mb-4"/>
             </div>
+            <div class="row">
+              <h3 class="mt-0 mb-1">{{ 'site.auth.oauth.error.code'|language }}</h3>
+              <p class="mb-2">{{ 'site.auth.oauth.error.unauthorized.errorHelp'|language }}</p>
+              <p class="mt-0">{{ error_code }}: {{ error_description }}</p>
+            </div>
+            <div class="row mt-2">
+              <hr class="mb-4"/>
+              <div class="col-12">
+                <form method="post" class="mb-0">
+                  <input type="hidden" name="action" value="cancel">
+                  <input type="hidden" name="csrf" value="{{ csrf }}">
+                  <button type="submit" class="btn btn-outline-danger w-100">{{ 'site.auth.oauth.error.backBtn'|language }}</button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>
 {% include '/general/footer_empty.twig' %}

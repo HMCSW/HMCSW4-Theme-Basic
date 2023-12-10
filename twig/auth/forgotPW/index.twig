@@ -1,61 +1,37 @@
 {% include '/general/header_noNav.twig' %}
 <section>
-  <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4"
-                href="{{ url }}/auth/login" data-bs-placement="left"><i class="fa fa-home"></i></a>
   <div class="container d-flex flex-column">
     <div class="row align-items-center justify-content-center min-vh-100">
-      <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
-        <div>
-          <div class="mb-5 text-center">
-            <div class="mb-5 text-center">
-              <h6 class="h3 mb-1">{{ 'site.auth.forgotPW.email' | language }}</h6>
-              <p class="text-muted mb-0">{{ 'site.auth.forgotPW.email.description' | language }}</p>
-            </div>
-          </div>
-          <span class="clearfix"></span>
-
-          {% include '/general/actionMessage.twig' %}
-
-
-          <form method="post" onsubmit="send();">
-            <input type="hidden" name="action" value="sendCode">
-            <input type="hidden" name="csrf" value="{{ csrf }}">
-
-            <div class="form-group">
-              <div class="pb-3 mb-3">
-                <div class="position-relative"><i class="fa fa-at fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                  <input class="form-control form-control-lg ps-5" type="email" id="email" name="email" placeholder="{{ 'general.form.email.placeholder' | language }}" required="">
-                </div>
+      <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 col-xs-12">
+        <div class="card">
+          <div class="card-body inputMask">
+            {% include 'general/actionMessage.twig' %}
+            <form method="post" onsubmit="send();">
+              <input type="hidden" name="action" value="sendCode">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
+              <h5 class="card-title">{{ 'site.auth.forgotPW.email' | language }}</h5>
+              <p class="pb-3 mb-3 mb-lg-4">{{ 'site.auth.login.not_registered' | language }} <a
+                  class="text-decoration-none"
+                  href='{{ url }}/auth/register{{ return_to }}'>{{ 'site.auth.login.create_account' | language }}</a>
+              </p>
+              <div class="mb-3">
+                <label for="emailInput" class="form-label">{{ 'general.form.email' | language }}</label>
+                <input class="form-control" type="email" id="emailInput" name="email"
+                       placeholder="{{ 'general.form.email.placeholder' | language }}" autocomplete="email">
               </div>
-            </div>
 
-            <div class="d-flex flex-wrap align-items-center justify-content-between pb-4">
-              <div id="recaptcha"></div>
-            </div>
-
-
-            <div class="mt-4">
-              <div id="form">
-                <button class="btn btn-lg btn-primary w-100 mb-4" type="submit">{{ 'site.forgotPW.form.sendCode' | language }}
-                </button>
+              <div class="mb-1">
+                <div id="recaptcha"></div>
               </div>
-              <div id="loader" style="display: none">
-                <button type="button" class="btn btn-lg btn-primary w-100 mb-4 pe-none">
-                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  {{ 'site.forgotPW.form.sendCode' | language }}...
-                </button>
-              </div>
-            </div>
-          </form>
 
-
-          <div class="mt-4 text-center"><small>{{ 'site.login.not_registered' | language }}</small>
-            <a href="{{ url }}/auth/register{{ return_to }}"
-               class="small font-weight-bold">{{ 'site.login.create_account' | language }}</a>
+              <button class="btn btn-primary inputBtn w-100 mt-4"
+                      type="submit">{{ 'site.forgotPW.form.sendCode' | language }}</button>
+            </form>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 {% include '/general/footer_empty.twig' %}

@@ -1,87 +1,113 @@
 {% include '/general/header_noNav.twig' %}
-<div class=" justify-content-center">
-  <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5">
-    <div class="w-100 mt-auto" style="max-width: 526px;">
-      <h1>{{ 'site.auth.register' | language }}</h1>
-      <p class="pb-3 mb-3 mb-lg-4">{{ 'site.register.already_registered' | language }}&nbsp;&nbsp;<a
-                href='{{ url }}/auth/login{{ return_to }}'>{{ 'site.register.login_in' | language }}</a>
-      </p>
-      {% include '/general/actionMessage.twig' %}
 
-      <form method="post" onsubmit="send();">
-        <input type="hidden" name="action" value="register">
-        <input type="hidden" name="csrf" value="{{ csrf }}">
+<section>
+  <div class="container d-flex flex-column">
+    <div class="row align-items-center justify-content-center min-vh-100" id="registerMask">
+      <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10 col-xs-12">
+        <div class="card">
+          <div class="continuous-progress registerLoader" style="display:none"></div>
+          <div class="card-body inputMask">
+            {% include 'general/actionMessage.twig' %}
+            <form method="post" onsubmit="send();">
+              <input type="hidden" name="action" value="register">
+              <input type="hidden" name="csrf" value="{{ csrf }}">
+              <h5 class="card-title">{{ 'site.auth.register' | language }}</h5>
+              <p class="pb-3 mb-3 mb-lg-4">{{ 'site.auth.register.already_registered' | language }} <a
+                  class="text-decoration-none"
+                  href='{{ url }}/auth/login{{ return_to }}'>{{ 'site.auth.register.login_in' | language }}</a>
+              </p>
+              <div class="mb-3">
+                <label for="emailInput" class="form-label">{{ 'general.form.email' | language }}</label>
+                <input class="form-control" type="email" id="emailInput" name="email"
+                       placeholder="{{ 'general.form.email.placeholder' | language }}" autocomplete="email">
+              </div>
+              <div class="mb-3">
+                <label for="usernameInput" class="form-label">{{ 'general.form.username' | language }}</label>
+                <input class="form-control" type="text" id="usernameInput" name="username"
+                       placeholder="{{ 'general.form.username.placeholder' | language }}" autocomplete="username">
+              </div>
 
-        <div class="pb-3 mb-3">
-          <div class="position-relative"><i
-                    class="fa fa-at fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-            <input class="form-control form-control-lg ps-5" type="email" id="email" name="email" autocomplete="email"
-                   placeholder="{{ 'general.form.email.placeholder' | language }}" required="">
+              <div class="mb-3">
+                <label class="form-label" for="passwordInput">{{ 'general.form.password' | language }}</label>
+                <div class="password-toggle">
+                  <input class="form-control" type="password" id="passwordInput" name="password"
+                         placeholder="{{ 'general.form.password.placeholder' | language }}"
+                         autocomplete="password new-password">
+                  <label class="password-toggle-btn">
+                    <input class="password-toggle-check" type="checkbox"
+                           aria-label="{{ 'general.form.password.show' | language }}">
+                    <span class="password-toggle-indicator"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <input class="form-check-input rememberLogin" type="checkbox" id="rememberLogin" name="remember_login">
+                <label class="form-check-label ms-1"
+                       for="rememberLogin">{{ 'general.form.remember' | language }}</label>
+              </div>
+              <div class="mb-1">
+                <div id="recaptcha"></div>
+              </div>
+
+              <button class="btn btn-primary emailInputBtn w-100 mt-4"
+                      type="submit">{{ 'site.auth.register.form.create' | language }}</button>
+            </form>
+            {% if avAccounts|length != 0 %}
+              <div class="btn-group btn-group-sm w-100 mt-4 mb-2" role="group">
+                {% for account in avAccounts %}
+                  <button
+                    class="btn btn-outline-secondary btn-icon remoteAccountBtn"
+                    data-name="{{ account['identifier'] }}"
+                    data-url="{{ url }}/auth/r/{{ account['identifier'] }}{{ return_to }}">
+                    {% if account['shortName'] == "TheSystems" %}
+                      <img src="https://cdn.the-systems.eu/icon-transparent.png" alt="TheSystems"
+                           height="10" width="30">
+                    {% elseif account['shortName'] == "Discord" %}
+                      <i class="fab fa-discord"></i>
+                    {% elseif account['shortName'] == "Apple" %}
+                      <i class="fab fa-apple"></i>
+                    {% elseif account['shortName'] == "Google" %}
+                      <i class="fab fa-google"></i>
+                    {% endif %}
+                  </button>
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
         </div>
-        <div class="pb-3 mb-3">
-          <div class="position-relative"><i
-                    class="fa fa-person fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-            <input class="form-control form-control-lg ps-5" type="text" id="username" name="username" autocomplete="username"
-                   placeholder="{{ 'general.form.username.placeholder' | language }}" required="">
-          </div>
-        </div>
-        <div class="mb-4">
-          <div class="position-relative"><i
-                    class="fa fa-lock fs-lg position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-            <div class="password-toggle">
-              <input class="form-control form-control-lg ps-5" type="password" id="password" name="password" autocomplete="new-password"
-                     placeholder="{{ 'general.form.password.placeholder' | language }}" required="">
-            </div>
-          </div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center justify-content-between pb-4">
-          <div id="recaptcha"></div>
-        </div>
-        <div class="d-flex flex-wrap align-items-center justify-content-between pb-4">
-          <form-check class="my-1">
-            <input class="form-check-input" type="checkbox" id="remember_login">
-            <label class="form-check-label ms-1"
-                   for="remember_login">{{ 'general.form.remember' | language }}</label>
-          </form-check>
-        </div>
-        <div id="form">
-          <button class="btn btn-lg btn-primary w-100 mb-4"
-                  type="submit">{{ 'site.register.form.create' | language }}
-          </button>
-        </div>
-        <div id="loader" style="display: none">
-          <button type="button" class="btn btn-lg btn-primary w-100 mb-4 pe-none">
-            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            {{ 'site.register.form.create' | language }}...
-          </button>
-        </div>
-      </form>
-      <h2 class="h6 text-center pt-3 pt-lg-4 mb-4">{{ 'site.login.form.or' | language }}</h2>
-      <div class="row row-cols-1 justify-content-center row-cols-sm-2 gy-3 d-flex">
-        {% if avAccounts|length != 0 %}
-          {% for account in avAccounts %}
-            <div class="col-lg-6">
-
-              <a href="{{ url }}/auth/r/{{ account['identifier'] }}{{ return_to }}"
-                 class="btn btn-outline-secondary btn-icon mb-2 w-100">
-                {% if account['shortName'] == "TheSystems" %}
-                  <img src="https://cdn.the-systems.eu/icon-transparent.png" alt="TheSystems"
-                       height="10" width="30">
-                {% elseif account['shortName'] == "Discord" %}
-                  <i class="fab fa-discord"></i>
-                {% elseif account['shortName'] == "Apple" %}
-                  <i class="fab fa-apple"></i>
-                {% elseif account['shortName'] == "Google" %}
-                  <i class="fab fa-google"></i>
-                {% endif %}
-              </a>
-
-            </div>
-          {% endfor %}
-        {% endif %}
       </div>
     </div>
+
   </div>
-</div>
+</section>
+<style>
+    .card {
+        overflow: hidden; /* Verhindert das Verschwinden des Fortschrittsbalkens außerhalb der Karte */
+    }
+
+    .continuous-progress {
+        width: 100%;
+        background-color: #007BFF;
+        height: 4px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: move 2s ease-in-out infinite;
+        z-index: 1; /* Über dem Karteninhalt */
+    }
+
+    .card {
+        position: relative;
+    }
+
+    @keyframes move {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 100%;
+        }
+    }
+</style>
 {% include '/general/footer_empty.twig' %}

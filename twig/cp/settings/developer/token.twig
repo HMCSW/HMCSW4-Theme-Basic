@@ -1,10 +1,10 @@
 {% include '/general/header.twig' %}
-<div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
-    <div class="row pt-sm-2 pt-lg-0">
-        {% include '/cp/settings/nav.twig' %}
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        {% include '/cp/sideNav.twig' %}
         <!-- Page content-->
         <div class="col-lg-9 pt-4 pb-2 pb-sm-4">
-            <section class="card border-0 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     <div class="d-flex align-items-center"><i
                                 class="fa-duotone fa-code text-primary lead pe-1 me-2"></i>
@@ -18,7 +18,7 @@
                 </div>
             </section>
 
-            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
                 <div class="card-body">
                     {% include '/general/pagination.twig' %}
                     <div class="table-responsive">
